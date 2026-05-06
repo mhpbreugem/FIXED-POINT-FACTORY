@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>fixed-point-factory — status</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root {
+    --bg: #fafafa; --fg: #222; --muted: #888;
+    --done: #2a7a2e; --ready: #1f6feb; --claimed: #b78700;
+    --bailed: #b1260f; --blocked: #999; --skip: #ccc;
+    --row: #fff; --rowalt: #f3f3f3; --hdr: #e8e8e8;
+    --stale: #b1260f;
+  }
+  body { font-family: ui-sans-serif, system-ui, sans-serif;
+         background: var(--bg); color: var(--fg); margin: 0; padding: 1.5rem; }
+  h1 { font-size: 1.25rem; margin: 0 0 0.5rem 0; }
+  h2 { font-size: 1rem; margin: 1.5rem 0 0.5rem 0; }
+  .meta { color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem; }
+  .summary { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 0.5rem 0 1rem 0; }
+  .pill { padding: 0.2rem 0.6rem; border-radius: 0.4rem; font-size: 0.85rem;
+          color: white; font-weight: 600; }
+  .pill.done    { background: var(--done); }
+  .pill.ready   { background: var(--ready); }
+  .pill.claimed { background: var(--claimed); }
+  .pill.blocked { background: var(--blocked); }
+  .pill.bailed  { background: var(--bailed); }
+  .pill.skip    { background: var(--skip); color: #444; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.85rem;
+          background: var(--row); }
+  th, td { text-align: left; padding: 0.35rem 0.6rem; border-bottom: 1px solid #eee; }
+  th { background: var(--hdr); font-weight: 600; cursor: pointer; user-select: none;
+       position: sticky; top: 0; }
+  th:hover { background: #ddd; }
+  tr:nth-child(even) td { background: var(--rowalt); }
+  td.status { font-weight: 600; }
+  td.status.done    { color: var(--done); }
+  td.status.ready   { color: var(--ready); }
+  td.status.claimed { color: var(--claimed); }
+  td.status.blocked { color: var(--blocked); }
+  td.status.bailed  { color: var(--bailed); }
+  td.status.skip    { color: var(--skip); }
+  .stale { color: var(--stale); font-weight: 600; }
+  .mono { font-family: ui-monospace, "Fira Code", monospace; }
+  .small { font-size: 0.8rem; color: var(--muted); }
+  .controls { margin: 0.5rem 0; display: flex; gap: 0.5rem; align-items: center;
+              flex-wrap: wrap; }
+  .controls input { padding: 0.3rem 0.5rem; border: 1px solid #ccc; border-radius: 0.3rem; }
+  .controls button { padding: 0.3rem 0.7rem; border: 1px solid #ccc;
+                     background: white; border-radius: 0.3rem; cursor: pointer; }
+  .err { color: #b1260f; padding: 1rem; background: #fee; border-radius: 0.3rem; }
+</style>
+</head>
+<body>
+
+<h1>fixed-point-factory — <span id="project">REZN</span></h1>
+<div class="meta" id="meta">loading…</div>
+
+<div class="summary" id="summary"></div>
+
+<h2>Active workers</h2>
+<div id="workers" class="small">loading…</div>
+
+<h2>Live progress</h2>
+<div id="progress" class="small">loading…</div>
+
+<h2>Tasks</h2>
+<div class="controls">
+  <input type="text" id="filter" placeholder="filter id, status, gamma…" oninput="render()">
+  <button onclick="loadAll()">refresh now</button>
+  <span class="small" id="autorefresh">auto-refresh every 60s</span>
+</div>
+<table id="tasks">
+  <thead>
+    <tr>
+      <th onclick="sortBy('id')">id</th>
+      <th onclick="sortBy('status')">status</th>
+      <th onclick="sortBy('kind')">kind</th>
+      <th onclick="sortBy('gamma')">γ</th>
+      <th onclick="sortBy('tau')">τ</th>
+      <th>deps</th>
+      <th onclick="sortBy('result')">result</th>
+      <th onclick="sortBy('checkpoint')">checkpoint</th>
+      <th>note</th>
+    </tr>
+  </thead>
+  <tbody id="tbody"></tbody>
+</table>
+
+<script>
+  const REPO = "mhpbreugem/fixed-point-factory";
+  const BRANCH = "main";
+  const params = new URLSearchParams(location.search);
+  const PROJECT = params.get("project") || "REZN";
+  document.getElementById("project").textContent = PROJECT;
+
+  const rawUrl = path => `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${path}?_=${Date.now()}`;
+  const listUrl = path => `https://api.github.com/repos/${REPO}/contents/${path}?ref=${BRANCH}&_=${Date.now()}`;
+
+  let TASKS = [];
+  let SORT_KEY = "id", SORT_ASC = true;
+
+  async function fetchJson(url) {
+    const r = await fetch(url, { cache: "no-store" });
+    if (!r.ok) throw new Error(`${url}: ${r.status}`);
+    return r.json();
+  }
+  async function fetchText(url) {
+    const r = await fetch(url, { cache: "no-store" });
+    if (!r.ok) throw new Error(`${url}: ${r.status}`);
+    return r.text();
+  }
+  function ageMin(iso) {
+    if (!iso) return null;
+    const t = new Date(iso.replace("Z", "+00:00"));
+    return (Date.now() - t.getTime()) / 60000;
+  }
+  function ageStr(iso) {
+    const m = ageMin(iso);
+    if (m === null) return "?";
+    if (m < 1) return `${Math.round(m * 60)}s ago`;
+    if (m < 90) return `${Math.round(m)}m ago`;
+    return `${Math.round(m / 60)}h ago`;
+  }
+
+  async function loadTasks() {
+    const data = await fetchJson(rawUrl(`projects/${PROJECT}/TASK_QUEUE.json`));
+    TASKS = data.tasks || [];
+    renderSummary();
+    render();
+  }
+
+  function renderSummary() {
+    const counts = {};
+    TASKS.forEach(t => { counts[t.status] = (counts[t.status] || 0) + 1; });
+    const order = ["done", "ready", "claimed", "blocked", "bailed", "skip"];
+    const sumDiv = document.getElementById("summary");
+    sumDiv.innerHTML = "";
+    order.forEach(s => {
+      if (!counts[s]) return;
+      const span = document.createElement("span");
+      span.className = `pill ${s}`;
+      span.textContent = `${s}: ${counts[s]}`;
+      sumDiv.appendChild(span);
+    });
+    const total = document.createElement("span");
+    total.className = "pill";
+    total.style.background = "#444";
+    total.textContent = `total: ${TASKS.length}`;
+    sumDiv.appendChild(total);
+  }
+
+  function sortBy(key) {
+    if (SORT_KEY === key) SORT_ASC = !SORT_ASC;
+    else { SORT_KEY = key; SORT_ASC = true; }
+    render();
+  }
+
+  function getSortVal(t, k) {
+    const v = t[k];
+    if (k === "result" && v) return JSON.stringify(v);
+    if (Array.isArray(v)) return v.join(",");
+    return v == null ? "" : v;
+  }
+
+  function render() {
+    const filter = document.getElementById("filter").value.toLowerCase().trim();
+    const filtered = TASKS.filter(t => {
+      if (!filter) return true;
+      const blob = JSON.stringify(t).toLowerCase();
+      return blob.includes(filter);
+    });
+    const sorted = [...filtered].sort((a, b) => {
+      const va = getSortVal(a, SORT_KEY), vb = getSortVal(b, SORT_KEY);
+      if (va < vb) return SORT_ASC ? -1 : 1;
+      if (va > vb) return SORT_ASC ? 1 : -1;
+      return 0;
+    });
+    const tbody = document.getElementById("tbody");
+    tbody.innerHTML = "";
+    sorted.forEach(t => {
+      const tr = document.createElement("tr");
+      const result = t.result
+        ? Object.entries(t.result).filter(([_, v]) => v != null)
+            .map(([k, v]) => `${k}=${typeof v === "number" ? v.toPrecision(3) : v}`).join(", ")
+        : "";
+      const ckpt = t.checkpoint
+        ? `<a href="https://github.com/${REPO}/blob/${BRANCH}/${t.checkpoint}" target="_blank">${t.checkpoint.split("/").pop()}</a>`
+        : "";
+      const deps = (t.depends_on || []).join(", ");
+      const note = (t.note || "").substring(0, 80);
+      tr.innerHTML = `
+        <td class="mono">${t.id}</td>
+        <td class="status ${t.status}">${t.status}</td>
+        <td>${t.kind || ""}</td>
+        <td>${t.gamma ?? ""}</td>
+        <td>${t.tau ?? ""}</td>
+        <td class="mono small">${deps}</td>
+        <td class="mono small">${result}</td>
+        <td class="small">${ckpt}</td>
+        <td class="small">${note}</td>`;
+      tbody.appendChild(tr);
+    });
+    document.getElementById("meta").textContent =
+      `${TASKS.length} tasks · last refresh ${new Date().toLocaleTimeString()}`;
+  }
+
+  async function loadWorkers() {
+    const div = document.getElementById("workers");
+    try {
+      const items = await fetchJson(listUrl(`projects/${PROJECT}/heartbeats`));
+      const beats = items.filter(i => i.name.endsWith(".txt"));
+      if (!beats.length) { div.innerHTML = "<i>no heartbeat files</i>"; return; }
+      const rows = await Promise.all(beats.map(async b => {
+        try {
+          const ts = (await fetchText(rawUrl(`projects/${PROJECT}/heartbeats/${b.name}`))).trim();
+          const age = ageMin(ts);
+          const stale = age > 15;
+          return `<div>${b.name.replace(".txt", "")}: <span class="${stale ? "stale" : ""}">${ageStr(ts)}</span> ${stale ? "(STALE)" : ""}</div>`;
+        } catch (e) { return `<div>${b.name}: error</div>`; }
+      }));
+      div.innerHTML = rows.join("");
+    } catch (e) {
+      div.innerHTML = `<i>could not load heartbeats (${e.message})</i>`;
+    }
+  }
+
+  async function loadProgress() {
+    const div = document.getElementById("progress");
+    try {
+      const items = await fetchJson(listUrl(`projects/${PROJECT}/progress`));
+      const files = items.filter(i => i.name.endsWith(".json"));
+      if (!files.length) { div.innerHTML = "<i>no active solves</i>"; return; }
+      const rows = await Promise.all(files.map(async f => {
+        try {
+          const p = await fetchJson(rawUrl(`projects/${PROJECT}/progress/${f.name}`));
+          const age = ageMin(p.last_update);
+          const stale = age > 3;
+          return `<div class="mono">${p.task_id} · ${p.worker_id} · iter=${p.iter} · ftol=${p.ftol} · <span class="${stale ? "stale" : ""}">${ageStr(p.last_update)}</span> ${stale ? "(STALE)" : ""}</div>`;
+        } catch (e) { return `<div>${f.name}: error</div>`; }
+      }));
+      div.innerHTML = rows.join("");
+    } catch (e) {
+      div.innerHTML = `<i>could not load progress (${e.message})</i>`;
+    }
+  }
+
+  async function loadAll() {
+    document.getElementById("meta").textContent = "loading…";
+    try {
+      await Promise.all([loadTasks(), loadWorkers(), loadProgress()]);
+    } catch (e) {
+      document.getElementById("meta").innerHTML = `<span class="err">error: ${e.message}</span>`;
+    }
+  }
+
+  loadAll();
+  setInterval(loadAll, 60000);
+</script>
+</body>
+</html>
