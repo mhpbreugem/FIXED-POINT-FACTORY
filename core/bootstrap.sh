@@ -138,6 +138,24 @@ while true; do
     cd "${REPO_DIR}"
     git pull --rebase origin "${BRANCH}" --quiet 2>/dev/null || true
 
+    # Clean up orphan progress files from crashed prior workers.
+    python3 - <<'PY' || true
+import json, os
+from pathlib import Path
+proj = os.environ["PROJECT"]
+root = Path(os.environ.get("REPO_DIR", "."))
+queue = json.load(open(root / "projects" / proj / "TASK_QUEUE.json"))
+claimed_ids = {t["id"] for t in queue["tasks"] if t.get("status") == "claimed"}
+pdir = root / "projects" / proj / "progress"
+if pdir.is_dir():
+    for f in pdir.glob("*.json"):
+        if f.stem not in claimed_ids:
+            f.unlink()
+PY
+    git add -A "projects/${PROJECT}/progress/" 2>/dev/null || true
+    git diff --cached --quiet 2>/dev/null || git commit -m "cleanup orphan progress" --quiet 2>/dev/null || true
+    git push origin "${BRANCH}" --quiet 2>/dev/null || true
+
     # Release stale claims
     python3 core/claim_task.py release \
         --project "${PROJECT}" \

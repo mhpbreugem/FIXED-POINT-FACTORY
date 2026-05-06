@@ -11,10 +11,16 @@ and checkpoint format. Adding one takes about 30 minutes.
 mkdir -p projects/MYPROJECT/heartbeats
 mkdir -p projects/MYPROJECT/checkpoints
 mkdir -p projects/MYPROJECT/solver_code
+mkdir -p projects/MYPROJECT/progress
 touch projects/MYPROJECT/heartbeats/.gitkeep
 touch projects/MYPROJECT/checkpoints/.gitkeep
 touch projects/MYPROJECT/solver_code/.gitkeep
+touch projects/MYPROJECT/progress/.gitkeep
 ```
+
+Workers will write live `iter`/`ftol` telemetry to
+`projects/MYPROJECT/progress/$TASK_ID.json` once per minute.
+See `core/PROGRESS_FORMAT.md` for the file schema and lifecycle.
 
 ---
 

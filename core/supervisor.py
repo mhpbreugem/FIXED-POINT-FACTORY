@@ -40,6 +40,47 @@ def heartbeat_dir(project: str) -> Path:
     return repo_root() / "projects" / project / "heartbeats"
 
 
+def progress_dir(project: str) -> Path:
+    return repo_root() / "projects" / project / "progress"
+
+
+def load_progress(project: str) -> dict:
+    """Return {task_id: progress_dict} from progress/*.json files."""
+    out = {}
+    pdir = progress_dir(project)
+    if not pdir.is_dir():
+        return out
+    for f in pdir.glob("*.json"):
+        try:
+            out[f.stem] = json.loads(f.read_text())
+        except Exception:
+            continue
+    return out
+
+
+def show_progress(project: str) -> None:
+    progress = load_progress(project)
+    if not progress:
+        return
+    print_separator(f"LIVE PROGRESS  ({len(progress)} active solves)")
+    now = datetime.datetime.now(datetime.timezone.utc)
+    for task_id, p in sorted(progress.items()):
+        worker = p.get("worker_id", "?")
+        it = p.get("iter")
+        ftol = p.get("ftol")
+        last = p.get("last_update", "?")
+        try:
+            last_dt = datetime.datetime.fromisoformat(last.replace("Z", "+00:00"))
+            age = (now - last_dt).total_seconds()
+            age_s = f"{int(age)}s ago" if age < 120 else f"{int(age/60)}m ago"
+            stale = "  STALE" if age > 180 else ""
+        except Exception:
+            age_s = "?"
+            stale = ""
+        print(f"  {task_id:<25}  by={worker:<14}  iter={it}  ftol={ftol}  "
+              f"({age_s}){stale}")
+
+
 # ---------------------------------------------------------------------------
 # Data loading
 # ---------------------------------------------------------------------------
@@ -244,6 +285,7 @@ def main():
     print('='*60)
 
     hbs = show_vm_status(args.project)
+    show_progress(args.project)
     show_queue_status(args.project, hbs)
     show_done_summary(args.project)
 
