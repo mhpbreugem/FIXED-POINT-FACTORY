@@ -1,0 +1,199 @@
+name: Solve tasks
+
+# Pure GitHub Actions architecture — no GCP, no external VMs.
+# A scheduler job claims up to N ready tasks atomically, then a matrix
+# of parallel solver jobs each runs one claimed task to completion.
+#
+# Concurrency group prevents two workflow runs from racing on the queue.
+# Within one run, parallel solver jobs are isolated: each owns a distinct
+# claimed task; the only shared write is the final done/bail commit.
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+    inputs:
+      max_workers:
+        description: 'Max parallel solver jobs (default 4, hard cap 20)'
+        required: false
+        default: '4'
+
+concurrency:
+  group: solve-tasks
+  cancel-in-progress: false
+
+permissions:
+  contents: write     # workflow can push commits back to the repo
+
+env:
+  FPF_PROJECT: REZN
+
+jobs:
+  # -------------------------------------------------------------------
+  # Stage 1: pick up to N ready tasks and claim them atomically.
+  # Outputs a JSON array of {id, worker_id} for the next stage's matrix.
+  # -------------------------------------------------------------------
+  schedule:
+    runs-on: ubuntu-latest
+    outputs:
+      tasks: ${{ steps.pick.outputs.tasks }}
+      count: ${{ steps.pick.outputs.count }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git identity
+        run: |
+          git config user.name  "fpf-scheduler[bot]"
+          git config user.email "fpf-scheduler@users.noreply.github.com"
+
+      - name: Pick and claim ready tasks
+        id: pick
+        env:
+          MAX_WORKERS: ${{ github.event.inputs.max_workers || '4' }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          QUEUE="projects/${FPF_PROJECT}/TASK_QUEUE.json"
+          NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          export QUEUE NOW
+
+          PICKED=$(python3 <<'PY'
+          import json, os
+          from pathlib import Path
+          MAX = int(os.environ["MAX_WORKERS"])
+          RUN = os.environ["RUN_ID"]
+          NOW = os.environ["NOW"]
+          path = Path(os.environ["QUEUE"])
+          q = json.loads(path.read_text())
+          picked = []
+          for t in q["tasks"]:
+              if len(picked) >= MAX:
+                  break
+              if t.get("status") == "ready":
+                  worker_id = f"gha-{RUN}-{t['id']}"
+                  t["status"] = "claimed"
+                  t["claimed_by"] = worker_id
+                  t["claimed_at"] = NOW
+                  picked.append({"id": t["id"], "worker_id": worker_id})
+          path.write_text(json.dumps(q, indent=2) + "\n")
+          print(json.dumps(picked))
+          PY
+          )
+
+          COUNT=$(echo "$PICKED" | python3 -c "import json,sys; print(len(json.load(sys.stdin)))")
+
+          echo "Picked: $COUNT tasks"
+          echo "$PICKED" | python3 -m json.tool || true
+
+          {
+            echo "tasks=$PICKED"
+            echo "count=$COUNT"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Push claims
+        if: steps.pick.outputs.count != '0'
+        run: |
+          set -euo pipefail
+          git add "projects/${FPF_PROJECT}/TASK_QUEUE.json"
+          git commit -m "Claim ${{ steps.pick.outputs.count }} task(s) for run ${{ github.run_id }}" \
+            || { echo "nothing to commit"; exit 0; }
+
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then
+              echo "push OK on attempt $attempt"
+              exit 0
+            fi
+            echo "push attempt $attempt failed; rebasing"
+            git pull --rebase origin main
+            sleep $((attempt * 2))
+          done
+          echo "Could not push claims after 5 attempts."
+          exit 1
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "## Schedule"
+            echo ""
+            echo "- run_id: \`${{ github.run_id }}\`"
+            echo "- max_workers: \`${{ github.event.inputs.max_workers || '4' }}\`"
+            echo "- claimed: \`${{ steps.pick.outputs.count }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # -------------------------------------------------------------------
+  # Stage 2: parallel solver jobs.
+  # One job per claimed task. Each runs solve.py end-to-end.
+  # -------------------------------------------------------------------
+  solve:
+    needs: schedule
+    if: needs.schedule.outputs.count != '0' && needs.schedule.outputs.count != ''
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        task: ${{ fromJSON(needs.schedule.outputs.tasks) }}
+    timeout-minutes: 350     # under GitHub's 360 min hard cap
+    steps:
+      - name: Checkout (after claim is on origin)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Configure git identity
+        run: |
+          git config user.name  "fpf-solver[bot]"
+          git config user.email "fpf-solver@users.noreply.github.com"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install Python deps
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install numpy scipy numba
+
+      - name: Clone REZN solver source
+        run: |
+          git clone --depth 1 https://github.com/mhpbreugem/REZN.git "$HOME/rezn-source"
+
+      - name: Run solver
+        env:
+          REZN_SRC: ${{ runner.temp }}/../rezn-source
+          PYTHONUNBUFFERED: '1'
+        run: |
+          set -euo pipefail
+          export REZN_SRC="$HOME/rezn-source"
+          python3 "projects/${FPF_PROJECT}/solver_code/solve.py" \
+            --project "${FPF_PROJECT}" \
+            --task-id "${{ matrix.task.id }}" \
+            --branch main \
+            --worker-id "${{ matrix.task.worker_id }}"
+
+      - name: Release claim if solve failed mid-run
+        if: failure()
+        run: |
+          set -euo pipefail
+          git pull --rebase origin main || true
+          python3 core/claim_task.py release \
+            --project "${FPF_PROJECT}" \
+            --worker-id "${{ matrix.task.worker_id }}" \
+            --branch main || true
+
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo "## Task ${{ matrix.task.id }}"
+            echo ""
+            echo "- worker_id: \`${{ matrix.task.worker_id }}\`"
+            echo "- status: see TASK_QUEUE.json after this run completes"
+          } >> "$GITHUB_STEP_SUMMARY"
