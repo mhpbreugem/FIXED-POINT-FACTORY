@@ -2,8 +2,8 @@
   "task_id": "figR2_lognormal_g100",
   "worker_id": "gha-25516025917-figR2_lognormal_g100",
   "started_at": "2026-05-07T19:00:05Z",
-  "last_update": "2026-05-07T19:02:10Z",
-  "iter": 5804,
-  "ftol": "5.897041e-02",
+  "last_update": "2026-05-07T19:03:05Z",
+  "iter": 8426,
+  "ftol": "4.680405e-02",
   "extra": {}
 }
