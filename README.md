@@ -51,38 +51,31 @@ The `TASK_QUEUE.json` file IS the distributed lock. To claim a task:
 No external coordinator needed. Stale claims (VM died silently) are
 auto-released after 6 hours by any worker on startup.
 
-### VM lifecycle
+### Worker lifecycle
 
-1. `core/create_gcp_vm.sh` spins up a GCP spot VM with `max-run-duration=1h`.
-2. On startup, the VM runs `core/bootstrap.sh`:
-   - Installs Python + dependencies
-   - Clones this repo
-   - Starts `core/heartbeat.sh` in background (writes a timestamp every 5 min)
-   - Enters the worker loop: claim → solve → done → repeat
-3. After 1 hour, GCP terminates the VM. Any claimed task is recovered by
-   the 6-hour stale claim mechanism.
-
-### Heartbeat
-
-Each VM writes `projects/<PROJECT>/heartbeats/<VM_ID>.txt` every 5 minutes
-and pushes. The supervisor reads these files to detect live vs. stuck VMs.
+1. `.github/workflows/solve-tasks.yml` runs every 15 minutes.
+2. The `schedule` job claims up to N ready tasks atomically and pushes the claims.
+3. Parallel `solve` jobs each run `projects/$PROJECT/solver_code/solve.py` end-to-end.
+4. Results are committed and pushed. Stale claims (jobs that fail mid-run) are
+   released by `.github/workflows/cleanup.yml`, which runs hourly at :17.
 
 ---
 
-## Quick start
+## Running workers
 
-### Spin up a solver VM (GCP)
+Workers run as GitHub Actions jobs — no external accounts needed.
 
-```bash
-GITHUB_TOKEN=ghp_xxx \
-PROJECT=REZN \
-BRANCH=main \
-VM_NAME=solver-1 \
-bash core/create_gcp_vm.sh
-```
+- **Automatic**: cron every 15 min via `.github/workflows/solve-tasks.yml`
+- **Manual**: GitHub UI → Actions → "Solve tasks" → Run workflow
 
-Spin up multiple VMs by changing `VM_NAME` (e.g. `solver-2`, `solver-3`).
-Each will automatically claim different tasks due to the worker-specific tiebreak.
+Live status: https://raw.githack.com/mhpbreugem/fixed-point-factory/main/docs/status.html
+
+Hourly cleanup of stale claims: `.github/workflows/cleanup.yml`
+
+The GCP-based scripts in `core/bootstrap.sh`, `core/create_gcp_vm.sh`,
+and `core/heartbeat.sh` are deprecated but kept for the case where
+we need to scale beyond Actions concurrency limits (currently 20
+parallel jobs on public repos).
 
 ### Monitor from your laptop
 

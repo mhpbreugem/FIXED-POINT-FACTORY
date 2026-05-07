@@ -1,0 +1,117 @@
+name: Cleanup stale claims and orphan progress files
+
+# Runs every hour at :17. Releases tasks claimed for more than 65 minutes
+# (covers one full Actions job timeout plus margin) and deletes progress
+# files for tasks that are no longer claimed.
+
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: solve-tasks      # same group as solve-tasks.yml — don't run during a solve
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  FPF_PROJECT: REZN
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git identity
+        run: |
+          git config user.name  "fpf-cleanup[bot]"
+          git config user.email "fpf-cleanup@users.noreply.github.com"
+
+      - name: Release stale claims and orphan progress files
+        id: cleanup
+        run: |
+          set -euo pipefail
+          NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          export NOW
+
+          RESULT=$(python3 <<'PY'
+          import json, os, datetime
+          from pathlib import Path
+
+          project  = os.environ["FPF_PROJECT"]
+          now      = datetime.datetime.fromisoformat(os.environ["NOW"].replace("Z", "+00:00"))
+          max_age  = datetime.timedelta(minutes=65)
+
+          queue_path = Path(f"projects/{project}/TASK_QUEUE.json")
+          q = json.loads(queue_path.read_text())
+
+          released = []
+          for t in q["tasks"]:
+              if t.get("status") != "claimed":
+                  continue
+              claimed_at = t.get("claimed_at")
+              if not claimed_at:
+                  continue
+              claimed_dt = datetime.datetime.fromisoformat(claimed_at.replace("Z", "+00:00"))
+              if (now - claimed_dt) > max_age:
+                  released.append(t["id"])
+                  t["status"] = "ready"
+                  t.pop("claimed_by", None)
+                  t.pop("claimed_at", None)
+
+          if released:
+              queue_path.write_text(json.dumps(q, indent=2) + "\n")
+
+          # Delete orphan progress files (no matching claimed task)
+          claimed_ids = {t["id"] for t in q["tasks"] if t.get("status") == "claimed"}
+          progress_dir = Path(f"projects/{project}/progress")
+          deleted = []
+          if progress_dir.is_dir():
+              for f in progress_dir.glob("*.json"):
+                  if f.stem not in claimed_ids:
+                      f.unlink()
+                      deleted.append(f.name)
+
+          print(json.dumps({"released": released, "deleted": deleted}))
+          PY
+          )
+
+          echo "Cleanup result: $RESULT"
+          RELEASED=$(echo "$RESULT" | python3 -c "import json,sys; d=json.load(sys.stdin); print(len(d['released']))")
+          DELETED=$(echo "$RESULT"  | python3 -c "import json,sys; d=json.load(sys.stdin); print(len(d['deleted']))")
+          echo "released=$RELEASED" >> "$GITHUB_OUTPUT"
+          echo "deleted=$DELETED"   >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push if anything changed
+        if: steps.cleanup.outputs.released != '0' || steps.cleanup.outputs.deleted != '0'
+        run: |
+          set -euo pipefail
+          git add "projects/${FPF_PROJECT}/TASK_QUEUE.json" \
+                  "projects/${FPF_PROJECT}/progress/" 2>/dev/null || true
+
+          git diff --cached --quiet && exit 0
+
+          git commit -m \
+            "cleanup: released=${{ steps.cleanup.outputs.released }} orphans=${{ steps.cleanup.outputs.deleted }}"
+
+          for attempt in 1 2 3; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+            sleep $((attempt * 2))
+          done
+          exit 1
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "## Cleanup"
+            echo "- stale claims released: \`${{ steps.cleanup.outputs.released }}\`"
+            echo "- orphan progress files deleted: \`${{ steps.cleanup.outputs.deleted }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"

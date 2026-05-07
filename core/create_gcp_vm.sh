@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+# =====================================================================
+# DEPRECATED — GCP-era infrastructure.
+# Active architecture: pure GitHub Actions (.github/workflows/solve-tasks.yml).
+# This file is kept in the repo as the fallback if we ever need to
+# scale beyond Actions runner concurrency limits.
+# =====================================================================
 # create_gcp_vm.sh — Spin up a GCP spot VM that runs a fixed-point-factory worker.
 #
 # Usage:

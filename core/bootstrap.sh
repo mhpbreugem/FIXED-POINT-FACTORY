@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-# DEPRECATED — superseded by the pure GitHub Actions architecture in
-# .github/workflows/solve-tasks.yml. Kept here in case GCP spot VMs
-# become useful again. Do not use for new runs.
-#
+# =====================================================================
+# DEPRECATED — GCP-era infrastructure.
+# Active architecture: pure GitHub Actions (.github/workflows/solve-tasks.yml).
+# This file is kept in the repo as the fallback if we ever need to
+# scale beyond Actions runner concurrency limits.
+# =====================================================================
 # bootstrap.sh — VM startup script for fixed-point-factory solver VMs.
 #
 # Designed to run as a GCP startup script or via curl-pipe on a fresh VM.

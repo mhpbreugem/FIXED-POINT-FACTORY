@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+# =====================================================================
+# DEPRECATED — GCP-era infrastructure.
+# Active architecture: pure GitHub Actions (.github/workflows/solve-tasks.yml).
+# This file is kept in the repo as the fallback if we ever need to
+# scale beyond Actions runner concurrency limits.
+# =====================================================================
 # heartbeat.sh — write a timestamp every 5 minutes, commit and push.
 # Run in background from bootstrap.sh.
 #
