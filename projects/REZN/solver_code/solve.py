@@ -220,6 +220,42 @@ def main() -> None:
     # Auto kernel bandwidth (mirrors staggered_run_K3 heuristic)
     kernel_h = max(0.005, 0.05 * du)
 
+    # ------------------------------------------------------------------
+    # CI smoke-test: task flagged "test": true — just verify the full
+    # import chain + one phi evaluation, then mark done immediately.
+    # ------------------------------------------------------------------
+    if task.get("test"):
+        print("[solve] TEST TASK — smoke-test mode, skipping full solve", flush=True)
+        reporter = ProgressReporter(
+            project=args.project, task_id=args.task_id,
+            worker_id=args.worker_id, branch=args.branch, interval=60,
+            repo_root=ROOT,
+        )
+        reporter.start()
+        try:
+            halo = init_no_learning_K3(u_full, tau_vec, gamma_vec, W_vec)
+            P_full_test = phi_K3_halo_smooth(
+                halo, u_full, inner_lo, inner_hi,
+                tau_vec, gamma_vec, W_vec, kernel_h,
+            )
+            P_inner_test = extract_inner(P_full_test, inner_lo, inner_hi)
+            F_inf = float(np.max(np.abs(extract_inner(halo, inner_lo, inner_hi) - P_inner_test)))
+            deficit = revelation_deficit_f128(P_inner_test, u_grid_inner, tau_vec, K)
+            print(f"[solve] smoke: phi(P_init) OK  ||F||inf={F_inf:.4e}  1-R²={deficit:.6e}", flush=True)
+            claim_done(args.project, args.task_id, args.branch, checkpoint="", result={
+                "smoke": True,
+                "1-R2": round(deficit, 8),
+                "F_max": float(f"{F_inf:.4e}"),
+                "note": "CI smoke test — one phi eval, no convergence required",
+            })
+        except Exception as e:
+            import traceback; traceback.print_exc()
+            claim_bail(args.project, args.task_id, args.branch, f"smoke test failed: {e}")
+            sys.exit(2)
+        finally:
+            reporter.stop(delete=True)
+        sys.exit(0)
+
     print(f"[solve] task={args.task_id}  γ={gamma}  τ={tau}  "
           f"G_inner={G_inner} pad={pad} G_full={G_full}  tol={tol:.0e}",
           flush=True)

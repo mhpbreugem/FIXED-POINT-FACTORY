@@ -24,15 +24,7 @@
       "gamma": 1.0,
       "tau": 0.3,
       "test": true,
-      "status": "done",
-      "checkpoint": "",
-      "result": {
-        "smoke": true,
-        "1-R2": 0.00015319,
-        "F_max": 0.20528,
-        "note": "CI smoke test \u2014 one phi eval, no convergence required"
-      },
-      "completed_at": "2026-05-07T08:28:38.623852Z"
+      "status": "ready"
     },
     {
       "id": "g050_t0030",
