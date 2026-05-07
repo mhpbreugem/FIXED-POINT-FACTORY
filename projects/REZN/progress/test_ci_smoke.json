@@ -1,0 +1,9 @@
+{
+  "task_id": "test_ci_smoke",
+  "worker_id": "local-smoke-test",
+  "started_at": "2026-05-07T08:28:34Z",
+  "last_update": "2026-05-07T08:28:34Z",
+  "iter": null,
+  "ftol": null,
+  "extra": {}
+}
