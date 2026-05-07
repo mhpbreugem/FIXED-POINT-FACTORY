@@ -627,12 +627,12 @@
         "g050_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "note": "\u03b3-sweep root: warm-start from nearby \u03b3 at \u03c4=2 (g100, g400, or g050 seed \u2014 any will do). fig4B: 1-R\u00b2=0.025 / slope=0.59.",
-      "claimed_by": "gha-25516025917-g200_t0200",
-      "claimed_at": "2026-05-07T18:59:40Z"
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g200_t0150",
@@ -685,7 +685,7 @@
       "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "Meta-task: active whenever any task is bailed. Scans bailed tasks, selects the nearest solved checkpoint (by (γ,τ) distance), constructs a warm-start .npz for each bailed task, resets their status to ready, and updates their checkpoint field. Re-runs automatically if new bails accumulate. Currently bailed: g050_t0400, g100_t0500."
+      "note": "Meta-task: active whenever any task is bailed. Scans bailed tasks, selects the nearest solved checkpoint (by (\u03b3,\u03c4) distance), constructs a warm-start .npz for each bailed task, resets their status to ready, and updates their checkpoint field. Re-runs automatically if new bails accumulate. Currently bailed: g050_t0400, g100_t0500."
     },
     {
       "id": "figR2_lognormal_g050",
