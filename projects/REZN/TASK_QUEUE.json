@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-07T19:03:06.012920Z",
+  "updated_at": "2026-05-07T21:32:30.848427Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -631,12 +631,12 @@
         "g050_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "bailed",
       "checkpoint": null,
-      "result": null,
-      "note": "\u03b3-sweep root: warm-start from nearby \u03b3 at \u03c4=2 (g100, g400, or g050 seed \u2014 any will do). fig4B: 1-R\u00b2=0.025 / slope=0.59.",
-      "claimed_by": "gha-25523119097-g200_t0200",
-      "claimed_at": "2026-05-07T21:29:22Z"
+      "result": {
+        "reason": "||F||inf=2.647e-02 > bail threshold 1e-04"
+      },
+      "note": "\u03b3-sweep root: warm-start from nearby \u03b3 at \u03c4=2 (g100, g400, or g050 seed \u2014 any will do). fig4B: 1-R\u00b2=0.025 / slope=0.59."
     },
     {
       "id": "g200_t0150",
