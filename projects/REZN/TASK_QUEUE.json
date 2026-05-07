@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-07T18:30:11.311322Z",
+  "updated_at": "2026-05-07T18:31:52.000658Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -24,9 +24,15 @@
       "gamma": 1.0,
       "tau": 0.3,
       "test": true,
-      "status": "claimed",
-      "claimed_by": "gha-25514645356-test_ci_smoke",
-      "claimed_at": "2026-05-07T18:31:23Z"
+      "status": "done",
+      "checkpoint": "",
+      "result": {
+        "smoke": true,
+        "1-R2": 0.00015319,
+        "F_max": 0.20528,
+        "note": "CI smoke test \u2014 one phi eval, no convergence required"
+      },
+      "completed_at": "2026-05-07T18:31:51.999548Z"
     },
     {
       "id": "g050_t0030",
