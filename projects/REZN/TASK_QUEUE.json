@@ -686,12 +686,12 @@
       "id": "requeue_bailed",
       "kind": "requeue_bailed",
       "depends_on": [],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "note": "Meta-task: active whenever any task is bailed. Scans bailed tasks, selects the nearest solved checkpoint (by (\u03b3,\u03c4) distance), constructs a warm-start .npz for each bailed task, resets their status to ready, and updates their checkpoint field. Re-runs automatically if new bails accumulate. Currently bailed: g050_t0400, g100_t0500.",
-      "claimed_by": "gha-25523119097-requeue_bailed",
-      "claimed_at": "2026-05-07T21:29:22Z"
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "figR2_lognormal_g050",
