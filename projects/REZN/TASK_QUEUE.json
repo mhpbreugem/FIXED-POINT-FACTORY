@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-07T16:11:48.306107Z",
+  "updated_at": "2026-05-07T16:12:23.846999Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -24,9 +24,7 @@
       "gamma": 1.0,
       "tau": 0.3,
       "test": true,
-      "status": "claimed",
-      "claimed_by": "gha-25507769170-test_ci_smoke",
-      "claimed_at": "2026-05-07T16:12:05Z"
+      "status": "ready"
     },
     {
       "id": "g050_t0030",
