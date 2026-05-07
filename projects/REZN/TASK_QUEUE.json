@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-07T18:22:54.209626Z",
+  "updated_at": "2026-05-07T18:24:25.067492Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -689,12 +689,10 @@
         10.0
       ],
       "depends_on": [],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "No-learning Fig R2 task. Independent of REE. Solve no-learning market clearing under v ~ LogNormal(0,1), measure weighted 1-R\u00b2 at each \u03c4. No warm-start needed. Output: results/full_ree/figR2_g050_pgfplots.tex.",
-      "claimed_by": "gha-25514308630-figR2_lognormal_g050",
-      "claimed_at": "2026-05-07T18:24:15Z"
+      "note": "No-learning Fig R2 task. Independent of REE. Solve no-learning market clearing under v ~ LogNormal(0,1), measure weighted 1-R\u00b2 at each \u03c4. No warm-start needed. Output: results/full_ree/figR2_g050_pgfplots.tex."
     },
     {
       "id": "figR2_lognormal_g100",
