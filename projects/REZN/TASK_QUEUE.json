@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-07T21:32:48.810361Z",
+  "updated_at": "2026-05-07T21:33:20.953295Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -548,12 +548,12 @@
       "depends_on": [
         "g050_t0200"
       ],
-      "status": "claimed",
+      "status": "bailed",
       "checkpoint": null,
-      "result": null,
-      "note": "\u03b3-sweep root: warm-start from g050_t0200 seed (now has 3D .npz). Previously bailed with 2D checkpoint. fig4B: 1-R\u00b2=0.133 / slope=0.51.",
-      "claimed_by": "gha-25523119097-g025_t0200",
-      "claimed_at": "2026-05-07T21:29:22Z"
+      "result": {
+        "reason": "||F||inf=1.408e-02 > bail threshold 1e-04"
+      },
+      "note": "\u03b3-sweep root: warm-start from g050_t0200 seed (now has 3D .npz). Previously bailed with 2D checkpoint. fig4B: 1-R\u00b2=0.133 / slope=0.51."
     },
     {
       "id": "g025_t0150",
