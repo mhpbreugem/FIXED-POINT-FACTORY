@@ -1,16 +1,22 @@
-name: Cleanup stale claims and orphan progress files
+name: Cleanup stale claims
 
-# Runs every hour at :17. Releases tasks claimed for more than 65 minutes
-# (covers one full Actions job timeout plus margin) and deletes progress
-# files for tasks that are no longer claimed.
+# Hourly safety net.
+# Releases tasks claimed more than 65 minutes ago. A healthy solver job
+# finishes well within its 350-min timeout AND marks its task done/bail
+# itself; a job that crashes hard releases its own claim via the
+# "Release claim if solve failed mid-run" step in solve-tasks.yml.
+# This workflow only catches the rare case where even that release step
+# couldn't run (e.g. runner killed by GitHub).
+#
+# Also deletes orphan progress files (whose task is no longer claimed).
 
 on:
   schedule:
-    - cron: '17 * * * *'
+    - cron: '17 * * * *'      # offset from solve.yml's :00/:15/:30/:45
   workflow_dispatch:
 
 concurrency:
-  group: solve-tasks      # same group as solve-tasks.yml — don't run during a solve
+  group: cleanup
   cancel-in-progress: false
 
 permissions:
@@ -18,6 +24,7 @@ permissions:
 
 env:
   FPF_PROJECT: REZN
+  STALE_MIN: '65'
 
 jobs:
   cleanup:
@@ -28,83 +35,84 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Configure git identity
+      - name: Configure git
         run: |
           git config user.name  "fpf-cleanup[bot]"
           git config user.email "fpf-cleanup@users.noreply.github.com"
 
-      - name: Release stale claims and orphan progress files
-        id: cleanup
+      - name: Release stale claims and delete orphan progress files
+        env:
+          QUEUE: projects/${{ env.FPF_PROJECT }}/TASK_QUEUE.json
+          PROGRESS_DIR: projects/${{ env.FPF_PROJECT }}/progress
         run: |
           set -euo pipefail
-          NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-          export NOW
-
-          RESULT=$(python3 <<'PY'
+          python3 - <<'PY' > /tmp/cleanup_report.txt
           import json, os, datetime
           from pathlib import Path
 
-          project  = os.environ["FPF_PROJECT"]
-          now      = datetime.datetime.fromisoformat(os.environ["NOW"].replace("Z", "+00:00"))
-          max_age  = datetime.timedelta(minutes=65)
+          STALE_MIN = int(os.environ["STALE_MIN"])
+          QUEUE = Path(os.environ["QUEUE"])
+          PDIR = Path(os.environ["PROGRESS_DIR"])
 
-          queue_path = Path(f"projects/{project}/TASK_QUEUE.json")
-          q = json.loads(queue_path.read_text())
+          q = json.loads(QUEUE.read_text())
+          now = datetime.datetime.now(datetime.timezone.utc)
+          released, claimed_ids = [], set()
 
-          released = []
           for t in q["tasks"]:
               if t.get("status") != "claimed":
                   continue
-              claimed_at = t.get("claimed_at")
-              if not claimed_at:
+              ca = t.get("claimed_at")
+              if not ca:
                   continue
-              claimed_dt = datetime.datetime.fromisoformat(claimed_at.replace("Z", "+00:00"))
-              if (now - claimed_dt) > max_age:
-                  released.append(t["id"])
+              try:
+                  ca_dt = datetime.datetime.fromisoformat(ca.replace("Z", "+00:00"))
+              except Exception:
+                  continue
+              age_min = (now - ca_dt).total_seconds() / 60
+              if age_min > STALE_MIN:
+                  released.append((t["id"], t.get("claimed_by"), int(age_min)))
                   t["status"] = "ready"
-                  t.pop("claimed_by", None)
-                  t.pop("claimed_at", None)
+                  t["claimed_by"] = None
+                  t["claimed_at"] = None
+              else:
+                  claimed_ids.add(t["id"])
 
-          if released:
-              queue_path.write_text(json.dumps(q, indent=2) + "\n")
+          QUEUE.write_text(json.dumps(q, indent=2) + "\n")
 
-          # Delete orphan progress files (no matching claimed task)
-          claimed_ids = {t["id"] for t in q["tasks"] if t.get("status") == "claimed"}
-          progress_dir = Path(f"projects/{project}/progress")
           deleted = []
-          if progress_dir.is_dir():
-              for f in progress_dir.glob("*.json"):
+          if PDIR.is_dir():
+              for f in sorted(PDIR.glob("*.json")):
                   if f.stem not in claimed_ids:
                       f.unlink()
                       deleted.append(f.name)
 
-          print(json.dumps({"released": released, "deleted": deleted}))
+          print(f"released={len(released)}")
+          print(f"orphan_progress={len(deleted)}")
+          for tid, who, age in released:
+              print(f"  released {tid} (was {who}, age {age}m)")
+          for f in deleted:
+              print(f"  deleted progress/{f}")
           PY
-          )
+          cat /tmp/cleanup_report.txt
 
-          echo "Cleanup result: $RESULT"
-          RELEASED=$(echo "$RESULT" | python3 -c "import json,sys; d=json.load(sys.stdin); print(len(d['released']))")
-          DELETED=$(echo "$RESULT"  | python3 -c "import json,sys; d=json.load(sys.stdin); print(len(d['deleted']))")
-          echo "released=$RELEASED" >> "$GITHUB_OUTPUT"
-          echo "deleted=$DELETED"   >> "$GITHUB_OUTPUT"
-
-      - name: Commit and push if anything changed
-        if: steps.cleanup.outputs.released != '0' || steps.cleanup.outputs.deleted != '0'
+      - name: Commit cleanup
         run: |
           set -euo pipefail
-          git add "projects/${FPF_PROJECT}/TASK_QUEUE.json" \
-                  "projects/${FPF_PROJECT}/progress/" 2>/dev/null || true
-
-          git diff --cached --quiet && exit 0
-
-          git commit -m \
-            "cleanup: released=${{ steps.cleanup.outputs.released }} orphans=${{ steps.cleanup.outputs.deleted }}"
-
-          for attempt in 1 2 3; do
-            if git push origin HEAD:main; then exit 0; fi
+          git add -A "projects/${FPF_PROJECT}/"
+          if git diff --cached --quiet; then
+            echo "Nothing to clean up."
+            exit 0
+          fi
+          git commit -m "Hourly cleanup: release stale claims, drop orphan progress"
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then
+              echo "push OK on attempt $attempt"
+              exit 0
+            fi
             git pull --rebase origin main
             sleep $((attempt * 2))
           done
+          echo "Could not push cleanup commit after 5 attempts."
           exit 1
 
       - name: Summary
@@ -112,6 +120,8 @@ jobs:
         run: |
           {
             echo "## Cleanup"
-            echo "- stale claims released: \`${{ steps.cleanup.outputs.released }}\`"
-            echo "- orphan progress files deleted: \`${{ steps.cleanup.outputs.deleted }}\`"
+            echo ""
+            echo '```'
+            cat /tmp/cleanup_report.txt 2>/dev/null || echo "(no report)"
+            echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
