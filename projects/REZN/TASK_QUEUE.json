@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-07T07:56:18.446929Z",
+  "updated_at": "2026-05-07T07:57:56.527033Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -528,12 +528,12 @@
       "depends_on": [
         "g050_t0200"
       ],
-      "status": "claimed",
+      "status": "bailed",
       "checkpoint": null,
-      "result": null,
-      "note": "\u03b3-sweep root: warm-start from seed (\u03b3=0.5, \u03c4=2). fig4B reports 1-R\u00b2=0.133 / slope=0.51 but no per-task checkpoint was preserved. Re-run produces the checkpoint that unblocks the \u03b3=0.25 \u03c4-sweep.",
-      "claimed_by": "local-claude-test",
-      "claimed_at": "2026-05-07T07:56:18.445190Z"
+      "result": {
+        "reason": "||F||inf=1.241e-01 > bail threshold 1e-04"
+      },
+      "note": "\u03b3-sweep root: warm-start from seed (\u03b3=0.5, \u03c4=2). fig4B reports 1-R\u00b2=0.133 / slope=0.51 but no per-task checkpoint was preserved. Re-run produces the checkpoint that unblocks the \u03b3=0.25 \u03c4-sweep."
     },
     {
       "id": "g025_t0150",
