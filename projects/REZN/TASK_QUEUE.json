@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-07T17:25:49.350292Z",
+  "updated_at": "2026-05-07T18:22:54.209626Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -24,9 +24,7 @@
       "gamma": 1.0,
       "tau": 0.3,
       "test": true,
-      "status": "claimed",
-      "claimed_by": "gha-25510909045-test_ci_smoke",
-      "claimed_at": "2026-05-07T17:14:01Z"
+      "status": "ready"
     },
     {
       "id": "g050_t0030",
@@ -515,11 +513,9 @@
       "depends_on": [
         "g400_t0700"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
-      "result": null,
-      "claimed_by": "gha-25510909045-g400_t1000",
-      "claimed_at": "2026-05-07T17:14:01Z"
+      "result": null
     },
     {
       "id": "g400_t1500",
@@ -621,12 +617,10 @@
         "g400_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "\u03b3-sweep root: warm-start from either \u03b3=1.0 or \u03b3=4.0 at \u03c4=2 (whichever exists). fig4B reports 1-R\u00b2=0.025 / slope=0.59. Re-run produces the checkpoint that unblocks the \u03b3=2.0 \u03c4-sweep.",
-      "claimed_by": "gha-25510909045-g200_t0200",
-      "claimed_at": "2026-05-07T17:14:01Z"
+      "note": "\u03b3-sweep root: warm-start from either \u03b3=1.0 or \u03b3=4.0 at \u03c4=2 (whichever exists). fig4B reports 1-R\u00b2=0.025 / slope=0.59. Re-run produces the checkpoint that unblocks the \u03b3=2.0 \u03c4-sweep."
     },
     {
       "id": "g200_t0150",
