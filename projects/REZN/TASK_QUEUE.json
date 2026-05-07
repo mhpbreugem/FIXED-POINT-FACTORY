@@ -689,10 +689,12 @@
         10.0
       ],
       "depends_on": [],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
-      "note": "No-learning Fig R2 task. Independent of REE. Solve no-learning market clearing under v ~ LogNormal(0,1), measure weighted 1-R\u00b2 at each \u03c4. No warm-start needed. Output: results/full_ree/figR2_g050_pgfplots.tex."
+      "note": "No-learning Fig R2 task. Independent of REE. Solve no-learning market clearing under v ~ LogNormal(0,1), measure weighted 1-R\u00b2 at each \u03c4. No warm-start needed. Output: results/full_ree/figR2_g050_pgfplots.tex.",
+      "claimed_by": "gha-25511468996-figR2_lognormal_g050",
+      "claimed_at": "2026-05-07T17:25:33Z"
     },
     {
       "id": "figR2_lognormal_g100",
