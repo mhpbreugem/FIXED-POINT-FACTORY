@@ -627,10 +627,12 @@
         "g400_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
-      "note": "\u03b3-sweep root: warm-start from either \u03b3=1.0 or \u03b3=4.0 at \u03c4=2 (whichever exists). fig4B reports 1-R\u00b2=0.025 / slope=0.59. Re-run produces the checkpoint that unblocks the \u03b3=2.0 \u03c4-sweep."
+      "note": "\u03b3-sweep root: warm-start from either \u03b3=1.0 or \u03b3=4.0 at \u03c4=2 (whichever exists). fig4B reports 1-R\u00b2=0.025 / slope=0.59. Re-run produces the checkpoint that unblocks the \u03b3=2.0 \u03c4-sweep.",
+      "claimed_by": "gha-25516025917-g200_t0200",
+      "claimed_at": "2026-05-07T18:59:40Z"
     },
     {
       "id": "g200_t0150",
@@ -693,10 +695,12 @@
         10.0
       ],
       "depends_on": [],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
-      "note": "No-learning Fig R2 task. Independent of REE. Solve no-learning market clearing under v ~ LogNormal(0,1), measure weighted 1-R\u00b2 at each \u03c4. No warm-start needed. Output: results/full_ree/figR2_g050_pgfplots.tex."
+      "note": "No-learning Fig R2 task. Independent of REE. Solve no-learning market clearing under v ~ LogNormal(0,1), measure weighted 1-R\u00b2 at each \u03c4. No warm-start needed. Output: results/full_ree/figR2_g050_pgfplots.tex.",
+      "claimed_by": "gha-25516025917-figR2_lognormal_g050",
+      "claimed_at": "2026-05-07T18:59:40Z"
     },
     {
       "id": "figR2_lognormal_g100",
@@ -715,10 +719,12 @@
         10.0
       ],
       "depends_on": [],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
-      "note": "Independent task. See figR2_lognormal_g050."
+      "note": "Independent task. See figR2_lognormal_g050.",
+      "claimed_by": "gha-25516025917-figR2_lognormal_g100",
+      "claimed_at": "2026-05-07T18:59:40Z"
     },
     {
       "id": "figR2_lognormal_g400",
@@ -737,10 +743,12 @@
         10.0
       ],
       "depends_on": [],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
-      "note": "Independent task. See figR2_lognormal_g050."
+      "note": "Independent task. See figR2_lognormal_g050.",
+      "claimed_by": "gha-25516025917-figR2_lognormal_g400",
+      "claimed_at": "2026-05-07T18:59:40Z"
     }
   ],
   "summary": {
