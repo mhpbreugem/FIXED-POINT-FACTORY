@@ -24,7 +24,9 @@
       "gamma": 1.0,
       "tau": 0.3,
       "test": true,
-      "status": "ready"
+      "status": "claimed",
+      "claimed_by": "gha-25514519145-test_ci_smoke",
+      "claimed_at": "2026-05-07T18:28:34Z"
     },
     {
       "id": "g050_t0030",
