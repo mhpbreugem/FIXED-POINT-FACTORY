@@ -1,0 +1,9 @@
+{
+  "task_id": "requeue_bailed",
+  "worker_id": "gha-25527846854-requeue_bailed",
+  "started_at": "2026-05-07T23:33:28Z",
+  "last_update": "2026-05-07T23:33:28Z",
+  "iter": null,
+  "ftol": null,
+  "extra": {}
+}
