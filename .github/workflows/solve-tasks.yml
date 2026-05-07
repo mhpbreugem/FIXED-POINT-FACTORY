@@ -159,7 +159,13 @@ jobs:
       - name: Install Python deps
         run: |
           python3 -m pip install --upgrade pip
-          python3 -m pip install numpy scipy numba
+          # Pin numba to a version with pre-built manylinux wheels for Python 3.11.
+          # --only-binary ensures pip never tries to compile llvmlite from source
+          # (source builds take hours and hang silently on GH Actions runners).
+          python3 -m pip install --only-binary=:all: \
+            "numpy>=1.24,<3" \
+            "scipy>=1.10" \
+            "numba>=0.57,<0.61"
 
       - name: Clone REZN solver source
         run: |
