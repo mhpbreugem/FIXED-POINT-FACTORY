@@ -165,9 +165,27 @@ jobs:
         run: |
           git clone --depth 1 https://github.com/mhpbreugem/REZN.git "$HOME/rezn-source"
 
+      - name: Verify REZN imports
+        env:
+          REZN_SRC: ${{ env.HOME }}/rezn-source
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import sys, os
+          rezn_src = os.environ["REZN_SRC"]
+          sys.path.insert(0, rezn_src)
+          print(f"REZN_SRC={rezn_src}")
+          print("importing contour_K3_halo (triggers numba JIT) ...")
+          from code.contour_K3_halo import init_no_learning_K3, phi_K3_halo_smooth
+          print("importing halo, staggered, f128 ...")
+          from code.halo import extract_inner, replace_inner
+          from code.staggered import staggered_solve
+          from code.f128 import revelation_deficit_f128
+          print("all REZN imports OK")
+          PY
+
       - name: Run solver
         env:
-          REZN_SRC: ${{ runner.temp }}/../rezn-source
           PYTHONUNBUFFERED: '1'
         run: |
           set -euo pipefail
