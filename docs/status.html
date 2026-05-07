@@ -64,7 +64,7 @@
 <div class="controls">
   <input type="text" id="filter" placeholder="filter id, status, gamma…" oninput="render()">
   <button onclick="loadAll()">refresh now</button>
-  <span class="small" id="autorefresh">auto-refresh every 60s</span>
+  <span class="small" id="autorefresh">auto-refresh every 30s</span>
 </div>
 <table id="tasks">
   <thead>
@@ -287,7 +287,7 @@
   }
 
   loadAll();
-  setInterval(loadAll, 60000);
+  setInterval(loadAll, 30000);
 </script>
 </body>
 </html>

@@ -228,7 +228,7 @@ def main() -> None:
         print("[solve] TEST TASK — smoke-test mode, skipping full solve", flush=True)
         reporter = ProgressReporter(
             project=args.project, task_id=args.task_id,
-            worker_id=args.worker_id, branch=args.branch, interval=60,
+            worker_id=args.worker_id, branch=args.branch, interval=30,
             repo_root=ROOT,
         )
         reporter.start()
@@ -263,7 +263,7 @@ def main() -> None:
     # --- progress reporter ------------------------------------------------
     reporter = ProgressReporter(
         project=args.project, task_id=args.task_id,
-        worker_id=args.worker_id, branch=args.branch, interval=60,
+        worker_id=args.worker_id, branch=args.branch, interval=30,
         repo_root=ROOT,
     )
     reporter.start()
@@ -309,7 +309,7 @@ def main() -> None:
             presmooth_steps=args.presmooth,
             presmooth_alpha=args.presmooth_alpha,
             halo_update="no_learning",
-            heartbeat_s=60.0,
+            heartbeat_s=30.0,
         )
 
         # Final diagnostics

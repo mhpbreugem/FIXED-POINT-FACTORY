@@ -115,13 +115,13 @@
       "tau": 2.0,
       "depends_on": [],
       "status": "done",
-      "checkpoint": "results/full_ree/posterior_v3_G20_umax5_notrim_mp300.json",
+      "checkpoint": "results/full_ree/seed_g050_t0200_3d.npz",
       "result": {
         "1-R2": 0.085,
         "slope": 0.543,
         "n_triples": 8000
       },
-      "note": "this is the seed at mp300; downstream tasks at mp50 use it as warm-start"
+      "note": "seed at mp300 converted to 3D .npz; downstream tasks warm-start from here"
     },
     {
       "id": "g050_t0300",
@@ -519,13 +519,14 @@
       "gamma": 4.0,
       "tau": 10.0,
       "depends_on": [
-        "g400_t0700"
+        "g400_t0700",
+        "g050_t0200"
       ],
-      "status": "bailed",
+      "deps_satisfy": "any",
+      "status": "ready",
       "checkpoint": null,
-      "result": {
-        "reason": "||F||inf=5.130e-01 > bail threshold 1e-04"
-      }
+      "result": null,
+      "note": "Previously bailed from cold start. Now warm-starts from g400_t0700 or g050_t0200 seed (any suffices)."
     },
     {
       "id": "g400_t1500",
@@ -545,12 +546,10 @@
       "depends_on": [
         "g050_t0200"
       ],
-      "status": "bailed",
+      "status": "ready",
       "checkpoint": null,
-      "result": {
-        "reason": "||F||inf=1.241e-01 > bail threshold 1e-04"
-      },
-      "note": "\u03b3-sweep root: warm-start from seed (\u03b3=0.5, \u03c4=2). fig4B reports 1-R\u00b2=0.133 / slope=0.51 but no per-task checkpoint was preserved. Re-run produces the checkpoint that unblocks the \u03b3=0.25 \u03c4-sweep."
+      "result": null,
+      "note": "\u03b3-sweep root: warm-start from g050_t0200 seed (now has 3D .npz). Previously bailed with 2D checkpoint. fig4B: 1-R\u00b2=0.133 / slope=0.51."
     },
     {
       "id": "g025_t0150",
@@ -624,13 +623,14 @@
       "tau": 2.0,
       "depends_on": [
         "g100_t0200",
-        "g400_t0200"
+        "g400_t0200",
+        "g050_t0200"
       ],
       "deps_satisfy": "any",
       "status": "claimed",
       "checkpoint": null,
       "result": null,
-      "note": "\u03b3-sweep root: warm-start from either \u03b3=1.0 or \u03b3=4.0 at \u03c4=2 (whichever exists). fig4B reports 1-R\u00b2=0.025 / slope=0.59. Re-run produces the checkpoint that unblocks the \u03b3=2.0 \u03c4-sweep.",
+      "note": "\u03b3-sweep root: warm-start from nearby \u03b3 at \u03c4=2 (g100, g400, or g050 seed \u2014 any will do). fig4B: 1-R\u00b2=0.025 / slope=0.59.",
       "claimed_by": "gha-25516025917-g200_t0200",
       "claimed_at": "2026-05-07T18:59:40Z"
     },
@@ -679,6 +679,15 @@
       "result": null
     },
     {
+      "id": "requeue_bailed",
+      "kind": "requeue_bailed",
+      "depends_on": [],
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "note": "Meta-task: active whenever any task is bailed. Scans bailed tasks, selects the nearest solved checkpoint (by (γ,τ) distance), constructs a warm-start .npz for each bailed task, resets their status to ready, and updates their checkpoint field. Re-runs automatically if new bails accumulate. Currently bailed: g050_t0400, g100_t0500."
+    },
+    {
       "id": "figR2_lognormal_g050",
       "kind": "no_learning_lognormal",
       "gamma": 0.5,
@@ -695,12 +704,10 @@
         10.0
       ],
       "depends_on": [],
-      "status": "claimed",
+      "status": "skip",
       "checkpoint": null,
       "result": null,
-      "note": "No-learning Fig R2 task. Independent of REE. Solve no-learning market clearing under v ~ LogNormal(0,1), measure weighted 1-R\u00b2 at each \u03c4. No warm-start needed. Output: results/full_ree/figR2_g050_pgfplots.tex.",
-      "claimed_by": "gha-25516025917-figR2_lognormal_g050",
-      "claimed_at": "2026-05-07T18:59:40Z"
+      "note": "Skipped: lognormal no-learning solver not implemented."
     },
     {
       "id": "figR2_lognormal_g100",
@@ -719,12 +726,10 @@
         10.0
       ],
       "depends_on": [],
-      "status": "bailed",
+      "status": "skip",
       "checkpoint": null,
-      "result": {
-        "reason": "||F||inf=4.680e-02 > bail threshold 1e-04"
-      },
-      "note": "Independent task. See figR2_lognormal_g050."
+      "result": null,
+      "note": "Skipped: lognormal no-learning solver not implemented."
     },
     {
       "id": "figR2_lognormal_g400",
@@ -743,31 +748,28 @@
         10.0
       ],
       "depends_on": [],
-      "status": "claimed",
+      "status": "skip",
       "checkpoint": null,
       "result": null,
-      "note": "Independent task. See figR2_lognormal_g050.",
-      "claimed_by": "gha-25516025917-figR2_lognormal_g400",
-      "claimed_at": "2026-05-07T18:59:40Z"
+      "note": "Skipped: lognormal no-learning solver not implemented."
     }
   ],
   "summary": {
-    "total": 51,
+    "total": 52,
     "done": 25,
-    "ready": 6,
+    "ready": 4,
     "blocked": 18,
-    "bailed": 2
+    "bailed": 1,
+    "skip": 3
   },
   "fanout": {
     "ready_tasks": [
       "g400_t1000",
       "g025_t0200",
       "g200_t0200",
-      "figR2_lognormal_g050",
-      "figR2_lognormal_g100",
-      "figR2_lognormal_g400"
+      "requeue_bailed"
     ],
-    "rationale": "With a strict linear \u03c4-chain, only one task is ever ready and N parallel workers all collide on it. To enable parallel work, the queue exposes 5 independent ready tasks: the head of the \u03b3=4 \u03c4-walk (g400_t1000), two \u03b3-sweep roots that warm-start directly from the seed (g025_t0200, g200_t0200), and three lognormal no-learning tasks that need no REE warm-start at all. Each new \u03c4-walk completion unblocks its successor; the lognormal tasks are independent and self-contained."
+    "rationale": "Three computation tasks plus one intervention task. g400_t1000 (\u03b3=4 \u03c4-walk tail, warm-starts from g400_t0700 or g050_t0200 seed), g025_t0200 (\u03b3=0.25 sweep root, warm-starts from g050_t0200 seed), g200_t0200 (\u03b3=2.0 sweep root, warm-starts from g100/g400/g050 at \u03c4=2). requeue_bailed is always ready when any bailed task exists and produces revised warm-starts for them."
   },
   "deps_semantics": {
     "default": "all",
