@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-06T00:00:00Z",
+  "updated_at": "2026-05-07T07:56:18.446929Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -21,413 +21,682 @@
   "tasks": [
     {
       "id": "g050_t0030",
-      "gamma": 0.5, "tau": 0.3,
-      "depends_on": ["g050_t0050"],
+      "gamma": 0.5,
+      "tau": 0.3,
+      "depends_on": [
+        "g050_t0050"
+      ],
       "status": "done",
       "checkpoint": "results/full_ree/task3_g050_t0030_mp50.json",
-      "result": {"1-R2": 0.037, "slope": null, "n_triples": 8000}
+      "result": {
+        "1-R2": 0.037,
+        "slope": null,
+        "n_triples": 8000
+      }
     },
     {
       "id": "g050_t0050",
-      "gamma": 0.5, "tau": 0.5,
-      "depends_on": ["g050_t0080"],
+      "gamma": 0.5,
+      "tau": 0.5,
+      "depends_on": [
+        "g050_t0080"
+      ],
       "status": "done",
       "checkpoint": "results/full_ree/task3_g050_t0050_mp50.json",
-      "result": {"1-R2": 0.038, "slope": null, "n_triples": 8000}
+      "result": {
+        "1-R2": 0.038,
+        "slope": null,
+        "n_triples": 8000
+      }
     },
     {
       "id": "g050_t0080",
-      "gamma": 0.5, "tau": 0.8,
-      "depends_on": ["g050_t0100"],
+      "gamma": 0.5,
+      "tau": 0.8,
+      "depends_on": [
+        "g050_t0100"
+      ],
       "status": "done",
       "checkpoint": "results/full_ree/task3_g050_t0080_mp50.json",
-      "result": {"1-R2": 0.047, "slope": null, "n_triples": 8000}
+      "result": {
+        "1-R2": 0.047,
+        "slope": null,
+        "n_triples": 8000
+      }
     },
     {
       "id": "g050_t0100",
-      "gamma": 0.5, "tau": 1.0,
-      "depends_on": ["g050_t0150"],
+      "gamma": 0.5,
+      "tau": 1.0,
+      "depends_on": [
+        "g050_t0150"
+      ],
       "status": "done",
       "checkpoint": "results/full_ree/task3_g050_t0100_mp50.json",
-      "result": {"1-R2": 0.052, "slope": null, "n_triples": 8000}
+      "result": {
+        "1-R2": 0.052,
+        "slope": null,
+        "n_triples": 8000
+      }
     },
     {
       "id": "g050_t0150",
-      "gamma": 0.5, "tau": 1.5,
-      "depends_on": ["g050_t0200"],
+      "gamma": 0.5,
+      "tau": 1.5,
+      "depends_on": [
+        "g050_t0200"
+      ],
       "status": "done",
       "checkpoint": "results/full_ree/task3_g050_t0150_mp50.json",
-      "result": {"1-R2": 0.064, "slope": null, "n_triples": 8000}
+      "result": {
+        "1-R2": 0.064,
+        "slope": null,
+        "n_triples": 8000
+      }
     },
     {
       "id": "g050_t0200",
-      "gamma": 0.5, "tau": 2.0,
+      "gamma": 0.5,
+      "tau": 2.0,
       "depends_on": [],
       "status": "done",
       "checkpoint": "results/full_ree/posterior_v3_G20_umax5_notrim_mp300.json",
-      "result": {"1-R2": 0.085, "slope": 0.543, "n_triples": 8000},
+      "result": {
+        "1-R2": 0.085,
+        "slope": 0.543,
+        "n_triples": 8000
+      },
       "note": "this is the seed at mp300; downstream tasks at mp50 use it as warm-start"
     },
     {
       "id": "g050_t0300",
-      "gamma": 0.5, "tau": 3.0,
-      "depends_on": ["g050_t0200"],
+      "gamma": 0.5,
+      "tau": 3.0,
+      "depends_on": [
+        "g050_t0200"
+      ],
       "status": "done",
       "checkpoint": "results/full_ree/task3_g050_t0300_mp50.json",
-      "result": {"1-R2": 0.138, "slope": null, "n_triples": 8000}
+      "result": {
+        "1-R2": 0.138,
+        "slope": null,
+        "n_triples": 8000
+      }
     },
     {
       "id": "g050_t0400",
-      "gamma": 0.5, "tau": 4.0,
-      "depends_on": ["g050_t0300"],
+      "gamma": 0.5,
+      "tau": 4.0,
+      "depends_on": [
+        "g050_t0300"
+      ],
       "status": "bailed",
       "checkpoint": null,
-      "result": {"reason": "boundary issue at G=20 UMAX=5; posteriors pin at 0/1 in tail rows. Accepted 7-point γ=0.5 curve."}
+      "result": {
+        "reason": "boundary issue at G=20 UMAX=5; posteriors pin at 0/1 in tail rows. Accepted 7-point \u03b3=0.5 curve."
+      }
     },
     {
       "id": "g050_t0500",
-      "gamma": 0.5, "tau": 5.0,
-      "depends_on": ["g050_t0400"],
+      "gamma": 0.5,
+      "tau": 5.0,
+      "depends_on": [
+        "g050_t0400"
+      ],
       "status": "blocked",
       "checkpoint": null,
       "result": null
     },
     {
       "id": "g050_t0700",
-      "gamma": 0.5, "tau": 7.0,
-      "depends_on": ["g050_t0500"],
+      "gamma": 0.5,
+      "tau": 7.0,
+      "depends_on": [
+        "g050_t0500"
+      ],
       "status": "blocked",
       "checkpoint": null,
       "result": null
     },
     {
       "id": "g050_t1000",
-      "gamma": 0.5, "tau": 10.0,
-      "depends_on": ["g050_t0700"],
+      "gamma": 0.5,
+      "tau": 10.0,
+      "depends_on": [
+        "g050_t0700"
+      ],
       "status": "blocked",
       "checkpoint": null,
       "result": null
     },
     {
       "id": "g050_t1500",
-      "gamma": 0.5, "tau": 15.0,
-      "depends_on": ["g050_t1000"],
+      "gamma": 0.5,
+      "tau": 15.0,
+      "depends_on": [
+        "g050_t1000"
+      ],
       "status": "blocked",
       "checkpoint": null,
       "result": null
     },
-
     {
       "id": "g100_t0030",
-      "gamma": 1.0, "tau": 0.3,
-      "depends_on": ["g100_t0050"],
+      "gamma": 1.0,
+      "tau": 0.3,
+      "depends_on": [
+        "g100_t0050"
+      ],
       "status": "done",
       "checkpoint": "results/full_ree/task3_g100_t0030_mp50.json",
-      "result": {"1-R2": 0.030, "slope": null, "n_triples": 8000}
+      "result": {
+        "1-R2": 0.03,
+        "slope": null,
+        "n_triples": 8000
+      }
     },
     {
       "id": "g100_t0050",
-      "gamma": 1.0, "tau": 0.5,
-      "depends_on": ["g100_t0080"],
+      "gamma": 1.0,
+      "tau": 0.5,
+      "depends_on": [
+        "g100_t0080"
+      ],
       "status": "done",
       "checkpoint": "results/full_ree/task3_g100_t0050_mp50.json",
-      "result": {"1-R2": 0.026, "slope": null, "n_triples": 8000}
+      "result": {
+        "1-R2": 0.026,
+        "slope": null,
+        "n_triples": 8000
+      }
     },
     {
       "id": "g100_t0080",
-      "gamma": 1.0, "tau": 0.8,
-      "depends_on": ["g100_t0100"],
+      "gamma": 1.0,
+      "tau": 0.8,
+      "depends_on": [
+        "g100_t0100"
+      ],
       "status": "done",
       "checkpoint": "results/full_ree/task3_g100_t0080_mp50.json",
-      "result": {"1-R2": 0.031, "slope": null, "n_triples": 8000}
+      "result": {
+        "1-R2": 0.031,
+        "slope": null,
+        "n_triples": 8000
+      }
     },
     {
       "id": "g100_t0100",
-      "gamma": 1.0, "tau": 1.0,
-      "depends_on": ["g100_t0150"],
+      "gamma": 1.0,
+      "tau": 1.0,
+      "depends_on": [
+        "g100_t0150"
+      ],
       "status": "done",
       "checkpoint": "results/full_ree/task3_g100_t0100_mp50.json",
-      "result": {"1-R2": 0.033, "slope": null, "n_triples": 8000}
+      "result": {
+        "1-R2": 0.033,
+        "slope": null,
+        "n_triples": 8000
+      }
     },
     {
       "id": "g100_t0150",
-      "gamma": 1.0, "tau": 1.5,
-      "depends_on": ["g100_t0200"],
+      "gamma": 1.0,
+      "tau": 1.5,
+      "depends_on": [
+        "g100_t0200"
+      ],
       "status": "done",
       "checkpoint": "results/full_ree/task3_g100_t0150_mp50.json",
-      "result": {"1-R2": 0.040, "slope": null, "n_triples": 8000}
+      "result": {
+        "1-R2": 0.04,
+        "slope": null,
+        "n_triples": 8000
+      }
     },
     {
       "id": "g100_t0200",
-      "gamma": 1.0, "tau": 2.0,
-      "depends_on": ["g050_t0200"],
+      "gamma": 1.0,
+      "tau": 2.0,
+      "depends_on": [
+        "g050_t0200"
+      ],
       "status": "done",
       "checkpoint": "results/full_ree/task3_g100_t0200_mp50.json",
-      "result": {"1-R2": 0.0467, "slope": 0.550, "n_triples": 8000}
+      "result": {
+        "1-R2": 0.0467,
+        "slope": 0.55,
+        "n_triples": 8000
+      }
     },
     {
       "id": "g100_t0300",
-      "gamma": 1.0, "tau": 3.0,
-      "depends_on": ["g100_t0200"],
+      "gamma": 1.0,
+      "tau": 3.0,
+      "depends_on": [
+        "g100_t0200"
+      ],
       "status": "done",
       "checkpoint": "results/full_ree/task3_g100_t0300_mp50.json",
-      "result": {"1-R2": 0.066, "slope": null, "n_triples": 8000}
+      "result": {
+        "1-R2": 0.066,
+        "slope": null,
+        "n_triples": 8000
+      }
     },
     {
       "id": "g100_t0400",
-      "gamma": 1.0, "tau": 4.0,
-      "depends_on": ["g100_t0300"],
+      "gamma": 1.0,
+      "tau": 4.0,
+      "depends_on": [
+        "g100_t0300"
+      ],
       "status": "done",
       "checkpoint": "results/full_ree/task3_g100_t0400_mp50.json",
-      "result": {"1-R2": 0.090, "slope": null, "n_triples": 8000, "note": "marginal: F_max ~ 2.3e-5"}
+      "result": {
+        "1-R2": 0.09,
+        "slope": null,
+        "n_triples": 8000,
+        "note": "marginal: F_max ~ 2.3e-5"
+      }
     },
     {
       "id": "g100_t0500",
-      "gamma": 1.0, "tau": 5.0,
-      "depends_on": ["g100_t0400"],
+      "gamma": 1.0,
+      "tau": 5.0,
+      "depends_on": [
+        "g100_t0400"
+      ],
       "status": "bailed",
       "checkpoint": null,
-      "result": {"reason": "did not converge below ||F||=1e-3 at G=20"}
+      "result": {
+        "reason": "did not converge below ||F||=1e-3 at G=20"
+      }
     },
     {
       "id": "g100_t0700",
-      "gamma": 1.0, "tau": 7.0,
-      "depends_on": ["g100_t0500"],
+      "gamma": 1.0,
+      "tau": 7.0,
+      "depends_on": [
+        "g100_t0500"
+      ],
       "status": "blocked",
       "checkpoint": null,
       "result": null
     },
     {
       "id": "g100_t1000",
-      "gamma": 1.0, "tau": 10.0,
-      "depends_on": ["g100_t0700"],
+      "gamma": 1.0,
+      "tau": 10.0,
+      "depends_on": [
+        "g100_t0700"
+      ],
       "status": "blocked",
       "checkpoint": null,
       "result": null
     },
     {
       "id": "g100_t1500",
-      "gamma": 1.0, "tau": 15.0,
-      "depends_on": ["g100_t1000"],
+      "gamma": 1.0,
+      "tau": 15.0,
+      "depends_on": [
+        "g100_t1000"
+      ],
       "status": "blocked",
       "checkpoint": null,
       "result": null
     },
-
     {
       "id": "g400_t0030",
-      "gamma": 4.0, "tau": 0.3,
-      "depends_on": ["g400_t0050"],
+      "gamma": 4.0,
+      "tau": 0.3,
+      "depends_on": [
+        "g400_t0050"
+      ],
       "status": "done",
       "checkpoint": "results/full_ree/task3_g400_t0030_mp50.json",
-      "result": {"1-R2": null, "slope": null, "n_triples": 8000, "note": "redo of original Terminal-3 run"}
+      "result": {
+        "1-R2": null,
+        "slope": null,
+        "n_triples": 8000,
+        "note": "redo of original Terminal-3 run"
+      }
     },
     {
       "id": "g400_t0050",
-      "gamma": 4.0, "tau": 0.5,
-      "depends_on": ["g400_t0080"],
+      "gamma": 4.0,
+      "tau": 0.5,
+      "depends_on": [
+        "g400_t0080"
+      ],
       "status": "done",
       "checkpoint": "results/full_ree/task3_g400_t0050_mp50.json",
-      "result": {"1-R2": null, "slope": null, "n_triples": 8000}
+      "result": {
+        "1-R2": null,
+        "slope": null,
+        "n_triples": 8000
+      }
     },
     {
       "id": "g400_t0080",
-      "gamma": 4.0, "tau": 0.8,
-      "depends_on": ["g400_t0100"],
+      "gamma": 4.0,
+      "tau": 0.8,
+      "depends_on": [
+        "g400_t0100"
+      ],
       "status": "done",
       "checkpoint": "results/full_ree/task3_g400_t0080_mp50.json",
-      "result": {"1-R2": null, "slope": null, "n_triples": 8000}
+      "result": {
+        "1-R2": null,
+        "slope": null,
+        "n_triples": 8000
+      }
     },
     {
       "id": "g400_t0100",
-      "gamma": 4.0, "tau": 1.0,
-      "depends_on": ["g400_t0150"],
+      "gamma": 4.0,
+      "tau": 1.0,
+      "depends_on": [
+        "g400_t0150"
+      ],
       "status": "done",
       "checkpoint": "results/full_ree/task3_g400_t0100_mp50.json",
-      "result": {"1-R2": null, "slope": null, "n_triples": 8000}
+      "result": {
+        "1-R2": null,
+        "slope": null,
+        "n_triples": 8000
+      }
     },
     {
       "id": "g400_t0150",
-      "gamma": 4.0, "tau": 1.5,
-      "depends_on": ["g400_t0200"],
+      "gamma": 4.0,
+      "tau": 1.5,
+      "depends_on": [
+        "g400_t0200"
+      ],
       "status": "done",
       "checkpoint": "results/full_ree/task3_g400_t0150_mp50.json",
-      "result": {"1-R2": null, "slope": null, "n_triples": 8000}
+      "result": {
+        "1-R2": null,
+        "slope": null,
+        "n_triples": 8000
+      }
     },
     {
       "id": "g400_t0200",
-      "gamma": 4.0, "tau": 2.0,
-      "depends_on": ["g050_t0200"],
+      "gamma": 4.0,
+      "tau": 2.0,
+      "depends_on": [
+        "g050_t0200"
+      ],
       "status": "done",
       "checkpoint": "results/full_ree/task3_g400_t0200_mp50.json",
-      "result": {"1-R2": 0.0163, "slope": 0.605, "n_triples": 8000, "note": "from γ-sweep at τ=2 (Task 2)"}
+      "result": {
+        "1-R2": 0.0163,
+        "slope": 0.605,
+        "n_triples": 8000,
+        "note": "from \u03b3-sweep at \u03c4=2 (Task 2)"
+      }
     },
     {
       "id": "g400_t0300",
-      "gamma": 4.0, "tau": 3.0,
-      "depends_on": ["g400_t0200"],
+      "gamma": 4.0,
+      "tau": 3.0,
+      "depends_on": [
+        "g400_t0200"
+      ],
       "status": "done",
       "checkpoint": "results/full_ree/task3_g400_t0300_mp50.json",
-      "result": {"1-R2": null, "slope": null, "n_triples": 8000}
+      "result": {
+        "1-R2": null,
+        "slope": null,
+        "n_triples": 8000
+      }
     },
     {
       "id": "g400_t0400",
-      "gamma": 4.0, "tau": 4.0,
-      "depends_on": ["g400_t0300"],
+      "gamma": 4.0,
+      "tau": 4.0,
+      "depends_on": [
+        "g400_t0300"
+      ],
       "status": "done",
       "checkpoint": "results/full_ree/task3_g400_t0400_mp50.json",
-      "result": {"1-R2": null, "slope": null, "n_triples": 8000}
+      "result": {
+        "1-R2": null,
+        "slope": null,
+        "n_triples": 8000
+      }
     },
     {
       "id": "g400_t0500",
-      "gamma": 4.0, "tau": 5.0,
-      "depends_on": ["g400_t0400"],
+      "gamma": 4.0,
+      "tau": 5.0,
+      "depends_on": [
+        "g400_t0400"
+      ],
       "status": "done",
       "checkpoint": "results/full_ree/task3_g400_t0500_mp50.json",
-      "result": {"1-R2": null, "slope": null, "n_triples": 8000}
+      "result": {
+        "1-R2": null,
+        "slope": null,
+        "n_triples": 8000
+      }
     },
     {
       "id": "g400_t0700",
-      "gamma": 4.0, "tau": 7.0,
-      "depends_on": ["g400_t0500"],
+      "gamma": 4.0,
+      "tau": 7.0,
+      "depends_on": [
+        "g400_t0500"
+      ],
       "status": "done",
       "checkpoint": "results/full_ree/task3_g400_t0700_mp50.json",
-      "result": {"1-R2": null, "slope": null, "n_triples": 8000}
+      "result": {
+        "1-R2": null,
+        "slope": null,
+        "n_triples": 8000
+      }
     },
     {
       "id": "g400_t1000",
-      "gamma": 4.0, "tau": 10.0,
-      "depends_on": ["g400_t0700"],
+      "gamma": 4.0,
+      "tau": 10.0,
+      "depends_on": [
+        "g400_t0700"
+      ],
       "status": "ready",
       "checkpoint": null,
       "result": null
     },
     {
       "id": "g400_t1500",
-      "gamma": 4.0, "tau": 15.0,
-      "depends_on": ["g400_t1000"],
+      "gamma": 4.0,
+      "tau": 15.0,
+      "depends_on": [
+        "g400_t1000"
+      ],
       "status": "blocked",
       "checkpoint": null,
       "result": null
     },
-
     {
       "id": "g025_t0200",
-      "gamma": 0.25, "tau": 2.0,
-      "depends_on": ["g050_t0200"],
-      "status": "ready",
+      "gamma": 0.25,
+      "tau": 2.0,
+      "depends_on": [
+        "g050_t0200"
+      ],
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
-      "note": "γ-sweep root: warm-start from seed (γ=0.5, τ=2). fig4B reports 1-R²=0.133 / slope=0.51 but no per-task checkpoint was preserved. Re-run produces the checkpoint that unblocks the γ=0.25 τ-sweep."
+      "note": "\u03b3-sweep root: warm-start from seed (\u03b3=0.5, \u03c4=2). fig4B reports 1-R\u00b2=0.133 / slope=0.51 but no per-task checkpoint was preserved. Re-run produces the checkpoint that unblocks the \u03b3=0.25 \u03c4-sweep.",
+      "claimed_by": "local-claude-test",
+      "claimed_at": "2026-05-07T07:56:18.445190Z"
     },
     {
       "id": "g025_t0150",
-      "gamma": 0.25, "tau": 1.5,
-      "depends_on": ["g025_t0200"],
+      "gamma": 0.25,
+      "tau": 1.5,
+      "depends_on": [
+        "g025_t0200"
+      ],
       "status": "blocked",
       "checkpoint": null,
       "result": null
     },
     {
       "id": "g025_t0100",
-      "gamma": 0.25, "tau": 1.0,
-      "depends_on": ["g025_t0150"],
+      "gamma": 0.25,
+      "tau": 1.0,
+      "depends_on": [
+        "g025_t0150"
+      ],
       "status": "blocked",
       "checkpoint": null,
       "result": null
     },
     {
       "id": "g025_t0080",
-      "gamma": 0.25, "tau": 0.8,
-      "depends_on": ["g025_t0100"],
+      "gamma": 0.25,
+      "tau": 0.8,
+      "depends_on": [
+        "g025_t0100"
+      ],
       "status": "blocked",
       "checkpoint": null,
       "result": null
     },
     {
       "id": "g025_t0050",
-      "gamma": 0.25, "tau": 0.5,
-      "depends_on": ["g025_t0080"],
+      "gamma": 0.25,
+      "tau": 0.5,
+      "depends_on": [
+        "g025_t0080"
+      ],
       "status": "blocked",
       "checkpoint": null,
       "result": null
     },
     {
       "id": "g025_t0030",
-      "gamma": 0.25, "tau": 0.3,
-      "depends_on": ["g025_t0050"],
+      "gamma": 0.25,
+      "tau": 0.3,
+      "depends_on": [
+        "g025_t0050"
+      ],
       "status": "blocked",
       "checkpoint": null,
       "result": null
     },
     {
       "id": "g025_t0300",
-      "gamma": 0.25, "tau": 3.0,
-      "depends_on": ["g025_t0200"],
+      "gamma": 0.25,
+      "tau": 3.0,
+      "depends_on": [
+        "g025_t0200"
+      ],
       "status": "blocked",
       "checkpoint": null,
       "result": null
     },
-
     {
       "id": "g200_t0200",
-      "gamma": 2.0, "tau": 2.0,
-      "depends_on": ["g100_t0200", "g400_t0200"],
+      "gamma": 2.0,
+      "tau": 2.0,
+      "depends_on": [
+        "g100_t0200",
+        "g400_t0200"
+      ],
       "deps_satisfy": "any",
       "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "γ-sweep root: warm-start from either γ=1.0 or γ=4.0 at τ=2 (whichever exists). fig4B reports 1-R²=0.025 / slope=0.59. Re-run produces the checkpoint that unblocks the γ=2.0 τ-sweep."
+      "note": "\u03b3-sweep root: warm-start from either \u03b3=1.0 or \u03b3=4.0 at \u03c4=2 (whichever exists). fig4B reports 1-R\u00b2=0.025 / slope=0.59. Re-run produces the checkpoint that unblocks the \u03b3=2.0 \u03c4-sweep."
     },
     {
       "id": "g200_t0150",
-      "gamma": 2.0, "tau": 1.5,
-      "depends_on": ["g200_t0200"],
+      "gamma": 2.0,
+      "tau": 1.5,
+      "depends_on": [
+        "g200_t0200"
+      ],
       "status": "blocked",
       "checkpoint": null,
       "result": null
     },
     {
       "id": "g200_t0100",
-      "gamma": 2.0, "tau": 1.0,
-      "depends_on": ["g200_t0150"],
+      "gamma": 2.0,
+      "tau": 1.0,
+      "depends_on": [
+        "g200_t0150"
+      ],
       "status": "blocked",
       "checkpoint": null,
       "result": null
     },
     {
       "id": "g200_t0300",
-      "gamma": 2.0, "tau": 3.0,
-      "depends_on": ["g200_t0200"],
+      "gamma": 2.0,
+      "tau": 3.0,
+      "depends_on": [
+        "g200_t0200"
+      ],
       "status": "blocked",
       "checkpoint": null,
       "result": null
     },
     {
       "id": "g200_t0500",
-      "gamma": 2.0, "tau": 5.0,
-      "depends_on": ["g200_t0300"],
+      "gamma": 2.0,
+      "tau": 5.0,
+      "depends_on": [
+        "g200_t0300"
+      ],
       "status": "blocked",
       "checkpoint": null,
       "result": null
     },
-
     {
       "id": "figR2_lognormal_g050",
       "kind": "no_learning_lognormal",
       "gamma": 0.5,
-      "tau_grid": [0.1, 0.2, 0.5, 1.0, 1.5, 2.0, 3.0, 5.0, 7.0, 10.0],
+      "tau_grid": [
+        0.1,
+        0.2,
+        0.5,
+        1.0,
+        1.5,
+        2.0,
+        3.0,
+        5.0,
+        7.0,
+        10.0
+      ],
       "depends_on": [],
       "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "No-learning Fig R2 task. Independent of REE. Solve no-learning market clearing under v ~ LogNormal(0,1), measure weighted 1-R² at each τ. No warm-start needed. Output: results/full_ree/figR2_g050_pgfplots.tex."
+      "note": "No-learning Fig R2 task. Independent of REE. Solve no-learning market clearing under v ~ LogNormal(0,1), measure weighted 1-R\u00b2 at each \u03c4. No warm-start needed. Output: results/full_ree/figR2_g050_pgfplots.tex."
     },
     {
       "id": "figR2_lognormal_g100",
       "kind": "no_learning_lognormal",
       "gamma": 1.0,
-      "tau_grid": [0.1, 0.2, 0.5, 1.0, 1.5, 2.0, 3.0, 5.0, 7.0, 10.0],
+      "tau_grid": [
+        0.1,
+        0.2,
+        0.5,
+        1.0,
+        1.5,
+        2.0,
+        3.0,
+        5.0,
+        7.0,
+        10.0
+      ],
       "depends_on": [],
       "status": "ready",
       "checkpoint": null,
@@ -438,7 +707,18 @@
       "id": "figR2_lognormal_g400",
       "kind": "no_learning_lognormal",
       "gamma": 4.0,
-      "tau_grid": [0.1, 0.2, 0.5, 1.0, 1.5, 2.0, 3.0, 5.0, 7.0, 10.0],
+      "tau_grid": [
+        0.1,
+        0.2,
+        0.5,
+        1.0,
+        1.5,
+        2.0,
+        3.0,
+        5.0,
+        7.0,
+        10.0
+      ],
       "depends_on": [],
       "status": "ready",
       "checkpoint": null,
@@ -447,11 +727,11 @@
     }
   ],
   "summary": {
-    "total":   51,
-    "done":    25,
-    "ready":     6,
+    "total": 51,
+    "done": 25,
+    "ready": 6,
     "blocked": 18,
-    "bailed":    2
+    "bailed": 2
   },
   "fanout": {
     "ready_tasks": [
@@ -462,19 +742,19 @@
       "figR2_lognormal_g100",
       "figR2_lognormal_g400"
     ],
-    "rationale": "With a strict linear τ-chain, only one task is ever ready and N parallel workers all collide on it. To enable parallel work, the queue exposes 5 independent ready tasks: the head of the γ=4 τ-walk (g400_t1000), two γ-sweep roots that warm-start directly from the seed (g025_t0200, g200_t0200), and three lognormal no-learning tasks that need no REE warm-start at all. Each new τ-walk completion unblocks its successor; the lognormal tasks are independent and self-contained."
+    "rationale": "With a strict linear \u03c4-chain, only one task is ever ready and N parallel workers all collide on it. To enable parallel work, the queue exposes 5 independent ready tasks: the head of the \u03b3=4 \u03c4-walk (g400_t1000), two \u03b3-sweep roots that warm-start directly from the seed (g025_t0200, g200_t0200), and three lognormal no-learning tasks that need no REE warm-start at all. Each new \u03c4-walk completion unblocks its successor; the lognormal tasks are independent and self-contained."
   },
   "deps_semantics": {
     "default": "all",
     "any": "Tasks may declare deps_satisfy='any', meaning the task is ready as soon as ANY listed dependency is done. Used when a worker can warm-start from one of several nearby checkpoints (e.g. g200_t0200 from either g100_t0200 or g400_t0200)."
   },
   "notes": [
-    "γ=0.5 high-τ (τ ≥ 4) bailed; the 7-point γ=0.5 curve (τ∈[0.3,3.0]) is the accepted answer for Fig 4A.",
-    "γ=1.0 high-τ (τ ≥ 5) bailed; the 8-point γ=1.0 curve (τ∈[0.3,4.0]) is the accepted answer.",
-    "γ=4.0 sweep: τ ∈ [0.3, 7.0] done. Only τ=10 is ready and τ=15 is blocked on it.",
-    "γ=0.25 and γ=2.0 τ-sweeps added as parallel chains: their τ=2 root warm-starts from the seed and runs concurrently with the γ=4 tail.",
-    "Three lognormal Fig R2 tasks (γ=0.5, 1.0, 4.0) are self-contained no-learning runs — no REE warm-start, run anywhere.",
-    "All 1-R² values are weighted by ex-ante probability (see EQUATIONS.md §7).",
+    "\u03b3=0.5 high-\u03c4 (\u03c4 \u2265 4) bailed; the 7-point \u03b3=0.5 curve (\u03c4\u2208[0.3,3.0]) is the accepted answer for Fig 4A.",
+    "\u03b3=1.0 high-\u03c4 (\u03c4 \u2265 5) bailed; the 8-point \u03b3=1.0 curve (\u03c4\u2208[0.3,4.0]) is the accepted answer.",
+    "\u03b3=4.0 sweep: \u03c4 \u2208 [0.3, 7.0] done. Only \u03c4=10 is ready and \u03c4=15 is blocked on it.",
+    "\u03b3=0.25 and \u03b3=2.0 \u03c4-sweeps added as parallel chains: their \u03c4=2 root warm-starts from the seed and runs concurrently with the \u03b3=4 tail.",
+    "Three lognormal Fig R2 tasks (\u03b3=0.5, 1.0, 4.0) are self-contained no-learning runs \u2014 no REE warm-start, run anywhere.",
+    "All 1-R\u00b2 values are weighted by ex-ante probability (see EQUATIONS.md \u00a77).",
     "Checkpoints listed for done tasks are the expected paths; if a path is missing on disk, the underlying run was completed but the per-task checkpoint was not committed back to results/full_ree/. The summary numbers come from results/full_ree/fig4A_G20_tau_sweep.json / fig4B_G20_gamma_sweep.json."
   ]
 }
