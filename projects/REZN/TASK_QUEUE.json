@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-07T18:28:45.555020Z",
+  "updated_at": "2026-05-07T18:30:11.311322Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -617,12 +617,10 @@
         "g400_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "\u03b3-sweep root: warm-start from either \u03b3=1.0 or \u03b3=4.0 at \u03c4=2 (whichever exists). fig4B reports 1-R\u00b2=0.025 / slope=0.59. Re-run produces the checkpoint that unblocks the \u03b3=2.0 \u03c4-sweep.",
-      "claimed_by": "gha-25514308630-g200_t0200",
-      "claimed_at": "2026-05-07T18:24:15Z"
+      "note": "\u03b3-sweep root: warm-start from either \u03b3=1.0 or \u03b3=4.0 at \u03c4=2 (whichever exists). fig4B reports 1-R\u00b2=0.025 / slope=0.59. Re-run produces the checkpoint that unblocks the \u03b3=2.0 \u03c4-sweep."
     },
     {
       "id": "g200_t0150",
