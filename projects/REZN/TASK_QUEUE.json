@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-07T08:28:38.626692Z",
+  "updated_at": "2026-05-07T16:11:40.531106Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -515,11 +515,9 @@
       "depends_on": [
         "g400_t0700"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
-      "result": null,
-      "claimed_by": "gha-25507756831-g400_t1000",
-      "claimed_at": "2026-05-07T16:11:29Z"
+      "result": null
     },
     {
       "id": "g400_t1500",
