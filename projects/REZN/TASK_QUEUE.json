@@ -521,9 +521,11 @@
       "depends_on": [
         "g400_t0700"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
-      "result": null
+      "result": null,
+      "claimed_by": "gha-25515329738-g400_t1000",
+      "claimed_at": "2026-05-07T18:45:13Z"
     },
     {
       "id": "g400_t1500",
