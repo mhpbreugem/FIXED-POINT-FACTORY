@@ -166,15 +166,15 @@ jobs:
           git clone --depth 1 https://github.com/mhpbreugem/REZN.git "$HOME/rezn-source"
 
       - name: Verify REZN imports
-        env:
-          REZN_SRC: ${{ env.HOME }}/rezn-source
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          import sys, os
-          rezn_src = os.environ["REZN_SRC"]
+          REZN_SRC="$HOME/rezn-source"
+          echo "REZN_SRC=$REZN_SRC"
+          python3 - "$REZN_SRC" <<'PY'
+          import sys
+          rezn_src = sys.argv[1]
           sys.path.insert(0, rezn_src)
-          print(f"REZN_SRC={rezn_src}")
+          print(f"sys.path[0]={rezn_src}")
           print("importing contour_K3_halo (triggers numba JIT) ...")
           from code.contour_K3_halo import init_no_learning_K3, phi_K3_halo_smooth
           print("importing halo, staggered, f128 ...")
