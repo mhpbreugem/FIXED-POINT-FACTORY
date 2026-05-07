@@ -43,6 +43,8 @@
   .stale { color: var(--stale); font-weight: 600; }
   .mono { font-family: ui-monospace, "Fira Code", monospace; }
   .small { font-size: 0.8rem; color: var(--muted); }
+  .live { font-size: 0.8rem; color: var(--claimed); font-family: ui-monospace, "Fira Code", monospace; }
+  .enorm { font-size: 0.8rem; color: var(--done); font-family: ui-monospace, "Fira Code", monospace; }
   .controls { margin: 0.5rem 0; display: flex; gap: 0.5rem; align-items: center;
               flex-wrap: wrap; }
   .controls input { padding: 0.3rem 0.5rem; border: 1px solid #ccc; border-radius: 0.3rem; }
@@ -58,12 +60,6 @@
 
 <div class="summary" id="summary"></div>
 
-<h2>Active workers</h2>
-<div id="workers" class="small">loading…</div>
-
-<h2>Live progress</h2>
-<div id="progress" class="small">loading…</div>
-
 <h2>Tasks</h2>
 <div class="controls">
   <input type="text" id="filter" placeholder="filter id, status, gamma…" oninput="render()">
@@ -75,17 +71,20 @@
     <tr>
       <th onclick="sortBy('id')">id</th>
       <th onclick="sortBy('status')">status</th>
-      <th onclick="sortBy('kind')">kind</th>
       <th onclick="sortBy('gamma')">γ</th>
       <th onclick="sortBy('tau')">τ</th>
+      <th>live iter · ftol</th>
+      <th>||F||∞ end</th>
+      <th onclick="sortBy('result')">1-R²</th>
       <th>deps</th>
-      <th onclick="sortBy('result')">result</th>
       <th onclick="sortBy('checkpoint')">checkpoint</th>
-      <th>note</th>
     </tr>
   </thead>
   <tbody id="tbody"></tbody>
 </table>
+
+<h2>Active workers</h2>
+<div id="workers" class="small">loading…</div>
 
 <script>
   const REPO = "mhpbreugem/fixed-point-factory";
@@ -98,6 +97,7 @@
   const listUrl = path => `https://api.github.com/repos/${REPO}/contents/${path}?ref=${BRANCH}&_=${Date.now()}`;
 
   let TASKS = [];
+  let PROGRESS = {};   // task_id -> {iter, ftol, last_update, stale}
   let SORT_KEY = "id", SORT_ASC = true;
 
   async function fetchJson(url) {
@@ -163,6 +163,12 @@
     return v == null ? "" : v;
   }
 
+  function fmtNum(v) {
+    if (v == null) return "";
+    if (typeof v === "number") return v.toPrecision(3);
+    return String(v);
+  }
+
   function render() {
     const filter = document.getElementById("filter").value.toLowerCase().trim();
     const filtered = TASKS.filter(t => {
@@ -180,25 +186,46 @@
     tbody.innerHTML = "";
     sorted.forEach(t => {
       const tr = document.createElement("tr");
-      const result = t.result
-        ? Object.entries(t.result).filter(([_, v]) => v != null)
-            .map(([k, v]) => `${k}=${typeof v === "number" ? v.toPrecision(3) : v}`).join(", ")
-        : "";
+
+      // Live iter/ftol from progress cache
+      const prog = PROGRESS[t.id];
+      let liveCell = "";
+      if (prog) {
+        const staleClass = prog.stale ? " stale" : "";
+        liveCell = `<span class="live${staleClass}">iter=${prog.iter ?? "?"} · ftol=${prog.ftol ?? "?"}</span>`;
+      } else if (t.status === "claimed") {
+        liveCell = `<span class="small" style="color:var(--claimed)">waiting…</span>`;
+      }
+
+      // End-norm F_max from result
+      let enorm = "";
+      if (t.result && t.result["F_max"] != null) {
+        enorm = `<span class="enorm">${fmtNum(t.result["F_max"])}</span>`;
+      }
+
+      // 1-R2 from result
+      let r2 = "";
+      if (t.result && t.result["1-R2"] != null) {
+        r2 = `<span class="mono">${fmtNum(t.result["1-R2"])}</span>`;
+      } else if (t.result && t.result["reason"]) {
+        r2 = `<span class="small">${String(t.result["reason"]).substring(0, 60)}</span>`;
+      }
+
       const ckpt = t.checkpoint
         ? `<a href="https://github.com/${REPO}/blob/${BRANCH}/${t.checkpoint}" target="_blank">${t.checkpoint.split("/").pop()}</a>`
         : "";
       const deps = (t.depends_on || []).join(", ");
-      const note = (t.note || "").substring(0, 80);
+
       tr.innerHTML = `
         <td class="mono">${t.id}</td>
         <td class="status ${t.status}">${t.status}</td>
-        <td>${t.kind || ""}</td>
         <td>${t.gamma ?? ""}</td>
-        <td>${t.tau ?? ""}</td>
+        <td>${t.tau ?? (t.tau_grid ? "[sweep]" : "")}</td>
+        <td>${liveCell}</td>
+        <td>${enorm}</td>
+        <td>${r2}</td>
         <td class="mono small">${deps}</td>
-        <td class="mono small">${result}</td>
-        <td class="small">${ckpt}</td>
-        <td class="small">${note}</td>`;
+        <td class="small">${ckpt}</td>`;
       tbody.appendChild(tr);
     });
     document.getElementById("meta").textContent =
@@ -226,29 +253,34 @@
   }
 
   async function loadProgress() {
-    const div = document.getElementById("progress");
+    // Reset progress cache
+    PROGRESS = {};
     try {
       const items = await fetchJson(listUrl(`projects/${PROJECT}/progress`));
       const files = items.filter(i => i.name.endsWith(".json"));
-      if (!files.length) { div.innerHTML = "<i>no active solves</i>"; return; }
-      const rows = await Promise.all(files.map(async f => {
+      if (!files.length) return;
+      await Promise.all(files.map(async f => {
         try {
           const p = await fetchJson(rawUrl(`projects/${PROJECT}/progress/${f.name}`));
-          const age = ageMin(p.last_update);
-          const stale = age > 3;
-          return `<div class="mono">${p.task_id} · ${p.worker_id} · iter=${p.iter} · ftol=${p.ftol} · <span class="${stale ? "stale" : ""}">${ageStr(p.last_update)}</span> ${stale ? "(STALE)" : ""}</div>`;
-        } catch (e) { return `<div>${f.name}: error</div>`; }
+          PROGRESS[p.task_id] = {
+            iter: p.iter,
+            ftol: p.ftol,
+            last_update: p.last_update,
+            stale: ageMin(p.last_update) > 3,
+          };
+        } catch (_) {}
       }));
-      div.innerHTML = rows.join("");
-    } catch (e) {
-      div.innerHTML = `<i>could not load progress (${e.message})</i>`;
-    }
+    } catch (_) {}
+    // Re-render table with fresh progress data
+    render();
   }
 
   async function loadAll() {
     document.getElementById("meta").textContent = "loading…";
     try {
-      await Promise.all([loadTasks(), loadWorkers(), loadProgress()]);
+      // Load tasks first, then overlay progress
+      await loadTasks();
+      await Promise.all([loadWorkers(), loadProgress()]);
     } catch (e) {
       document.getElementById("meta").innerHTML = `<span class="err">error: ${e.message}</span>`;
     }
