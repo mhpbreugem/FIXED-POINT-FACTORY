@@ -2,8 +2,8 @@
   "task_id": "requeue_bailed",
   "worker_id": "gha-25523119097-requeue_bailed",
   "started_at": "2026-05-07T21:29:49Z",
-  "last_update": "2026-05-07T21:30:55Z",
-  "iter": 2853,
-  "ftol": "2.032057e-01",
+  "last_update": "2026-05-07T21:31:28Z",
+  "iter": 4417,
+  "ftol": "9.804355e-02",
   "extra": {}
 }
