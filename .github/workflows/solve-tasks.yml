@@ -154,18 +154,18 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: pip
 
       - name: Install Python deps
         run: |
           python3 -m pip install --upgrade pip
-          # Pin numba to a version with pre-built manylinux wheels for Python 3.11.
-          # --only-binary ensures pip never tries to compile llvmlite from source
-          # (source builds take hours and hang silently on GH Actions runners).
+          # Exact pins with pre-built manylinux wheels for Python 3.11.
+          # numba 0.60.0 requires numpy<2.1 and llvmlite 0.43.x.
+          # --only-binary prevents silent multi-hour llvmlite source builds.
           python3 -m pip install --only-binary=:all: \
-            "numpy>=1.24,<2.1" \
-            "scipy>=1.10,<2" \
-            "numba>=0.57,<0.61"
+            "numpy==2.0.2" \
+            "scipy==1.15.3" \
+            "numba==0.60.0"
+          python3 -c "import numpy, scipy, numba; print('numpy', numpy.__version__, 'scipy', scipy.__version__, 'numba', numba.__version__)"
 
       - name: Clone REZN solver source
         run: |
