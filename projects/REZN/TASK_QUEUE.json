@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-07T07:57:56.527033Z",
+  "updated_at": "2026-05-07T08:28:38.626692Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -19,6 +19,21 @@
     "dps": 300
   },
   "tasks": [
+    {
+      "id": "test_ci_smoke",
+      "gamma": 1.0,
+      "tau": 0.3,
+      "test": true,
+      "status": "done",
+      "checkpoint": "",
+      "result": {
+        "smoke": true,
+        "1-R2": 0.00015319,
+        "F_max": 0.20528,
+        "note": "CI smoke test \u2014 one phi eval, no convergence required"
+      },
+      "completed_at": "2026-05-07T08:28:38.623852Z"
+    },
     {
       "id": "g050_t0030",
       "gamma": 0.5,
