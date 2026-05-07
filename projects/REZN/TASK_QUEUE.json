@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-07T18:49:06.605388Z",
+  "updated_at": "2026-05-07T19:03:06.012920Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -719,12 +719,12 @@
         10.0
       ],
       "depends_on": [],
-      "status": "claimed",
+      "status": "bailed",
       "checkpoint": null,
-      "result": null,
-      "note": "Independent task. See figR2_lognormal_g050.",
-      "claimed_by": "gha-25516025917-figR2_lognormal_g100",
-      "claimed_at": "2026-05-07T18:59:40Z"
+      "result": {
+        "reason": "||F||inf=4.680e-02 > bail threshold 1e-04"
+      },
+      "note": "Independent task. See figR2_lognormal_g050."
     },
     {
       "id": "figR2_lognormal_g400",
