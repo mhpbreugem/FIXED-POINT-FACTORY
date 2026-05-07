@@ -24,7 +24,9 @@
       "gamma": 1.0,
       "tau": 0.3,
       "test": true,
-      "status": "ready"
+      "status": "claimed",
+      "claimed_by": "gha-25514308630-test_ci_smoke",
+      "claimed_at": "2026-05-07T18:24:15Z"
     },
     {
       "id": "g050_t0030",
@@ -513,9 +515,11 @@
       "depends_on": [
         "g400_t0700"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
-      "result": null
+      "result": null,
+      "claimed_by": "gha-25514308630-g400_t1000",
+      "claimed_at": "2026-05-07T18:24:15Z"
     },
     {
       "id": "g400_t1500",
@@ -617,10 +621,12 @@
         "g400_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
-      "note": "\u03b3-sweep root: warm-start from either \u03b3=1.0 or \u03b3=4.0 at \u03c4=2 (whichever exists). fig4B reports 1-R\u00b2=0.025 / slope=0.59. Re-run produces the checkpoint that unblocks the \u03b3=2.0 \u03c4-sweep."
+      "note": "\u03b3-sweep root: warm-start from either \u03b3=1.0 or \u03b3=4.0 at \u03c4=2 (whichever exists). fig4B reports 1-R\u00b2=0.025 / slope=0.59. Re-run produces the checkpoint that unblocks the \u03b3=2.0 \u03c4-sweep.",
+      "claimed_by": "gha-25514308630-g200_t0200",
+      "claimed_at": "2026-05-07T18:24:15Z"
     },
     {
       "id": "g200_t0150",
@@ -683,10 +689,12 @@
         10.0
       ],
       "depends_on": [],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
-      "note": "No-learning Fig R2 task. Independent of REE. Solve no-learning market clearing under v ~ LogNormal(0,1), measure weighted 1-R\u00b2 at each \u03c4. No warm-start needed. Output: results/full_ree/figR2_g050_pgfplots.tex."
+      "note": "No-learning Fig R2 task. Independent of REE. Solve no-learning market clearing under v ~ LogNormal(0,1), measure weighted 1-R\u00b2 at each \u03c4. No warm-start needed. Output: results/full_ree/figR2_g050_pgfplots.tex.",
+      "claimed_by": "gha-25514308630-figR2_lognormal_g050",
+      "claimed_at": "2026-05-07T18:24:15Z"
     },
     {
       "id": "figR2_lognormal_g100",
