@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-07T21:32:30.848427Z",
+  "updated_at": "2026-05-07T21:32:48.810361Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -523,12 +523,12 @@
         "g050_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "bailed",
       "checkpoint": null,
-      "result": null,
-      "note": "Previously bailed from cold start. Now warm-starts from g400_t0700 or g050_t0200 seed (any suffices).",
-      "claimed_by": "gha-25523119097-g400_t1000",
-      "claimed_at": "2026-05-07T21:29:22Z"
+      "result": {
+        "reason": "||F||inf=3.327e-01 > bail threshold 1e-04"
+      },
+      "note": "Previously bailed from cold start. Now warm-starts from g400_t0700 or g050_t0200 seed (any suffices)."
     },
     {
       "id": "g400_t1500",
