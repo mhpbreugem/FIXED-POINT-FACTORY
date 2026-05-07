@@ -1,9 +1,0 @@
-{
-  "task_id": "test_ci_smoke",
-  "worker_id": "gha-25514645356-test_ci_smoke",
-  "started_at": "2026-05-07T18:31:49Z",
-  "last_update": "2026-05-07T18:31:49Z",
-  "iter": null,
-  "ftol": null,
-  "extra": {}
-}
