@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-07T18:31:52.000658Z",
+  "updated_at": "2026-05-07T18:49:06.605388Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -521,11 +521,11 @@
       "depends_on": [
         "g400_t0700"
       ],
-      "status": "claimed",
+      "status": "bailed",
       "checkpoint": null,
-      "result": null,
-      "claimed_by": "gha-25515329738-g400_t1000",
-      "claimed_at": "2026-05-07T18:45:13Z"
+      "result": {
+        "reason": "||F||inf=5.130e-01 > bail threshold 1e-04"
+      }
     },
     {
       "id": "g400_t1500",
