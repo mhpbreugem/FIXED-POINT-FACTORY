@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-08T20:50:48.816708Z",
+  "updated_at": "2026-05-08T21:05:52.909439Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -606,7 +606,7 @@
         "g100_t0500",
         "g100_t0590"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -624,13 +624,11 @@
         "lgmres_tol": 1e-10,
         "lgmres_inner_m": 30,
         "lgmres_outer": 10,
-        "noise_level": 0.002
+        "noise_level": 0.004
       },
-      "requeue_count": 3,
+      "requeue_count": 4,
       "deps_satisfy": "any",
-      "note": "Auto-requeued (attempt 3): noise perturbation noise_level=0.002.",
-      "claimed_by": "gha-25576829681-g100_t0700",
-      "claimed_at": "2026-05-08T20:04:14Z"
+      "note": "Auto-requeued (attempt 4): noise perturbation noise_level=0.004."
     },
     {
       "id": "g100_t1000",
@@ -1620,8 +1618,8 @@
   "summary": {
     "total": 65,
     "done": 49,
-    "ready": 2,
-    "claimed": 5,
+    "ready": 3,
+    "claimed": 4,
     "blocked": 5,
     "bailed": 0,
     "skip": 4
