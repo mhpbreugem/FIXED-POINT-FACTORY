@@ -792,7 +792,7 @@
         "g050_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": "projects/REZN/checkpoints/g035_t0200.npz",
       "result": null,
       "note": "\u03b3-ladder between g050_t0200 (\u03b3=0.5) and g025_t0200 (\u03b3=0.25) at \u03c4=2.0.",
@@ -813,8 +813,8 @@
         "lgmres_outer": 10
       },
       "requeue_count": 0,
-      "claimed_by": "gha-25549032408-g035_t0200",
-      "claimed_at": "2026-05-08T10:38:24Z"
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g025_t0200",
