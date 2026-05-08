@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-08T11:01:33.636608Z",
+  "updated_at": "2026-05-08T11:02:06.240968Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -1013,9 +1013,9 @@
       ],
       "deps_satisfy": "any",
       "status": "ready",
-      "checkpoint": null,
+      "checkpoint": "projects/REZN/checkpoints/g200_t0200.npz",
       "result": null,
-      "note": "Auto-requeued (attempt 1): noise perturbation noise_level=0.002.",
+      "note": "Restored checkpoint after Newton sign-fix; noise_level removed.",
       "solver_params": {
         "presmooth": 200,
         "presmooth_alpha": 0.01,
@@ -1030,10 +1030,9 @@
         "mp_iters": 20,
         "lgmres_tol": 1e-10,
         "lgmres_inner_m": 30,
-        "lgmres_outer": 10,
-        "noise_level": 0.002
+        "lgmres_outer": 10
       },
-      "requeue_count": 1
+      "requeue_count": 0
     },
     {
       "id": "g200_t0150",

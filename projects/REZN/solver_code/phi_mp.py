@@ -394,7 +394,7 @@ def phi_newton_mp(
         for i in range(inner_lo, inner_hi):
             for j in range(inner_lo, inner_hi):
                 for l in range(inner_lo, inner_hi):
-                    P_full_mp[i][j][l] -= F_inf_scale * delta_mp[idx]
+                    P_full_mp[i][j][l] += F_inf_scale * delta_mp[idx]
                     idx += 1
 
         # Extract updated float64 P for the next Jacobian evaluation
