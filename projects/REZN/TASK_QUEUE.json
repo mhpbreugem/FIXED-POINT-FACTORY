@@ -786,11 +786,13 @@
         "g200_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 1): warm-start from g200_t0200 (log-dist=1.65).",
-      "requeue_count": 1
+      "requeue_count": 1,
+      "claimed_by": "gha-25560784839-g140_t1000",
+      "claimed_at": "2026-05-08T14:21:11Z"
     },
     {
       "id": "g400_t1000",
@@ -836,7 +838,7 @@
       "depends_on": [
         "g400_t1000"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -854,7 +856,9 @@
         "lgmres_tol": 1e-10,
         "lgmres_inner_m": 30,
         "lgmres_outer": 10
-      }
+      },
+      "claimed_by": "gha-25560784839-g400_t1500",
+      "claimed_at": "2026-05-08T14:21:11Z"
     },
     {
       "id": "g035_t0200",
