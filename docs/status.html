@@ -373,7 +373,7 @@
 
   // ——— Task-queue scatter: 1-R² vs τ per γ slice ———
   function renderScatter(map) {
-    const gammas = [0.25, 0.35, 0.5, 1.0, 1.4, 2.0, 4.0];
+    const gammas = [0.1, 0.25, 0.35, 0.5, 1.0, 1.4, 2.0, 4.0];
     const colors = ["#d62728","#bcbd22","#1f77b4","#ff7f0e","#9467bd","#8c564b","#2ca02c"];
     const series = gammas.map((g,i) => ({
       label: `γ=${g}`,
@@ -478,7 +478,7 @@
          <strong>Panel (b)</strong> vs γ at τ=2, comparing REE (circles) with no-learning (squares).
          REE deficit exceeds no-learning at every γ — learning from curved contours amplifies the Jensen gap.</p>
       <div style="display:flex;gap:1rem;flex-wrap:wrap">
-        <div><strong>(a) vs τ — REE</strong><div class="chart-wrap">${renderScatterByGamma(map,[0.5,1.0,4.0])}</div></div>
+        <div><strong>(a) vs τ — REE</strong><div class="chart-wrap">${renderScatterByGamma(map,[0.1,0.5,1.0,4.0])}</div></div>
         <div><strong>(b) vs γ at τ=2 — REE vs NL</strong><div class="chart-wrap" id="chart-fig3b"></div></div>
       </div>
     </div>
@@ -550,7 +550,7 @@
     </p>
     `;
 
-    renderGammaTable("tbl-gamma-sweep", [0.25, 0.35, 0.5, 1.0, 1.4, 2.0, 4.0], 1.0, map);
+    renderGammaTable("tbl-gamma-sweep", [0.1, 0.25, 0.35, 0.5, 1.0, 1.4, 2.0, 4.0], 1.0, map);
     renderGridTable("tbl-grid", map);
     renderFig3b(map);
     renderFig4(map);
@@ -574,7 +574,7 @@
 
   // ——— REE scatter panels ———
   function renderScatterByGamma(map, gammas) {
-    const colors = {"0.5":"#1f77b4","1.0":"#ff7f0e","4.0":"#2ca02c"};
+    const colors = {"0.1":"#9c27b0","0.5":"#1f77b4","1.0":"#ff7f0e","4.0":"#2ca02c"};
     const series = gammas.map(g => ({
       label: `γ=${g}`,
       color: colors[String(g)] || nlGammaColor(g),
@@ -583,8 +583,9 @@
     })).filter(s=>s.pts.length);
     if (!series.length) return `<p style="color:#aaa;font-size:0.82rem">No converged REE tasks yet.</p>`;
     const allY = series.flatMap(s=>s.pts.map(p=>p.y));
+    const yMaxSc = Math.max(...allY)*1.15;
     return miniChart({series, xLabel:"τ", yLabel:"1−R² (REE)",
-                      xMin:0, xMax:11, yMin:0, yMax:Math.max(...allY)*1.1,
+                      xMin:0, xMax:11, yMin:0, yMax:yMaxSc,
                       hLines:[{y:0,color:"#ccc",dash:"2 2"}]});
   }
 
@@ -612,8 +613,10 @@
     nlPts.sort((a,b)=>a.x-b.x);
     if (nlPts.length) series.push({label:"No-learning", color:"#d62728", pts:nlPts});
     if (!series.length) { el.innerHTML=`<p style="color:#aaa;font-size:0.82rem">No data.</p>`; return; }
+    const allY3b = series.flatMap(s=>s.pts.map(p=>p.y));
     el.innerHTML = miniChart({series, xLabel:"γ", yLabel:"1−R²",
-                              xLog:true, xMin:0.1, xMax:10, yMin:0, yMax:0.16,
+                              xLog:true, xMin:0.1, xMax:10, yMin:0,
+                              yMax: allY3b.length ? Math.max(...allY3b)*1.1 : 0.5,
                               hLines:[{y:0,color:"#ccc",dash:"2 2"}]});
   }
 
@@ -703,8 +706,9 @@
     const el = document.getElementById("chart-fig6");
     if (!el) return;
     const pts = data.map(([x,y])=>({x,y}));
+    const yMaxV = Math.max(...pts.map(p=>p.y))*1.1;
     el.innerHTML = miniChart({data:pts, xLabel:"γ", yLabel:"E[|x_k|]",
-                              xLog:true, xMin:0.1, xMax:100, yMin:0, yMax:1.65,
+                              xLog:true, xMin:0.1, xMax:100, yMin:0, yMax:yMaxV,
                               lines:true, dots:true,
                               hLines:[{y:0,color:"#ccc",dash:"2 2"}]});
   }
@@ -824,8 +828,10 @@
       color: nlGammaColor(g),
       pts: data[g].map(([x,y])=>({x,y}))
     }));
+    const allY1 = series.flatMap(s=>s.pts.map(p=>p.y));
+    const yMax1 = Math.max(...allY1)*1.05;
     el.innerHTML = miniChart({series, xLabel:"Signal precision τ", yLabel:"1−R²",
-                              xLog:true, xMin:0.1, xMax:20, yMin:0, yMax:0.12,
+                              xLog:true, xMin:0.1, xMax:20, yMin:0, yMax:yMax1,
                               hLines:[{y:0,color:"#999",dash:"4 2"}]});
   }
 
