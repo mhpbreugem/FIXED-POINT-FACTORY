@@ -4,9 +4,9 @@ name: Solve tasks
 # A scheduler job claims up to N ready tasks atomically, then a matrix
 # of parallel solver jobs each runs one claimed task to completion.
 #
-# Concurrency group prevents two workflow runs from racing on the queue.
-# Within one run, parallel solver jobs are isolated: each owns a distinct
-# claimed task; the only shared write is the final done/bail commit.
+# Concurrency is scoped to the schedule job only (not the whole workflow),
+# so multiple workflow runs can execute solve jobs in parallel while only
+# one scheduler at a time claims tasks — preventing double-claim races.
 
 on:
   schedule:
@@ -17,10 +17,6 @@ on:
         description: 'Max parallel solver jobs (default 4, hard cap 20)'
         required: false
         default: '4'
-
-concurrency:
-  group: solve-tasks
-  cancel-in-progress: false
 
 permissions:
   contents: write     # workflow can push commits back to the repo
@@ -35,6 +31,9 @@ jobs:
   # -------------------------------------------------------------------
   schedule:
     runs-on: ubuntu-latest
+    concurrency:
+      group: solve-tasks-scheduler
+      cancel-in-progress: false
     outputs:
       tasks: ${{ steps.pick.outputs.tasks }}
       count: ${{ steps.pick.outputs.count }}
