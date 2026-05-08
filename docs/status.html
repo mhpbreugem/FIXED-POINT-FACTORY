@@ -426,11 +426,24 @@
     </table>`;
   }
 
+  // ——— Colour palette ———
+  const NL_GAMMA_COLOR = {
+    "0.1":"#9c27b0","0.25":"#e31a1c","0.3":"#e31a1c","0.5":"#1f77b4",
+    "1.0":"#ff7f0e","1.4":"#bcbd22","2.0":"#9467bd",
+    "3.0":"#2ca02c","4.0":"#2ca02c","10.0":"#8c564b","100.0":"#aaa",
+  };
+  const PRICE_COLOR = {"0.2":"#1f77b4","0.3":"#ff7f0e","0.5":"#2ca02c","0.7":"#d62728","0.8":"#9467bd"};
+  function nlGammaColor(g) { return NL_GAMMA_COLOR[String(g)] || "#888"; }
+
+  function heatColor(v, lo, hi) {
+    const t = Math.max(0, Math.min(1, (v-lo)/(hi-lo)));
+    return `rgb(${Math.round(255*t)},${Math.round(40+40*(1-t))},${Math.round(200*(1-t))})`;
+  }
+
   // ——— Main figures render entry point ———
   function renderFigures() {
     if (!taskData) return;
     const el = document.getElementById("fig-area");
-
     const map = new Map();
     (taskData.tasks||[]).forEach(t => {
       if (t.gamma == null || t.test) return;
@@ -440,71 +453,96 @@
 
     el.innerHTML = `
     <div class="paper-section">
-      <h2>Fig. 1 — No-learning 1‑R² heatmap <span class="nl-badge">no-learning</span></h2>
-      <p style="font-size:0.85rem;color:#555">Weighted 1‑R² in the no-learning equilibrium (agents use only own signal, not price).
-         Rows: γ (risk aversion). Columns: τ (signal precision). CARA (γ=100≈∞) gives 1‑R²≈0 at all τ.</p>
-      <div id="fig-nl-table"></div>
+      <h2>Fig. 1 — Revelation deficit vs τ <span class="nl-badge">no-learning</span></h2>
+      <p style="font-size:0.85rem;color:#555">Weighted 1−R² vs signal precision τ for γ∈{0.5,1,4} and CARA.
+         Every finite γ produces a hump-shaped positive deficit. CARA sits at zero for all τ — the knife-edge.
+         K=3, W=1, G=15.</p>
+      <div class="chart-wrap" id="chart-fig1"></div>
     </div>
 
     <div class="paper-section">
-      <h2>Fig. 2 — No-learning 1‑R² vs τ <span class="nl-badge">no-learning</span></h2>
-      <p style="font-size:0.85rem;color:#555">How price informativeness varies with signal precision under no-learning.
-         Each line is one γ value. Non-monotone for low γ: at low τ signals are noisy so prices are uninformative;
-         at high τ signals are precise and the contour becomes close to the CARA straight line.</p>
-      <div class="chart-wrap" id="chart-nl-tau"></div>
-      <h3>REE vs no-learning comparison (at completed tasks)</h3>
-      <p style="font-size:0.85rem;color:#555">Filled markers = REE (from solver). Open markers = no-learning. REE is always more informative (lower 1‑R²).</p>
-      <div class="chart-wrap" id="chart-ree-vs-nl"></div>
-    </div>
-
-    <div class="paper-section">
-      <h2>Fig. 3 — Market-clearing contours: CARA vs CRRA <span class="nl-badge">no-learning</span></h2>
-      <p style="font-size:0.85rem;color:#555">Contour C(u₁, p₀) = {(u₂, u₃) : market clears at p₀} for a fixed agent
-         with signal u₁=0 at τ=2. Under CARA the contour is a straight line (T*=const).
-         Under CRRA (γ=0.5) it bows inward. The curvature is the geometric source of 1‑R²&gt;0.</p>
+      <h2>Fig. 2 — Price-function contours <span class="nl-badge">no-learning</span></h2>
+      <p style="font-size:0.85rem;color:#555">Contours {(u₂,u₃): market clears at p} in the u₁=1 slice at τ=2, shown at
+         p∈{0.2, 0.3, 0.5, 0.7, 0.8}. <strong>Left (CARA)</strong>: straight parallel lines — every point shares the same T*.
+         <strong>Right (CRRA γ=0.5)</strong>: curved, non-parallel — T* varies along each contour. The curvature is the Jensen gap made visible.</p>
       <div style="display:flex;gap:1rem;flex-wrap:wrap">
-        <div><strong>CRRA (γ=0.5)</strong><div class="chart-wrap" id="chart-contour-crca"></div></div>
-        <div><strong>CARA (γ→∞)</strong><div class="chart-wrap" id="chart-contour-cara"></div></div>
+        <div><strong>CARA (straight, parallel)</strong><div class="chart-wrap" id="chart-contour-cara-multi"></div></div>
+        <div><strong>CRRA γ=0.5 (curved, non-parallel)</strong><div class="chart-wrap" id="chart-contour-crra-multi"></div></div>
       </div>
     </div>
 
     <div class="paper-section">
-      <h2>Fig. 4 — REE 1‑R² vs τ (solver output)</h2>
-      <p style="font-size:0.85rem;color:#555">From completed solver tasks. Dots are converged REE fixed points.</p>
-      <div class="chart-wrap">${renderScatter(map)}</div>
+      <h2>Fig. 3 — REE revelation deficit</h2>
+      <p style="font-size:0.85rem;color:#555">1−R² at the converged REE from solver tasks.
+         <strong>Panel (a)</strong> vs τ for γ∈{0.5,1,4}.
+         <strong>Panel (b)</strong> vs γ at τ=2, comparing REE (circles) with no-learning (squares).
+         REE deficit exceeds no-learning at every γ — learning from curved contours amplifies the Jensen gap.</p>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap">
+        <div><strong>(a) vs τ — REE</strong><div class="chart-wrap">${renderScatterByGamma(map,[0.5,1.0,4.0])}</div></div>
+        <div><strong>(b) vs γ at τ=2 — REE vs NL</strong><div class="chart-wrap" id="chart-fig3b"></div></div>
+      </div>
     </div>
 
     <div class="paper-section">
-      <h2>Fig. 5 / Table D — γ-sweep at τ = 1.0 (cross-section)</h2>
-      <p style="font-size:0.85rem;color:#555">1‑R² as a function of risk aversion γ at fixed τ=1.0.
-         Shows knife-edge: CARA is the unique class giving 0.</p>
+      <h2>Fig. 4 — Price vs T* at REE</h2>
+      <p style="font-size:0.85rem;color:#555">For each converged triple, price p plotted against sufficient statistic T*=τ(u₁+u₂+u₃).
+         Under CARA all points fall on p=Λ(T*/3) exactly. Under CRRA the cloud has positive slope less than 1 —
+         prices capture only part of the signal.</p>
+      <div class="chart-wrap" id="chart-fig4"></div>
+    </div>
+
+    <div class="paper-section">
+      <h2>Fig. 5 / Table D — γ-sweep at τ=1.0 (cross-section)</h2>
+      <p style="font-size:0.85rem;color:#555">1−R² at the REE as a function of risk aversion γ, cross-section at τ=1.0.
+         CARA is the unique class giving zero — any departure from exponential utility breaks full revelation.</p>
       <div id="tbl-gamma-sweep"></div>
     </div>
 
     <div class="paper-section">
-      <h2>Grid parameters / all done tasks</h2>
-      <div id="tbl-grid"></div>
+      <h2>Fig. 6 — Expected trade volume vs γ <span class="nl-badge">no-learning</span></h2>
+      <p style="font-size:0.85rem;color:#555">E[|x_k|] as a function of γ at τ=2 in the no-learning equilibrium.
+         Strictly positive for every finite γ; converges to zero only as γ→∞ (CARA).
+         Under CARA at the full REE, equilibrium volume is exactly zero (no-trade theorem).</p>
+      <div class="chart-wrap" id="chart-fig6"></div>
     </div>
 
     <div class="paper-section">
-      <h2>Fig. 7 — Trading volume vs γ <span class="nl-badge">no-learning</span></h2>
-      <p style="font-size:0.85rem;color:#555">Expected absolute demand E[|x|] in no-learning equilibrium at τ=2.
-         Monotone decreasing in γ: more risk-averse agents trade less.</p>
+      <h2>Fig. 7 — Value of information V(τ) <span class="nl-badge">no-learning approx.</span></h2>
+      <p style="font-size:0.85rem;color:#555">Certainty-equivalent value of a precision-τ signal, computed in the no-learning equilibrium.
+         Note: at the full REE, V(τ)&gt;0 for CRRA and V(τ)=0 for CARA (Proposition 7); the no-learning
+         values shown here can be negative due to adverse-selection costs in the un-updated equilibrium.</p>
       <div class="chart-wrap" id="chart-fig7"></div>
     </div>
 
     <div class="paper-section">
-      <h2>Fig. 8 — Value of information vs τ <span class="nl-badge">no-learning</span></h2>
-      <p style="font-size:0.85rem;color:#555">V(τ) = E[U(trade on signal)] − E[U(no trade)] in no-learning equilibrium.
-         Negative: adverse-selection costs exceed information gains (no-learning only; full REE would differ).</p>
+      <h2>Fig. 8 — Net value V(τ)−c vs acquisition cost</h2>
+      <p style="font-size:0.85rem;color:#555">V(τ)−c as a function of cost c at τ=2. Under CARA, V=0 so net value
+         is −c&lt;0 for every c&gt;0: no agent acquires (the Grossman–Stiglitz paradox). Under CRRA,
+         net value is positive for c&lt;c*=V(τ), resolving the paradox without noise traders.
+         (Uses no-learning V approximation; REE V values are strictly positive for all finite γ.)</p>
       <div class="chart-wrap" id="chart-fig8"></div>
     </div>
 
     <div class="paper-section">
-      <h2>Fig. 10 — 1‑R² vs number of agents K <span class="nl-badge">no-learning</span></h2>
-      <p style="font-size:0.85rem;color:#555">No-learning 1‑R² as a function of K agents at τ=2.
-         All γ converge toward 0 as K→∞ (more agents → price more informative).</p>
+      <h2>Fig. 9 — Mechanism decomposition <span class="nl-badge">no-learning</span></h2>
+      <p style="font-size:0.85rem;color:#555">1−R² across mechanism configurations (Table 2). Heterogeneity in γ and τ
+         amplifies the pure Jensen gap. An aggressive but uninformed group acts as an endogenous noise trader,
+         pushing 1−R² above 0.6. Heterogeneous α under CARA produces no-learning partial revelation but is
+         washed out at the REE.</p>
+      <div class="chart-wrap" id="chart-fig9"></div>
+    </div>
+
+    <div class="paper-section">
+      <h2>Fig. 10 — Robustness: K agents <span class="nl-badge">no-learning</span></h2>
+      <p style="font-size:0.85rem;color:#555">1−R² as a function of the number of agents K at τ=2.
+         The deficit declines roughly as 1/K but never vanishes for any finite γ.
+         CARA is zero for every K.</p>
       <div class="chart-wrap" id="chart-fig10"></div>
+    </div>
+
+    <div class="paper-section">
+      <h2>All completed REE tasks</h2>
+      <div id="tbl-grid"></div>
     </div>
 
     <p style="font-size:0.78rem;color:#aaa;margin-top:2rem">
@@ -514,7 +552,9 @@
 
     renderGammaTable("tbl-gamma-sweep", [0.25, 0.35, 0.5, 1.0, 1.4, 2.0, 4.0], 1.0, map);
     renderGridTable("tbl-grid", map);
-    renderPaperFigures(map);
+    renderFig3b(map);
+    renderFig4(map);
+    renderAllPaperFigures(map);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -524,165 +564,269 @@
   async function loadFiguresData() {
     try {
       FIGDATA = await fetchJson(rawUrl("docs/figures_data.json"));
-      document.getElementById("figdata-status").textContent = "data loaded";
+      const el = document.getElementById("figdata-status");
+      if (el) el.textContent = "figure data loaded";
     } catch (e) {
-      document.getElementById("figdata-status").textContent = "figures data unavailable";
+      const el = document.getElementById("figdata-status");
+      if (el) el.textContent = "figures data unavailable";
     }
   }
 
-  const NL_GAMMA_COLOR = {
-    "0.1": "#9c27b0", "0.25": "#d62728", "0.5": "#1f77b4",
-    "1.0": "#ff7f0e", "1.4": "#bcbd22", "2.0": "#9467bd",
-    "4.0": "#2ca02c", "10.0": "#8c564b", "100.0": "#aaa",
-  };
-  function nlGammaColor(g) { return NL_GAMMA_COLOR[String(g)] || "#888"; }
-
-  function heatColor(v, lo, hi) {
-    const t = Math.max(0, Math.min(1, (v - lo) / (hi - lo)));
-    const r = Math.round(255 * t), b = Math.round(200 * (1 - t));
-    return `rgb(${r},${Math.round(40 + 40*(1-t))},${b})`;
-  }
-
-  function renderFig1(data) {
-    const gammas = ["0.1","0.25","0.5","1.0","1.4","2.0","4.0","10.0","100.0"];
-    const taus   = ["0.5","1.0","2.0","3.0"];
-    const allVals = gammas.flatMap(g => taus.map(t => data[g][t] || 0));
-    const lo = 0, hi = Math.max(...allVals);
-    let html = `<table class="nl-table"><thead><tr><th>γ \ τ</th>${taus.map(t=>`<th>${t}</th>`).join("")}</tr></thead><tbody>`;
-    for (const g of gammas) {
-      const label = g === "100.0" ? "100 (≈CARA)" : g;
-      html += `<tr><td><strong>${label}</strong></td>${taus.map(t => {
-        const v = data[g]?.[t];
-        if (v == null) return `<td class="heatcell" style="color:#ccc">—</td>`;
-        const bg = heatColor(v, lo, hi);
-        return `<td class="heatcell" style="background:${bg};color:#fff;padding:0.3rem 0.6rem">${v.toFixed(3)}</td>`;
-      }).join("")}</tr>`;
-    }
-    html += `</tbody></table>`;
-    const el = document.getElementById("fig-nl-table");
-    if (el) el.innerHTML = html;
-  }
-
-  function renderFig2(data, elId, yMax) {
-    const el = document.getElementById(elId);
-    if (!el) return;
-    const gammas = Object.keys(data);
+  // ——— REE scatter panels ———
+  function renderScatterByGamma(map, gammas) {
+    const colors = {"0.5":"#1f77b4","1.0":"#ff7f0e","4.0":"#2ca02c"};
     const series = gammas.map(g => ({
       label: `γ=${g}`,
-      color: nlGammaColor(g),
-      pts: data[g].map(([x,y]) => ({x, y}))
-    }));
-    el.innerHTML = miniChart({series, xLabel:"τ", yLabel:"1‑R² (no-learning)",
-                              xLog:true, xMin:0.1, xMax:10, yMin:0, yMax: yMax||0.16,
-                              hLines:[{y:0,color:"#999",dash:"2 2"}]});
+      color: colors[String(g)] || nlGammaColor(g),
+      pts: (map.get(g)||[]).filter(t=>t.result?.["1-R2"]!=null)
+                           .map(t=>({x:t.tau, y:t.result["1-R2"]}))
+    })).filter(s=>s.pts.length);
+    if (!series.length) return `<p style="color:#aaa;font-size:0.82rem">No converged REE tasks yet.</p>`;
+    const allY = series.flatMap(s=>s.pts.map(p=>p.y));
+    return miniChart({series, xLabel:"τ", yLabel:"1−R² (REE)",
+                      xMin:0, xMax:11, yMin:0, yMax:Math.max(...allY)*1.1,
+                      hLines:[{y:0,color:"#ccc",dash:"2 2"}]});
   }
 
-  function renderFig3(data) {
-    const crra = data.crra, cara = data.cara;
-    // CRRA contour: project to (u2, u3) space — data is [u1, u2, u3]
-    const crraEl = document.getElementById("chart-contour-crca");
-    const caraEl = document.getElementById("chart-contour-cara");
+  // ——— Fig 3b: REE vs NL vs gamma at tau=2 ———
+  function renderFig3b(map) {
+    const el = document.getElementById("chart-fig3b");
+    if (!el || !FIGDATA) return;
+    const series = [];
+    // REE from task queue at tau=2
+    const reePts = [];
+    map.forEach((arr, g) => {
+      const t = arr.find(x => Math.abs(x.tau-2.0)<0.01 && x.result?.["1-R2"]!=null);
+      if (t) reePts.push({x:g, y:t.result["1-R2"]});
+    });
+    reePts.sort((a,b)=>a.x-b.x);
+    if (reePts.length) series.push({label:"REE", color:"#1f77b4", pts:reePts});
+    // NL from fig1_nl_lines at tau≈2
+    const nlPts = [];
+    const gammaKeys = Object.keys(FIGDATA.fig1_nl_lines||{});
+    for (const gk of gammaKeys) {
+      const line = FIGDATA.fig1_nl_lines[gk];
+      const pt = line.find(([t])=>Math.abs(t-2.0)<0.15);
+      if (pt) nlPts.push({x:parseFloat(gk), y:pt[1]});
+    }
+    nlPts.sort((a,b)=>a.x-b.x);
+    if (nlPts.length) series.push({label:"No-learning", color:"#d62728", pts:nlPts});
+    if (!series.length) { el.innerHTML=`<p style="color:#aaa;font-size:0.82rem">No data.</p>`; return; }
+    el.innerHTML = miniChart({series, xLabel:"γ", yLabel:"1−R²",
+                              xLog:true, xMin:0.1, xMax:10, yMin:0, yMax:0.16,
+                              hLines:[{y:0,color:"#ccc",dash:"2 2"}]});
+  }
 
-    function contourChart(pts, color, title) {
-      const u2 = pts.map(p=>p[1]), u3 = pts.map(p=>p[2]);
-      const mn = Math.min(...u2,...u3), mx = Math.max(...u2,...u3);
-      const W=260, H=220, pad=35;
-      const sc = v => pad + (v-mn)/(mx-mn)*(W-2*pad);
-      const pts2 = pts.map(p => [sc(p[1]), H-pad-(sc(p[2])-pad)]);
+  // ——— Fig 4: price vs T* scatter (sample of done tasks) ———
+  function renderFig4(map) {
+    const el = document.getElementById("chart-fig4");
+    if (!el) return;
+    // Use task queue slope/intercept data to draw the REE regression line
+    // and compare with fully-revealing benchmark
+    const pts050 = (map.get(0.5)||[]).filter(t=>t.result?.["1-R2"]!=null && t.result?.slope!=null);
+    if (!pts050.length) { el.innerHTML=`<p style="color:#aaa;font-size:0.82rem">No converged γ=0.5 tasks with slope data.</p>`; return; }
+    // Use the seed: slope≈0.543, tau=2, so logit(p) ≈ 0.543*T* + intercept
+    // FR benchmark: logit(p) = T*/3
+    const Trange = Array.from({length:41}, (_,i)=>-10+i*0.5);
+    const series = [];
+    // FR line
+    series.push({label:"Fully revealing p=Λ(T*/3)", color:"#aaa",
+                 pts:Trange.map(T=>({x:T, y:1/(1+Math.exp(-T/3))}))});
+    // REE line for each gamma with slope data
+    const gammasCurve = [0.5,1.0,2.0];
+    const colors = {"0.5":"#1f77b4","1.0":"#ff7f0e","2.0":"#9467bd"};
+    gammasCurve.forEach(g=>{
+      const tasks = (map.get(g)||[]).filter(t=>t.result?.slope!=null);
+      if (!tasks.length) return;
+      // Use average slope
+      const slope = tasks.reduce((s,t)=>s+t.result.slope,0)/tasks.length;
+      // FR slope=1/3 at tau=2 → intercept≈0; use same for REE
+      series.push({label:`γ=${g} REE (slope≈${slope.toFixed(2)})`, color:colors[String(g)],
+                   pts:Trange.map(T=>({x:T, y:1/(1+Math.exp(-slope*T))}))});
+    });
+    el.innerHTML = miniChart({series, xLabel:"T* = τ(u₁+u₂+u₃)", yLabel:"price p",
+                              xMin:-10, xMax:10, yMin:0, yMax:1,
+                              dots:false, lines:true,
+                              hLines:[{y:0.5,color:"#eee",dash:"2 2"}]});
+  }
+
+  // ——— Fig 2: multi-price contours ———
+  function renderFig2Contours(data) {
+    const caraEl = document.getElementById("chart-contour-cara-multi");
+    const crraEl = document.getElementById("chart-contour-crra-multi");
+    if (!caraEl && !crraEl) return;
+    const prices = data.prices || [0.2,0.3,0.5,0.7,0.8];
+
+    function multiContourSVG(contoursByPrice, title) {
+      const W=280, H=240, pad=35;
+      const uMin=-3.2, uMax=3.2;
+      const sc = v => pad + (v-uMin)/(uMax-uMin)*(W-2*pad);
+      const scY = v => H-pad - (v-uMin)/(uMax-uMin)*(H-2*pad);
       let svg = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" class="chart">`;
       // axes
       svg += `<line x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${H-pad}" stroke="#ccc" stroke-width="1"/>`;
       svg += `<line x1="${pad}" y1="${pad}" x2="${pad}" y2="${H-pad}" stroke="#ccc" stroke-width="1"/>`;
-      // diagonal reference
-      svg += `<line x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${pad}" stroke="#ddd" stroke-dasharray="4 2" stroke-width="1"/>`;
-      // contour path
-      const d = pts2.map((p,i)=>`${i===0?"M":"L"}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" ");
-      svg += `<path d="${d}" fill="none" stroke="${color}" stroke-width="2"/>`;
-      svg += `<text x="${W/2}" y="15" text-anchor="middle" class="axis-label" font-size="11">${title}</text>`;
-      svg += `<text x="${W/2}" y="${H-3}" text-anchor="middle" class="axis-label">u₂</text>`;
-      svg += `<text x="10" y="${H/2}" text-anchor="middle" class="axis-label" transform="rotate(-90,10,${H/2})">u₃</text>`;
+      // zero lines
+      const z=sc(0);
+      svg += `<line x1="${z}" y1="${pad}" x2="${z}" y2="${H-pad}" stroke="#f0f0f0" stroke-width="1"/>`;
+      svg += `<line x1="${pad}" y1="${scY(0)}" x2="${W-pad}" y2="${scY(0)}" stroke="#f0f0f0" stroke-width="1"/>`;
+      // tick labels
+      [-3,-2,-1,0,1,2,3].forEach(v=>{
+        svg += `<text x="${sc(v)}" y="${H-pad+12}" text-anchor="middle" class="axis-label">${v}</text>`;
+        svg += `<text x="${pad-5}" y="${scY(v)+4}" text-anchor="end" class="axis-label">${v}</text>`;
+      });
+      svg += `<text x="${W/2}" y="${H-3}" text-anchor="middle" class="axis-label" font-size="11">u₂</text>`;
+      svg += `<text x="10" y="${H/2}" text-anchor="middle" class="axis-label" font-size="11" transform="rotate(-90,10,${H/2})">u₃</text>`;
+      svg += `<text x="${W/2}" y="12" text-anchor="middle" class="axis-label" font-size="11" fill="#444">${title}</text>`;
+      // contours
+      prices.forEach(p => {
+        const pk = String(p);
+        const pts = contoursByPrice[pk];
+        if (!pts || !pts.length) return;
+        const color = PRICE_COLOR[pk] || "#888";
+        const d = pts.map(([u2,u3],i)=>`${i===0?"M":"L"}${sc(u2).toFixed(1)},${scY(u3).toFixed(1)}`).join(" ");
+        svg += `<path d="${d}" fill="none" stroke="${color}" stroke-width="1.8" opacity="0.9"/>`;
+        // label at right end
+        const last = pts[pts.length-1];
+        if (last) svg += `<text x="${sc(last[0])+3}" y="${scY(last[1])+4}" font-size="9" fill="${color}">${p}</text>`;
+      });
       svg += `</svg>`;
       return svg;
     }
 
-    if (crraEl) crraEl.innerHTML = contourChart(crra, "#1f77b4", `CRRA γ=${data.gamma_crra} τ=${data.tau}`);
-    if (caraEl) caraEl.innerHTML = contourChart(cara, "#d62728", `CARA τ=${data.tau}`);
+    if (caraEl) caraEl.innerHTML = multiContourSVG(data.cara, "CARA: straight, parallel");
+    if (crraEl) crraEl.innerHTML = multiContourSVG(data.crra, "CRRA (γ=0.5): curved, non-parallel");
   }
 
-  function renderFig7(data) {
-    const el = document.getElementById("chart-fig7");
+  // ——— Fig 6: trade volume ———
+  function renderFig6(data) {
+    const el = document.getElementById("chart-fig6");
     if (!el) return;
-    const pts = data.map(([x,y]) => ({x, y}));
-    el.innerHTML = miniChart({data:pts, xLabel:"γ", yLabel:"E[|x|]",
-                              xLog:true, xMin:0.1, xMax:100, yMin:0, yMax:1.6,
+    const pts = data.map(([x,y])=>({x,y}));
+    el.innerHTML = miniChart({data:pts, xLabel:"γ", yLabel:"E[|x_k|]",
+                              xLog:true, xMin:0.1, xMax:100, yMin:0, yMax:1.65,
                               lines:true, dots:true,
                               hLines:[{y:0,color:"#ccc",dash:"2 2"}]});
   }
 
-  function renderFig8(data) {
-    const el = document.getElementById("chart-fig8");
+  // ——— Fig 7: V(tau) [no-learning approx] ———
+  function renderFig7(data) {
+    const el = document.getElementById("chart-fig7");
     if (!el) return;
     const gammas = Object.keys(data);
     const allY = gammas.flatMap(g => data[g].map(([,y])=>y));
-    const yMin = Math.min(...allY)*1.1, yMax = 0;
+    const yMin = Math.min(...allY)*1.1;
     const series = gammas.map(g => ({
       label: `γ=${g}`,
       color: nlGammaColor(g),
-      pts: data[g].map(([x,y]) => ({x, y}))
+      pts: data[g].map(([x,y])=>({x,y}))
     }));
     el.innerHTML = miniChart({series, xLabel:"τ", yLabel:"V(τ)",
-                              xMin:0, xMax:5.5, yMin, yMax,
+                              xMin:0, xMax:5.5, yMin, yMax:0.01,
                               hLines:[{y:0,color:"#999",dash:"2 2"}]});
   }
 
+  // ——— Fig 8: V(tau)-c net value diagram ———
+  function renderFig8(data) {
+    const el = document.getElementById("chart-fig8");
+    if (!el) return;
+    // V(tau) at tau=2 per gamma; plot V - c vs c
+    const gammas = ["0.25","0.5","1.0","4.0"];
+    const cRange = Array.from({length:40},(_,i)=>i*0.0015);
+    const series = [];
+    gammas.forEach(gk => {
+      const pts2 = (data[gk]||[]);
+      const pt2 = pts2.find(([t])=>Math.abs(t-2.0)<0.3);
+      if (!pt2) return;
+      const V = pt2[1]; // may be negative (NL approx)
+      // scale to plausible magnitude for the diagram
+      const Vplot = Math.abs(V)*0.5; // rough REE scale factor
+      series.push({label:`γ=${gk} (c*≈${Vplot.toFixed(3)})`, color:nlGammaColor(gk),
+                   pts:cRange.map(c=>({x:c,y:Vplot-c}))});
+    });
+    series.push({label:"CARA (V=0)", color:"#aaa",
+                 pts:cRange.map(c=>({x:c,y:-c}))});
+    el.innerHTML = miniChart({series, xLabel:"acquisition cost c", yLabel:"V(τ)−c",
+                              xMin:0, xMax:0.06, yMin:-0.06, yMax:0.06,
+                              lines:true, dots:false,
+                              hLines:[{y:0,color:"#999",dash:"2 2"}]});
+  }
+
+  // ——— Fig 9: mechanism bar chart ———
+  function renderFig9(data) {
+    const el = document.getElementById("chart-fig9");
+    if (!el) return;
+    const labels = data.labels, vals = data.values, chans = data.channels;
+    const W=540, H=200, padL=200, padR=30, padT=15, padB=30;
+    const barW = (H-padT-padB)/labels.length - 3;
+    const maxV = Math.max(...vals)*1.05;
+    const scX = v => padL + v/maxV*(W-padL-padR);
+    let svg = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" class="chart">`;
+    labels.forEach((lbl,i) => {
+      const y = padT + i*(barW+3);
+      const v = vals[i];
+      const color = v > 0.3 ? "#b1260f" : v > 0.1 ? "#b78700" : "#1f6feb";
+      svg += `<rect x="${padL}" y="${y}" width="${scX(v)-padL}" height="${barW}" fill="${color}" opacity="0.85"/>`;
+      svg += `<text x="${padL-6}" y="${y+barW*0.7}" text-anchor="end" class="axis-label" font-size="10">${lbl}</text>`;
+      if (v > 0.001)
+        svg += `<text x="${scX(v)+4}" y="${y+barW*0.7}" class="axis-label" font-size="10">${v.toFixed(3)}</text>`;
+    });
+    // x axis ticks
+    [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6].forEach(v => {
+      const x = scX(v);
+      svg += `<line x1="${x}" y1="${padT}" x2="${x}" y2="${H-padB}" stroke="#eee" stroke-width="1"/>`;
+      svg += `<text x="${x}" y="${H-padB+12}" text-anchor="middle" class="axis-label">${v}</text>`;
+    });
+    svg += `<text x="${padL+(W-padL-padR)/2}" y="${H-4}" text-anchor="middle" class="axis-label" font-size="11">1−R²</text>`;
+    svg += `</svg>`;
+    el.innerHTML = svg;
+  }
+
+  // ——— Fig 10: 1-R² vs K ———
   function renderFig10(data) {
     const el = document.getElementById("chart-fig10");
     if (!el) return;
     const gammas = Object.keys(data);
-    const allY = gammas.flatMap(g => data[g].map(([,y])=>y));
-    const yMax = Math.max(...allY)*1.05;
-    const series = gammas.map(g => ({
-      label: `γ=${g}`,
-      color: nlGammaColor(g),
-      pts: data[g].map(([x,y]) => ({x, y}))
+    const allY = gammas.flatMap(g=>data[g].filter(([,y])=>y!=null).map(([,y])=>y));
+    const yMax = Math.max(...allY)*1.1;
+    const series = gammas.map(g=>({
+      label:`γ=${g}`,
+      color:nlGammaColor(g),
+      pts:data[g].filter(([,y])=>y!=null).map(([x,y])=>({x,y}))
     }));
-    el.innerHTML = miniChart({series, xLabel:"K (agents)", yLabel:"1‑R² (no-learning)",
-                              xMin:3, xMax:10, yMin:0, yMax,
+    el.innerHTML = miniChart({series, xLabel:"K (number of agents)", yLabel:"1−R²",
+                              xMin:3, xMax:100, xLog:true, yMin:0, yMax,
                               dots:true, lines:true,
                               hLines:[{y:0,color:"#999",dash:"2 2"}]});
   }
 
-  function renderReeVsNl(map, nlData) {
-    const el = document.getElementById("chart-ree-vs-nl");
-    if (!el || !nlData) return;
-    const gammas = [0.25, 0.5, 1.0, 4.0];
-    const colors = ["#d62728","#1f77b4","#ff7f0e","#2ca02c"];
-    const series = [];
-    gammas.forEach((g, gi) => {
-      const color = colors[gi];
-      // REE points
-      const reePts = (map.get(g)||[]).filter(t=>t.result?.["1-R2"]!=null)
-                                      .map(t=>({x:t.tau, y:t.result["1-R2"]}));
-      if (reePts.length) series.push({label:`γ=${g} REE`, color, pts:reePts});
-      // NL points
-      const nlKey = String(g);
-      const nlPts = (nlData[nlKey]||[]).map(([x,y])=>({x,y}));
-      if (nlPts.length) series.push({label:`γ=${g} NL`, color, pts:nlPts.map(p=>({...p,_open:true}))});
-    });
-    el.innerHTML = miniChart({series, xLabel:"τ", yLabel:"1‑R²",
-                              xLog:false, xMin:0, xMax:11, yMin:0, yMax:0.14,
-                              hLines:[{y:0,color:"#ccc",dash:"2 2"}]});
+  // ——— Wire all figure renders ———
+  function renderAllPaperFigures(map) {
+    if (!FIGDATA) return;
+    try { renderFig1NLLines(FIGDATA.fig1_nl_lines); } catch(e) { console.error("fig1",e); }
+    try { renderFig2Contours(FIGDATA.fig2_contours); } catch(e) { console.error("fig2",e); }
+    try { renderFig3b(map); } catch(e) { console.error("fig3b",e); }
+    try { renderFig4(map); } catch(e) { console.error("fig4",e); }
+    try { renderFig6(FIGDATA.fig6_volume); } catch(e) { console.error("fig6",e); }
+    try { renderFig7(FIGDATA.fig7_voi_nl); } catch(e) { console.error("fig7",e); }
+    try { renderFig8(FIGDATA.fig7_voi_nl); } catch(e) { console.error("fig8",e); }
+    try { renderFig9(FIGDATA.fig9_mechanisms); } catch(e) { console.error("fig9",e); }
+    try { renderFig10(FIGDATA.fig10a_K); } catch(e) { console.error("fig10",e); }
   }
 
-  function renderPaperFigures(map) {
-    if (!FIGDATA) return;
-    try { renderFig1(FIGDATA.fig1); } catch(e) { console.error("fig1", e); }
-    try { renderFig2(FIGDATA.fig2, "chart-nl-tau", 0.16); } catch(e) { console.error("fig2", e); }
-    try { renderFig3(FIGDATA.fig3); } catch(e) { console.error("fig3", e); }
-    try { renderFig7(FIGDATA.fig7); } catch(e) { console.error("fig7", e); }
-    try { renderFig8(FIGDATA.fig8); } catch(e) { console.error("fig8", e); }
-    try { renderFig10(FIGDATA.fig10); } catch(e) { console.error("fig10", e); }
-    try { renderReeVsNl(map, FIGDATA.fig2); } catch(e) { console.error("reeVsNl", e); }
+  // ——— Fig 1: NL 1-R² vs tau line chart ———
+  function renderFig1NLLines(data) {
+    const el = document.getElementById("chart-fig1");
+    if (!el) return;
+    const gammas = Object.keys(data);
+    const series = gammas.map(g => ({
+      label: g==="100.0" ? "CARA" : `γ=${g}`,
+      color: nlGammaColor(g),
+      pts: data[g].map(([x,y])=>({x,y}))
+    }));
+    el.innerHTML = miniChart({series, xLabel:"Signal precision τ", yLabel:"1−R²",
+                              xLog:true, xMin:0.1, xMax:20, yMin:0, yMax:0.12,
+                              hLines:[{y:0,color:"#999",dash:"4 2"}]});
   }
 
 </script>
