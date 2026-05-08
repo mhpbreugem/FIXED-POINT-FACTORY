@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-08T21:45:21.317164Z",
+  "updated_at": "2026-05-08T21:53:52.669672Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -990,15 +990,15 @@
       "gamma": 1.4,
       "tau": 5.7,
       "depends_on": [
+        "g100_t0500",
         "g140_t0330"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "\u03c4-ladder between g140_t0330 (\u03c4=3.3) and g140_t1000 (\u03c4=10.0).",
-      "claimed_by": "gha-25581358468-g140_t0570",
-      "claimed_at": "2026-05-08T21:52:56Z"
+      "note": "Auto-requeued (attempt 1): warm-start from g100_t0500 (log-dist=0.36).",
+      "requeue_count": 1
     },
     {
       "id": "g140_t1000",
@@ -1648,8 +1648,8 @@
   "summary": {
     "total": 66,
     "done": 51,
-    "ready": 2,
-    "claimed": 4,
+    "ready": 1,
+    "claimed": 5,
     "blocked": 4,
     "bailed": 1,
     "skip": 4
