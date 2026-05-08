@@ -165,7 +165,8 @@ jobs:
             "numpy==2.0.2" \
             "scipy==1.15.3" \
             "numba==0.60.0"
-          python3 -c "import numpy, scipy, numba; print('numpy', numpy.__version__, 'scipy', scipy.__version__, 'numba', numba.__version__)"
+          python3 -m pip install mpmath
+          python3 -c "import numpy, scipy, numba, mpmath; print('numpy', numpy.__version__, 'scipy', scipy.__version__, 'numba', numba.__version__, 'mpmath', mpmath.__version__)"
 
       - name: Clone REZN solver source
         run: |
