@@ -936,7 +936,7 @@
         "g140_t0270"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 3): noise perturbation noise_level=0.002.",
@@ -945,7 +945,9 @@
         "noise_level": 0.002,
         "presmooth": 100,
         "presmooth_alpha": 0.02
-      }
+      },
+      "claimed_by": "gha-25578769442-g140_t0300",
+      "claimed_at": "2026-05-08T20:47:58Z"
     },
     {
       "id": "g140_t0330",
@@ -955,10 +957,12 @@
         "g140_t0240"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
-      "note": "\u03c4-ladder between g140_t0240 (\u03c4=2.4) and g140_t0450 (\u03c4=4.5)."
+      "note": "\u03c4-ladder between g140_t0240 (\u03c4=2.4) and g140_t0450 (\u03c4=4.5).",
+      "claimed_by": "gha-25578769442-g140_t0330",
+      "claimed_at": "2026-05-08T20:47:58Z"
     },
     {
       "id": "g140_t0450",
@@ -968,11 +972,13 @@
         "g140_t0330"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 4): via new ladder g140_t0330. \u03c4-ladder at \u03c4=3.3",
-      "requeue_count": 4
+      "requeue_count": 4,
+      "claimed_by": "gha-25578769442-g140_t0450",
+      "claimed_at": "2026-05-08T20:47:58Z"
     },
     {
       "id": "g140_t1000",
@@ -1249,7 +1255,7 @@
       "depends_on": [
         "g025_t0100"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -1267,7 +1273,9 @@
         "lgmres_tol": 1e-10,
         "lgmres_inner_m": 30,
         "lgmres_outer": 10
-      }
+      },
+      "claimed_by": "gha-25578769442-g025_t0080",
+      "claimed_at": "2026-05-08T20:47:58Z"
     },
     {
       "id": "g025_t0050",
