@@ -33,6 +33,7 @@ import numpy as np
 # ---------------------------------------------------------------------------
 ROOT = Path(__file__).resolve().parents[3]   # fixed-point-factory repo root
 sys.path.insert(0, str(ROOT / "core"))
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # phi_mp.py lives here
 
 from progress import ProgressReporter  # noqa: E402
 
@@ -383,14 +384,45 @@ def main() -> None:
                 heartbeat_s=30.0,
             )
 
-        # Final diagnostics
+        # Final diagnostics (float64)
         P_full_final = replace_inner(halo, P_inner_final, inner_lo, inner_hi)
         F_full = phi_full_fn(P_full_final) - P_full_final
         F_inner = extract_inner(F_full, inner_lo, inner_hi)
         F_inf_final = float(np.max(np.abs(F_inner)))
         deficit = revelation_deficit_f128(P_inner_final, u_grid_inner, tau_vec, K)
-        wall_s = time.perf_counter() - t_start
 
+        # ----------------------------------------------------------------
+        # Optional mpmath polish phase
+        # Activated when solver_params contains mp_dps (e.g. 100).
+        # Runs pure Picard in mpmath starting from the float64 result.
+        # ----------------------------------------------------------------
+        mp_dps = int(sp.get("mp_dps", 0))
+        if mp_dps > 0:
+            from phi_mp import phi_picard_mp  # noqa: PLC0415
+            mp_tol     = str(sp.get("mp_tol", "1e-50"))
+            mp_iters   = int(sp.get("mp_iters", 2000))
+            mp_alpha   = float(sp.get("mp_alpha", 0.5))
+            print(f"[solve] mpmath polish: dps={mp_dps} tol={mp_tol} "
+                  f"alpha={mp_alpha} max_iters={mp_iters}", flush=True)
+            P_inner_mp, F_inf_mp_val, n_mp = phi_picard_mp(
+                P_inner_final, halo, u_full,
+                inner_lo, inner_hi,
+                tau_vec, gamma_vec, W_vec,
+                kernel_h,
+                dps=mp_dps,
+                tol_str=mp_tol,
+                max_iters=mp_iters,
+                alpha=mp_alpha,
+                reporter=reporter,
+            )
+            P_inner_final = P_inner_mp
+            F_inf_final   = F_inf_mp_val
+            P_full_final  = replace_inner(halo, P_inner_final, inner_lo, inner_hi)
+            deficit = revelation_deficit_f128(P_inner_final, u_grid_inner, tau_vec, K)
+            print(f"[solve] mpmath done  ||F||={F_inf_final:.4e}  "
+                  f"1-R²={deficit:.6e}  mp_iters={n_mp}", flush=True)
+
+        wall_s = time.perf_counter() - t_start
         print(f"[solve] done  ||F_inner||inf={F_inf_final:.4e}  "
               f"1-R²={deficit:.6e}  wall={wall_s:.0f}s", flush=True)
 
