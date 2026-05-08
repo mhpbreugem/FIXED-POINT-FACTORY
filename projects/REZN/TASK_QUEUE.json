@@ -585,7 +585,7 @@
         "g100_t0500"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 1): noise perturbation noise_level=0.002.",
@@ -595,8 +595,8 @@
         "presmooth_alpha": 0.02
       },
       "requeue_count": 1,
-      "claimed_by": "gha-25576829681-g100_t0590",
-      "claimed_at": "2026-05-08T20:04:14Z"
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g100_t0700",
@@ -994,13 +994,13 @@
         "g140_t0450"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 4): warm-start from g100_t0500 (log-dist=0.77).",
       "requeue_count": 4,
-      "claimed_by": "gha-25573264484-g140_t1000",
-      "claimed_at": "2026-05-08T18:45:20Z"
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g400_t1000",
