@@ -651,7 +651,7 @@
         "g050_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "note": "\u03b3-sweep root. Conservative solver: 200 presmooth steps \u03b1=0.01, rdiff=1e-5. Auto-requeue will insert \u03b3-ladder if this also fails. fig4B: 1-R\u00b2=0.025 / slope=0.59.",
@@ -662,7 +662,9 @@
         "inner_rdiff": 1e-05,
         "inner_max_iter": 50
       },
-      "requeue_count": 0
+      "requeue_count": 0,
+      "claimed_by": "gha-25534916917-g200_t0200",
+      "claimed_at": "2026-05-08T03:35:03Z"
     },
     {
       "id": "g200_t0150",
