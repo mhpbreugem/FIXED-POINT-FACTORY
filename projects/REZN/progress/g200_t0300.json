@@ -2,8 +2,8 @@
   "task_id": "g200_t0300",
   "worker_id": "claude-local-1",
   "started_at": "2026-05-08T12:52:06Z",
-  "last_update": "2026-05-08T12:52:06Z",
-  "iter": null,
-  "ftol": null,
+  "last_update": "2026-05-08T12:52:37Z",
+  "iter": 549,
+  "ftol": "1.094257e-02",
   "extra": {}
 }
