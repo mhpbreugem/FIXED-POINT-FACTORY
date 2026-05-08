@@ -606,7 +606,7 @@
         "g100_t0500",
         "g100_t0590"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -628,7 +628,9 @@
       },
       "requeue_count": 4,
       "deps_satisfy": "any",
-      "note": "Auto-requeued (attempt 4): noise perturbation noise_level=0.004."
+      "note": "Auto-requeued (attempt 4): noise perturbation noise_level=0.004.",
+      "claimed_by": "gha-25579868790-g100_t0700",
+      "claimed_at": "2026-05-08T21:14:29Z"
     },
     {
       "id": "g100_t1000",
@@ -934,7 +936,7 @@
         "g140_t0270"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 4): noise perturbation noise_level=0.004.",
@@ -943,7 +945,9 @@
         "noise_level": 0.004,
         "presmooth": 100,
         "presmooth_alpha": 0.02
-      }
+      },
+      "claimed_by": "gha-25579868790-g140_t0300",
+      "claimed_at": "2026-05-08T21:14:29Z"
     },
     {
       "id": "g140_t0330",
@@ -1448,7 +1452,7 @@
       "depends_on": [
         "g200_t0150"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -1467,8 +1471,8 @@
         "lgmres_inner_m": 30,
         "lgmres_outer": 10
       },
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25579868790-g200_t0100",
+      "claimed_at": "2026-05-08T21:14:29Z"
     },
     {
       "id": "g200_t0300",
