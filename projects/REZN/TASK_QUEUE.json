@@ -528,7 +528,7 @@
       "result": {
         "reason": "||F||inf=3.327e-01 > bail threshold 1e-04"
       },
-      "note": "Genuinely stuck: both g400_t0700 (.json, not .npz) and g050_t0200 (.npz) tried. F=0.333 — too far from REE. Needs a γ=4 .npz checkpoint (e.g. g400_t0200 re-solved by new solver) before retrying."
+      "note": "Genuinely stuck: both g400_t0700 (.json, not .npz) and g050_t0200 (.npz) tried. F=0.333 \u2014 too far from REE. Needs a \u03b3=4 .npz checkpoint (e.g. g400_t0200 re-solved by new solver) before retrying."
     },
     {
       "id": "g400_t1500",
@@ -548,10 +548,12 @@
       "depends_on": [
         "g050_t0200"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
-      "note": "\u03b3-sweep root. Bailed at F=0.014 (pre-auto-requeue deploy). Re-queued: solver got close, worth retrying. fig4B: 1-R\u00b2=0.133 / slope=0.51."
+      "note": "\u03b3-sweep root. Bailed at F=0.014 (pre-auto-requeue deploy). Re-queued: solver got close, worth retrying. fig4B: 1-R\u00b2=0.133 / slope=0.51.",
+      "claimed_by": "gha-25534308120-g025_t0200",
+      "claimed_at": "2026-05-08T03:05:22Z"
     },
     {
       "id": "g025_t0150",
