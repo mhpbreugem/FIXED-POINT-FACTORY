@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-08T04:33:52.812795Z",
+  "updated_at": "2026-05-08T04:33:53.665715Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -717,7 +717,7 @@
         "picard_tol": 1e-07
       },
       "requeue_count": 1,
-      "completed_at": "2026-05-08T04:33:52.811625Z"
+      "completed_at": "2026-05-08T04:33:53.664673Z"
     },
     {
       "id": "g200_t0150",
