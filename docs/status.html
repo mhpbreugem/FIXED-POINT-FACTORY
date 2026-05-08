@@ -94,7 +94,6 @@
   document.getElementById("project").textContent = PROJECT;
 
   const rawUrl = path => `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${path}?_=${Date.now()}`;
-  const listUrl = path => `https://api.github.com/repos/${REPO}/contents/${path}?ref=${BRANCH}&_=${Date.now()}`;
 
   let TASKS = [];
   let PROGRESS = {};   // task_id -> {iter, ftol, last_update, stale}
@@ -234,44 +233,35 @@
 
   async function loadWorkers() {
     const div = document.getElementById("workers");
-    try {
-      const items = await fetchJson(listUrl(`projects/${PROJECT}/heartbeats`));
-      const beats = items.filter(i => i.name.endsWith(".txt"));
-      if (!beats.length) { div.innerHTML = "<i>no heartbeat files</i>"; return; }
-      const rows = await Promise.all(beats.map(async b => {
-        try {
-          const ts = (await fetchText(rawUrl(`projects/${PROJECT}/heartbeats/${b.name}`))).trim();
-          const age = ageMin(ts);
-          const stale = age > 15;
-          return `<div>${b.name.replace(".txt", "")}: <span class="${stale ? "stale" : ""}">${ageStr(ts)}</span> ${stale ? "(STALE)" : ""}</div>`;
-        } catch (e) { return `<div>${b.name}: error</div>`; }
-      }));
-      div.innerHTML = rows.join("");
-    } catch (e) {
-      div.innerHTML = `<i>could not load heartbeats (${e.message})</i>`;
-    }
+    // Derive active workers from claimed tasks — no API listing needed
+    const claimed = TASKS.filter(t => t.status === "claimed" && t.claimed_by);
+    if (!claimed.length) { div.innerHTML = "<i>no active workers</i>"; return; }
+    const rows = claimed.map(t => {
+      const age = ageMin(t.claimed_at);
+      const stale = age !== null && age > 120;
+      return `<div>${t.claimed_by} → <span class="mono">${t.id}</span> `
+           + `<span class="${stale ? "stale" : "small"}">(claimed ${ageStr(t.claimed_at)}${stale ? " — STALE?" : ""})</span></div>`;
+    });
+    div.innerHTML = rows.join("");
   }
 
   async function loadProgress() {
-    // Reset progress cache
+    // Reset progress cache, then fetch per-task progress files directly by ID.
+    // No GitHub Contents API call — avoids the 60 req/hr unauthenticated rate limit.
     PROGRESS = {};
-    try {
-      const items = await fetchJson(listUrl(`projects/${PROJECT}/progress`));
-      const files = items.filter(i => i.name.endsWith(".json"));
-      if (!files.length) return;
-      await Promise.all(files.map(async f => {
-        try {
-          const p = await fetchJson(rawUrl(`projects/${PROJECT}/progress/${f.name}`));
-          PROGRESS[p.task_id] = {
-            iter: p.iter,
-            ftol: p.ftol,
-            last_update: p.last_update,
-            stale: ageMin(p.last_update) > 3,
-          };
-        } catch (_) {}
-      }));
-    } catch (_) {}
-    // Re-render table with fresh progress data
+    const claimedIds = TASKS.filter(t => t.status === "claimed").map(t => t.id);
+    if (!claimedIds.length) { render(); return; }
+    await Promise.all(claimedIds.map(async tid => {
+      try {
+        const p = await fetchJson(rawUrl(`projects/${PROJECT}/progress/${tid}.json`));
+        PROGRESS[p.task_id] = {
+          iter: p.iter,
+          ftol: p.ftol,
+          last_update: p.last_update,
+          stale: ageMin(p.last_update) > 3,
+        };
+      } catch (_) {}  // file absent until first push — silently skip
+    }));
     render();
   }
 
