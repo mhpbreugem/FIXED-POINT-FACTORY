@@ -73,9 +73,9 @@
 <p class="meta" id="meta">loading…</p>
 
 <div class="tabs">
-  <button class="tab active" onclick="switchTab('tasks')">Tasks</button>
-  <button class="tab" onclick="switchTab('workers')">Workers</button>
-  <button class="tab" onclick="switchTab('figures')">Figures</button>
+  <button class="tab active" onclick="switchTab(this,'tasks')">Tasks</button>
+  <button class="tab" onclick="switchTab(this,'workers')">Workers</button>
+  <button class="tab" onclick="switchTab(this,'figures')">Figures</button>
 </div>
 
 <!-- refresh button outside tabs -->
@@ -139,11 +139,11 @@
     return r.text();
   }
 
-  function switchTab(name) {
+  function switchTab(btn, name) {
     document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
     document.querySelectorAll(".tab-content").forEach(d => d.classList.remove("active"));
     document.getElementById(`tab-${name}`).classList.add("active");
-    event.target.classList.add("active");
+    btn.classList.add("active");
     if (name === "figures") renderFigures();
   }
 
