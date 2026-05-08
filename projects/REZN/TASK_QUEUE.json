@@ -232,7 +232,7 @@
       "depends_on": [
         "g050_t0500"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -251,8 +251,8 @@
         "lgmres_inner_m": 30,
         "lgmres_outer": 10
       },
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25565514206-g050_t0700",
+      "claimed_at": "2026-05-08T15:57:17Z"
     },
     {
       "id": "g050_t1000",
@@ -528,7 +528,7 @@
       "depends_on": [
         "g100_t0500"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -548,8 +548,8 @@
         "lgmres_outer": 10
       },
       "requeue_count": 0,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25565514206-g100_t0700",
+      "claimed_at": "2026-05-08T15:57:17Z"
     },
     {
       "id": "g100_t1000",
@@ -787,11 +787,13 @@
         "g200_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 2): warm-start from g100_t0500 (log-dist=0.77).",
-      "requeue_count": 2
+      "requeue_count": 2,
+      "claimed_by": "gha-25565514206-g140_t1000",
+      "claimed_at": "2026-05-08T15:57:17Z"
     },
     {
       "id": "g400_t1000",
@@ -980,7 +982,7 @@
       "depends_on": [
         "g025_t0150"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -999,8 +1001,8 @@
         "lgmres_inner_m": 30,
         "lgmres_outer": 10
       },
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25565514206-g025_t0100",
+      "claimed_at": "2026-05-08T15:57:17Z"
     },
     {
       "id": "g025_t0080",
