@@ -232,7 +232,7 @@
       "depends_on": [
         "g050_t0500"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -250,7 +250,9 @@
         "lgmres_tol": 1e-10,
         "lgmres_inner_m": 30,
         "lgmres_outer": 10
-      }
+      },
+      "claimed_by": "claude-local-1",
+      "claimed_at": "2026-05-08T14:19:25.122338+00:00"
     },
     {
       "id": "g050_t1000",
@@ -970,7 +972,7 @@
       "depends_on": [
         "g025_t0150"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -988,7 +990,9 @@
         "lgmres_tol": 1e-10,
         "lgmres_inner_m": 30,
         "lgmres_outer": 10
-      }
+      },
+      "claimed_by": "claude-local-1",
+      "claimed_at": "2026-05-08T14:19:25.122338+00:00"
     },
     {
       "id": "g025_t0080",
@@ -1187,7 +1191,7 @@
       "depends_on": [
         "g200_t0150"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -1205,7 +1209,9 @@
         "lgmres_tol": 1e-10,
         "lgmres_inner_m": 30,
         "lgmres_outer": 10
-      }
+      },
+      "claimed_by": "claude-local-1",
+      "claimed_at": "2026-05-08T14:19:25.122338+00:00"
     },
     {
       "id": "g200_t0300",
