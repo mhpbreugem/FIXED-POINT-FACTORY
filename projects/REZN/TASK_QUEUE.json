@@ -409,6 +409,39 @@
       }
     },
     {
+      "id": "g140_t0200",
+      "gamma": 1.4,
+      "tau": 2.0,
+      "depends_on": [
+        "g100_t0200",
+        "g200_t0200"
+      ],
+      "deps_satisfy": "any",
+      "status": "claimed",
+      "checkpoint": null,
+      "result": null,
+      "note": "Added to fill gamma-sweep at tau=2.0; warmstart from g200_t0200 (closest checkpoint).",
+      "requeue_count": 0,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "claimed_by": "claude-local-1",
+      "claimed_at": "2026-05-08T13:44:39.196932+00:00"
+    },
+    {
       "id": "g100_t0300",
       "gamma": 1.0,
       "tau": 3.0,
