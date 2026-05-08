@@ -823,7 +823,7 @@
       "depends_on": [
         "g035_t0200"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "projects/REZN/checkpoints/g025_t0200.npz",
       "result": null,
       "note": "Auto-requeued (attempt 1): via new ladder g035_t0200. \u03b3-ladder at \u03b3=0.35000000000000003",
@@ -844,7 +844,9 @@
         "lgmres_outer": 10
       },
       "requeue_count": 0,
-      "deps_satisfy": "any"
+      "deps_satisfy": "any",
+      "claimed_by": "gha-25552104032-g025_t0200",
+      "claimed_at": "2026-05-08T11:38:07Z"
     },
     {
       "id": "g025_t0150",
