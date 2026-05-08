@@ -161,7 +161,7 @@
         "g050_t0300",
         "g100_t0500"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "deps_satisfy": "any",
@@ -182,7 +182,9 @@
         "lgmres_outer": 10
       },
       "requeue_count": 1,
-      "note": "Auto-requeued (attempt 1): warm-start from g050_t0200 (log-dist=0.69)."
+      "note": "Auto-requeued (attempt 1): warm-start from g050_t0200 (log-dist=0.69).",
+      "claimed_by": "gha-25555129405-g050_t0400",
+      "claimed_at": "2026-05-08T12:18:37Z"
     },
     {
       "id": "g050_t0500",
@@ -724,10 +726,12 @@
         "g050_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
-      "note": "\u03b3-ladder between g050_t0200 (\u03b3=0.5) and g400_t1000 (\u03b3=4.0) at \u03c4=10.0."
+      "note": "\u03b3-ladder between g050_t0200 (\u03b3=0.5) and g400_t1000 (\u03b3=4.0) at \u03c4=10.0.",
+      "claimed_by": "gha-25555129405-g140_t1000",
+      "claimed_at": "2026-05-08T12:18:37Z"
     },
     {
       "id": "g400_t1000",
@@ -737,7 +741,7 @@
         "g140_t1000"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 1): via new ladder g140_t1000. \u03b3-ladder at \u03b3=1.4",
@@ -757,7 +761,9 @@
         "lgmres_inner_m": 30,
         "lgmres_outer": 10
       },
-      "requeue_count": 1
+      "requeue_count": 1,
+      "claimed_by": "gha-25555129405-g400_t1000",
+      "claimed_at": "2026-05-08T12:18:37Z"
     },
     {
       "id": "g400_t1500",
@@ -862,7 +868,7 @@
       "depends_on": [
         "g025_t0200"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -881,7 +887,9 @@
         "lgmres_inner_m": 30,
         "lgmres_outer": 10
       },
-      "requeue_count": 0
+      "requeue_count": 0,
+      "claimed_by": "gha-25555129405-g025_t0150",
+      "claimed_at": "2026-05-08T12:18:37Z"
     },
     {
       "id": "g025_t0100",
