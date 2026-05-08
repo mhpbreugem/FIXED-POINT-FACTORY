@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-08T03:17:16.911644Z",
+  "updated_at": "2026-05-08T03:34:52.353472Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -542,16 +542,29 @@
       "result": null
     },
     {
-      "id": "g025_t0200",
-      "gamma": 0.25,
+      "id": "g035_t0200",
+      "gamma": 0.35000000000000003,
       "tau": 2.0,
       "depends_on": [
         "g050_t0200"
       ],
-      "status": "claimed",
+      "deps_satisfy": "any",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "\u03b3-sweep root. Conservative solver: 200 presmooth steps \u03b1=0.01, rdiff=1e-5. Auto-requeue will insert \u03b3-ladder if this also fails. fig4B: 1-R\u00b2=0.133 / slope=0.51.",
+      "note": "\u03b3-ladder between g050_t0200 (\u03b3=0.5) and g025_t0200 (\u03b3=0.25) at \u03c4=2.0."
+    },
+    {
+      "id": "g025_t0200",
+      "gamma": 0.25,
+      "tau": 2.0,
+      "depends_on": [
+        "g035_t0200"
+      ],
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "note": "Auto-requeued (attempt 1): via new ladder g035_t0200. \u03b3-ladder at \u03b3=0.35000000000000003",
       "solver_params": {
         "presmooth": 200,
         "presmooth_alpha": 0.01,
@@ -559,9 +572,8 @@
         "inner_rdiff": 1e-05,
         "inner_max_iter": 50
       },
-      "requeue_count": 0,
-      "claimed_by": "gha-25534912470-g025_t0200",
-      "claimed_at": "2026-05-08T03:25:47Z"
+      "requeue_count": 1,
+      "deps_satisfy": "any"
     },
     {
       "id": "g025_t0150",
