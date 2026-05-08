@@ -1021,7 +1021,7 @@
         "g050_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": "projects/REZN/checkpoints/g200_t0200.npz",
       "result": null,
       "note": "Restored checkpoint after Newton sign-fix; noise_level removed.",
@@ -1042,8 +1042,8 @@
         "lgmres_outer": 10
       },
       "requeue_count": 0,
-      "claimed_by": "claude-local-1",
-      "claimed_at": "2026-05-08T11:02:23.809109Z"
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g200_t0150",

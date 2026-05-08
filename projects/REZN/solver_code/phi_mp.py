@@ -307,12 +307,16 @@ def phi_newton_mp(
     F_float = float("inf")
     n_steps = 0
 
+    # Initialize once — never reconstruct from float64 inside the loop.
+    # Reconstructing from P_full_np each iteration would discard sub-float64
+    # mpmath corrections once F < 1e-15.
+    P_full_mp = np_to_mp(_mp.mp, P_full_np)
+
     for newton_it in range(max_newton):
         # ------------------------------------------------------------------
         # Step 1: accurate residual in mpmath
         # ------------------------------------------------------------------
         t_mp = time.perf_counter()
-        P_full_mp = np_to_mp(_mp.mp, P_full_np)
         P_new_mp = phi_K3_smooth_mp(
             _mp.mp, P_full_mp, u_full_mp, inner_lo, inner_hi,
             tau_mp, gamma_mp, W_mp, kernel_mp,
