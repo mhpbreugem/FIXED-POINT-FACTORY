@@ -50,10 +50,12 @@
   .err { color: var(--bailed); }
   .stale { color: var(--stale); font-weight: 600; }
   .mono { font-family: ui-monospace, monospace; font-size: 0.8rem; }
-  .worker-table td, .worker-table th { padding: 0.25rem 0.5rem; }
-  .progress-bar-wrap { width: 120px; background: #eee; border-radius: 3px;
-                       display: inline-block; vertical-align: middle; }
-  .progress-bar { height: 8px; border-radius: 3px; background: var(--claimed); }
+  .small { font-size: 0.8rem; color: var(--muted); }
+  .live  { font-size: 0.8rem; color: var(--claimed); font-family: ui-monospace, monospace; }
+  .enorm { font-size: 0.8rem; color: var(--done);    font-family: ui-monospace, monospace; }
+  .controls { margin: 0.5rem 0 0.8rem 0; display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+  .controls input { padding: 0.3rem 0.5rem; border: 1px solid #ccc; border-radius: 0.3rem; width: 220px; }
+  .workers-inline { margin-top: 1.2rem; font-size: 0.82rem; color: var(--muted); }
   svg.chart { overflow: visible; }
   .chart-wrap { margin: 0.5rem 0 1.5rem 0; }
   /* mini chart axis */
@@ -74,40 +76,29 @@
 
 <div class="tabs">
   <button class="tab active" onclick="switchTab(this,'tasks')">Tasks</button>
-  <button class="tab" onclick="switchTab(this,'workers')">Workers</button>
   <button class="tab" onclick="switchTab(this,'figures')">Figures</button>
-</div>
-
-<!-- refresh button outside tabs -->
-<div style="margin-bottom:0.5rem">
-  <button onclick="loadAll()">refresh now</button>
 </div>
 
 <div id="tab-tasks" class="tab-content active">
   <div class="summary" id="summary"></div>
+  <div class="controls">
+    <input type="text" id="filter" placeholder="filter id, status, γ…" oninput="renderTasks()">
+    <button onclick="loadAll()">refresh now</button>
+  </div>
   <table id="task-table">
     <thead><tr>
-      <th onclick="sortBy('id')">ID</th>
+      <th onclick="sortBy('id')">id</th>
+      <th onclick="sortBy('status')">status</th>
       <th onclick="sortBy('gamma')">&#947;</th>
       <th onclick="sortBy('tau')">&#964;</th>
-      <th onclick="sortBy('status')">Status</th>
-      <th onclick="sortBy('1-R2')">1‑R²</th>
-      <th>Note</th>
-      <th>Depends on</th>
+      <th>live iter · ftol</th>
+      <th onclick="sortBy('F_max')">&#8214;F&#8214;&#8734;</th>
+      <th onclick="sortBy('1-R2')">1&#8209;R²</th>
+      <th>checkpoint</th>
     </tr></thead>
     <tbody id="task-body"></tbody>
   </table>
-</div>
-
-<div id="tab-workers" class="tab-content">
-  <h2>Active workers</h2>
-  <table class="worker-table" id="worker-table">
-    <thead><tr>
-      <th>Worker</th><th>Task</th><th>Heartbeat</th><th>Age</th>
-      <th>Iter</th><th>F-tol</th><th>Progress</th>
-    </tr></thead>
-    <tbody id="worker-body"></tbody>
-  </table>
+  <div class="workers-inline" id="workers-inline"></div>
 </div>
 
 <div id="tab-figures" class="tab-content">
@@ -166,6 +157,7 @@
   function renderTasks() {
     if (!taskData) return;
     const tasks = taskData.tasks || [];
+    const filterVal = (document.getElementById("filter")?.value || "").toLowerCase();
 
     // summary pills
     const counts = {};
@@ -176,8 +168,15 @@
         `<span class="pill ${s}">${s}: ${counts[s]}</span>`).join("") +
       `<span class="pill" style="background:#555">total: ${tasks.length}</span>`;
 
-    // sort
-    const sorted = [...tasks].sort((a,b) => {
+    // filter + sort
+    const filtered = tasks.filter(t => {
+      if (!filterVal) return true;
+      return t.id.toLowerCase().includes(filterVal) ||
+             t.status.toLowerCase().includes(filterVal) ||
+             String(t.gamma||"").includes(filterVal) ||
+             String(t.tau||"").includes(filterVal);
+    });
+    const sorted = [...filtered].sort((a,b) => {
       let av = a[sortCol] ?? a.result?.[sortCol] ?? "";
       let bv = b[sortCol] ?? b.result?.[sortCol] ?? "";
       if (typeof av === "number" && typeof bv === "number")
@@ -189,19 +188,31 @@
     // render rows
     document.getElementById("task-body").innerHTML = sorted.map(t => {
       const r2 = t.result?.["1-R2"];
-      const r2str = r2 != null ? r2.toFixed(4) : "";
-      const deps = (t.depends_on||[]).join(", ");
+      const r2str = r2 != null ? r2.toPrecision(3) : "";
+      const fmax = t.result?.F_max ?? t.result?.F_max_bound;
+      const fmaxStr = fmax != null ? Number(fmax).toExponential(1) : "";
+      const pr = progressData[t.id];
+      let liveStr = "";
+      if (t.status === "claimed" && pr) {
+        liveStr = `<div class="live">${pr.iter} · ${pr.ftol != null ? Number(pr.ftol).toExponential(1) : ""}</div>`;
+      }
+      const ckpt = t.checkpoint;
+      const ckptCell = ckpt
+        ? `<a href="https://github.com/${OWNER}/${REPO}/blob/${BRANCH}/${ckpt}" target="_blank" class="mono" style="font-size:0.78rem">${ckpt.split("/").pop()}</a>`
+        : "";
       return `<tr>
         <td class="mono">${esc(t.id)}</td>
+        <td class="status ${t.status}">${t.status}</td>
         <td>${t.gamma != null ? t.gamma : ""}</td>
         <td>${t.tau  != null ? t.tau  : ""}</td>
-        <td class="status ${t.status}">${t.status}</td>
+        <td>${liveStr}</td>
+        <td class="enorm">${fmaxStr}</td>
         <td>${r2str}</td>
-        <td style="max-width:260px;font-size:0.78rem;color:#555">${esc(t.note||"")}${
-          t.test ? " <em>(test)</em>" : ""}</td>
-        <td class="mono" style="font-size:0.78rem;color:#888">${esc(deps)}</td>
+        <td>${ckptCell}</td>
       </tr>`;
     }).join("");
+
+    renderWorkersInline();
   }
 
   function sortBy(col) {
@@ -232,39 +243,43 @@
           progressData[d.task_id] = d;
         } catch {}
       }));
-      renderWorkers();
+      renderTasks();
     } catch {}
   }
 
-  function renderWorkers() {
-    const tbody = document.getElementById("worker-body");
+  function renderWorkersInline() {
+    const el = document.getElementById("workers-inline");
+    if (!el) return;
     if (!workerData || workerData.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7" style="color:#888">no heartbeat files found</td></tr>`;
+      el.innerHTML = "<em>no active workers</em>";
       return;
     }
     const now = Date.now();
-    tbody.innerHTML = workerData.map(f => {
+    const rows = workerData.map(f => {
       const workerName = f.name.replace(".txt","");
       const hbAge = f.last_modified ? Math.round((now - new Date(f.last_modified).getTime())/60000) : null;
       const isStale = hbAge != null && hbAge > 10;
       const pr = progressData[workerName] || Object.values(progressData).find(p => p.worker_id === workerName);
-      const iter  = pr ? pr.iter  : "";
-      const ftol  = pr ? pr.ftol  : "";
-      const taskId = pr ? pr.task_id : "";
-      const maxIter = pr ? pr.max_iter : null;
-      const pctStr = (pr && maxIter) ? Math.round(pr.iter/maxIter*100)+"%" : "";
-      const barW   = (pr && maxIter) ? Math.round(pr.iter/maxIter*80) : 0;
+      const taskId = pr ? pr.task_id : "—";
+      const iter   = pr ? pr.iter : "—";
+      const ftol   = pr?.ftol != null ? Number(pr.ftol).toExponential(1) : "—";
+      const ageStr = hbAge != null ? (isStale ? `<span class="stale">${hbAge}m ago</span>` : `${hbAge}m ago`) : "?";
       return `<tr>
         <td class="mono">${esc(workerName)}</td>
         <td class="mono">${esc(taskId)}</td>
-        <td>${hbAge != null ? (isStale ? `<span class="stale">${hbAge}m ago</span>` : `${hbAge}m ago`) : "?"}</td>
-        <td>${hbAge != null ? hbAge + "m" : "?"}</td>
+        <td>${ageStr}</td>
         <td>${iter}</td>
-        <td class="mono">${ftol ? Number(ftol).toExponential(1) : ""}</td>
-        <td><div class="progress-bar-wrap"><div class="progress-bar" style="width:${barW}px"></div></div> ${pctStr}</td>
+        <td class="mono">${ftol}</td>
       </tr>`;
     }).join("");
+    el.innerHTML = `<strong>Workers</strong>
+      <table style="font-size:0.82rem;margin-top:0.4rem">
+        <thead><tr><th>worker</th><th>task</th><th>heartbeat</th><th>iter</th><th>ftol</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
   }
+
+  function renderWorkers() { renderWorkersInline(); }
 
   // ═══════════════════════════════════════════════════════════════════════════
   // LOAD ALL
