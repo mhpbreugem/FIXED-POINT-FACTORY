@@ -606,7 +606,7 @@
         "g100_t0500",
         "g100_t0590"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -627,7 +627,9 @@
       },
       "requeue_count": 2,
       "deps_satisfy": "any",
-      "note": "Auto-requeued (attempt 2): warm-start from g100_t0500 (log-dist=0.34)."
+      "note": "Auto-requeued (attempt 2): warm-start from g100_t0500 (log-dist=0.34).",
+      "claimed_by": "gha-25573264484-g100_t0700",
+      "claimed_at": "2026-05-08T18:45:20Z"
     },
     {
       "id": "g100_t1000",
@@ -893,10 +895,12 @@
         "g140_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
-      "note": "\u03c4-ladder between g140_t0200 (\u03c4=2.0) and g140_t0450 (\u03c4=4.5)."
+      "note": "\u03c4-ladder between g140_t0200 (\u03c4=2.0) and g140_t0450 (\u03c4=4.5).",
+      "claimed_by": "gha-25573264484-g140_t0300",
+      "claimed_at": "2026-05-08T18:45:20Z"
     },
     {
       "id": "g140_t0450",
@@ -906,11 +910,13 @@
         "g140_t0300"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 2): via new ladder g140_t0300. \u03c4-ladder at \u03c4=3.0",
-      "requeue_count": 2
+      "requeue_count": 2,
+      "claimed_by": "gha-25573264484-g140_t0450",
+      "claimed_at": "2026-05-08T18:45:20Z"
     },
     {
       "id": "g140_t1000",
@@ -921,11 +927,13 @@
         "g140_t0450"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 4): warm-start from g100_t0500 (log-dist=0.77).",
-      "requeue_count": 4
+      "requeue_count": 4,
+      "claimed_by": "gha-25573264484-g140_t1000",
+      "claimed_at": "2026-05-08T18:45:20Z"
     },
     {
       "id": "g400_t1000",
