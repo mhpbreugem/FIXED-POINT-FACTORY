@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-08T10:10:51.666674Z",
+  "updated_at": "2026-05-08T10:54:02.604566Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -1012,7 +1012,7 @@
         "g050_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "projects/REZN/checkpoints/g200_t0200.npz",
       "result": null,
       "note": "Auto-requeued (attempt 1): noise perturbation noise_level=0.002.",
@@ -1032,7 +1032,9 @@
         "lgmres_inner_m": 30,
         "lgmres_outer": 10
       },
-      "requeue_count": 0
+      "requeue_count": 0,
+      "claimed_by": "claude-local-1",
+      "claimed_at": "2026-05-08T10:54:02.602367Z"
     },
     {
       "id": "g200_t0150",
