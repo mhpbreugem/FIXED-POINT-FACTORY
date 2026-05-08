@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-08T23:21:03.111704Z",
+  "updated_at": "2026-05-08T23:53:34.103262Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -1389,9 +1389,15 @@
       "depends_on": [
         "g025_t0050"
       ],
-      "status": "claimed",
-      "checkpoint": null,
-      "result": null,
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g025_t0030.npz",
+      "result": {
+        "1-R2": 0.06521073,
+        "F_max": 1.0421e-53,
+        "n_stages": 1,
+        "phi_calls": 4098,
+        "wall_s": 2126.6
+      },
       "solver_params": {
         "presmooth": 200,
         "presmooth_alpha": 0.01,
@@ -1408,8 +1414,7 @@
         "lgmres_inner_m": 30,
         "lgmres_outer": 10
       },
-      "claimed_by": "gha-25584211144-g025_t0030",
-      "claimed_at": "2026-05-08T23:17:44Z"
+      "completed_at": "2026-05-08T23:53:34.101804Z"
     },
     {
       "id": "g025_t0300",
@@ -1726,7 +1731,7 @@
       "id": "extract_volume_g025",
       "gamma": 0.25,
       "tau": null,
-      "status": "blocked",
+      "status": "ready",
       "deps_satisfy": "all",
       "depends_on": [
         "g025_t0030",
@@ -1744,7 +1749,7 @@
       "id": "extract_value_info_g025",
       "gamma": 0.25,
       "tau": null,
-      "status": "blocked",
+      "status": "ready",
       "deps_satisfy": "all",
       "depends_on": [
         "g025_t0030",
@@ -1979,11 +1984,11 @@
   ],
   "summary": {
     "total": 86,
-    "done": 55,
-    "ready": 13,
-    "claimed": 1,
-    "blocked": 13,
-    "bailed": 3,
+    "done": 56,
+    "ready": 18,
+    "claimed": 0,
+    "blocked": 11,
+    "bailed": 0,
     "skip": 1
   },
   "fanout": {
