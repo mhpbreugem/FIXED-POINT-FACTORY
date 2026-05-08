@@ -1,1 +1,1954 @@
-QUEUE_PLACEHOLDER
+{
+  "queue_version": 1,
+  "updated_at": "2026-05-08T21:55:54.708689Z",
+  "params": {
+    "G": 20,
+    "UMAX": 5.0,
+    "trim": 0.0,
+    "K": 3,
+    "dps": 50,
+    "F_tol": "1e-25",
+    "weighting": "ex-ante 0.5*(f0^3+f1^3)"
+  },
+  "seed": {
+    "id": "seed",
+    "gamma": 0.5,
+    "tau": 2.0,
+    "checkpoint": "results/full_ree/posterior_v3_G20_umax5_notrim_mp300.json",
+    "F_max": "7.4e-119",
+    "dps": 300
+  },
+  "tasks": [
+    {
+      "id": "test_ci_smoke",
+      "gamma": 1.0,
+      "tau": 0.3,
+      "test": true,
+      "status": "done",
+      "checkpoint": "",
+      "result": {
+        "smoke": true,
+        "1-R2": 0.00015319,
+        "F_max": 0.20528,
+        "note": "CI smoke test \u2014 one phi eval, no convergence required"
+      },
+      "completed_at": "2026-05-07T18:31:51.999548Z"
+    },
+    {
+      "id": "g050_t0030",
+      "gamma": 0.5,
+      "tau": 0.3,
+      "depends_on": [
+        "g050_t0050"
+      ],
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g050_t0030_mp50.json",
+      "result": {
+        "1-R2": 0.037,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      }
+    },
+    {
+      "id": "g050_t0050",
+      "gamma": 0.5,
+      "tau": 0.5,
+      "depends_on": [
+        "g050_t0080"
+      ],
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g050_t0050_mp50.json",
+      "result": {
+        "1-R2": 0.038,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      }
+    },
+    {
+      "id": "g050_t0080",
+      "gamma": 0.5,
+      "tau": 0.8,
+      "depends_on": [
+        "g050_t0100"
+      ],
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g050_t0080_mp50.json",
+      "result": {
+        "1-R2": 0.047,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      }
+    },
+    {
+      "id": "g050_t0100",
+      "gamma": 0.5,
+      "tau": 1.0,
+      "depends_on": [
+        "g050_t0150"
+      ],
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g050_t0100_mp50.json",
+      "result": {
+        "1-R2": 0.052,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      }
+    },
+    {
+      "id": "g050_t0150",
+      "gamma": 0.5,
+      "tau": 1.5,
+      "depends_on": [
+        "g050_t0200"
+      ],
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g050_t0150_mp50.json",
+      "result": {
+        "1-R2": 0.064,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      }
+    },
+    {
+      "id": "g050_t0200",
+      "gamma": 0.5,
+      "tau": 2.0,
+      "depends_on": [],
+      "status": "done",
+      "checkpoint": "results/full_ree/seed_g050_t0200_3d.npz",
+      "result": {
+        "1-R2": 0.085,
+        "slope": 0.543,
+        "n_triples": 8000,
+        "F_max": 7.4e-119,
+        "F_source": "original mp300 solver (posterior_v3_G20_umax5_notrim_mp300)"
+      },
+      "note": "seed at mp300 converted to 3D .npz; downstream tasks warm-start from here"
+    },
+    {
+      "id": "g050_t0300",
+      "gamma": 0.5,
+      "tau": 3.0,
+      "depends_on": [
+        "g050_t0200"
+      ],
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g050_t0300_mp50.json",
+      "result": {
+        "1-R2": 0.138,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      }
+    },
+    {
+      "id": "g050_t0400",
+      "gamma": 0.5,
+      "tau": 4.0,
+      "depends_on": [
+        "g050_t0200",
+        "g050_t0300",
+        "g100_t0500"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g050_t0400.npz",
+      "result": {
+        "1-R2": 0.10294311,
+        "F_max": 2.1051e-53,
+        "n_stages": 1,
+        "phi_calls": 1697,
+        "wall_s": 1898.7
+      },
+      "deps_satisfy": "any",
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "requeue_count": 1,
+      "note": "Auto-requeued (attempt 1): warm-start from g050_t0200 (log-dist=0.69).",
+      "completed_at": "2026-05-08T12:50:37.285484Z"
+    },
+    {
+      "id": "g050_t0500",
+      "gamma": 0.5,
+      "tau": 5.0,
+      "depends_on": [
+        "g050_t0400"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g050_t0500.npz",
+      "result": {
+        "1-R2": 0.09541927,
+        "F_max": 8.2188e-53,
+        "n_stages": 1,
+        "phi_calls": 1918,
+        "wall_s": 1388.7
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-08T13:44:42.736236Z"
+    },
+    {
+      "id": "g050_t0700",
+      "gamma": 0.5,
+      "tau": 7.0,
+      "depends_on": [
+        "g050_t0500"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g050_t0700.npz",
+      "result": {
+        "1-R2": 0.08354414,
+        "F_max": 2.9731e-52,
+        "n_stages": 1,
+        "phi_calls": 4639,
+        "wall_s": 1996.0
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-08T16:31:03.793253Z"
+    },
+    {
+      "id": "g050_t1000",
+      "gamma": 0.5,
+      "tau": 10.0,
+      "depends_on": [
+        "g050_t0700"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g050_t1000.npz",
+      "result": {
+        "1-R2": 0.06889042,
+        "F_max": 1.3965e-53,
+        "n_stages": 1,
+        "phi_calls": 1676,
+        "wall_s": 1591.6
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-08T17:08:08.185153Z"
+    },
+    {
+      "id": "g050_t1500",
+      "gamma": 0.5,
+      "tau": 15.0,
+      "depends_on": [
+        "g050_t1000"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g050_t1500.npz",
+      "result": {
+        "1-R2": 0.06503577,
+        "F_max": 1.8852e-53,
+        "n_stages": 1,
+        "phi_calls": 1269,
+        "wall_s": 1163.0
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-08T17:34:19.283586Z"
+    },
+    {
+      "id": "g050_t2000",
+      "gamma": 0.5,
+      "tau": 20.0,
+      "depends_on": [
+        "g050_t1500"
+      ],
+      "deps_satisfy": "all",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g050_t2000.npz",
+      "result": {
+        "1-R2": 0.23058634,
+        "F_max": 1.15e-51,
+        "n_stages": 1,
+        "phi_calls": 1146,
+        "wall_s": 1237.2
+      },
+      "note": "tau=20 extension of gamma=0.5 sweep",
+      "requeue_count": 0,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-08T18:37:04.138013Z"
+    },
+    {
+      "id": "g100_t0030",
+      "gamma": 1.0,
+      "tau": 0.3,
+      "depends_on": [
+        "g100_t0050"
+      ],
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g100_t0030_mp50.json",
+      "result": {
+        "1-R2": 0.03,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      }
+    },
+    {
+      "id": "g100_t0050",
+      "gamma": 1.0,
+      "tau": 0.5,
+      "depends_on": [
+        "g100_t0080"
+      ],
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g100_t0050_mp50.json",
+      "result": {
+        "1-R2": 0.026,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      }
+    },
+    {
+      "id": "g100_t0080",
+      "gamma": 1.0,
+      "tau": 0.8,
+      "depends_on": [
+        "g100_t0100"
+      ],
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g100_t0080_mp50.json",
+      "result": {
+        "1-R2": 0.031,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      }
+    },
+    {
+      "id": "g100_t0100",
+      "gamma": 1.0,
+      "tau": 1.0,
+      "depends_on": [
+        "g100_t0150"
+      ],
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g100_t0100_mp50.json",
+      "result": {
+        "1-R2": 0.033,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      }
+    },
+    {
+      "id": "g100_t0150",
+      "gamma": 1.0,
+      "tau": 1.5,
+      "depends_on": [
+        "g100_t0200"
+      ],
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g100_t0150_mp50.json",
+      "result": {
+        "1-R2": 0.04,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      }
+    },
+    {
+      "id": "g100_t0200",
+      "gamma": 1.0,
+      "tau": 2.0,
+      "depends_on": [
+        "g050_t0200"
+      ],
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g100_t0200_mp50.json",
+      "result": {
+        "1-R2": 0.0467,
+        "slope": 0.55,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      }
+    },
+    {
+      "id": "g140_t0200",
+      "gamma": 1.4,
+      "tau": 2.0,
+      "depends_on": [
+        "g100_t0200",
+        "g200_t0200"
+      ],
+      "deps_satisfy": "any",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g140_t0200.npz",
+      "result": {
+        "1-R2": 0.08388755,
+        "F_max": 1.7296e-53,
+        "n_stages": 1,
+        "phi_calls": 1216,
+        "wall_s": 2047.6
+      },
+      "note": "Added to fill gamma-sweep at tau=2.0; warmstart from g200_t0200 (closest checkpoint).",
+      "requeue_count": 0,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-08T14:18:51.248303Z"
+    },
+    {
+      "id": "g100_t0300",
+      "gamma": 1.0,
+      "tau": 3.0,
+      "depends_on": [
+        "g100_t0200"
+      ],
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g100_t0300_mp50.json",
+      "result": {
+        "1-R2": 0.066,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      }
+    },
+    {
+      "id": "g100_t0400",
+      "gamma": 1.0,
+      "tau": 4.0,
+      "depends_on": [
+        "g100_t0300"
+      ],
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g100_t0400_mp50.json",
+      "result": {
+        "1-R2": 0.09,
+        "slope": null,
+        "n_triples": 8000,
+        "note": "marginal: F_max ~ 2.3e-5",
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      }
+    },
+    {
+      "id": "g100_t0500",
+      "gamma": 1.0,
+      "tau": 5.0,
+      "depends_on": [
+        "g050_t0200",
+        "g100_t0400"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g100_t0500.npz",
+      "result": {
+        "1-R2": 0.09234331,
+        "F_max": 3.7019e-51,
+        "n_stages": 1,
+        "phi_calls": 2,
+        "wall_s": 3380.3
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "requeue_count": 1,
+      "note": "Auto-requeued (attempt 1): warm-start from g050_t0200 (log-dist=1.15).",
+      "deps_satisfy": "any",
+      "completed_at": "2026-05-08T12:59:37.017571Z"
+    },
+    {
+      "id": "g100_t0590",
+      "gamma": 1.0,
+      "tau": 5.9,
+      "depends_on": [
+        "g100_t0500"
+      ],
+      "deps_satisfy": "any",
+      "status": "claimed",
+      "checkpoint": null,
+      "result": null,
+      "note": "Auto-requeued (attempt 1): noise perturbation noise_level=0.002.",
+      "solver_params": {
+        "noise_level": 0.002,
+        "presmooth": 100,
+        "presmooth_alpha": 0.02
+      },
+      "requeue_count": 1,
+      "claimed_by": "gha-25580422348-g100_t0590",
+      "claimed_at": "2026-05-08T21:28:25Z"
+    },
+    {
+      "id": "g100_t0700",
+      "gamma": 1.0,
+      "tau": 7.0,
+      "depends_on": [
+        "g100_t0500",
+        "g100_t0590"
+      ],
+      "status": "claimed",
+      "checkpoint": null,
+      "result": null,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10,
+        "noise_level": 0.004
+      },
+      "requeue_count": 4,
+      "deps_satisfy": "any",
+      "note": "Auto-requeued (attempt 4): noise perturbation noise_level=0.004.",
+      "claimed_by": "gha-25579868790-g100_t0700",
+      "claimed_at": "2026-05-08T21:14:29Z"
+    },
+    {
+      "id": "g100_t1000",
+      "gamma": 1.0,
+      "tau": 10.0,
+      "depends_on": [
+        "g100_t0700"
+      ],
+      "status": "blocked",
+      "checkpoint": null,
+      "result": null,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      }
+    },
+    {
+      "id": "g100_t1500",
+      "gamma": 1.0,
+      "tau": 15.0,
+      "depends_on": [
+        "g100_t1000"
+      ],
+      "status": "blocked",
+      "checkpoint": null,
+      "result": null,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      }
+    },
+    {
+      "id": "g100_t2000",
+      "gamma": 1.0,
+      "tau": 20.0,
+      "depends_on": [
+        "g100_t1500"
+      ],
+      "deps_satisfy": "all",
+      "status": "blocked",
+      "checkpoint": null,
+      "result": null,
+      "note": "tau=20 extension of gamma=1.0 sweep",
+      "requeue_count": 0,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      }
+    },
+    {
+      "id": "g400_t0030",
+      "gamma": 4.0,
+      "tau": 0.3,
+      "depends_on": [
+        "g400_t0050"
+      ],
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g400_t0030_mp50.json",
+      "result": {
+        "1-R2": null,
+        "slope": null,
+        "n_triples": 8000,
+        "note": "redo of original Terminal-3 run",
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      }
+    },
+    {
+      "id": "g400_t0050",
+      "gamma": 4.0,
+      "tau": 0.5,
+      "depends_on": [
+        "g400_t0080"
+      ],
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g400_t0050_mp50.json",
+      "result": {
+        "1-R2": null,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      }
+    },
+    {
+      "id": "g400_t0080",
+      "gamma": 4.0,
+      "tau": 0.8,
+      "depends_on": [
+        "g400_t0100"
+      ],
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g400_t0080_mp50.json",
+      "result": {
+        "1-R2": null,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      }
+    },
+    {
+      "id": "g400_t0100",
+      "gamma": 4.0,
+      "tau": 1.0,
+      "depends_on": [
+        "g400_t0150"
+      ],
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g400_t0100_mp50.json",
+      "result": {
+        "1-R2": null,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      }
+    },
+    {
+      "id": "g400_t0150",
+      "gamma": 4.0,
+      "tau": 1.5,
+      "depends_on": [
+        "g400_t0200"
+      ],
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g400_t0150_mp50.json",
+      "result": {
+        "1-R2": null,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      }
+    },
+    {
+      "id": "g400_t0200",
+      "gamma": 4.0,
+      "tau": 2.0,
+      "depends_on": [
+        "g050_t0200"
+      ],
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g400_t0200_mp50.json",
+      "result": {
+        "1-R2": 0.0163,
+        "slope": 0.605,
+        "n_triples": 8000,
+        "note": "from \u03b3-sweep at \u03c4=2 (Task 2)",
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      }
+    },
+    {
+      "id": "g400_t0300",
+      "gamma": 4.0,
+      "tau": 3.0,
+      "depends_on": [
+        "g400_t0200"
+      ],
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g400_t0300_mp50.json",
+      "result": {
+        "1-R2": null,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      }
+    },
+    {
+      "id": "g400_t0400",
+      "gamma": 4.0,
+      "tau": 4.0,
+      "depends_on": [
+        "g400_t0300"
+      ],
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g400_t0400_mp50.json",
+      "result": {
+        "1-R2": null,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      }
+    },
+    {
+      "id": "g400_t0500",
+      "gamma": 4.0,
+      "tau": 5.0,
+      "depends_on": [
+        "g400_t0400"
+      ],
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g400_t0500_mp50.json",
+      "result": {
+        "1-R2": null,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      }
+    },
+    {
+      "id": "g400_t0700",
+      "gamma": 4.0,
+      "tau": 7.0,
+      "depends_on": [
+        "g400_t0500"
+      ],
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g400_t0700_mp50.json",
+      "result": {
+        "1-R2": null,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      }
+    },
+    {
+      "id": "g140_t0240",
+      "gamma": 1.4,
+      "tau": 2.4,
+      "depends_on": [
+        "g140_t0200"
+      ],
+      "deps_satisfy": "any",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g140_t0240.npz",
+      "result": {
+        "1-R2": 0.08257998,
+        "F_max": 2.6112e-12,
+        "n_stages": 4,
+        "phi_calls": 402,
+        "wall_s": 11.3
+      },
+      "note": "\u03c4-ladder between g140_t0200 (\u03c4=2.0) and g140_t0300 (\u03c4=3.0).",
+      "completed_at": "2026-05-08T19:38:53.639409Z"
+    },
+    {
+      "id": "g140_t0270",
+      "gamma": 1.4,
+      "tau": 2.7,
+      "depends_on": [
+        "g140_t0240"
+      ],
+      "deps_satisfy": "any",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g140_t0270.npz",
+      "result": {
+        "1-R2": 0.07843365,
+        "F_max": 4.8068e-12,
+        "n_stages": 3,
+        "phi_calls": 108,
+        "wall_s": 4.9
+      },
+      "note": "\u03c4-ladder between g140_t0240 (\u03c4=2.4) and g140_t0300 (\u03c4=3.0).",
+      "completed_at": "2026-05-08T20:04:53.998379Z"
+    },
+    {
+      "id": "g140_t0300",
+      "gamma": 1.4,
+      "tau": 3.0,
+      "depends_on": [
+        "g140_t0270"
+      ],
+      "deps_satisfy": "any",
+      "status": "ready",
+      "checkpoint": null,
+      "result": {
+        "reason": "||F||inf=3.983e-01 > bail threshold 1e-04"
+      },
+      "note": "Auto-requeued (attempt 5): noise perturbation noise_level=0.008.",
+      "requeue_count": 5,
+      "solver_params": {
+        "noise_level": 0.008,
+        "presmooth": 100,
+        "presmooth_alpha": 0.02
+      }
+    },
+    {
+      "id": "g140_t0330",
+      "gamma": 1.4,
+      "tau": 3.3,
+      "depends_on": [
+        "g140_t0240"
+      ],
+      "deps_satisfy": "any",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g140_t0330.npz",
+      "result": {
+        "1-R2": 0.10235603,
+        "F_max": 9.2371e-14,
+        "n_stages": 3,
+        "phi_calls": 125,
+        "wall_s": 4.3
+      },
+      "note": "\u03c4-ladder between g140_t0240 (\u03c4=2.4) and g140_t0450 (\u03c4=4.5).",
+      "completed_at": "2026-05-08T20:48:34.230586Z"
+    },
+    {
+      "id": "g140_t0450",
+      "gamma": 1.4,
+      "tau": 4.5,
+      "depends_on": [
+        "g140_t0330"
+      ],
+      "deps_satisfy": "any",
+      "status": "claimed",
+      "checkpoint": null,
+      "result": null,
+      "note": "Auto-requeued (attempt 4): via new ladder g140_t0330. \u03c4-ladder at \u03c4=3.3",
+      "requeue_count": 4,
+      "claimed_by": "gha-25578769442-g140_t0450",
+      "claimed_at": "2026-05-08T20:47:58Z"
+    },
+    {
+      "id": "g140_t0570",
+      "gamma": 1.4,
+      "tau": 5.7,
+      "depends_on": [
+        "g100_t0500",
+        "g140_t0330"
+      ],
+      "deps_satisfy": "any",
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "note": "Auto-requeued (attempt 1): warm-start from g100_t0500 (log-dist=0.36).",
+      "requeue_count": 1
+    },
+    {
+      "id": "g140_t1000",
+      "gamma": 1.4,
+      "tau": 10.0,
+      "depends_on": [
+        "g140_t0570"
+      ],
+      "deps_satisfy": "any",
+      "status": "ready",
+      "checkpoint": null,
+      "result": {
+        "reason": "||F||inf=3.777e-01 > bail threshold 1e-04"
+      },
+      "note": "Auto-requeued (attempt 5): via new ladder g140_t0570. \u03c4-ladder at \u03c4=5.7",
+      "requeue_count": 5
+    },
+    {
+      "id": "g400_t1000",
+      "gamma": 4.0,
+      "tau": 10.0,
+      "depends_on": [
+        "g140_t1000"
+      ],
+      "deps_satisfy": "any",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g400_t1000.npz",
+      "result": {
+        "1-R2": 0.04436996,
+        "F_max": 1.6894e-51,
+        "n_stages": 1,
+        "phi_calls": 2068,
+        "wall_s": 2082.0
+      },
+      "note": "Auto-requeued (attempt 1): via new ladder g140_t1000. \u03b3-ladder at \u03b3=1.4",
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "requeue_count": 1,
+      "completed_at": "2026-05-08T12:53:43.998012Z"
+    },
+    {
+      "id": "g400_t1500",
+      "gamma": 4.0,
+      "tau": 15.0,
+      "depends_on": [
+        "g400_t1000"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g400_t1500.npz",
+      "result": {
+        "1-R2": 0.0213335,
+        "F_max": 1.0065e-52,
+        "n_stages": 1,
+        "phi_calls": 1131,
+        "wall_s": 1107.9
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-08T14:40:15.444579Z"
+    },
+    {
+      "id": "g400_t2000",
+      "gamma": 4.0,
+      "tau": 20.0,
+      "depends_on": [
+        "g400_t1500"
+      ],
+      "deps_satisfy": "all",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g400_t2000.npz",
+      "result": {
+        "1-R2": 5.109e-05,
+        "F_max": 6.8496e-53,
+        "n_stages": 1,
+        "phi_calls": 1005,
+        "wall_s": 1519.4
+      },
+      "note": "tau=20 extension of gamma=4.0 sweep",
+      "requeue_count": 0,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-08T20:03:57.406822Z"
+    },
+    {
+      "id": "g035_t0200",
+      "gamma": 0.35000000000000003,
+      "tau": 2.0,
+      "depends_on": [
+        "g050_t0200"
+      ],
+      "deps_satisfy": "any",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g035_t0200.npz",
+      "result": {
+        "1-R2": 0.08953636,
+        "F_max": 1.2276e-53,
+        "n_stages": 1,
+        "phi_calls": 2,
+        "wall_s": 2855.9
+      },
+      "note": "\u03b3-ladder between g050_t0200 (\u03b3=0.5) and g025_t0200 (\u03b3=0.25) at \u03c4=2.0.",
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "requeue_count": 0,
+      "completed_at": "2026-05-08T12:50:52.618375Z"
+    },
+    {
+      "id": "g025_t0200",
+      "gamma": 0.25,
+      "tau": 2.0,
+      "depends_on": [
+        "g035_t0200"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g025_t0200.npz",
+      "result": {
+        "1-R2": 0.09218914,
+        "F_max": 3.0122e-52,
+        "n_stages": 1,
+        "phi_calls": 2,
+        "wall_s": 2313.0
+      },
+      "note": "Auto-requeued (attempt 1): via new ladder g035_t0200. \u03b3-ladder at \u03b3=0.35000000000000003",
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "requeue_count": 0,
+      "deps_satisfy": "any",
+      "completed_at": "2026-05-08T12:17:08.321970Z"
+    },
+    {
+      "id": "g025_t0150",
+      "gamma": 0.25,
+      "tau": 1.5,
+      "depends_on": [
+        "g025_t0200"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g025_t0150.npz",
+      "result": {
+        "1-R2": 0.09459724,
+        "F_max": 3.3206e-54,
+        "n_stages": 1,
+        "phi_calls": 3532,
+        "wall_s": 2249.0
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "requeue_count": 0,
+      "completed_at": "2026-05-08T12:56:32.057730Z"
+    },
+    {
+      "id": "g025_t0100",
+      "gamma": 0.25,
+      "tau": 1.0,
+      "depends_on": [
+        "g025_t0150"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g025_t0100.npz",
+      "result": {
+        "1-R2": 0.04164972,
+        "F_max": 3.0256e-53,
+        "n_stages": 1,
+        "phi_calls": 3928,
+        "wall_s": 2068.6
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-08T16:32:11.401304Z"
+    },
+    {
+      "id": "g025_t0080",
+      "gamma": 0.25,
+      "tau": 0.8,
+      "depends_on": [
+        "g025_t0100"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g025_t0080.npz",
+      "result": {
+        "1-R2": 0.04439197,
+        "F_max": 5.2024e-51,
+        "n_stages": 1,
+        "phi_calls": 2821,
+        "wall_s": 2213.8
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-08T21:25:24.473252Z"
+    },
+    {
+      "id": "g025_t0050",
+      "gamma": 0.25,
+      "tau": 0.5,
+      "depends_on": [
+        "g025_t0080"
+      ],
+      "status": "claimed",
+      "checkpoint": null,
+      "result": null,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "claimed_by": "gha-25580422348-g025_t0050",
+      "claimed_at": "2026-05-08T21:28:25Z"
+    },
+    {
+      "id": "g025_t0030",
+      "gamma": 0.25,
+      "tau": 0.3,
+      "depends_on": [
+        "g025_t0050"
+      ],
+      "status": "blocked",
+      "checkpoint": null,
+      "result": null,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      }
+    },
+    {
+      "id": "g025_t0300",
+      "gamma": 0.25,
+      "tau": 3.0,
+      "depends_on": [
+        "g025_t0200"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g025_t0300.npz",
+      "result": {
+        "1-R2": 0.11226708,
+        "F_max": 6.5089e-53,
+        "n_stages": 1,
+        "phi_calls": 2523,
+        "wall_s": 2810.5
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "requeue_count": 0,
+      "completed_at": "2026-05-08T14:15:29.885050Z"
+    },
+    {
+      "id": "g200_t0200",
+      "gamma": 2.0,
+      "tau": 2.0,
+      "depends_on": [
+        "g100_t0200",
+        "g400_t0200",
+        "g050_t0200"
+      ],
+      "deps_satisfy": "any",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g200_t0200.npz",
+      "result": {
+        "1-R2": 0.08305015,
+        "F_max": 5.8518e-54,
+        "n_stages": 1,
+        "phi_calls": 2,
+        "wall_s": 1979.8
+      },
+      "note": "Restored checkpoint after Newton sign-fix; noise_level removed.",
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "requeue_count": 0,
+      "completed_at": "2026-05-08T12:02:16.562411Z"
+    },
+    {
+      "id": "g200_t0150",
+      "gamma": 2.0,
+      "tau": 1.5,
+      "depends_on": [
+        "g200_t0200"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g200_t0150.npz",
+      "result": {
+        "1-R2": 0.07966269,
+        "F_max": 8.9809e-51,
+        "n_stages": 1,
+        "phi_calls": 4736,
+        "wall_s": 2844.0
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "requeue_count": 0,
+      "completed_at": "2026-05-08T13:39:30.407103Z"
+    },
+    {
+      "id": "g200_t0100",
+      "gamma": 2.0,
+      "tau": 1.0,
+      "depends_on": [
+        "g200_t0150"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g200_t0100.npz",
+      "result": {
+        "1-R2": 0.04907112,
+        "F_max": 9.0242e-53,
+        "n_stages": 1,
+        "phi_calls": 2285,
+        "wall_s": 1823.6
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-08T21:45:21.315781Z"
+    },
+    {
+      "id": "g200_t0300",
+      "gamma": 2.0,
+      "tau": 3.0,
+      "depends_on": [
+        "g200_t0200"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g200_t0300.npz",
+      "result": {
+        "1-R2": 0.10160492,
+        "F_max": 1.1648e-52,
+        "n_stages": 1,
+        "phi_calls": 3313,
+        "wall_s": 2137.9
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "requeue_count": 0,
+      "completed_at": "2026-05-08T13:27:44.265953Z"
+    },
+    {
+      "id": "g200_t0500",
+      "gamma": 2.0,
+      "tau": 5.0,
+      "depends_on": [
+        "g200_t0300"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g200_t0500.npz",
+      "result": {
+        "1-R2": 0.08969444,
+        "F_max": 2.3143e-56,
+        "n_stages": 1,
+        "phi_calls": 1384,
+        "wall_s": 2082.8
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-08T14:03:22.247118Z"
+    },
+    {
+      "id": "requeue_bailed",
+      "kind": "requeue_bailed",
+      "depends_on": [],
+      "status": "skip",
+      "checkpoint": null,
+      "result": null,
+      "note": "Retired: auto-requeue is now built into mark_failed() in claim_task.py. Removed from ready queue to prevent solver from mistakenly claiming it."
+    },
+    {
+      "id": "g010_t0050",
+      "gamma": 0.1,
+      "tau": 0.5,
+      "status": "ready",
+      "checkpoint": null,
+      "result": null
+    },
+    {
+      "id": "g010_t0100",
+      "gamma": 0.1,
+      "tau": 1.0,
+      "status": "ready",
+      "checkpoint": null,
+      "result": null
+    },
+    {
+      "id": "g010_t0150",
+      "gamma": 0.1,
+      "tau": 1.5,
+      "status": "ready",
+      "checkpoint": null,
+      "result": null
+    },
+    {
+      "id": "g010_t0200",
+      "gamma": 0.1,
+      "tau": 2.0,
+      "status": "ready",
+      "checkpoint": null,
+      "result": null
+    },
+    {
+      "id": "g010_t0300",
+      "gamma": 0.1,
+      "tau": 3.0,
+      "status": "ready",
+      "checkpoint": null,
+      "result": null
+    },
+    {
+      "id": "g010_t0500",
+      "gamma": 0.1,
+      "tau": 5.0,
+      "status": "ready",
+      "checkpoint": null,
+      "result": null
+    },
+    {
+      "id": "g050_t1200",
+      "gamma": 0.5,
+      "tau": 12.0,
+      "status": "ready",
+      "checkpoint": null,
+      "result": null
+    },
+    {
+      "id": "extract_volume_g010",
+      "gamma": 0.1,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g010_t0050",
+        "g010_t0100",
+        "g010_t0150",
+        "g010_t0200",
+        "g010_t0300",
+        "g010_t0500"
+      ],
+      "note": "Fig 7 extraction for gamma=0.1",
+      "result": null
+    },
+    {
+      "id": "extract_value_info_g010",
+      "gamma": 0.1,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g010_t0050",
+        "g010_t0100",
+        "g010_t0150",
+        "g010_t0200",
+        "g010_t0300",
+        "g010_t0500"
+      ],
+      "note": "Fig 8 extraction for gamma=0.1",
+      "result": null
+    },
+    {
+      "id": "extract_volume_g025",
+      "gamma": 0.25,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g025_t0030",
+        "g025_t0050",
+        "g025_t0080",
+        "g025_t0100",
+        "g025_t0150",
+        "g025_t0200",
+        "g025_t0300"
+      ],
+      "note": "Fig 7 extraction for gamma=0.25",
+      "result": null
+    },
+    {
+      "id": "extract_value_info_g025",
+      "gamma": 0.25,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g025_t0030",
+        "g025_t0050",
+        "g025_t0080",
+        "g025_t0100",
+        "g025_t0150",
+        "g025_t0200",
+        "g025_t0300"
+      ],
+      "note": "Fig 8 extraction for gamma=0.25",
+      "result": null
+    },
+    {
+      "id": "extract_volume_g050",
+      "gamma": 0.5,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g050_t0030",
+        "g050_t0050",
+        "g050_t0080",
+        "g050_t0100",
+        "g050_t0150",
+        "g050_t0200",
+        "g050_t0300",
+        "g050_t0400",
+        "g050_t0500",
+        "g050_t0700",
+        "g050_t1000",
+        "g050_t1200",
+        "g050_t1500",
+        "g050_t2000"
+      ],
+      "note": "Fig 7 extraction for gamma=0.5",
+      "result": null
+    },
+    {
+      "id": "extract_value_info_g050",
+      "gamma": 0.5,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g050_t0030",
+        "g050_t0050",
+        "g050_t0080",
+        "g050_t0100",
+        "g050_t0150",
+        "g050_t0200",
+        "g050_t0300",
+        "g050_t0400",
+        "g050_t0500",
+        "g050_t0700",
+        "g050_t1000",
+        "g050_t1200",
+        "g050_t1500",
+        "g050_t2000"
+      ],
+      "note": "Fig 8 extraction for gamma=0.5",
+      "result": null
+    },
+    {
+      "id": "extract_volume_g100",
+      "gamma": 1.0,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g100_t0030",
+        "g100_t0050",
+        "g100_t0080",
+        "g100_t0100",
+        "g100_t0150",
+        "g100_t0200",
+        "g100_t0300",
+        "g100_t0400",
+        "g100_t0500",
+        "g100_t0590",
+        "g100_t0700",
+        "g100_t1000",
+        "g100_t1500",
+        "g100_t2000"
+      ],
+      "note": "Fig 7 extraction for gamma=1.0",
+      "result": null
+    },
+    {
+      "id": "extract_value_info_g100",
+      "gamma": 1.0,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g100_t0030",
+        "g100_t0050",
+        "g100_t0080",
+        "g100_t0100",
+        "g100_t0150",
+        "g100_t0200",
+        "g100_t0300",
+        "g100_t0400",
+        "g100_t0500",
+        "g100_t0590",
+        "g100_t0700",
+        "g100_t1000",
+        "g100_t1500",
+        "g100_t2000"
+      ],
+      "note": "Fig 8 extraction for gamma=1.0",
+      "result": null
+    },
+    {
+      "id": "extract_volume_g140",
+      "gamma": 1.4,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g140_t0200",
+        "g140_t0240",
+        "g140_t0270",
+        "g140_t0300",
+        "g140_t0330",
+        "g140_t0450",
+        "g140_t0570",
+        "g140_t1000"
+      ],
+      "note": "Fig 7 extraction for gamma=1.4",
+      "result": null
+    },
+    {
+      "id": "extract_value_info_g140",
+      "gamma": 1.4,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g140_t0200",
+        "g140_t0240",
+        "g140_t0270",
+        "g140_t0300",
+        "g140_t0330",
+        "g140_t0450",
+        "g140_t0570",
+        "g140_t1000"
+      ],
+      "note": "Fig 8 extraction for gamma=1.4",
+      "result": null
+    },
+    {
+      "id": "extract_volume_g200",
+      "gamma": 2.0,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g200_t0100",
+        "g200_t0150",
+        "g200_t0200",
+        "g200_t0300",
+        "g200_t0500"
+      ],
+      "note": "Fig 7 extraction for gamma=2.0",
+      "result": null
+    },
+    {
+      "id": "extract_value_info_g200",
+      "gamma": 2.0,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g200_t0100",
+        "g200_t0150",
+        "g200_t0200",
+        "g200_t0300",
+        "g200_t0500"
+      ],
+      "note": "Fig 8 extraction for gamma=2.0",
+      "result": null
+    },
+    {
+      "id": "extract_volume_g400",
+      "gamma": 4.0,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g400_t0030",
+        "g400_t0050",
+        "g400_t0080",
+        "g400_t0100",
+        "g400_t0150",
+        "g400_t0200",
+        "g400_t0300",
+        "g400_t0400",
+        "g400_t0500",
+        "g400_t0700",
+        "g400_t1000",
+        "g400_t1500",
+        "g400_t2000"
+      ],
+      "note": "Fig 7 extraction for gamma=4.0",
+      "result": null
+    },
+    {
+      "id": "extract_value_info_g400",
+      "gamma": 4.0,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g400_t0030",
+        "g400_t0050",
+        "g400_t0080",
+        "g400_t0100",
+        "g400_t0150",
+        "g400_t0200",
+        "g400_t0300",
+        "g400_t0400",
+        "g400_t0500",
+        "g400_t0700",
+        "g400_t1000",
+        "g400_t1500",
+        "g400_t2000"
+      ],
+      "note": "Fig 8 extraction for gamma=4.0",
+      "result": null
+    }
+  ],
+  "summary": {
+    "total": 66,
+    "done": 51,
+    "ready": 1,
+    "claimed": 4,
+    "blocked": 4,
+    "bailed": 2,
+    "skip": 4
+  },
+  "fanout": {
+    "ready_tasks": [
+      "g025_t0200",
+      "g200_t0200"
+    ],
+    "rationale": "Three computation tasks plus one intervention task."
+  },
+  "deps_semantics": {
+    "default": "all",
+    "any": "Tasks may declare deps_satisfy='any', meaning the task is ready as soon as ANY listed dependency is done."
+  },
+  "notes": [
+    "\u03b3=0.5 high-\u03c4 (\u03c4 \u2265 4) bailed; the 7-point \u03b3=0.5 curve (\u03c4\u2208[0.3,3.0]) is the accepted answer for Fig 4A.",
+    "\u03b3=1.0 high-\u03c4 (\u03c4 \u2265 5) bailed; the 8-point \u03b3=1.0 curve (\u03c4\u2208[0.3,4.0]) is the accepted answer.",
+    "\u03b3=4.0 sweep: \u03c4 \u2208 [0.3, 7.0] done. Only \u03c4=10 is ready and \u03c4=15 is blocked on it.",
+    "\u03b3=0.25 and \u03b3=2.0 \u03c4-sweeps added as parallel chains.",
+    "All 1-R\u00b2 values are weighted by ex-ante probability (see EQUATIONS.md \u00a77).",
+    "Checkpoints listed for done tasks are the expected paths."
+  ]
+}
