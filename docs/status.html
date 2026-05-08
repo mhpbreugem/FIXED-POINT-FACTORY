@@ -196,10 +196,15 @@
         liveCell = `<span class="small" style="color:var(--claimed)">waiting…</span>`;
       }
 
-      // End-norm F_max from result
+      // End-norm F_max from result. F_max=verified, F_max_bound=historical
+      // upper bound (from original mp50 convergence tolerance).
       let enorm = "";
       if (t.result && t.result["F_max"] != null) {
-        enorm = `<span class="enorm">${fmtNum(t.result["F_max"])}</span>`;
+        const tip = t.result["F_source"] ? ` title="${t.result["F_source"]}"` : "";
+        enorm = `<span class="enorm"${tip}>${fmtNum(t.result["F_max"])}</span>`;
+      } else if (t.result && t.result["F_max_bound"] != null) {
+        const tip = t.result["F_source"] ? ` title="${t.result["F_source"]}"` : "";
+        enorm = `<span class="small"${tip}>≤ ${fmtNum(t.result["F_max_bound"])}</span>`;
       }
 
       // 1-R2 from result
