@@ -106,11 +106,11 @@
       <tr>
         <th onclick="sortBy('id')">id</th>
         <th onclick="sortBy('status')">status</th>
-        <th onclick="sortBy('gamma')">γ</th>
-        <th onclick="sortBy('tau')">τ</th>
-        <th>live iter · ftol</th>
-        <th>||F||∞ end</th>
-        <th onclick="sortBy('result')">1-R²</th>
+        <th onclick="sortBy('gamma')">&#947;</th>
+        <th onclick="sortBy('tau')">&#964;</th>
+        <th>live iter &middot; ftol</th>
+        <th>||F||&#8734; end</th>
+        <th onclick="sortBy('result')">1-R&sup2;</th>
         <th>deps</th>
         <th onclick="sortBy('checkpoint')">checkpoint</th>
       </tr>
@@ -124,45 +124,45 @@
 <!-- ═══════════════════════════════════════════════════════════════════ Figures -->
 <div id="tab-figures" class="tab-content">
 
-  <h2>Fig. 1 — Revelation deficit 1−R² vs signal precision τ</h2>
+  <h2>Fig. 1 — Revelation deficit 1−R² vs signal precision &#964;</h2>
   <p class="small" style="margin:0 0 0.5rem 0">
     1−R² = 0 means prices perfectly reveal the sufficient statistic T* (CARA benchmark).
-    Higher τ → sharper signals → more private information → price function harder to invert.
+    Higher &#964; &rarr; sharper signals &rarr; more private information &rarr; price function harder to invert.
     Points marked <strong>?</strong> have no converged fixed point yet (see table for task status).
-    Points marked <strong>†</strong> are solved but 1−R² was not retained in the legacy run.
+    Points marked <strong>&dagger;</strong> are solved but 1−R² was not retained in the legacy run.
   </p>
   <div class="charts-row">
     <div class="chart-box">
       <svg id="chart-tau-sweep" viewBox="0 0 600 380"></svg>
-      <p class="chart-caption">τ-sweep — multiple γ series. X-axis: log scale.</p>
+      <p class="chart-caption">&tau;-sweep — multiple &#947; series. X-axis: log scale.</p>
     </div>
     <div class="chart-box">
       <svg id="chart-gamma-sweep" viewBox="0 0 600 380"></svg>
-      <p class="chart-caption">γ-sweep at τ = 2.0. X-axis: log scale.</p>
+      <p class="chart-caption">&#947;-sweep at &#964; = 2.0. X-axis: log scale.</p>
     </div>
   </div>
 
-  <h3>Table A — τ-sweep at γ = 0.5 (Fig. 1, blue series)</h3>
+  <h3>Table A — &#964;-sweep at &#947; = 0.5 (Fig. 1, blue series)</h3>
   <div class="fig-table-wrap"><div id="tbl-g050"></div></div>
 
-  <h3>Table B — τ-sweep at γ = 1.0</h3>
+  <h3>Table B — &#964;-sweep at &#947; = 1.0</h3>
   <div class="fig-table-wrap"><div id="tbl-g100"></div></div>
 
-  <h3>Table C — τ-sweep at γ = 4.0</h3>
+  <h3>Table C — &#964;-sweep at &#947; = 4.0</h3>
   <div class="fig-table-wrap"><div id="tbl-g400"></div></div>
 
-  <h2>Fig. 2 — Revelation deficit vs risk aversion γ at τ = 2.0</h2>
+  <h2>Fig. 2 — Revelation deficit vs risk aversion &#947; at &#964; = 2.0</h2>
   <p class="small" style="margin:0 0 0.5rem 0">
-    Cross-section of the γ-sweep. Each point is from the fixed point at the stated (γ, τ=2).
-    Note the U-shape: moderate γ (1.0) achieves the lowest 1−R², while both very low and very
+    Cross-section of the &#947;-sweep. Each point is from the fixed point at the stated (&#947;, &#964;=2).
+    Note the U-shape: moderate &#947; (1.0) achieves the lowest 1−R², while both very low and very
     high risk aversion imply greater price incompleteness.
   </p>
 
-  <h3>Table D — γ-sweep at τ = 2.0 (Fig. 2)</h3>
+  <h3>Table D — &#947;-sweep at &#964; = 2.0 (Fig. 2)</h3>
   <div class="fig-table-wrap"><div id="tbl-gamma-sweep"></div></div>
 
   <h2>Full result grid</h2>
-  <p class="small" style="margin:0 0 0.5rem 0">All (γ, τ) combinations. — = no task queued for that pair.</p>
+  <p class="small" style="margin:0 0 0.5rem 0">All (&#947;, &#964;) combinations. — = no task queued for that pair.</p>
   <div class="fig-table-wrap" style="overflow-x:auto"><div id="tbl-grid"></div></div>
 
 </div><!-- /tab-figures -->
@@ -180,7 +180,7 @@
   let PROGRESS = {};
   let SORT_KEY = "id", SORT_ASC = true;
 
-  // ─── tab switching ─────────────────────────────────────────────────────────
+  // ─── tab switching ─────────────────────────────────────────────────────────────────────
   function switchTab(name) {
     document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
     document.querySelectorAll(".tab-btn").forEach(el => el.classList.remove("active"));
@@ -189,7 +189,7 @@
     if (name === "figures") renderFigures();
   }
 
-  // ─── utilities ─────────────────────────────────────────────────────────────
+  // ─── utilities ─────────────────────────────────────────────────────────────────────────
   async function fetchJson(url) {
     const r = await fetch(url, { cache: "no-store" });
     if (!r.ok) throw new Error(`${url}: ${r.status}`);
@@ -217,7 +217,7 @@
   }
   function esc(s) { return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
-  // ─── Tasks tab ─────────────────────────────────────────────────────────────
+  // ─── Tasks tab ────────────────────────────────────────────────────────────────────────
   async function loadTasks() {
     const data = await fetchJson(rawUrl(`projects/${PROJECT}/TASK_QUEUE.json`));
     TASKS = data.tasks || [];
@@ -277,9 +277,9 @@
       let liveCell = "";
       if (prog) {
         const sc = prog.stale ? " stale" : "";
-        liveCell = `<span class="live${sc}">iter=${prog.iter ?? "?"} · ftol=${prog.ftol ?? "?"}</span>`;
+        liveCell = `<span class="live${sc}">iter=${prog.iter ?? "?"} &middot; ftol=${prog.ftol ?? "?"}</span>`;
       } else if (t.status === "claimed") {
-        liveCell = `<span class="small" style="color:var(--claimed)">waiting…</span>`;
+        liveCell = `<span class="small" style="color:var(--claimed)">waiting&hellip;</span>`;
       }
       let enorm = "";
       if (t.result && t.result["F_max"] != null) {
@@ -287,7 +287,7 @@
         enorm = `<span class="enorm"${tip}>${fmtNum(t.result["F_max"])}</span>`;
       } else if (t.result && t.result["F_max_bound"] != null) {
         const tip = t.result["F_source"] ? ` title="${esc(t.result["F_source"])}"` : "";
-        enorm = `<span class="small"${tip}>≤ ${fmtNum(t.result["F_max_bound"])}</span>`;
+        enorm = `<span class="small"${tip}>&le; ${fmtNum(t.result["F_max_bound"])}</span>`;
       }
       let r2 = "";
       if (t.result && t.result["1-R2"] != null)
@@ -311,7 +311,7 @@
       tbody.appendChild(tr);
     });
     document.getElementById("meta").textContent =
-      `${TASKS.length} tasks · last refresh ${new Date().toLocaleTimeString()}`;
+      `${TASKS.length} tasks &middot; last refresh ${new Date().toLocaleTimeString()}`;
   }
 
   async function loadWorkers() {
@@ -321,7 +321,7 @@
     const rows = claimed.map(t => {
       const age = ageMin(t.claimed_at);
       const stale = age !== null && age > 120;
-      return `<div>${esc(t.claimed_by)} → <span class="mono">${esc(t.id)}</span> `
+      return `<div>${esc(t.claimed_by)} &rarr; <span class="mono">${esc(t.id)}</span> `
            + `<span class="${stale ? "stale" : "small"}">(claimed ${ageStr(t.claimed_at)}${stale ? " — STALE?" : ""})</span></div>`;
     });
     div.innerHTML = rows.join("");
@@ -385,7 +385,7 @@
     return "γ = " + (Number.isInteger(v) ? v.toFixed(1) : v);
   }
 
-  // ─── SVG chart builder ─────────────────────────────────────────────────────
+  // ─── SVG chart builder ────────────────────────────────────────────────────────────────────
   const SVG_NS = "http://www.w3.org/2000/svg";
   function svgEl(tag, attrs) {
     const el = document.createElementNS(SVG_NS, tag);
@@ -553,15 +553,12 @@
     return v.toExponential(1);
   }
   function fmtTickX(v) {
-    // Always show one decimal so integers like 1, 2, 4 render as "1.0", "2.0", "4.0"
-    // and aren't confused with τ ticks on the other chart.
     if (Number.isInteger(v)) return v.toFixed(1);
-    // Strip trailing zeros for values like 0.30 → "0.3"
     const s = v.toPrecision(3).replace(/\.?0+$/, "");
     return s;
   }
 
-  // ─── Data extraction from TASKS ────────────────────────────────────────────
+  // ─── Data extraction from TASKS ────────────────────────────────────────────────────────────────────
   function buildLookup() {
     const map = {};  // "gamma_tau" -> task
     TASKS.forEach(t => {
@@ -585,7 +582,7 @@
     return t && t.result && t.result["F_max_bound"] != null && !t.result["F_max"];
   }
 
-  // ─── Table builder for a tau-sweep at fixed gamma ──────────────────────────
+  // ─── Table builder for a tau-sweep at fixed gamma ──────────────────────────────────────────────────
   function renderTauTable(containerId, gammaVal, taus, map) {
     const rows = taus.map(tau => {
       const t = lookup(map, gammaVal, tau);
@@ -611,9 +608,7 @@
       const note = (legacy && r2 == null) ? `<td class="note-legacy">†&nbsp;1-R² not retained (legacy solver)</td>` :
                    (!t) ? `<td class="small" style="color:#ccc">no task</td>` :
                    `<td></td>`;
-      return `<tr>${r2Cell}${fmCell}${srcCell}${stCell}${note}</tr>`
-           .replace("TAUWRAP", `<td>${tau}</td>`)
-        .replace("<tr>", `<tr><td>${tau}</td>`);
+      return `<tr><td>${tau}</td>${r2Cell}${fmCell}${srcCell}${stCell}${note}</tr>`;
     });
     const html = `<table>
       <thead><tr>
@@ -626,7 +621,7 @@
     document.getElementById(containerId).innerHTML = html;
   }
 
-  // ─── Table D: gamma-sweep at fixed tau ─────────────────────────────────────
+  // ─── Table D: gamma-sweep at fixed tau ──────────────────────────────────────────────────────────────────
   function renderGammaTable(containerId, gammas, tauVal, map) {
     const rows = gammas.map(g => {
       const t = lookup(map, g, tauVal);
@@ -664,7 +659,7 @@
     document.getElementById(containerId).innerHTML = html;
   }
 
-  // ─── Full grid table ────────────────────────────────────────────────────────
+  // ─── Full grid table ──────────────────────────────────────────────────────────────────────────────
   function renderGridTable(containerId, map) {
     // collect all gammas and taus that appear in tasks
     const gammaSet = new Set(), tauSet = new Set();
@@ -709,18 +704,18 @@
       </p>`;
   }
 
-  // ─── Main figure renderer ───────────────────────────────────────────────────
+  // ─── Main figure renderer ───────────────────────────────────────────────────────────────────────
   function renderFigures() {
     if (!TASKS.length) return;
     const map = buildLookup();
 
     // ── Fig 1A: τ-sweep, multiple gamma series
     const tauSeries = [
-      { gamma: 0.5,  taus: [0.3,0.5,0.8,1.0,1.5,2.0,3.0,4.0,5.0,7.0,10.0,15.0] },
-      { gamma: 1.0,  taus: [0.3,0.5,0.8,1.0,1.5,2.0,3.0,4.0,5.0,7.0,10.0,15.0] },
-      { gamma: 4.0,  taus: [0.3,0.5,0.8,1.0,1.5,2.0,3.0,4.0,5.0,7.0,10.0,15.0] },
+      { gamma: 0.5,  taus: [0.3,0.5,0.8,1.0,1.5,2.0,3.0,4.0,5.0,7.0,10.0,15.0,20.0] },
+      { gamma: 1.0,  taus: [0.3,0.5,0.8,1.0,1.5,2.0,3.0,4.0,5.0,7.0,10.0,15.0,20.0] },
+      { gamma: 4.0,  taus: [0.3,0.5,0.8,1.0,1.5,2.0,3.0,4.0,5.0,7.0,10.0,15.0,20.0] },
       { gamma: 0.25, taus: [2.0] },
-      { gamma: 2.0,  taus: [1.5,2.0,3.0] },
+      { gamma: 2.0,  taus: [1.0,1.5,2.0,3.0,5.0] },
     ];
     const svgTau = document.getElementById("chart-tau-sweep");
     const tauChartSeries = tauSeries.map(s => {
@@ -734,19 +729,17 @@
             fmax: fm ? (fm.exact ? fm.val.toExponential(2) : "≤"+fm.val.toExponential(0)) : null,
             legacy: isLegacy(t) });
         } else if (t) {
-          // Task exists but no 1-R²
           miss.push({ x: tau, id: t.id, status: t.status,
             reason: (t.status === "done" && isLegacy(t)) ? "legacy, 1-R² not retained" : t.status });
         }
-        // No task → skip (gap in τ grid)
       });
       return { label: gammaLabel(s.gamma), color: gammaColor(s.gamma), points: pts, missing: miss };
     }).filter(s => s.points.length > 0 || s.missing.length > 0);
 
     drawChart(svgTau, tauChartSeries, {
-      xMin: 0.25, xMax: 16, xLog: true, yMin: 0, yMax: 0.17,
+      xMin: 0.25, xMax: 22, xLog: true, yMin: 0, yMax: 0.17,
       xLabel: "τ (signal precision)", yLabel: "1 − R²",
-      xTicks: [0.3, 0.5, 1, 2, 3, 5, 10, 15],
+      xTicks: [0.3, 0.5, 1, 2, 3, 5, 10, 15, 20],
       yTicks: [0, 0.02, 0.04, 0.06, 0.08, 0.10, 0.12, 0.14, 0.16],
     });
 
@@ -777,9 +770,9 @@
       });
 
     // ── Tables
-    const g050Taus = [0.3,0.5,0.8,1.0,1.5,2.0,3.0,4.0,5.0,7.0,10.0,15.0];
-    const g100Taus = [0.3,0.5,0.8,1.0,1.5,2.0,3.0,4.0,5.0,7.0,10.0,15.0];
-    const g400Taus = [0.3,0.5,0.8,1.0,1.5,2.0,3.0,4.0,5.0,7.0,10.0,15.0];
+    const g050Taus = [0.3,0.5,0.8,1.0,1.5,2.0,3.0,4.0,5.0,7.0,10.0,15.0,20.0];
+    const g100Taus = [0.3,0.5,0.8,1.0,1.5,2.0,3.0,4.0,5.0,7.0,10.0,15.0,20.0];
+    const g400Taus = [0.3,0.5,0.8,1.0,1.5,2.0,3.0,4.0,5.0,7.0,10.0,15.0,20.0];
     renderTauTable("tbl-g050", 0.5,  g050Taus, map);
     renderTauTable("tbl-g100", 1.0,  g100Taus, map);
     renderTauTable("tbl-g400", 4.0,  g400Taus, map);
