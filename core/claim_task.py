@@ -233,28 +233,61 @@ def mark_done(project: str, task_id: str, checkpoint: str | None,
     return False
 
 
+def _make_ladder_id(gamma: float, tau: float) -> str:
+    return f"g{int(round(gamma * 100)):03d}_t{int(round(tau * 100)):04d}"
+
+
+def _insert_ladder(queue: dict, task: dict, ladder: dict,
+                   requeue_count: int, reason: str) -> bool:
+    new_id = ladder["id"]
+    existing_ids = {t["id"] for t in queue["tasks"]}
+    if new_id in existing_ids:
+        existing = _find_by_id(queue, new_id)
+        if existing and existing["status"] == "done" and new_id not in set(task.get("depends_on") or []):
+            task["status"] = "ready"
+            task["result"] = None
+            task["checkpoint"] = None
+            task["depends_on"] = sorted(set(task.get("depends_on") or []) | {new_id})
+            task["deps_satisfy"] = "any"
+            task["requeue_count"] = requeue_count + 1
+            task["note"] = f"Auto-requeued (attempt {task['requeue_count']}): dep on existing {new_id}. {reason}"
+            return True
+        return False
+    idx = next(i for i, t in enumerate(queue["tasks"]) if t["id"] == task["id"])
+    queue["tasks"].insert(idx, ladder)
+    task["status"] = "ready"
+    task["result"] = None
+    task["checkpoint"] = None
+    task["depends_on"] = [new_id]
+    task["deps_satisfy"] = "any"
+    task["requeue_count"] = requeue_count + 1
+    task["note"] = f"Auto-requeued (attempt {task['requeue_count']}): via new ladder {new_id}. {reason}"
+    return True
+
+
 def _auto_requeue_bailed(queue: dict, task: dict) -> bool:
     """
     After a bail, try to find a better warm-start or insert a ladder task.
     Mutates queue and task in place. Returns True if task was re-queued.
 
-    Strategy:
-      1. Find done tasks with .npz checkpoints not yet in depends_on.
-         If any is closer (in log-γ/τ space) than what was already tried,
-         add it as a dep and reset to ready.
-      2. Otherwise, if the gap to the closest same-γ done checkpoint exceeds
-         a 1.25× ratio in τ, insert a new intermediate task at the log-midpoint
-         and reset the bailed task to depend on it.
-      3. Give up after 3 auto-requeue attempts to avoid infinite loops.
+    Strategy (in order):
+      1. Add the closest untried .npz checkpoint as a dep if it's closer than
+         what's already been tried.
+      2. Insert a τ-ladder at the log-midpoint between the bailed task and the
+         closest same-γ done .npz.
+      3. Insert a γ-ladder at the log-midpoint between the bailed task and the
+         closest done .npz (any γ) — bridges the γ-gap.
+      4. Re-queue with a noise perturbation (solver_params.noise_level) as a
+         last resort before giving up.
+      Gives up after 5 attempts.
     """
     requeue_count = task.get("requeue_count", 0)
-    if requeue_count >= 3:
+    if requeue_count >= 5:
         return False
 
     gamma = float(task.get("gamma") or 1.0)
     tau   = float(task.get("tau")   or 1.0)
 
-    # Only .npz checkpoints are loadable by the warm-start path in solve.py
     done_npz = [
         t for t in queue["tasks"]
         if t["status"] == "done"
@@ -272,8 +305,9 @@ def _auto_requeue_bailed(queue: dict, task: dict) -> bool:
         return math.hypot(math.log(gamma / g2), math.log(tau / t2))
 
     done_npz_by_dist = sorted(done_npz, key=log_dist)
-    untried = [t for t in done_npz_by_dist if t["id"] not in current_deps]
 
+    # ── Step 1: untried closer checkpoint ────────────────────────────────────
+    untried = [t for t in done_npz_by_dist if t["id"] not in current_deps]
     if untried:
         best = untried[0]
         d_best = log_dist(best)
@@ -289,68 +323,72 @@ def _auto_requeue_bailed(queue: dict, task: dict) -> bool:
                             f"warm-start from {best['id']} (log-dist={d_best:.2f}).")
             return True
 
-    # No better untried checkpoint — try inserting a τ-ladder task
+    # ── Step 2: τ-ladder (same γ) ────────────────────────────────────────────
     same_gamma = [t for t in done_npz
                   if abs(float(t.get("gamma") or 0) - gamma) < 0.01 * gamma]
-    if not same_gamma:
-        return False
+    if same_gamma:
+        closest_tau = min(same_gamma,
+            key=lambda t: abs(math.log(tau / max(float(t.get("tau") or 1.0), 1e-9))))
+        tau_prev = float(closest_tau.get("tau") or 1.0)
+        ratio = max(tau, tau_prev) / min(tau, tau_prev)
+        if ratio >= 1.25:
+            tau_mid = math.exp((math.log(tau) + math.log(max(tau_prev, 1e-9))) / 2.0)
+            mag = 10 ** math.floor(math.log10(tau_mid))
+            tau_mid = round(tau_mid / mag, 1) * mag
+            new_id = _make_ladder_id(gamma, tau_mid)
+            ladder = {
+                "id": new_id, "gamma": gamma, "tau": tau_mid,
+                "depends_on": [closest_tau["id"]], "deps_satisfy": "any",
+                "status": "ready", "checkpoint": None, "result": None,
+                "note": f"τ-ladder between {closest_tau['id']} (τ={tau_prev}) and {task['id']} (τ={tau}).",
+            }
+            if _insert_ladder(queue, task, ladder, requeue_count,
+                              f"τ-ladder at τ={tau_mid}"):
+                return True
 
-    closest = min(same_gamma, key=lambda t: abs(math.log(tau / max(float(t.get("tau") or 1.0), 1e-9))))
-    tau_prev = float(closest.get("tau") or 1.0)
-    ratio = max(tau, tau_prev) / min(tau, tau_prev)
-    if ratio < 1.25:
-        return False  # gap already small; a ladder won't help
+    # ── Step 3: γ-ladder (cross-γ, same τ or nearest) ───────────────────────
+    # Find the closest done .npz and insert a γ-midpoint task at the same τ
+    if done_npz_by_dist:
+        closest_any = done_npz_by_dist[0]
+        g2 = float(closest_any.get("gamma") or 1.0)
+        t2 = float(closest_any.get("tau")   or 1.0)
+        g_ratio = max(gamma, g2) / min(gamma, g2)
+        if g_ratio >= 1.25:
+            gamma_mid = math.exp((math.log(gamma) + math.log(g2)) / 2.0)
+            # Round gamma_mid to 2 sig figs
+            mag = 10 ** math.floor(math.log10(gamma_mid))
+            gamma_mid = round(gamma_mid / mag, 1) * mag
+            # Ladder is at the midpoint γ, same τ as the bailed task
+            new_id = _make_ladder_id(gamma_mid, tau)
+            ladder = {
+                "id": new_id, "gamma": gamma_mid, "tau": tau,
+                "depends_on": [closest_any["id"]], "deps_satisfy": "any",
+                "status": "ready", "checkpoint": None, "result": None,
+                "note": (f"γ-ladder between {closest_any['id']} (γ={g2}) "
+                         f"and {task['id']} (γ={gamma}) at τ={tau}."),
+            }
+            if _insert_ladder(queue, task, ladder, requeue_count,
+                              f"γ-ladder at γ={gamma_mid}"):
+                return True
 
-    # Midpoint in log-τ space, rounded to 2 significant figures
-    tau_mid = math.exp((math.log(tau) + math.log(max(tau_prev, 1e-9))) / 2.0)
-    mag = 10 ** math.floor(math.log10(tau_mid))
-    tau_mid = round(tau_mid / mag, 1) * mag
+    # ── Step 4: noise perturbation as last resort ────────────────────────────
+    existing_sp = dict(task.get("solver_params") or {})
+    current_noise = float(existing_sp.get("noise_level", 0.0))
+    next_noise = max(0.002, current_noise * 2.0) if current_noise > 0 else 0.002
+    if next_noise <= 0.05:
+        task["status"] = "ready"
+        task["result"] = None
+        task["checkpoint"] = None
+        existing_sp["noise_level"] = next_noise
+        existing_sp.setdefault("presmooth", 100)
+        existing_sp.setdefault("presmooth_alpha", 0.02)
+        task["solver_params"] = existing_sp
+        task["requeue_count"] = requeue_count + 1
+        task["note"] = (f"Auto-requeued (attempt {task['requeue_count']}): "
+                        f"noise perturbation noise_level={next_noise:.3f}.")
+        return True
 
-    g_tag = f"g{int(round(gamma * 100)):03d}"
-    t_tag = f"t{int(round(tau_mid * 100)):04d}"
-    new_id = f"{g_tag}_{t_tag}"
-
-    existing_ids = {t["id"] for t in queue["tasks"]}
-    if new_id in existing_ids:
-        # Ladder task already exists — add it as a dep if it's done
-        existing = _find_by_id(queue, new_id)
-        if existing and existing["status"] == "done" and new_id not in current_deps:
-            task["status"] = "ready"
-            task["result"] = None
-            task["checkpoint"] = None
-            task["depends_on"] = sorted(current_deps | {new_id})
-            task["deps_satisfy"] = "any"
-            task["requeue_count"] = requeue_count + 1
-            task["note"] = (f"Auto-requeued (attempt {task['requeue_count']}): "
-                            f"dep on existing ladder {new_id}.")
-            return True
-        return False
-
-    # Insert a new ladder task immediately before the bailed task
-    ladder: dict = {
-        "id": new_id,
-        "gamma": gamma,
-        "tau": tau_mid,
-        "depends_on": [closest["id"]],
-        "deps_satisfy": "any",
-        "status": "ready",
-        "checkpoint": None,
-        "result": None,
-        "note": (f"Auto-inserted ladder between {closest['id']} (τ={tau_prev}) "
-                 f"and {task['id']} (τ={tau})."),
-    }
-    idx = next(i for i, t in enumerate(queue["tasks"]) if t["id"] == task["id"])
-    queue["tasks"].insert(idx, ladder)
-
-    task["status"] = "ready"
-    task["result"] = None
-    task["checkpoint"] = None
-    task["depends_on"] = [new_id]
-    task["deps_satisfy"] = "any"
-    task["requeue_count"] = requeue_count + 1
-    task["note"] = (f"Auto-requeued via new ladder {new_id} (τ={tau_mid}, "
-                    f"attempt {task['requeue_count']}).")
-    return True
+    return False
 
 
 def mark_failed(project: str, task_id: str, reason: str,

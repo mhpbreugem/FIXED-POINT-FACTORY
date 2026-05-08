@@ -548,12 +548,18 @@
       "depends_on": [
         "g050_t0200"
       ],
-      "status": "bailed",
+      "status": "ready",
       "checkpoint": null,
-      "result": {
-        "reason": "||F||inf=2.286e-02 > bail threshold 1e-04"
+      "result": null,
+      "note": "\u03b3-sweep root. Conservative solver: 200 presmooth steps \u03b1=0.01, rdiff=1e-5. Auto-requeue will insert \u03b3-ladder if this also fails. fig4B: 1-R\u00b2=0.133 / slope=0.51.",
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50
       },
-      "note": "\u03b3-sweep root. Bailed at F=0.014 (pre-auto-requeue deploy). Re-queued: solver got close, worth retrying. fig4B: 1-R\u00b2=0.133 / slope=0.51."
+      "requeue_count": 0
     },
     {
       "id": "g025_t0150",
@@ -631,12 +637,18 @@
         "g050_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "bailed",
+      "status": "ready",
       "checkpoint": null,
-      "result": {
-        "reason": "||F||inf=3.780e-02 > bail threshold 1e-04"
+      "result": null,
+      "note": "\u03b3-sweep root. Conservative solver: 200 presmooth steps \u03b1=0.01, rdiff=1e-5. Auto-requeue will insert \u03b3-ladder if this also fails. fig4B: 1-R\u00b2=0.025 / slope=0.59.",
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50
       },
-      "note": "\u03b3-sweep root. Bailed at F=0.026 (pre-auto-requeue deploy). Re-queued: solver got close, worth retrying. fig4B: 1-R\u00b2=0.025 / slope=0.59."
+      "requeue_count": 0
     },
     {
       "id": "g200_t0150",

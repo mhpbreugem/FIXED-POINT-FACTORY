@@ -208,11 +208,21 @@ def main() -> None:
     tau_vec   = np.full(K, tau,   dtype=np.float64)
     W_vec     = np.ones(K,        dtype=np.float64)
 
-    G_inner  = args.G_inner
-    pad      = args.pad
+    # Per-task solver parameter overrides (task["solver_params"] wins over CLI defaults)
+    sp = task.get("solver_params") or {}
+    G_inner      = int(sp.get("G_inner",        args.G_inner))
+    pad          = int(sp.get("pad",             args.pad))
+    u_inner_max  = float(sp.get("u_inner_max",   args.u_inner_max))
+    max_stages   = int(sp.get("max_stages",      args.max_stages))
+    presmooth    = int(sp.get("presmooth",        args.presmooth))
+    presmooth_alpha = float(sp.get("presmooth_alpha", args.presmooth_alpha))
+    inner_max_iter  = int(sp.get("inner_max_iter",    args.inner_max_iter))
+    inner_rdiff  = float(sp.get("inner_rdiff",    1.0e-4))
+    noise_level  = float(sp.get("noise_level",    0.0))
+
     G_full   = G_inner + 2 * pad
-    du       = (2.0 * args.u_inner_max) / (G_inner - 1)
-    u_full   = np.array([-args.u_inner_max + (q - pad) * du
+    du       = (2.0 * u_inner_max) / (G_inner - 1)
+    u_full   = np.array([-u_inner_max + (q - pad) * du
                           for q in range(G_full)], dtype=np.float64)
     inner_lo, inner_hi = pad, pad + G_inner
     u_grid_inner = u_full[inner_lo:inner_hi].copy()
@@ -287,6 +297,15 @@ def main() -> None:
             inner_lo, inner_hi,
         )
 
+        # Optional noise perturbation to escape saddle points / Newton traps
+        if noise_level > 0.0:
+            rng = np.random.default_rng(seed=abs(hash(args.task_id)) % (2**31))
+            noise = rng.normal(0.0, noise_level * float(np.std(P_inner_seed)), P_inner_seed.shape)
+            P_inner_seed = np.clip(P_inner_seed + noise, 1e-6, 1.0 - 1e-6).astype(np.float64)
+            halo_noise = rng.normal(0.0, noise_level * float(np.std(halo)), halo.shape)
+            halo = np.clip(halo + halo_noise, 1e-6, 1.0 - 1e-6).astype(np.float64)
+            print(f"[solve] noise perturbation applied: level={noise_level}", flush=True)
+
         # phi closure — wrap to update reporter on each evaluation
         phi_calls = {"n": 0}
 
@@ -303,20 +322,24 @@ def main() -> None:
             reporter.update(iter=phi_calls["n"], ftol=F_inf)
             return out
 
+        print(f"[solve] params: presmooth={presmooth} alpha={presmooth_alpha} "
+              f"max_stages={max_stages} inner_rdiff={inner_rdiff:.0e} "
+              f"inner_max_iter={inner_max_iter}", flush=True)
+
         P_inner_final, history = staggered_solve(
             phi_full_fn, u_full, inner_lo, inner_hi,
             u_grid_inner=u_grid_inner, tau_vec=tau_vec, K=K,
             halo_initial=halo, inner_initial=P_inner_seed,
-            max_stages=args.max_stages,
+            max_stages=max_stages,
             stage_tol=1.0e-3,
             inner_method="lgmres",
-            inner_max_iter=args.inner_max_iter,
+            inner_max_iter=inner_max_iter,
             inner_tol=tol,
             inner_outer_k=40,
             inner_inner_maxiter=80,
-            inner_rdiff=1.0e-4,
-            presmooth_steps=args.presmooth,
-            presmooth_alpha=args.presmooth_alpha,
+            inner_rdiff=inner_rdiff,
+            presmooth_steps=presmooth,
+            presmooth_alpha=presmooth_alpha,
             halo_update="no_learning",
             heartbeat_s=30.0,
         )
