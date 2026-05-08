@@ -198,7 +198,7 @@
       "depends_on": [
         "g050_t0400"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -216,7 +216,9 @@
         "lgmres_tol": 1e-10,
         "lgmres_inner_m": 30,
         "lgmres_outer": 10
-      }
+      },
+      "claimed_by": "gha-25557891340-g050_t0500",
+      "claimed_at": "2026-05-08T13:21:08Z"
     },
     {
       "id": "g050_t0700",
