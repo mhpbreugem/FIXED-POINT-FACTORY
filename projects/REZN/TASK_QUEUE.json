@@ -166,17 +166,19 @@
       "deps_satisfy": "any",
       "solver_params": {
         "presmooth": 200,
-        "presmooth_alpha": 0.005,
+        "presmooth_alpha": 0.01,
         "max_stages": 8,
         "inner_rdiff": 1e-05,
         "inner_max_iter": 50,
         "pure_picard": true,
-        "picard_iters": 500000,
+        "picard_iters": 300000,
         "picard_tol": 1e-07,
         "mp_dps": 100,
         "mp_tol": "1e-50",
-        "mp_alpha": 0.3,
-        "mp_iters": 500
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
       },
       "requeue_count": 0,
       "note": "Retrying with pure_picard + mp_dps=100. Warm-start from g100_t0500 (\u03b3=1, \u03c4=5 .npz) or g050_t0300.",
@@ -385,8 +387,10 @@
         "picard_tol": 1e-07,
         "mp_dps": 100,
         "mp_tol": "1e-50",
-        "mp_alpha": 0.3,
-        "mp_iters": 500
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
       },
       "requeue_count": 0,
       "note": "Requeued with pure_picard mode. Cold start (no .npz dep available).",
@@ -638,8 +642,10 @@
         "picard_tol": 1e-07,
         "mp_dps": 100,
         "mp_tol": "1e-50",
-        "mp_alpha": 0.3,
-        "mp_iters": 500
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
       },
       "requeue_count": 0,
       "claimed_by": null,
@@ -679,8 +685,10 @@
         "picard_tol": 1e-07,
         "mp_dps": 100,
         "mp_tol": "1e-50",
-        "mp_alpha": 0.3,
-        "mp_iters": 500
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
       },
       "requeue_count": 0,
       "claimed_by": null,
@@ -708,8 +716,10 @@
         "picard_tol": 1e-07,
         "mp_dps": 100,
         "mp_tol": "1e-50",
-        "mp_alpha": 0.3,
-        "mp_iters": 500
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
       },
       "requeue_count": 0,
       "deps_satisfy": "any"
@@ -835,8 +845,10 @@
         "picard_tol": 1e-07,
         "mp_dps": 100,
         "mp_tol": "1e-50",
-        "mp_alpha": 0.3,
-        "mp_iters": 500
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
       },
       "requeue_count": 0
     },

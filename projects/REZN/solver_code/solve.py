@@ -414,21 +414,34 @@ def main() -> None:
         # ----------------------------------------------------------------
         mp_dps = int(sp.get("mp_dps", 0))
         if mp_dps > 0:
-            from phi_mp import phi_picard_mp  # noqa: PLC0415
-            mp_tol     = str(sp.get("mp_tol", "1e-50"))
-            mp_iters   = int(sp.get("mp_iters", 2000))
-            mp_alpha   = float(sp.get("mp_alpha", 0.5))
-            print(f"[solve] mpmath polish: dps={mp_dps} tol={mp_tol} "
-                  f"alpha={mp_alpha} max_iters={mp_iters}", flush=True)
-            P_inner_mp, F_inf_mp_val, n_mp = phi_picard_mp(
+            from phi_mp import phi_newton_mp  # noqa: PLC0415
+            mp_tol       = str(sp.get("mp_tol", "1e-50"))
+            mp_iters     = int(sp.get("mp_iters", 20))
+            lgmres_tol   = float(sp.get("lgmres_tol", 1e-10))
+            lgmres_inner = int(sp.get("lgmres_inner_m", 30))
+            lgmres_outer = int(sp.get("lgmres_outer", 10))
+            print(f"[solve] mpmath Newton: dps={mp_dps} tol={mp_tol} "
+                  f"max_newton={mp_iters} lgmres_tol={lgmres_tol:.0e}", flush=True)
+
+            # Raw float64 phi for LGMRES Jacobian-vector products (no reporter calls)
+            def _phi64_raw(P_full: np.ndarray) -> np.ndarray:
+                return phi_K3_halo_smooth(
+                    P_full, u_full, inner_lo, inner_hi,
+                    tau_vec, gamma_vec, W_vec, kernel_h,
+                )
+
+            P_inner_mp, F_inf_mp_val, n_mp = phi_newton_mp(
                 P_inner_final, halo, u_full,
                 inner_lo, inner_hi,
                 tau_vec, gamma_vec, W_vec,
                 kernel_h,
+                phi_float64_fn=_phi64_raw,
                 dps=mp_dps,
                 tol_str=mp_tol,
-                max_iters=mp_iters,
-                alpha=mp_alpha,
+                max_newton=mp_iters,
+                lgmres_tol=lgmres_tol,
+                lgmres_inner_m=lgmres_inner,
+                lgmres_outer=lgmres_outer,
                 reporter=reporter,
             )
             P_inner_final = P_inner_mp
