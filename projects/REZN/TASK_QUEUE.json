@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-08T12:56:31.484387Z",
+  "updated_at": "2026-05-08T12:56:32.059037Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -909,7 +909,7 @@
         "lgmres_outer": 10
       },
       "requeue_count": 0,
-      "completed_at": "2026-05-08T12:56:31.482985Z"
+      "completed_at": "2026-05-08T12:56:32.057730Z"
     },
     {
       "id": "g025_t0100",
