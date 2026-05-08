@@ -146,7 +146,7 @@
         "g050_t0300",
         "g100_t0500"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "deps_satisfy": "any",
@@ -165,7 +165,9 @@
         "mp_iters": 500
       },
       "requeue_count": 0,
-      "note": "Retrying with pure_picard + mp_dps=100. Warm-start from g100_t0500 (\u03b3=1, \u03c4=5 .npz) or g050_t0300."
+      "note": "Retrying with pure_picard + mp_dps=100. Warm-start from g100_t0500 (\u03b3=1, \u03c4=5 .npz) or g050_t0300.",
+      "claimed_by": "gha-25537352222-g050_t0400",
+      "claimed_at": "2026-05-08T04:47:49Z"
     },
     {
       "id": "g050_t0500",
@@ -339,7 +341,7 @@
       "depends_on": [
         "g100_t0400"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "projects/REZN/checkpoints/g100_t0500.npz",
       "result": null,
       "solver_params": {
@@ -357,7 +359,9 @@
         "mp_iters": 500
       },
       "requeue_count": 0,
-      "note": "Requeued with pure_picard mode. Cold start (no .npz dep available)."
+      "note": "Requeued with pure_picard mode. Cold start (no .npz dep available).",
+      "claimed_by": "gha-25537352222-g100_t0500",
+      "claimed_at": "2026-05-08T04:47:49Z"
     },
     {
       "id": "g100_t0700",
@@ -569,7 +573,7 @@
         "g200_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "note": "Warm-start from g200_t0200 .npz once available. pure_picard \u03b1=0.005 for stability at \u03b3=4 \u03c4=10.",
@@ -587,7 +591,9 @@
         "mp_alpha": 0.3,
         "mp_iters": 500
       },
-      "requeue_count": 0
+      "requeue_count": 0,
+      "claimed_by": "gha-25537352222-g400_t1000",
+      "claimed_at": "2026-05-08T04:47:49Z"
     },
     {
       "id": "g400_t1500",
@@ -608,7 +614,7 @@
         "g050_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "projects/REZN/checkpoints/g035_t0200.npz",
       "result": null,
       "note": "\u03b3-ladder between g050_t0200 (\u03b3=0.5) and g025_t0200 (\u03b3=0.25) at \u03c4=2.0.",
@@ -626,7 +632,9 @@
         "mp_alpha": 0.3,
         "mp_iters": 500
       },
-      "requeue_count": 0
+      "requeue_count": 0,
+      "claimed_by": "gha-25537352222-g035_t0200",
+      "claimed_at": "2026-05-08T04:47:49Z"
     },
     {
       "id": "g025_t0200",
