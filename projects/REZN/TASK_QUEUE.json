@@ -39,7 +39,7 @@
         "smoke": true,
         "1-R2": 0.00015319,
         "F_max": 0.20528,
-        "note": "CI smoke test — one phi eval, no convergence required"
+        "note": "CI smoke test \u2014 one phi eval, no convergence required"
       },
       "completed_at": "2026-05-07T18:31:51.999548Z"
     },
@@ -57,7 +57,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -74,7 +74,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -91,7 +91,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -108,7 +108,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -125,7 +125,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -159,7 +159,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -176,7 +176,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -193,7 +193,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -210,7 +210,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -227,7 +227,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -244,7 +244,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -261,7 +261,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -278,7 +278,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -348,7 +348,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -365,7 +365,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -382,7 +382,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -397,7 +397,7 @@
       "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "Re-solve with new K3 solver to get 1-R² for γ-sweep at τ=1.0. Warm-start from g400_t1000 (nearest new-format .npz at γ=4).",
+      "note": "Re-solve with new K3 solver to get 1-R\u00b2 for \u03b3-sweep at \u03c4=1.0. Warm-start from g400_t1000 (nearest new-format .npz at \u03b3=4).",
       "solver_params": {
         "presmooth": 200,
         "presmooth_alpha": 0.01,
@@ -429,7 +429,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -439,15 +439,9 @@
       "depends_on": [
         "g400_t0300"
       ],
-      "status": "done",
-      "checkpoint": "results/full_ree/task3_g400_t0200_mp50.json",
-      "result": {
-        "1-R2": 0.003,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
-      }
+      "status": "ready",
+      "checkpoint": null,
+      "result": null
     },
     {
       "id": "g400_t0300",
@@ -463,7 +457,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -553,7 +547,7 @@
       "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "γ-sweep at τ=1.0: γ=0.35 point. Warm-start from g035_t0200 (nearest .npz at γ=0.35).",
+      "note": "\u03b3-sweep at \u03c4=1.0: \u03b3=0.35 point. Warm-start from g035_t0200 (nearest .npz at \u03b3=0.35).",
       "solver_params": {
         "presmooth": 200,
         "presmooth_alpha": 0.01,
@@ -662,7 +656,7 @@
       "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "γ-sweep at τ=1.0: γ=1.4 point. Warm-start from g140_t0200 (nearest .npz at γ=1.4).",
+      "note": "\u03b3-sweep at \u03c4=1.0: \u03b3=1.4 point. Warm-start from g140_t0200 (nearest .npz at \u03b3=1.4).",
       "solver_params": {
         "presmooth": 200,
         "presmooth_alpha": 0.01,
@@ -687,14 +681,9 @@
       "depends_on": [
         "g140_t0240"
       ],
-      "status": "done",
-      "checkpoint": "checkpoints/g140_t0200.npz",
-      "result": {
-        "1-R2": 0.019,
-        "slope": 0.368,
-        "n_triples": 8000,
-        "F_max": 7.3e-26
-      }
+      "status": "ready",
+      "checkpoint": null,
+      "result": null
     },
     {
       "id": "g140_t0240",
@@ -886,7 +875,7 @@
       "status": "skip",
       "note": "No-learning 1-R2 for gamma=1.0; computed analytically, no solver needed",
       "result": {
-        "1-R2_nl": 0.030
+        "1-R2_nl": 0.03
       }
     },
     {
@@ -898,54 +887,6 @@
       "result": {
         "1-R2_nl": 0.004
       }
-    },
-    {
-      "id": "extract_volume_g050",
-      "gamma": 0.5,
-      "tau": null,
-      "status": "skip",
-      "note": "Fig 7 trading volume for gamma=0.5; use no-learning formula",
-      "result": null
-    },
-    {
-      "id": "extract_volume_g100",
-      "gamma": 1.0,
-      "tau": null,
-      "status": "skip",
-      "note": "Fig 7 trading volume for gamma=1.0; use no-learning formula",
-      "result": null
-    },
-    {
-      "id": "extract_volume_g400",
-      "gamma": 4.0,
-      "tau": null,
-      "status": "skip",
-      "note": "Fig 7 trading volume for gamma=4.0; use no-learning formula",
-      "result": null
-    },
-    {
-      "id": "extract_value_info_g050",
-      "gamma": 0.5,
-      "tau": null,
-      "status": "skip",
-      "note": "Fig 8 value of information for gamma=0.5; use no-learning formula",
-      "result": null
-    },
-    {
-      "id": "extract_value_info_g100",
-      "gamma": 1.0,
-      "tau": null,
-      "status": "skip",
-      "note": "Fig 8 value of information for gamma=1.0; use no-learning formula",
-      "result": null
-    },
-    {
-      "id": "extract_value_info_g400",
-      "gamma": 4.0,
-      "tau": null,
-      "status": "skip",
-      "note": "Fig 8 value of information for gamma=4.0; use no-learning formula",
-      "result": null
     },
     {
       "id": "g200_t1000",
@@ -1031,14 +972,9 @@
       "depends_on": [
         "g100_t0400"
       ],
-      "status": "done",
-      "checkpoint": "checkpoints/g100_t0500.npz",
-      "result": {
-        "1-R2": 0.057,
-        "slope": 0.415,
-        "n_triples": 8000,
-        "F_max": 3.1e-26
-      }
+      "status": "ready",
+      "checkpoint": null,
+      "result": null
     },
     {
       "id": "g100_t0800",
@@ -1049,6 +985,352 @@
       ],
       "status": "ready",
       "checkpoint": null,
+      "result": null
+    },
+    {
+      "id": "g050_t0400",
+      "gamma": 0.5,
+      "tau": 4.0,
+      "status": "ready",
+      "checkpoint": null,
+      "result": null
+    },
+    {
+      "id": "g010_t0050",
+      "gamma": 0.1,
+      "tau": 0.5,
+      "status": "ready",
+      "checkpoint": null,
+      "result": null
+    },
+    {
+      "id": "g010_t0100",
+      "gamma": 0.1,
+      "tau": 1.0,
+      "status": "ready",
+      "checkpoint": null,
+      "result": null
+    },
+    {
+      "id": "g010_t0150",
+      "gamma": 0.1,
+      "tau": 1.5,
+      "status": "ready",
+      "checkpoint": null,
+      "result": null
+    },
+    {
+      "id": "g010_t0200",
+      "gamma": 0.1,
+      "tau": 2.0,
+      "status": "ready",
+      "checkpoint": null,
+      "result": null
+    },
+    {
+      "id": "g010_t0300",
+      "gamma": 0.1,
+      "tau": 3.0,
+      "status": "ready",
+      "checkpoint": null,
+      "result": null
+    },
+    {
+      "id": "g010_t0500",
+      "gamma": 0.1,
+      "tau": 5.0,
+      "status": "ready",
+      "checkpoint": null,
+      "result": null
+    },
+    {
+      "id": "g050_t2000",
+      "gamma": 0.5,
+      "tau": 20.0,
+      "status": "skip",
+      "note": "outlier - excluded from fit",
+      "result": null
+    },
+    {
+      "id": "g050_t1200",
+      "gamma": 0.5,
+      "tau": 12.0,
+      "status": "ready",
+      "checkpoint": null,
+      "result": null
+    },
+    {
+      "id": "extract_volume_g010",
+      "gamma": 0.1,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g010_t0050",
+        "g010_t0100",
+        "g010_t0150",
+        "g010_t0200",
+        "g010_t0300",
+        "g010_t0500"
+      ],
+      "note": "Fig 7 extraction for gamma=0.1",
+      "result": null
+    },
+    {
+      "id": "extract_value_info_g010",
+      "gamma": 0.1,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g010_t0050",
+        "g010_t0100",
+        "g010_t0150",
+        "g010_t0200",
+        "g010_t0300",
+        "g010_t0500"
+      ],
+      "note": "Fig 8 extraction for gamma=0.1",
+      "result": null
+    },
+    {
+      "id": "extract_volume_g025",
+      "gamma": 0.25,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g025_t0100",
+        "g025_t0200",
+        "g025_t0300",
+        "g025_t0400",
+        "g025_t0500",
+        "g025_t0700",
+        "g025_t1000",
+        "g025_t1500"
+      ],
+      "note": "Fig 7 extraction for gamma=0.25",
+      "result": null
+    },
+    {
+      "id": "extract_value_info_g025",
+      "gamma": 0.25,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g025_t0100",
+        "g025_t0200",
+        "g025_t0300",
+        "g025_t0400",
+        "g025_t0500",
+        "g025_t0700",
+        "g025_t1000",
+        "g025_t1500"
+      ],
+      "note": "Fig 8 extraction for gamma=0.25",
+      "result": null
+    },
+    {
+      "id": "extract_volume_g050",
+      "gamma": 0.5,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g050_t0030",
+        "g050_t0050",
+        "g050_t0080",
+        "g050_t0100",
+        "g050_t0150",
+        "g050_t0200",
+        "g050_t0300",
+        "g050_t0400",
+        "g050_t1200"
+      ],
+      "note": "Fig 7 extraction for gamma=0.5",
+      "result": null
+    },
+    {
+      "id": "extract_value_info_g050",
+      "gamma": 0.5,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g050_t0030",
+        "g050_t0050",
+        "g050_t0080",
+        "g050_t0100",
+        "g050_t0150",
+        "g050_t0200",
+        "g050_t0300",
+        "g050_t0400",
+        "g050_t1200"
+      ],
+      "note": "Fig 8 extraction for gamma=0.5",
+      "result": null
+    },
+    {
+      "id": "extract_volume_g100",
+      "gamma": 1.0,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g100_t0030",
+        "g100_t0050",
+        "g100_t0080",
+        "g100_t0100",
+        "g100_t0150",
+        "g100_t0200",
+        "g100_t0300",
+        "g100_t0400",
+        "g100_t0490",
+        "g100_t0500",
+        "g100_t0590",
+        "g100_t0700",
+        "g100_t0800"
+      ],
+      "note": "Fig 7 extraction for gamma=1.0",
+      "result": null
+    },
+    {
+      "id": "extract_value_info_g100",
+      "gamma": 1.0,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g100_t0030",
+        "g100_t0050",
+        "g100_t0080",
+        "g100_t0100",
+        "g100_t0150",
+        "g100_t0200",
+        "g100_t0300",
+        "g100_t0400",
+        "g100_t0490",
+        "g100_t0500",
+        "g100_t0590",
+        "g100_t0700",
+        "g100_t0800"
+      ],
+      "note": "Fig 8 extraction for gamma=1.0",
+      "result": null
+    },
+    {
+      "id": "extract_volume_g140",
+      "gamma": 1.4,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g140_t0100",
+        "g140_t0200",
+        "g140_t0240",
+        "g140_t0300",
+        "g140_t0500",
+        "g140_t1000",
+        "g140_t1500"
+      ],
+      "note": "Fig 7 extraction for gamma=1.4",
+      "result": null
+    },
+    {
+      "id": "extract_value_info_g140",
+      "gamma": 1.4,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g140_t0100",
+        "g140_t0200",
+        "g140_t0240",
+        "g140_t0300",
+        "g140_t0500",
+        "g140_t1000",
+        "g140_t1500"
+      ],
+      "note": "Fig 8 extraction for gamma=1.4",
+      "result": null
+    },
+    {
+      "id": "extract_volume_g200",
+      "gamma": 2.0,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g200_t0100",
+        "g200_t0200",
+        "g200_t0300",
+        "g200_t0500",
+        "g200_t1000",
+        "g200_t1500"
+      ],
+      "note": "Fig 7 extraction for gamma=2.0",
+      "result": null
+    },
+    {
+      "id": "extract_value_info_g200",
+      "gamma": 2.0,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g200_t0100",
+        "g200_t0200",
+        "g200_t0300",
+        "g200_t0500",
+        "g200_t1000",
+        "g200_t1500"
+      ],
+      "note": "Fig 8 extraction for gamma=2.0",
+      "result": null
+    },
+    {
+      "id": "extract_volume_g400",
+      "gamma": 4.0,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g400_t0030",
+        "g400_t0050",
+        "g400_t0080",
+        "g400_t0100",
+        "g400_t0150",
+        "g400_t0200",
+        "g400_t0300",
+        "g400_t0500",
+        "g400_t0700",
+        "g400_t1000",
+        "g400_t1500"
+      ],
+      "note": "Fig 7 extraction for gamma=4.0",
+      "result": null
+    },
+    {
+      "id": "extract_value_info_g400",
+      "gamma": 4.0,
+      "tau": null,
+      "status": "blocked",
+      "deps_satisfy": "all",
+      "depends_on": [
+        "g400_t0030",
+        "g400_t0050",
+        "g400_t0080",
+        "g400_t0100",
+        "g400_t0150",
+        "g400_t0200",
+        "g400_t0300",
+        "g400_t0500",
+        "g400_t0700",
+        "g400_t1000",
+        "g400_t1500"
+      ],
+      "note": "Fig 8 extraction for gamma=4.0",
       "result": null
     }
   ]
