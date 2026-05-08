@@ -528,7 +528,7 @@
       "result": {
         "reason": "||F||inf=3.327e-01 > bail threshold 1e-04"
       },
-      "note": "Previously bailed from cold start. Now warm-starts from g400_t0700 or g050_t0200 seed (any suffices)."
+      "note": "Genuinely stuck: both g400_t0700 (.json, not .npz) and g050_t0200 (.npz) tried. F=0.333 — too far from REE. Needs a γ=4 .npz checkpoint (e.g. g400_t0200 re-solved by new solver) before retrying."
     },
     {
       "id": "g400_t1500",
@@ -548,12 +548,10 @@
       "depends_on": [
         "g050_t0200"
       ],
-      "status": "bailed",
+      "status": "ready",
       "checkpoint": null,
-      "result": {
-        "reason": "||F||inf=1.408e-02 > bail threshold 1e-04"
-      },
-      "note": "\u03b3-sweep root: warm-start from g050_t0200 seed (now has 3D .npz). Previously bailed with 2D checkpoint. fig4B: 1-R\u00b2=0.133 / slope=0.51."
+      "result": null,
+      "note": "\u03b3-sweep root. Bailed at F=0.014 (pre-auto-requeue deploy). Re-queued: solver got close, worth retrying. fig4B: 1-R\u00b2=0.133 / slope=0.51."
     },
     {
       "id": "g025_t0150",
@@ -631,12 +629,10 @@
         "g050_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "bailed",
+      "status": "ready",
       "checkpoint": null,
-      "result": {
-        "reason": "||F||inf=2.647e-02 > bail threshold 1e-04"
-      },
-      "note": "\u03b3-sweep root: warm-start from nearby \u03b3 at \u03c4=2 (g100, g400, or g050 seed \u2014 any will do). fig4B: 1-R\u00b2=0.025 / slope=0.59."
+      "result": null,
+      "note": "\u03b3-sweep root. Bailed at F=0.026 (pre-auto-requeue deploy). Re-queued: solver got close, worth retrying. fig4B: 1-R\u00b2=0.025 / slope=0.59."
     },
     {
       "id": "g200_t0150",
@@ -686,12 +682,10 @@
       "id": "requeue_bailed",
       "kind": "requeue_bailed",
       "depends_on": [],
-      "status": "bailed",
+      "status": "skip",
       "checkpoint": null,
-      "result": {
-        "reason": "||F||inf=6.634e-02 > bail threshold 1e-04"
-      },
-      "note": "Meta-task: active whenever any task is bailed. Scans bailed tasks, selects the nearest solved checkpoint (by (\u03b3,\u03c4) distance), constructs a warm-start .npz for each bailed task, resets their status to ready, and updates their checkpoint field. Re-runs automatically if new bails accumulate. Currently bailed: g050_t0400, g100_t0500."
+      "result": null,
+      "note": "Retired: auto-requeue is now built into mark_failed() in claim_task.py. Removed from ready queue to prevent solver from mistakenly claiming it."
     },
     {
       "id": "figR2_lognormal_g050",
@@ -765,15 +759,13 @@
     "done": 25,
     "ready": 4,
     "blocked": 18,
-    "bailed": 1,
-    "skip": 3
+    "bailed": 3,
+    "skip": 4
   },
   "fanout": {
     "ready_tasks": [
-      "g400_t1000",
       "g025_t0200",
-      "g200_t0200",
-      "requeue_bailed"
+      "g200_t0200"
     ],
     "rationale": "Three computation tasks plus one intervention task. g400_t1000 (\u03b3=4 \u03c4-walk tail, warm-starts from g400_t0700 or g050_t0200 seed), g025_t0200 (\u03b3=0.25 sweep root, warm-starts from g050_t0200 seed), g200_t0200 (\u03b3=2.0 sweep root, warm-starts from g100/g400/g050 at \u03c4=2). requeue_bailed is always ready when any bailed task exists and produces revised warm-starts for them."
   },

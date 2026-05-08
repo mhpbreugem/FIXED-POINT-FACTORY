@@ -221,6 +221,15 @@ def main() -> None:
     kernel_h = max(0.005, 0.05 * du)
 
     # ------------------------------------------------------------------
+    # Reject tasks with an unrecognised kind (e.g. meta-tasks).
+    # ------------------------------------------------------------------
+    task_kind = task.get("kind")
+    if task_kind is not None and task_kind not in ("ree", "ree_k3"):
+        print(f"[solve] task {args.task_id} has kind={task_kind!r} — not a solver task, skipping",
+              flush=True)
+        sys.exit(0)
+
+    # ------------------------------------------------------------------
     # CI smoke-test: task flagged "test": true — just verify the full
     # import chain + one phi evaluation, then mark done immediately.
     # ------------------------------------------------------------------
