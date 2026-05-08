@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-08T11:26:57.197934Z",
+  "updated_at": "2026-05-08T11:31:01.627678Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -435,10 +435,11 @@
       "gamma": 1.0,
       "tau": 5.0,
       "depends_on": [
+        "g050_t0200",
         "g100_t0400"
       ],
-      "status": "claimed",
-      "checkpoint": "projects/REZN/checkpoints/g100_t0500.npz",
+      "status": "ready",
+      "checkpoint": null,
       "result": null,
       "solver_params": {
         "presmooth": 200,
@@ -456,10 +457,9 @@
         "lgmres_inner_m": 30,
         "lgmres_outer": 10
       },
-      "requeue_count": 0,
-      "note": "Requeued with pure_picard mode. Cold start (no .npz dep available).",
-      "claimed_by": "gha-25549032408-g100_t0500",
-      "claimed_at": "2026-05-08T10:38:24Z"
+      "requeue_count": 1,
+      "note": "Auto-requeued (attempt 1): warm-start from g050_t0200 (log-dist=1.15).",
+      "deps_satisfy": "any"
     },
     {
       "id": "g100_t0700",
@@ -1234,8 +1234,8 @@
   "summary": {
     "total": 55,
     "done": 26,
-    "ready": 3,
-    "claimed": 4,
+    "ready": 4,
+    "claimed": 3,
     "blocked": 18,
     "bailed": 0,
     "skip": 4
