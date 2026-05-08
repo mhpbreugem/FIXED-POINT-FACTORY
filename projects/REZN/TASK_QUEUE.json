@@ -300,7 +300,7 @@
       "depends_on": [
         "g050_t1000"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -318,7 +318,9 @@
         "lgmres_tol": 1e-10,
         "lgmres_inner_m": 30,
         "lgmres_outer": 10
-      }
+      },
+      "claimed_by": "gha-25569069588-g050_t1500",
+      "claimed_at": "2026-05-08T17:14:25Z"
     },
     {
       "id": "g050_t2000",
@@ -571,10 +573,12 @@
         "g100_t0500"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
-      "note": "\u03c4-ladder between g100_t0500 (\u03c4=5.0) and g100_t0700 (\u03c4=7.0)."
+      "note": "\u03c4-ladder between g100_t0500 (\u03c4=5.0) and g100_t0700 (\u03c4=7.0).",
+      "claimed_by": "gha-25569069588-g100_t0590",
+      "claimed_at": "2026-05-08T17:14:25Z"
     },
     {
       "id": "g100_t0700",
@@ -583,7 +587,7 @@
       "depends_on": [
         "g100_t0590"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -604,7 +608,9 @@
       },
       "requeue_count": 1,
       "deps_satisfy": "any",
-      "note": "Auto-requeued (attempt 1): via new ladder g100_t0590. \u03c4-ladder at \u03c4=5.9"
+      "note": "Auto-requeued (attempt 1): via new ladder g100_t0590. \u03c4-ladder at \u03c4=5.9",
+      "claimed_by": "gha-25569069588-g100_t0700",
+      "claimed_at": "2026-05-08T17:14:25Z"
     },
     {
       "id": "g100_t1000",
@@ -870,10 +876,12 @@
         "g140_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
-      "note": "\u03c4-ladder between g140_t0200 (\u03c4=2.0) and g140_t1000 (\u03c4=10.0)."
+      "note": "\u03c4-ladder between g140_t0200 (\u03c4=2.0) and g140_t1000 (\u03c4=10.0).",
+      "claimed_by": "gha-25569069588-g140_t0450",
+      "claimed_at": "2026-05-08T17:14:25Z"
     },
     {
       "id": "g140_t1000",
