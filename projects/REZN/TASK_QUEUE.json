@@ -46,7 +46,9 @@
       "result": {
         "1-R2": 0.037,
         "slope": null,
-        "n_triples": 8000
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -61,7 +63,9 @@
       "result": {
         "1-R2": 0.038,
         "slope": null,
-        "n_triples": 8000
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -76,7 +80,9 @@
       "result": {
         "1-R2": 0.047,
         "slope": null,
-        "n_triples": 8000
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -91,7 +97,9 @@
       "result": {
         "1-R2": 0.052,
         "slope": null,
-        "n_triples": 8000
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -106,7 +114,9 @@
       "result": {
         "1-R2": 0.064,
         "slope": null,
-        "n_triples": 8000
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -119,7 +129,9 @@
       "result": {
         "1-R2": 0.085,
         "slope": 0.543,
-        "n_triples": 8000
+        "n_triples": 8000,
+        "F_max": 7.4e-119,
+        "F_source": "original mp300 solver (posterior_v3_G20_umax5_notrim_mp300)"
       },
       "note": "seed at mp300 converted to 3D .npz; downstream tasks warm-start from here"
     },
@@ -135,7 +147,9 @@
       "result": {
         "1-R2": 0.138,
         "slope": null,
-        "n_triples": 8000
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -225,7 +239,9 @@
       "result": {
         "1-R2": 0.03,
         "slope": null,
-        "n_triples": 8000
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -240,7 +256,9 @@
       "result": {
         "1-R2": 0.026,
         "slope": null,
-        "n_triples": 8000
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -255,7 +273,9 @@
       "result": {
         "1-R2": 0.031,
         "slope": null,
-        "n_triples": 8000
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -270,7 +290,9 @@
       "result": {
         "1-R2": 0.033,
         "slope": null,
-        "n_triples": 8000
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -285,7 +307,9 @@
       "result": {
         "1-R2": 0.04,
         "slope": null,
-        "n_triples": 8000
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -300,7 +324,9 @@
       "result": {
         "1-R2": 0.0467,
         "slope": 0.55,
-        "n_triples": 8000
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -315,7 +341,9 @@
       "result": {
         "1-R2": 0.066,
         "slope": null,
-        "n_triples": 8000
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -331,7 +359,9 @@
         "1-R2": 0.09,
         "slope": null,
         "n_triples": 8000,
-        "note": "marginal: F_max ~ 2.3e-5"
+        "note": "marginal: F_max ~ 2.3e-5",
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -424,7 +454,9 @@
         "1-R2": null,
         "slope": null,
         "n_triples": 8000,
-        "note": "redo of original Terminal-3 run"
+        "note": "redo of original Terminal-3 run",
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -439,7 +471,9 @@
       "result": {
         "1-R2": null,
         "slope": null,
-        "n_triples": 8000
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -454,7 +488,9 @@
       "result": {
         "1-R2": null,
         "slope": null,
-        "n_triples": 8000
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -469,7 +505,9 @@
       "result": {
         "1-R2": null,
         "slope": null,
-        "n_triples": 8000
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -484,7 +522,9 @@
       "result": {
         "1-R2": null,
         "slope": null,
-        "n_triples": 8000
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -500,7 +540,9 @@
         "1-R2": 0.0163,
         "slope": 0.605,
         "n_triples": 8000,
-        "note": "from \u03b3-sweep at \u03c4=2 (Task 2)"
+        "note": "from \u03b3-sweep at \u03c4=2 (Task 2)",
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -515,7 +557,9 @@
       "result": {
         "1-R2": null,
         "slope": null,
-        "n_triples": 8000
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -530,7 +574,9 @@
       "result": {
         "1-R2": null,
         "slope": null,
-        "n_triples": 8000
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -545,7 +591,9 @@
       "result": {
         "1-R2": null,
         "slope": null,
-        "n_triples": 8000
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -560,7 +608,9 @@
       "result": {
         "1-R2": null,
         "slope": null,
-        "n_triples": 8000
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
