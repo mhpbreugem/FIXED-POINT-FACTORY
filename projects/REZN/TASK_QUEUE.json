@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-08T11:02:06.240968Z",
+  "updated_at": "2026-05-08T11:02:23.811699Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -1012,7 +1012,7 @@
         "g050_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "projects/REZN/checkpoints/g200_t0200.npz",
       "result": null,
       "note": "Restored checkpoint after Newton sign-fix; noise_level removed.",
@@ -1032,7 +1032,9 @@
         "lgmres_inner_m": 30,
         "lgmres_outer": 10
       },
-      "requeue_count": 0
+      "requeue_count": 0,
+      "claimed_by": "claude-local-1",
+      "claimed_at": "2026-05-08T11:02:23.809109Z"
     },
     {
       "id": "g200_t0150",
