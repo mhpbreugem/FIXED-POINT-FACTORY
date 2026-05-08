@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-08T12:50:37.286750Z",
+  "updated_at": "2026-05-08T12:50:52.621537Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -805,9 +805,15 @@
         "g050_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "done",
       "checkpoint": "projects/REZN/checkpoints/g035_t0200.npz",
-      "result": null,
+      "result": {
+        "1-R2": 0.08953636,
+        "F_max": 1.2276e-53,
+        "n_stages": 1,
+        "phi_calls": 2,
+        "wall_s": 2855.9
+      },
       "note": "\u03b3-ladder between g050_t0200 (\u03b3=0.5) and g025_t0200 (\u03b3=0.25) at \u03c4=2.0.",
       "solver_params": {
         "presmooth": 200,
@@ -826,8 +832,7 @@
         "lgmres_outer": 10
       },
       "requeue_count": 0,
-      "claimed_by": "claude-local-1",
-      "claimed_at": "2026-05-08T12:03:11.544677+00:00"
+      "completed_at": "2026-05-08T12:50:52.618375Z"
     },
     {
       "id": "g025_t0200",
@@ -1259,9 +1264,9 @@
   ],
   "summary": {
     "total": 55,
-    "done": 29,
+    "done": 30,
     "ready": 5,
-    "claimed": 4,
+    "claimed": 3,
     "blocked": 13,
     "bailed": 0,
     "skip": 4
