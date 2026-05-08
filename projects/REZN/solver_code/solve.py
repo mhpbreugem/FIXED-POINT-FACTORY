@@ -86,6 +86,19 @@ def dps_to_tol(dps) -> float:
 # Warm-start
 # ---------------------------------------------------------------------------
 
+def _try_load_npz(ckpt_path: Path) -> tuple[np.ndarray, np.ndarray] | None:
+    """Return (halo, P_inner) from an .npz checkpoint, or None on failure."""
+    if not ckpt_path.exists() or ckpt_path.suffix != ".npz":
+        return None
+    try:
+        arr = np.load(ckpt_path)
+        if "P_inner" in arr and "halo" in arr:
+            return arr["halo"].astype(np.float64), arr["P_inner"].astype(np.float64)
+    except Exception as e:
+        print(f"[solve] npz load failed ({e}): {ckpt_path.name}", flush=True)
+    return None
+
+
 def load_warm_start(
     project: str, task: dict,
     u_full: np.ndarray, tau_vec: np.ndarray,
@@ -93,6 +106,17 @@ def load_warm_start(
     inner_lo: int, inner_hi: int,
 ) -> tuple[np.ndarray, np.ndarray]:
     """Return (halo_full, P_inner).  Falls back to no-learning if no usable checkpoint."""
+    # 1. Try the task's own previous checkpoint (re-solve to higher precision)
+    own_ckpt = task.get("checkpoint")
+    if own_ckpt:
+        result = _try_load_npz(ROOT / own_ckpt)
+        if result is not None:
+            halo, P_inner = result
+            print(f"[solve] warm-start from own checkpoint: {Path(own_ckpt).name}",
+                  flush=True)
+            return halo, P_inner
+
+    # 2. Try the task's dependency checkpoints
     queue = load_queue(project)
     by_id = {t["id"]: t for t in queue["tasks"]}
 
@@ -103,19 +127,11 @@ def load_warm_start(
         ckpt = dep.get("checkpoint")
         if not ckpt:
             continue
-        ckpt_path = ROOT / ckpt
-        if not ckpt_path.exists() or ckpt_path.suffix != ".npz":
-            continue
-        try:
-            arr = np.load(ckpt_path)
-            if "P_inner" in arr and "halo" in arr:
-                P_inner = arr["P_inner"].astype(np.float64)
-                halo = arr["halo"].astype(np.float64)
-                print(f"[solve] warm-start from {ckpt_path.name}", flush=True)
-                return halo, P_inner
-        except Exception as e:
-            print(f"[solve] warm-start load failed ({e}), falling back to cold start",
-                  flush=True)
+        result = _try_load_npz(ROOT / ckpt)
+        if result is not None:
+            halo, P_inner = result
+            print(f"[solve] warm-start from dep {dep_id}: {Path(ckpt).name}", flush=True)
+            return halo, P_inner
 
     print("[solve] cold start (no-learning init)", flush=True)
     halo = init_no_learning_K3(u_full, tau_vec, gamma_vec, W_vec)
@@ -442,8 +458,13 @@ def main() -> None:
             "wall_s":      round(wall_s, 1),
         }
 
-        # Bail if residual is too large (solver stalled)
-        BAIL_THRESHOLD = max(tol * 1000, 1.0e-4)
+        # Bail if residual is too large (solver stalled).
+        # When mp_dps is set, the acceptance criterion is mp_tol (e.g. 1e-50).
+        # Without mp_dps, accept anything below 1e-4 (float64 realistic).
+        if mp_dps > 0:
+            BAIL_THRESHOLD = float(sp.get("mp_tol", "1e-50"))
+        else:
+            BAIL_THRESHOLD = max(tol * 1000, 1.0e-4)
         if F_inf_final > BAIL_THRESHOLD:
             claim_bail(args.project, args.task_id, args.branch,
                        f"||F||inf={F_inf_final:.3e} > bail threshold {BAIL_THRESHOLD:.0e}")
