@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-08T11:31:01.627678Z",
+  "updated_at": "2026-05-08T11:37:55.126268Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -157,10 +157,11 @@
       "gamma": 0.5,
       "tau": 4.0,
       "depends_on": [
+        "g050_t0200",
         "g050_t0300",
         "g100_t0500"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "deps_satisfy": "any",
@@ -180,10 +181,8 @@
         "lgmres_inner_m": 30,
         "lgmres_outer": 10
       },
-      "requeue_count": 0,
-      "note": "Retrying with pure_picard + mp_dps=100. Warm-start from g100_t0500 (\u03b3=1, \u03c4=5 .npz) or g050_t0300.",
-      "claimed_by": "gha-25549032408-g050_t0400",
-      "claimed_at": "2026-05-08T10:38:24Z"
+      "requeue_count": 1,
+      "note": "Auto-requeued (attempt 1): warm-start from g050_t0200 (log-dist=0.69)."
     },
     {
       "id": "g050_t0500",
@@ -1234,8 +1233,8 @@
   "summary": {
     "total": 55,
     "done": 26,
-    "ready": 4,
-    "claimed": 3,
+    "ready": 5,
+    "claimed": 2,
     "blocked": 18,
     "bailed": 0,
     "skip": 4
