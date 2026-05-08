@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-08T04:34:51.959035Z",
+  "updated_at": "2026-05-08T10:10:51.666674Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -194,7 +194,23 @@
       ],
       "status": "blocked",
       "checkpoint": null,
-      "result": null
+      "result": null,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      }
     },
     {
       "id": "g050_t0700",
@@ -205,7 +221,23 @@
       ],
       "status": "blocked",
       "checkpoint": null,
-      "result": null
+      "result": null,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      }
     },
     {
       "id": "g050_t1000",
@@ -216,7 +248,23 @@
       ],
       "status": "blocked",
       "checkpoint": null,
-      "result": null
+      "result": null,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      }
     },
     {
       "id": "g050_t1500",
@@ -227,7 +275,23 @@
       ],
       "status": "blocked",
       "checkpoint": null,
-      "result": null
+      "result": null,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      }
     },
     {
       "id": "g100_t0030",
@@ -418,8 +482,10 @@
         "picard_tol": 1e-07,
         "mp_dps": 100,
         "mp_tol": "1e-50",
-        "mp_alpha": 0.3,
-        "mp_iters": 500
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
       },
       "requeue_count": 0
     },
@@ -432,7 +498,23 @@
       ],
       "status": "blocked",
       "checkpoint": null,
-      "result": null
+      "result": null,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      }
     },
     {
       "id": "g100_t1500",
@@ -443,7 +525,23 @@
       ],
       "status": "blocked",
       "checkpoint": null,
-      "result": null
+      "result": null,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      }
     },
     {
       "id": "g400_t0030",
@@ -660,7 +758,23 @@
       ],
       "status": "blocked",
       "checkpoint": null,
-      "result": null
+      "result": null,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      }
     },
     {
       "id": "g035_t0200",
@@ -745,8 +859,10 @@
         "picard_tol": 1e-07,
         "mp_dps": 100,
         "mp_tol": "1e-50",
-        "mp_alpha": 0.3,
-        "mp_iters": 500
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
       },
       "requeue_count": 0
     },
@@ -759,7 +875,23 @@
       ],
       "status": "blocked",
       "checkpoint": null,
-      "result": null
+      "result": null,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      }
     },
     {
       "id": "g025_t0080",
@@ -770,7 +902,23 @@
       ],
       "status": "blocked",
       "checkpoint": null,
-      "result": null
+      "result": null,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      }
     },
     {
       "id": "g025_t0050",
@@ -781,7 +929,23 @@
       ],
       "status": "blocked",
       "checkpoint": null,
-      "result": null
+      "result": null,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      }
     },
     {
       "id": "g025_t0030",
@@ -792,7 +956,23 @@
       ],
       "status": "blocked",
       "checkpoint": null,
-      "result": null
+      "result": null,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      }
     },
     {
       "id": "g025_t0300",
@@ -815,8 +995,10 @@
         "picard_tol": 1e-07,
         "mp_dps": 100,
         "mp_tol": "1e-50",
-        "mp_alpha": 0.3,
-        "mp_iters": 500
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
       },
       "requeue_count": 0
     },
@@ -873,8 +1055,10 @@
         "picard_tol": 1e-07,
         "mp_dps": 100,
         "mp_tol": "1e-50",
-        "mp_alpha": 0.3,
-        "mp_iters": 500
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
       },
       "requeue_count": 0
     },
@@ -887,7 +1071,23 @@
       ],
       "status": "blocked",
       "checkpoint": null,
-      "result": null
+      "result": null,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      }
     },
     {
       "id": "g200_t0300",
@@ -910,8 +1110,10 @@
         "picard_tol": 1e-07,
         "mp_dps": 100,
         "mp_tol": "1e-50",
-        "mp_alpha": 0.3,
-        "mp_iters": 500
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
       },
       "requeue_count": 0
     },
@@ -924,7 +1126,23 @@
       ],
       "status": "blocked",
       "checkpoint": null,
-      "result": null
+      "result": null,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      }
     },
     {
       "id": "requeue_bailed",
