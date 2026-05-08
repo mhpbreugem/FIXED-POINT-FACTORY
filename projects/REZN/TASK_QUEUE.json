@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-08T22:07:22.126451Z",
+  "updated_at": "2026-05-08T22:10:59.522543Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -1306,9 +1306,15 @@
       "depends_on": [
         "g025_t0080"
       ],
-      "status": "claimed",
-      "checkpoint": null,
-      "result": null,
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g025_t0050.npz",
+      "result": {
+        "1-R2": 0.05364659,
+        "F_max": 1.9602e-53,
+        "n_stages": 1,
+        "phi_calls": 5247,
+        "wall_s": 2522.7
+      },
       "solver_params": {
         "presmooth": 200,
         "presmooth_alpha": 0.01,
@@ -1325,8 +1331,7 @@
         "lgmres_inner_m": 30,
         "lgmres_outer": 10
       },
-      "claimed_by": "gha-25580422348-g025_t0050",
-      "claimed_at": "2026-05-08T21:28:25Z"
+      "completed_at": "2026-05-08T22:10:59.521142Z"
     },
     {
       "id": "g025_t0030",
@@ -1335,7 +1340,7 @@
       "depends_on": [
         "g025_t0050"
       ],
-      "status": "blocked",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -1844,7 +1849,7 @@
       "id": "extract_volume_g200",
       "gamma": 2.0,
       "tau": null,
-      "status": "blocked",
+      "status": "ready",
       "deps_satisfy": "all",
       "depends_on": [
         "g200_t0100",
@@ -1860,7 +1865,7 @@
       "id": "extract_value_info_g200",
       "gamma": 2.0,
       "tau": null,
-      "status": "blocked",
+      "status": "ready",
       "deps_satisfy": "all",
       "depends_on": [
         "g200_t0100",
@@ -1876,7 +1881,7 @@
       "id": "extract_volume_g400",
       "gamma": 4.0,
       "tau": null,
-      "status": "blocked",
+      "status": "ready",
       "deps_satisfy": "all",
       "depends_on": [
         "g400_t0030",
@@ -1900,7 +1905,7 @@
       "id": "extract_value_info_g400",
       "gamma": 4.0,
       "tau": null,
-      "status": "blocked",
+      "status": "ready",
       "deps_satisfy": "all",
       "depends_on": [
         "g400_t0030",
@@ -1923,10 +1928,10 @@
   ],
   "summary": {
     "total": 84,
-    "done": 51,
-    "ready": 11,
-    "claimed": 3,
-    "blocked": 18,
+    "done": 52,
+    "ready": 16,
+    "claimed": 2,
+    "blocked": 13,
     "bailed": 0,
     "skip": 1
   },
