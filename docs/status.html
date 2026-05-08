@@ -40,313 +40,241 @@
   td.status.claimed { color: var(--claimed); }
   td.status.blocked { color: var(--blocked); }
   td.status.bailed  { color: var(--bailed); }
-  td.status.skip    { color: var(--skip); }
-  .stale { color: var(--stale); font-weight: 600; }
-  .mono { font-family: ui-monospace, "Fira Code", monospace; }
-  .small { font-size: 0.8rem; color: var(--muted); }
-  .live { font-size: 0.8rem; color: var(--claimed); font-family: ui-monospace, "Fira Code", monospace; }
-  .enorm { font-size: 0.8rem; color: var(--done); font-family: ui-monospace, "Fira Code", monospace; }
-  .controls { margin: 0.5rem 0; display: flex; gap: 0.5rem; align-items: center;
-              flex-wrap: wrap; }
-  .controls input { padding: 0.3rem 0.5rem; border: 1px solid #ccc; border-radius: 0.3rem; }
-  .controls button { padding: 0.3rem 0.7rem; border: 1px solid #ccc;
-                     background: white; border-radius: 0.3rem; cursor: pointer; }
-  .err { color: #b1260f; padding: 1rem; background: #fee; border-radius: 0.3rem; }
-
-  /* Tabs */
-  .tab-nav { display: flex; gap: 0; margin: 0.75rem 0 0 0; border-bottom: 2px solid #ddd; }
-  .tab-btn { padding: 0.4rem 1.1rem; font-size: 0.9rem; font-weight: 600;
-             border: 1px solid transparent; border-bottom: none; background: none;
-             cursor: pointer; color: var(--muted); border-radius: 0.3rem 0.3rem 0 0;
-             margin-bottom: -2px; }
-  .tab-btn:hover { background: #eee; color: var(--fg); }
-  .tab-btn.active { background: var(--bg); border-color: #ddd; color: var(--fg); }
-  .tab-content { display: none; padding-top: 0.5rem; }
+  td.status.skip    { color: #aaa; }
+  .tabs { display: flex; gap: 0.3rem; margin-bottom: 1rem; }
+  .tab { padding: 0.3rem 0.8rem; border: 1px solid #ccc; border-radius: 0.3rem;
+         cursor: pointer; background: #fff; font-size: 0.85rem; }
+  .tab.active { background: #222; color: #fff; border-color: #222; }
+  .tab-content { display: none; }
   .tab-content.active { display: block; }
-
-  /* Figure charts */
-  .charts-row { display: flex; gap: 2rem; flex-wrap: wrap; margin: 1rem 0; }
-  .chart-box { flex: 1 1 480px; min-width: 300px; }
-  .chart-box svg { width: 100%; display: block; }
-  .chart-caption { font-size: 0.8rem; color: var(--muted); margin-top: 0.25rem; }
-
-  /* Figure tables */
-  .fig-table-wrap { overflow-x: auto; margin: 0.5rem 0 1.5rem 0; }
-  .fig-table-wrap table { min-width: 560px; }
-  td.r2-val { font-family: ui-monospace, monospace; font-weight: 600; }
-  td.r2-miss { color: var(--muted); font-style: italic; text-align: center; }
-  td.src-id { font-family: ui-monospace, monospace; font-size: 0.78rem; color: #555; }
-  td.fmax-val { font-family: ui-monospace, monospace; font-size: 0.78rem; color: var(--done); }
-  td.fmax-bound { font-size: 0.78rem; color: var(--muted); }
-  .note-legacy { font-size: 0.75rem; color: var(--muted); }
-  .footnote { font-size: 0.78rem; color: var(--muted); margin-top: 0.4rem; line-height: 1.5; }
+  .err { color: var(--bailed); }
+  .stale { color: var(--stale); font-weight: 600; }
+  .mono { font-family: ui-monospace, monospace; font-size: 0.8rem; }
+  .worker-table td, .worker-table th { padding: 0.25rem 0.5rem; }
+  .progress-bar-wrap { width: 120px; background: #eee; border-radius: 3px;
+                       display: inline-block; vertical-align: middle; }
+  .progress-bar { height: 8px; border-radius: 3px; background: var(--claimed); }
+  svg.chart { overflow: visible; }
+  .chart-wrap { margin: 0.5rem 0 1.5rem 0; }
+  /* mini chart axis */
+  .axis-label { font-size: 10px; fill: #888; }
+  .grid-line { stroke: #eee; stroke-width: 1; }
+  .paper-section { margin: 2rem 0 0.5rem 0; padding: 0.5rem 0 0 0;
+                   border-top: 2px solid #ddd; }
+  .nl-badge { display: inline-block; font-size: 0.7rem; background: #e8e8e8;
+              border-radius: 0.3rem; padding: 0.1rem 0.4rem; color: #555;
+              vertical-align: middle; margin-left: 0.4rem; }
+  table.nl-table { font-size: 0.82rem; border-collapse: collapse; width: auto; min-width: 420px; }
+  .heatcell { font-family: ui-monospace, monospace; }
 </style>
 </head>
 <body>
+<h1>fixed-point-factory — <span id="project-label">REZN</span></h1>
+<p class="meta" id="meta">loading…</p>
 
-<h1>fixed-point-factory — <span id="project">REZN</span></h1>
-<div class="meta" id="meta">loading…</div>
-<div class="summary" id="summary"></div>
-
-<div class="tab-nav">
-  <button class="tab-btn active" onclick="switchTab('tasks')">Tasks</button>
-  <button class="tab-btn" onclick="switchTab('figures')">Figures</button>
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('tasks')">Tasks</button>
+  <button class="tab" onclick="switchTab('workers')">Workers</button>
+  <button class="tab" onclick="switchTab('figures')">Figures</button>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════════════ Tasks -->
+<!-- refresh button outside tabs -->
+<div style="margin-bottom:0.5rem">
+  <button onclick="loadAll()">refresh now</button>
+</div>
+
 <div id="tab-tasks" class="tab-content active">
-  <h2>Tasks</h2>
-  <div class="controls">
-    <input type="text" id="filter" placeholder="filter id, status, gamma…" oninput="render()">
-    <button onclick="loadAll()">refresh now</button>
-    <span class="small" id="autorefresh">auto-refresh every 30s</span>
-  </div>
-  <table id="tasks">
-    <thead>
-      <tr>
-        <th onclick="sortBy('id')">id</th>
-        <th onclick="sortBy('status')">status</th>
-        <th onclick="sortBy('gamma')">&#947;</th>
-        <th onclick="sortBy('tau')">&#964;</th>
-        <th>live iter &middot; ftol</th>
-        <th>||F||&#8734; end</th>
-        <th onclick="sortBy('result')">1-R&sup2;</th>
-        <th>deps</th>
-        <th onclick="sortBy('checkpoint')">checkpoint</th>
-      </tr>
-    </thead>
-    <tbody id="tbody"></tbody>
+  <div class="summary" id="summary"></div>
+  <table id="task-table">
+    <thead><tr>
+      <th onclick="sortBy('id')">ID</th>
+      <th onclick="sortBy('gamma')">&#947;</th>
+      <th onclick="sortBy('tau')">&#964;</th>
+      <th onclick="sortBy('status')">Status</th>
+      <th onclick="sortBy('1-R2')">1‑R²</th>
+      <th>Note</th>
+      <th>Depends on</th>
+    </tr></thead>
+    <tbody id="task-body"></tbody>
   </table>
-  <h2>Active workers</h2>
-  <div id="workers" class="small">loading…</div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════════════ Figures -->
+<div id="tab-workers" class="tab-content">
+  <h2>Active workers</h2>
+  <table class="worker-table" id="worker-table">
+    <thead><tr>
+      <th>Worker</th><th>Task</th><th>Heartbeat</th><th>Age</th>
+      <th>Iter</th><th>F-tol</th><th>Progress</th>
+    </tr></thead>
+    <tbody id="worker-body"></tbody>
+  </table>
+</div>
+
 <div id="tab-figures" class="tab-content">
-
-  <h2>Fig. 1 — Revelation deficit 1−R² vs signal precision &#964;</h2>
-  <p class="small" style="margin:0 0 0.5rem 0">
-    1−R² = 0 means prices perfectly reveal the sufficient statistic T* (CARA benchmark).
-    Higher &#964; &rarr; sharper signals &rarr; more private information &rarr; price function harder to invert.
-    Points marked <strong>?</strong> have no converged fixed point yet (see table for task status).
-    Points marked <strong>&dagger;</strong> are solved but 1−R² was not retained in the legacy run.
-  </p>
-  <div class="charts-row">
-    <div class="chart-box">
-      <svg id="chart-tau-sweep" viewBox="0 0 600 380"></svg>
-      <p class="chart-caption">&tau;-sweep — multiple &#947; series. X-axis: log scale.</p>
-    </div>
-    <div class="chart-box">
-      <svg id="chart-gamma-sweep" viewBox="0 0 600 380"></svg>
-      <p class="chart-caption">&#947;-sweep at &#964; = 2.0. X-axis: log scale.</p>
-    </div>
-  </div>
-
-  <h3>Table A — &#964;-sweep at &#947; = 0.5 (Fig. 1, blue series)</h3>
-  <div class="fig-table-wrap"><div id="tbl-g050"></div></div>
-
-  <h3>Table B — &#964;-sweep at &#947; = 1.0</h3>
-  <div class="fig-table-wrap"><div id="tbl-g100"></div></div>
-
-  <h3>Table C — &#964;-sweep at &#947; = 4.0</h3>
-  <div class="fig-table-wrap"><div id="tbl-g400"></div></div>
-
-  <h2>Fig. 2 — Revelation deficit vs risk aversion &#947; at &#964; = 2.0</h2>
-  <p class="small" style="margin:0 0 0.5rem 0">
-    Cross-section of the &#947;-sweep. Each point is from the fixed point at the stated (&#947;, &#964;=2).
-    Note the U-shape: moderate &#947; (1.0) achieves the lowest 1−R², while both very low and very
-    high risk aversion imply greater price incompleteness.
-  </p>
-
-  <h3>Table D — &#947;-sweep at &#964; = 2.0 (Fig. 2)</h3>
-  <div class="fig-table-wrap"><div id="tbl-gamma-sweep"></div></div>
-
-  <h2>Full result grid</h2>
-  <p class="small" style="margin:0 0 0.5rem 0">All (&#947;, &#964;) combinations. — = no task queued for that pair.</p>
-  <div class="fig-table-wrap" style="overflow-x:auto"><div id="tbl-grid"></div></div>
-
-</div><!-- /tab-figures -->
+  <div id="fig-area"></div>
+</div>
 
 <script>
-  const REPO = "mhpbreugem/fixed-point-factory";
-  const BRANCH = "main";
-  const params = new URLSearchParams(location.search);
-  const PROJECT = params.get("project") || "REZN";
-  document.getElementById("project").textContent = PROJECT;
+  const OWNER = "mhpbreugem", REPO = "fixed-point-factory", BRANCH = "main";
+  const PROJECT = "REZN";
+  let taskData = null, workerData = null, progressData = {};
+  let sortCol = "id", sortAsc = true;
+  let FIGDATA = null;
 
-  const rawUrl = path => `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${path}?_=${Date.now()}`;
+  function rawUrl(path) {
+    return `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${path}`;
+  }
+  function apiUrl(path) {
+    return `https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}?ref=${BRANCH}`;
+  }
 
-  let TASKS = [];
-  let PROGRESS = {};
-  let SORT_KEY = "id", SORT_ASC = true;
+  async function fetchJson(url) {
+    const r = await fetch(url, {cache:"no-store"});
+    if (!r.ok) throw new Error(`${r.status} ${r.statusText} — ${url}`);
+    return r.json();
+  }
+  async function fetchText(url) {
+    const r = await fetch(url, {cache:"no-store"});
+    if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
+    return r.text();
+  }
 
-  // ─── tab switching ─────────────────────────────────────────────────────────────────────
   function switchTab(name) {
-    document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
-    document.querySelectorAll(".tab-btn").forEach(el => el.classList.remove("active"));
-    document.getElementById("tab-" + name).classList.add("active");
-    document.querySelector(`.tab-btn[onclick="switchTab('${name}')"]`).classList.add("active");
+    document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".tab-content").forEach(d => d.classList.remove("active"));
+    document.getElementById(`tab-${name}`).classList.add("active");
+    event.target.classList.add("active");
     if (name === "figures") renderFigures();
   }
 
-  // ─── utilities ─────────────────────────────────────────────────────────────────────────
-  async function fetchJson(url) {
-    const r = await fetch(url, { cache: "no-store" });
-    if (!r.ok) throw new Error(`${url}: ${r.status}`);
-    return r.json();
+  function esc(s) {
+    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
   }
-  function ageMin(iso) {
-    if (!iso) return null;
-    return (Date.now() - new Date(iso.replace("Z", "+00:00")).getTime()) / 60000;
-  }
-  function ageStr(iso) {
-    const m = ageMin(iso);
-    if (m === null) return "?";
-    if (m < 1) return `${Math.round(m * 60)}s ago`;
-    if (m < 90) return `${Math.round(m)}m ago`;
-    return `${Math.round(m / 60)}h ago`;
-  }
-  function fmtNum(v) {
-    if (v == null) return "";
-    if (typeof v === "number") return v.toPrecision(3);
-    return String(v);
-  }
-  function fmtR2(v) {
-    if (v == null) return null;
-    return (typeof v === "number") ? v.toFixed(4) : String(v);
-  }
-  function esc(s) { return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
-  // ─── Tasks tab ────────────────────────────────────────────────────────────────────────
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TASK LOADING
+  // ═══════════════════════════════════════════════════════════════════════════
+
   async function loadTasks() {
     const data = await fetchJson(rawUrl(`projects/${PROJECT}/TASK_QUEUE.json`));
-    TASKS = data.tasks || [];
-    renderSummary();
-    render();
-  }
-
-  function renderSummary() {
-    const counts = {};
-    TASKS.forEach(t => { counts[t.status] = (counts[t.status] || 0) + 1; });
-    const order = ["done", "ready", "claimed", "blocked", "bailed", "skip"];
-    const sumDiv = document.getElementById("summary");
-    sumDiv.innerHTML = "";
-    order.forEach(s => {
-      if (!counts[s]) return;
-      const span = document.createElement("span");
-      span.className = `pill ${s}`;
-      span.textContent = `${s}: ${counts[s]}`;
-      sumDiv.appendChild(span);
-    });
-    const total = document.createElement("span");
-    total.className = "pill";
-    total.style.background = "#444";
-    total.textContent = `total: ${TASKS.length}`;
-    sumDiv.appendChild(total);
-  }
-
-  function sortBy(key) {
-    if (SORT_KEY === key) SORT_ASC = !SORT_ASC;
-    else { SORT_KEY = key; SORT_ASC = true; }
-    render();
-  }
-  function getSortVal(t, k) {
-    const v = t[k];
-    if (k === "result" && v) return JSON.stringify(v);
-    if (Array.isArray(v)) return v.join(",");
-    return v == null ? "" : v;
-  }
-
-  function render() {
-    const filter = document.getElementById("filter").value.toLowerCase().trim();
-    const filtered = TASKS.filter(t => {
-      if (!filter) return true;
-      return JSON.stringify(t).toLowerCase().includes(filter);
-    });
-    const sorted = [...filtered].sort((a, b) => {
-      const va = getSortVal(a, SORT_KEY), vb = getSortVal(b, SORT_KEY);
-      if (va < vb) return SORT_ASC ? -1 : 1;
-      if (va > vb) return SORT_ASC ? 1 : -1;
-      return 0;
-    });
-    const tbody = document.getElementById("tbody");
-    tbody.innerHTML = "";
-    sorted.forEach(t => {
-      const tr = document.createElement("tr");
-      const prog = PROGRESS[t.id];
-      let liveCell = "";
-      if (prog) {
-        const sc = prog.stale ? " stale" : "";
-        liveCell = `<span class="live${sc}">iter=${prog.iter ?? "?"} &middot; ftol=${prog.ftol ?? "?"}</span>`;
-      } else if (t.status === "claimed") {
-        liveCell = `<span class="small" style="color:var(--claimed)">waiting&hellip;</span>`;
-      }
-      let enorm = "";
-      if (t.result && t.result["F_max"] != null) {
-        const tip = t.result["F_source"] ? ` title="${esc(t.result["F_source"])}"` : "";
-        enorm = `<span class="enorm"${tip}>${fmtNum(t.result["F_max"])}</span>`;
-      } else if (t.result && t.result["F_max_bound"] != null) {
-        const tip = t.result["F_source"] ? ` title="${esc(t.result["F_source"])}"` : "";
-        enorm = `<span class="small"${tip}>&le; ${fmtNum(t.result["F_max_bound"])}</span>`;
-      }
-      let r2 = "";
-      if (t.result && t.result["1-R2"] != null)
-        r2 = `<span class="mono">${fmtNum(t.result["1-R2"])}</span>`;
-      else if (t.result && t.result["reason"])
-        r2 = `<span class="small">${esc(String(t.result["reason"]).substring(0, 60))}</span>`;
-      const ckpt = t.checkpoint
-        ? `<a href="https://github.com/${REPO}/blob/${BRANCH}/${t.checkpoint}" target="_blank">${t.checkpoint.split("/").pop()}</a>`
-        : "";
-      const deps = (t.depends_on || []).join(", ");
-      tr.innerHTML = `
-        <td class="mono">${esc(t.id)}</td>
-        <td class="status ${t.status}">${t.status}</td>
-        <td>${t.gamma ?? ""}</td>
-        <td>${t.tau ?? (t.tau_grid ? "[sweep]" : "")}</td>
-        <td>${liveCell}</td>
-        <td>${enorm}</td>
-        <td>${r2}</td>
-        <td class="mono small">${esc(deps)}</td>
-        <td class="small">${ckpt}</td>`;
-      tbody.appendChild(tr);
-    });
+    taskData = data;
+    renderTasks();
     document.getElementById("meta").textContent =
-      `${TASKS.length} tasks &middot; last refresh ${new Date().toLocaleTimeString()}`;
+      `last refresh: ${new Date().toLocaleTimeString()}  ·  updated_at: ${data.updated_at || "?"}  ·  project: ${PROJECT}`;
   }
+
+  function renderTasks() {
+    if (!taskData) return;
+    const tasks = taskData.tasks || [];
+
+    // summary pills
+    const counts = {};
+    tasks.forEach(t => { counts[t.status] = (counts[t.status]||0)+1; });
+    const pillOrder = ["done","ready","claimed","blocked","bailed","skip"];
+    document.getElementById("summary").innerHTML =
+      pillOrder.filter(s => counts[s]).map(s =>
+        `<span class="pill ${s}">${s}: ${counts[s]}</span>`).join("") +
+      `<span class="pill" style="background:#555">total: ${tasks.length}</span>`;
+
+    // sort
+    const sorted = [...tasks].sort((a,b) => {
+      let av = a[sortCol] ?? a.result?.[sortCol] ?? "";
+      let bv = b[sortCol] ?? b.result?.[sortCol] ?? "";
+      if (typeof av === "number" && typeof bv === "number")
+        return sortAsc ? av-bv : bv-av;
+      return sortAsc ? String(av).localeCompare(String(bv))
+                     : String(bv).localeCompare(String(av));
+    });
+
+    // render rows
+    document.getElementById("task-body").innerHTML = sorted.map(t => {
+      const r2 = t.result?.["1-R2"];
+      const r2str = r2 != null ? r2.toFixed(4) : "";
+      const deps = (t.depends_on||[]).join(", ");
+      return `<tr>
+        <td class="mono">${esc(t.id)}</td>
+        <td>${t.gamma != null ? t.gamma : ""}</td>
+        <td>${t.tau  != null ? t.tau  : ""}</td>
+        <td class="status ${t.status}">${t.status}</td>
+        <td>${r2str}</td>
+        <td style="max-width:260px;font-size:0.78rem;color:#555">${esc(t.note||"")}${
+          t.test ? " <em>(test)</em>" : ""}</td>
+        <td class="mono" style="font-size:0.78rem;color:#888">${esc(deps)}</td>
+      </tr>`;
+    }).join("");
+  }
+
+  function sortBy(col) {
+    if (sortCol === col) sortAsc = !sortAsc;
+    else { sortCol = col; sortAsc = true; }
+    renderTasks();
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // WORKER / PROGRESS LOADING
+  // ═══════════════════════════════════════════════════════════════════════════
 
   async function loadWorkers() {
-    const div = document.getElementById("workers");
-    const claimed = TASKS.filter(t => t.status === "claimed" && t.claimed_by);
-    if (!claimed.length) { div.innerHTML = "<i>no active workers</i>"; return; }
-    const rows = claimed.map(t => {
-      const age = ageMin(t.claimed_at);
-      const stale = age !== null && age > 120;
-      return `<div>${esc(t.claimed_by)} &rarr; <span class="mono">${esc(t.id)}</span> `
-           + `<span class="${stale ? "stale" : "small"}">(claimed ${ageStr(t.claimed_at)}${stale ? " — STALE?" : ""})</span></div>`;
-    });
-    div.innerHTML = rows.join("");
+    try {
+      const hbDir = await fetchJson(apiUrl(`projects/${PROJECT}/heartbeats`));
+      workerData = Array.isArray(hbDir) ? hbDir : [];
+    } catch { workerData = []; }
   }
 
   async function loadProgress() {
-    PROGRESS = {};
-    const claimedIds = TASKS.filter(t => t.status === "claimed").map(t => t.id);
-    if (!claimedIds.length) { render(); return; }
-    await Promise.all(claimedIds.map(async tid => {
-      try {
-        const p = await fetchJson(rawUrl(`projects/${PROJECT}/progress/${tid}.json`));
-        PROGRESS[p.task_id] = { iter: p.iter, ftol: p.ftol, last_update: p.last_update,
-                                stale: ageMin(p.last_update) > 3 };
-      } catch (_) {}
-    }));
-    render();
+    try {
+      const pDir = await fetchJson(apiUrl(`projects/${PROJECT}/progress`));
+      if (!Array.isArray(pDir)) return;
+      progressData = {};
+      await Promise.all(pDir.filter(f => f.name.endsWith(".json")).map(async f => {
+        try {
+          const d = await fetchJson(rawUrl(`projects/${PROJECT}/progress/${f.name}`));
+          progressData[d.task_id] = d;
+        } catch {}
+      }));
+      renderWorkers();
+    } catch {}
   }
+
+  function renderWorkers() {
+    const tbody = document.getElementById("worker-body");
+    if (!workerData || workerData.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7" style="color:#888">no heartbeat files found</td></tr>`;
+      return;
+    }
+    const now = Date.now();
+    tbody.innerHTML = workerData.map(f => {
+      const workerName = f.name.replace(".txt","");
+      const hbAge = f.last_modified ? Math.round((now - new Date(f.last_modified).getTime())/60000) : null;
+      const isStale = hbAge != null && hbAge > 10;
+      const pr = progressData[workerName] || Object.values(progressData).find(p => p.worker_id === workerName);
+      const iter  = pr ? pr.iter  : "";
+      const ftol  = pr ? pr.ftol  : "";
+      const taskId = pr ? pr.task_id : "";
+      const maxIter = pr ? pr.max_iter : null;
+      const pctStr = (pr && maxIter) ? Math.round(pr.iter/maxIter*100)+"%" : "";
+      const barW   = (pr && maxIter) ? Math.round(pr.iter/maxIter*80) : 0;
+      return `<tr>
+        <td class="mono">${esc(workerName)}</td>
+        <td class="mono">${esc(taskId)}</td>
+        <td>${hbAge != null ? (isStale ? `<span class="stale">${hbAge}m ago</span>` : `${hbAge}m ago`) : "?"}</td>
+        <td>${hbAge != null ? hbAge + "m" : "?"}</td>
+        <td>${iter}</td>
+        <td class="mono">${ftol ? Number(ftol).toExponential(1) : ""}</td>
+        <td><div class="progress-bar-wrap"><div class="progress-bar" style="width:${barW}px"></div></div> ${pctStr}</td>
+      </tr>`;
+    }).join("");
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // LOAD ALL
+  // ═══════════════════════════════════════════════════════════════════════════
 
   async function loadAll() {
     document.getElementById("meta").textContent = "loading…";
     try {
       await loadTasks();
-      await Promise.all([loadWorkers(), loadProgress()]);
-      // Re-render figures if that tab is visible
+      await Promise.all([loadWorkers(), loadProgress(), loadFiguresData()]);
       if (document.getElementById("tab-figures").classList.contains("active"))
         renderFigures();
     } catch (e) {
@@ -363,421 +291,398 @@
 
   const STATUS_COLOR = {
     done: "#2a7a2e", ready: "#1f6feb", claimed: "#b78700",
-    blocked: "#999",  bailed: "#b1260f", skip: "#bbb",
+    bailed: "#b1260f", blocked: "#bbb", skip: "#ccc"
   };
 
-  // Series palette (by gamma)
-  const GAMMA_COLOR = {
-    "0.25": "#d62728",  // red
-    "0.35": "#e377c2",  // pink
-    "0.5":  "#1f77b4",  // blue
-    "1.0":  "#ff7f0e",  // orange
-    "1.4":  "#bcbd22",  // yellow-green
-    "2.0":  "#9467bd",  // purple
-    "4.0":  "#2ca02c",  // green
-  };
-  function gammaColor(g) {
-    const k = String(parseFloat(g));
-    return GAMMA_COLOR[k] || "#888";
-  }
-  function gammaLabel(g) {
-    const v = parseFloat(g);
-    return "γ = " + (Number.isInteger(v) ? v.toFixed(1) : v);
-  }
+  // ——— SVG mini-chart helper ———
+  function miniChart({
+    data,        // [{x, y, color?, label?}] or [{x, y}]
+    series,      // [{label, color, pts:[{x,y}]}]  (alternative to data)
+    width=520, height=200, padL=50, padR=20, padT=15, padB=40,
+    xLabel="", yLabel="", title="",
+    xLog=false, yLog=false,
+    xMin, xMax, yMin, yMax,
+    hLines=[],    // [{y, color, dash}]
+    refLine,      // {slope, intercept, color}  y = slope*x + intercept
+    dots=true, lines=true,
+  }) {
+    // collect all points
+    const allPts = series ? series.flatMap(s=>s.pts) : (data||[]);
+    const xs = allPts.map(p=>p.x), ys = allPts.map(p=>p.y);
+    const x0 = xMin ?? Math.min(...xs), x1 = xMax ?? Math.max(...xs);
+    const y0 = yMin ?? Math.min(...ys), y1 = yMax ?? Math.max(...ys);
+    const W = width-padL-padR, H = height-padT-padB;
 
-  // ─── SVG chart builder ────────────────────────────────────────────────────────────────────
-  const SVG_NS = "http://www.w3.org/2000/svg";
-  function svgEl(tag, attrs) {
-    const el = document.createElementNS(SVG_NS, tag);
-    Object.entries(attrs || {}).forEach(([k, v]) => el.setAttribute(k, v));
-    return el;
-  }
-  function svgText(x, y, txt, attrs) {
-    const el = svgEl("text", { x, y, ...attrs });
-    el.textContent = txt;
-    return el;
-  }
+    const px = x => padL + (xLog ? Math.log(x/x0)/Math.log(x1/x0)*W : (x-x0)/(x1-x0)*W);
+    const py = y => padT + H - (yLog ? Math.log(Math.max(y,1e-9)/y0)/Math.log(y1/y0)*H : (y-y0)/(y1-y0)*H);
 
-  /**
-   * Draw a scatter+line chart into an existing <svg> element.
-   * series: [{label, color, points: [{x, y, id, fmax}], missing: [{x, id, status, reason}]}]
-   * opts: { xMin, xMax, xLog, yMin, yMax, xLabel, yLabel, W=600, H=380,
-   *         ml=72, mr=24, mt=24, mb=62, xTicks, yTicks }
-   */
-  function drawChart(svgDom, series, opts) {
-    const { xMin, xMax, xLog=true, yMin=0, yMax,
-            xLabel="", yLabel="", W=600, H=380,
-            ml=72, mr=24, mt=28, mb=62 } = opts;
-    const pw = W - ml - mr, ph = H - mt - mb;
+    let svg = `<svg class="chart" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">`;
 
-    svgDom.innerHTML = "";
-    svgDom.setAttribute("viewBox", `0 0 ${W} ${H}`);
-
-    // coordinate transforms
-    function cx(v) {
-      if (xLog) return ml + Math.log(v / xMin) / Math.log(xMax / xMin) * pw;
-      return ml + (v - xMin) / (xMax - xMin) * pw;
+    // grid lines + x ticks
+    const nxt = 6;
+    for (let i=0;i<=nxt;i++) {
+      const xv = xLog ? x0*Math.pow(x1/x0,i/nxt) : x0+(x1-x0)*i/nxt;
+      const xp = px(xv);
+      svg += `<line x1="${xp}" y1="${padT}" x2="${xp}" y2="${padT+H}" class="grid-line"/>`;
+      svg += `<text x="${xp}" y="${padT+H+14}" text-anchor="middle" class="axis-label">${xv<0.01?xv.toExponential(0):(xv>=100?xv.toFixed(0):xv.toPrecision(2))}</text>`;
     }
-    function cy(v) { return mt + ph - (v - yMin) / (yMax - yMin) * ph; }
-
-    // plot background
-    svgDom.appendChild(svgEl("rect", { x: ml, y: mt, width: pw, height: ph,
-      fill: "#fff", stroke: "#ccc", "stroke-width": 1 }));
-
-    // horizontal grid lines + y-axis labels
-    const yTicks = opts.yTicks || autoTicks(yMin, yMax, 6);
-    yTicks.forEach(v => {
-      const yy = cy(v);
-      svgDom.appendChild(svgEl("line", { x1: ml, y1: yy, x2: ml + pw, y2: yy,
-        stroke: "#e8e8e8", "stroke-width": 1 }));
-      svgDom.appendChild(svgEl("line", { x1: ml - 4, y1: yy, x2: ml, y2: yy,
-        stroke: "#888", "stroke-width": 1 }));
-      const t = svgText(ml - 7, yy + 4, fmtTickY(v), {
-        "text-anchor": "end", "font-size": 11, fill: "#555" });
-      svgDom.appendChild(t);
-    });
-
-    // x-axis ticks + labels
-    const xTicks = opts.xTicks || (xLog ? logTicks(xMin, xMax) : autoTicks(xMin, xMax, 7));
-    xTicks.forEach(v => {
-      const xx = cx(v);
-      svgDom.appendChild(svgEl("line", { x1: xx, y1: mt + ph, x2: xx, y2: mt + ph + 4,
-        stroke: "#888", "stroke-width": 1 }));
-      svgDom.appendChild(svgEl("line", { x1: xx, y1: mt, x2: xx, y2: mt + ph,
-        stroke: "#e8e8e8", "stroke-width": 1 }));
-      const t = svgText(xx, mt + ph + 16, fmtTickX(v), {
-        "text-anchor": "middle", "font-size": 11, fill: "#555" });
-      svgDom.appendChild(t);
-    });
-
-    // axis borders
-    svgDom.appendChild(svgEl("line", { x1: ml, y1: mt, x2: ml, y2: mt + ph,
-      stroke: "#888", "stroke-width": 1.5 }));
-    svgDom.appendChild(svgEl("line", { x1: ml, y1: mt + ph, x2: ml + pw, y2: mt + ph,
-      stroke: "#888", "stroke-width": 1.5 }));
+    const nyt = 5;
+    for (let i=0;i<=nyt;i++) {
+      const yv = yLog ? y0*Math.pow(y1/y0,i/nyt) : y0+(y1-y0)*i/nyt;
+      const yp = py(yv);
+      svg += `<line x1="${padL}" y1="${yp}" x2="${padL+W}" y2="${yp}" class="grid-line"/>`;
+      svg += `<text x="${padL-4}" y="${yp+4}" text-anchor="end" class="axis-label">${yv.toPrecision(2)}</text>`;
+    }
 
     // axis labels
-    svgDom.appendChild(svgText(ml + pw / 2, H - 8, xLabel, {
-      "text-anchor": "middle", "font-size": 13, fill: "#333" }));
-    const yLabelEl = svgText(14, mt + ph / 2, yLabel, {
-      "text-anchor": "middle", "font-size": 13, fill: "#333",
-      transform: `rotate(-90, 14, ${mt + ph / 2})` });
-    svgDom.appendChild(yLabelEl);
+    if (xLabel) svg += `<text x="${padL+W/2}" y="${height-4}" text-anchor="middle" class="axis-label" font-size="11">${xLabel}</text>`;
+    if (yLabel) svg += `<text x="12" y="${padT+H/2}" text-anchor="middle" class="axis-label" font-size="11" transform="rotate(-90,12,${padT+H/2})">${yLabel}</text>`;
+    if (title)  svg += `<text x="${padL+W/2}" y="${padT-3}" text-anchor="middle" class="axis-label" font-size="11" fill="#444">${title}</text>`;
 
-    // draw each series
-    series.forEach(s => {
-      const pts = (s.points || []).filter(p => p.y != null)
-                    .sort((a, b) => a.x - b.x);
+    // hLines
+    hLines.forEach(({y,color="#ccc",dash="4 2"}) => {
+      svg += `<line x1="${padL}" y1="${py(y)}" x2="${padL+W}" y2="${py(y)}" stroke="${color}" stroke-width="1" stroke-dasharray="${dash}"/>`;
+    });
 
-      // line through known points
-      if (pts.length >= 2) {
-        const d = pts.map((p, i) =>
-          (i === 0 ? "M" : "L") + cx(p.x).toFixed(1) + "," + cy(p.y).toFixed(1)
-        ).join(" ");
-        svgDom.appendChild(svgEl("path", { d, fill: "none", stroke: s.color,
-          "stroke-width": 1.8, "stroke-linejoin": "round" }));
+    // series or single data
+    const seriesList = series || [{label:null, color:"#1f6feb", pts: data||[]}];
+    seriesList.forEach(s => {
+      const pts = s.pts.filter(p => p.y != null && isFinite(p.y));
+      if (lines && pts.length > 1) {
+        const pathD = pts.map((p,i)=>`${i===0?"M":"L"}${px(p.x).toFixed(1)},${py(p.y).toFixed(1)}`).join(" ");
+        svg += `<path d="${pathD}" fill="none" stroke="${s.color||'#1f6feb'}" stroke-width="1.5"/>`;
       }
-
-      // data points
-      pts.forEach(p => {
-        const g = svgEl("g", {});
-        const tip = svgEl("title", {});
-        tip.textContent = `${s.label}  τ=${p.x}  1-R²=${p.y.toFixed(4)}\nSource: ${p.id || "?"}${p.fmax ? `\n||F||∞ = ${p.fmax}` : ""}${p.legacy ? "\n(legacy run — F ≤ 1e-25)" : ""}`;
-        g.appendChild(tip);
-        g.appendChild(svgEl("circle", { cx: cx(p.x), cy: cy(p.y), r: 5,
-          fill: s.color, stroke: "#fff", "stroke-width": 1.5 }));
-        svgDom.appendChild(g);
-      });
-
-      // "?" markers for missing/null data
-      const miss = (s.missing || []).sort((a, b) => a.x - b.x);
-      miss.forEach(m => {
-        const xx = cx(m.x);
-        const yy = mt + ph + 0;   // bottom of plot area
-        const color = STATUS_COLOR[m.status] || "#999";
-        // dashed vertical line from axis up
-        svgDom.appendChild(svgEl("line", { x1: xx, y1: mt + ph, x2: xx, y2: mt + ph - 18,
-          stroke: color, "stroke-width": 1, "stroke-dasharray": "3,2" }));
-        const g = svgEl("g", {});
-        const tip = svgEl("title", {});
-        const reason = m.reason ? ` (${m.reason})` : "";
-        tip.textContent = `${s.label}  x=${m.x}  1-R² not yet available\nTask: ${m.id || "—"}  status: ${m.status || "—"}${reason}`;
-        g.appendChild(tip);
-        g.appendChild(svgText(xx, mt + ph - 20, "?", {
-          "text-anchor": "middle", "font-size": 13, "font-weight": "bold",
-          fill: color }));
-        svgDom.appendChild(g);
+      if (dots) pts.forEach(p => {
+        svg += `<circle cx="${px(p.x).toFixed(1)}" cy="${py(p.y).toFixed(1)}" r="3" fill="${s.color||p.color||'#1f6feb'}" opacity="0.85"/>`;
       });
     });
 
-    // legend (bottom right)
-    const legX = ml + pw - 4, legY = mt + 6;
-    const validSeries = series.filter(s =>
-      (s.points || []).some(p => p.y != null) || (s.missing || []).length > 0);
-    validSeries.forEach((s, i) => {
-      const ly = legY + i * 18;
-      svgDom.appendChild(svgEl("line", { x1: legX - 62, y1: ly + 4, x2: legX - 42, y2: ly + 4,
-        stroke: s.color, "stroke-width": 2 }));
-      svgDom.appendChild(svgEl("circle", { cx: legX - 52, cy: ly + 4, r: 4,
-        fill: s.color, stroke: "#fff", "stroke-width": 1 }));
-      svgDom.appendChild(svgText(legX - 38, ly + 8, s.label, {
-        "font-size": 11, fill: "#333" }));
-    });
-  }
-
-  function autoTicks(lo, hi, n) {
-    const step = niceStep((hi - lo) / n);
-    const ticks = [];
-    for (let v = Math.ceil(lo / step) * step; v <= hi + 1e-9; v += step)
-      ticks.push(parseFloat(v.toFixed(10)));
-    return ticks;
-  }
-  function niceStep(raw) {
-    const mag = Math.pow(10, Math.floor(Math.log10(raw)));
-    const f = raw / mag;
-    return (f < 1.5 ? 1 : f < 3.5 ? 2 : f < 7 ? 5 : 10) * mag;
-  }
-  function logTicks(lo, hi) {
-    const ticks = [];
-    for (let d = Math.ceil(Math.log10(lo)); d <= Math.floor(Math.log10(hi)); d++) {
-      [1, 2, 3, 5].forEach(m => {
-        const v = m * Math.pow(10, d);
-        if (v >= lo - 1e-9 && v <= hi + 1e-9) ticks.push(v);
+    // legend
+    if (series && series.length > 1) {
+      let lx = padL + W - 10, ly = padT + 10;
+      [...series].reverse().forEach(s => {
+        svg += `<rect x="${lx-36}" y="${ly-8}" width="14" height="3" fill="${s.color}"/>`;
+        svg += `<text x="${lx-18}" y="${ly+3}" class="axis-label" font-size="10" fill="${s.color}">${s.label||""}</text>`;
+        ly += 14;
       });
     }
-    return ticks;
-  }
-  function fmtTickY(v) {
-    if (v === 0) return "0";
-    if (v >= 0.01) return v.toFixed(Math.max(0, 2 - Math.floor(Math.log10(v))));
-    return v.toExponential(1);
-  }
-  function fmtTickX(v) {
-    if (Number.isInteger(v)) return v.toFixed(1);
-    const s = v.toPrecision(3).replace(/\.?0+$/, "");
-    return s;
+
+    svg += `</svg>`;
+    return svg;
   }
 
-  // ─── Data extraction from TASKS ────────────────────────────────────────────────────────────────────
-  function buildLookup() {
-    const map = {};  // "gamma_tau" -> task
-    TASKS.forEach(t => {
-      if (t.gamma == null || t.tau == null) return;
-      const k = parseFloat(t.gamma).toFixed(4) + "_" + parseFloat(t.tau).toFixed(4);
-      map[k] = t;
-    });
-    return map;
-  }
-  function lookup(map, g, tau) {
-    return map[parseFloat(g).toFixed(4) + "_" + parseFloat(tau).toFixed(4)] || null;
-  }
-  function taskR2(t) { return t && t.result ? t.result["1-R2"] : null; }
-  function taskFmax(t) {
-    if (!t || !t.result) return null;
-    if (t.result["F_max"] != null) return { val: t.result["F_max"], exact: true };
-    if (t.result["F_max_bound"] != null) return { val: t.result["F_max_bound"], exact: false };
-    return null;
-  }
-  function isLegacy(t) {
-    return t && t.result && t.result["F_max_bound"] != null && !t.result["F_max"];
+  // ——— Task-queue scatter: 1-R² vs τ per γ slice ———
+  function renderScatter(map) {
+    const gammas = [0.25, 0.35, 0.5, 1.0, 1.4, 2.0, 4.0];
+    const colors = ["#d62728","#bcbd22","#1f77b4","#ff7f0e","#9467bd","#8c564b","#2ca02c"];
+    const series = gammas.map((g,i) => ({
+      label: `γ=${g}`,
+      color: colors[i],
+      pts: (map.get(g)||[]).map(t => ({x:t.tau, y:t["1-R2"]})).filter(p=>p.y!=null)
+    })).filter(s=>s.pts.length);
+    return miniChart({series, xLabel:"τ", yLabel:"1‑R² (REE)", xLog:false,
+                      xMin:0, xMax:11, yMin:0, yMax:0.12, dots:true, lines:true,
+                      hLines:[{y:0,color:"#aaa",dash:"2 2"}]});
   }
 
-  // ─── Table builder for a tau-sweep at fixed gamma ──────────────────────────────────────────────────
-  function renderTauTable(containerId, gammaVal, taus, map) {
-    const rows = taus.map(tau => {
-      const t = lookup(map, gammaVal, tau);
-      const r2 = taskR2(t);
-      const fm = taskFmax(t);
-      const status = t ? t.status : null;
-      const legacy = isLegacy(t);
-      const r2Cell = r2 != null
-        ? `<td class="r2-val">${r2.toFixed(4)}</td>`
-        : (t && status === "done" && legacy)
-            ? `<td class="r2-miss" title="Solved with legacy mp50 solver — 1-R² not retained">† —</td>`
-            : (t ? `<td class="r2-miss">? <span class="note-legacy">(${status})</span></td>`
-                 : `<td class="r2-miss">—</td>`);
-      const fmCell = fm
-        ? (fm.exact
-            ? `<td class="fmax-val">${fm.val.toExponential(3)}</td>`
-            : `<td class="fmax-bound">≤ ${fm.val.toExponential(0)}</td>`)
-        : `<td class="small" style="color:#ccc">—</td>`;
-      const srcCell = t ? `<td class="src-id">${esc(t.id)}</td>` : `<td class="small" style="color:#ccc">—</td>`;
-      const stCell = t
-        ? `<td class="status ${status}">${status}</td>`
-        : `<td class="small" style="color:#ccc">—</td>`;
-      const note = (legacy && r2 == null) ? `<td class="note-legacy">†&nbsp;1-R² not retained (legacy solver)</td>` :
-                   (!t) ? `<td class="small" style="color:#ccc">no task</td>` :
-                   `<td></td>`;
-      return `<tr><td>${tau}</td>${r2Cell}${fmCell}${srcCell}${stCell}${note}</tr>`;
-    });
-    const html = `<table>
-      <thead><tr>
-        <th>τ</th><th>1−R²</th><th>||F||∞</th><th>Source task</th><th>Status</th><th>Notes</th>
-      </tr></thead>
-      <tbody>${rows.join("")}</tbody>
-    </table>
-    <p class="footnote">† Legacy run (original mp50 solver, F ≤ 1e-25 but exact ||F|| not retained).
-    ? = task not yet solved or 1-R² not computed.</p>`;
-    document.getElementById(containerId).innerHTML = html;
+  // ——— γ-sweep table (cross-section at fixed τ) ———
+  function lookup(map, gamma, tau) {
+    const arr = map.get(gamma)||[];
+    const t = arr.find(x => Math.abs(x.tau - tau) < 0.001);
+    return t ? t["1-R2"] : null;
   }
 
-  // ─── Table D: gamma-sweep at fixed tau ──────────────────────────────────────────────────────────────────
-  function renderGammaTable(containerId, gammas, tauVal, map) {
+  function renderGammaTable(id, gammas, tau, map) {
+    const el = document.getElementById(id);
+    if (!el) return;
     const rows = gammas.map(g => {
-      const t = lookup(map, g, tauVal);
-      const r2 = taskR2(t);
-      const fm = taskFmax(t);
-      const status = t ? t.status : null;
-      const legacy = isLegacy(t);
-      const r2Cell = r2 != null
-        ? `<td class="r2-val">${r2.toFixed(4)}</td>`
-        : (t && status === "done" && legacy)
-            ? `<td class="r2-miss" title="Legacy solver — 1-R² not retained">† —</td>`
-            : `<td class="r2-miss" style="color:${STATUS_COLOR[status] || '#aaa'}">?</td>`;
-      const fmCell = fm
-        ? (fm.exact
-            ? `<td class="fmax-val">${fm.val.toExponential(3)}</td>`
-            : `<td class="fmax-bound">≤ ${fm.val.toExponential(0)}</td>`)
-        : `<td class="small" style="color:#ccc">—</td>`;
-      const srcCell = t ? `<td class="src-id">${esc(t.id)}</td>` : `<td class="small" style="color:#ccc">—</td>`;
-      const stCell = t
-        ? `<td class="status ${status}">${status}</td>`
-        : `<td class="small" style="color:#ccc">—</td>`;
-      const note = (legacy && r2 == null) ? `<td class="note-legacy">† 1-R² not retained</td>` : `<td></td>`;
-      const gDisplay = Number.isInteger(parseFloat(g)) ? parseFloat(g).toFixed(1) : parseFloat(g);
-      return `<tr><td>${gDisplay}</td>${r2Cell}${fmCell}${srcCell}${stCell}${note}</tr>`;
+      const v = lookup(map, g, tau);
+      return `<tr><td>γ = ${g}</td><td>${v != null ? v.toFixed(4) : '<span style="color:#aaa">pending</span>'}</td></tr>`;
     });
-    const html = `<table>
-      <thead><tr>
-        <th>γ</th><th>1−R²</th><th>||F||∞</th><th>Source task</th><th>Status</th><th>Notes</th>
-      </tr></thead>
+    el.innerHTML = `<table style="font-size:0.85rem">
+      <thead><tr><th>Risk aversion γ</th><th>1‑R² (REE, τ=${tau})</th></tr></thead>
       <tbody>${rows.join("")}</tbody>
-    </table>
-    <p class="footnote">
-      † Legacy run. ? = no task for this (γ, τ=2.0) pair, or task not yet solved.
+    </table><p style="font-size:0.78rem;color:#888;margin-top:0.3rem">
+      Tab. D footnote: weighted 1‑R² at τ=${tau}.
     </p>`;
-    document.getElementById(containerId).innerHTML = html;
   }
 
-  // ─── Full grid table ──────────────────────────────────────────────────────────────────────────────
-  function renderGridTable(containerId, map) {
-    // collect all gammas and taus that appear in tasks
-    const gammaSet = new Set(), tauSet = new Set();
-    TASKS.forEach(t => {
-      if (t.gamma != null && t.tau != null && t.id !== "test_ci_smoke" &&
-          !t.id.startsWith("fig") && !t.id.startsWith("requeue")) {
-        gammaSet.add(parseFloat(t.gamma));
-        tauSet.add(parseFloat(t.tau));
-      }
-    });
-    const gammas = [...gammaSet].sort((a,b) => a-b);
-    const taus   = [...tauSet].sort((a,b) => a-b);
-
-    const hdr = `<tr><th>γ \\ τ</th>${taus.map(t => `<th>${t}</th>`).join("")}</tr>`;
-    const rows = gammas.map(g => {
-      const cells = taus.map(tau => {
-        const t = lookup(map, g, tau);
-        if (!t) return `<td style="color:#ddd;text-align:center">—</td>`;
-        const r2 = taskR2(t);
-        const s = t.status;
-        if (r2 != null) {
-          return `<td title="${esc(t.id)}" style="text-align:center">` +
-            `<span style="color:${STATUS_COLOR[s] || '#888'};font-family:monospace;font-size:0.78rem">${r2.toFixed(3)}</span></td>`;
-        }
-        if (s === "done" && isLegacy(t)) {
-          return `<td title="${esc(t.id)}: solved, 1-R² not retained" style="text-align:center;color:#bbb;font-size:0.78rem">†</td>`;
-        }
-        return `<td title="${esc(t.id)}: ${s}" style="text-align:center;color:${STATUS_COLOR[s] || '#999'};font-size:0.8rem">?</td>`;
-      }).join("");
-      return `<tr><th>${g}</th>${cells}</tr>`;
-    }).join("");
-
-    document.getElementById(containerId).innerHTML = `
-      <table style="font-size:0.8rem;min-width:700px">
-        <thead>${hdr}</thead>
-        <tbody>${rows}</tbody>
-      </table>
-      <p class="footnote">
-        Colored numbers = 1-R² (green=done, orange=claimed, blue=ready, gray=blocked).
-        † = solved (legacy), 1-R² not retained. ? = task exists but not yet solved.
-        — = no task for this (γ,τ) pair.
-      </p>`;
+  // ——— Grid-params table ———
+  function renderGridTable(id, map) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const allTasks = [];
+    map.forEach((arr) => arr.forEach(t => allTasks.push(t)));
+    const done = allTasks.filter(t => t.status==="done" && t.result);
+    if (!done.length) { el.innerHTML="<p>No done tasks yet.</p>"; return; }
+    el.innerHTML = `<table style="font-size:0.82rem">
+      <thead><tr><th>Task</th><th>γ</th><th>τ</th><th>1‑R²</th><th>F_max</th><th>n_triples</th></tr></thead>
+      <tbody>${done.map(t=>`<tr>
+        <td class="mono">${esc(t.id)}</td><td>${t.gamma}</td><td>${t.tau}</td>
+        <td>${t.result["1-R2"]?.toFixed(4)||""}</td>
+        <td class="mono">${t.result.F_max!=null ? Number(t.result.F_max).toExponential(1) : ""}</td>
+        <td>${t.result.n_triples||""}</td>
+      </tr>`).join("")}</tbody>
+    </table>`;
   }
 
-  // ─── Main figure renderer ───────────────────────────────────────────────────────────────────────
+  // ——— Main figures render entry point ———
   function renderFigures() {
-    if (!TASKS.length) return;
-    const map = buildLookup();
+    if (!taskData) return;
+    const el = document.getElementById("fig-area");
 
-    // ── Fig 1A: τ-sweep, multiple gamma series
-    const tauSeries = [
-      { gamma: 0.5,  taus: [0.3,0.5,0.8,1.0,1.5,2.0,3.0,4.0,5.0,7.0,10.0,15.0,20.0] },
-      { gamma: 1.0,  taus: [0.3,0.5,0.8,1.0,1.5,2.0,3.0,4.0,5.0,7.0,10.0,15.0,20.0] },
-      { gamma: 4.0,  taus: [0.3,0.5,0.8,1.0,1.5,2.0,3.0,4.0,5.0,7.0,10.0,15.0,20.0] },
-      { gamma: 0.25, taus: [2.0] },
-      { gamma: 2.0,  taus: [1.0,1.5,2.0,3.0,5.0] },
-    ];
-    const svgTau = document.getElementById("chart-tau-sweep");
-    const tauChartSeries = tauSeries.map(s => {
-      const pts = [], miss = [];
-      s.taus.forEach(tau => {
-        const t = lookup(map, s.gamma, tau);
-        const r2 = taskR2(t);
-        const fm = taskFmax(t);
-        if (r2 != null) {
-          pts.push({ x: tau, y: r2, id: t.id,
-            fmax: fm ? (fm.exact ? fm.val.toExponential(2) : "≤"+fm.val.toExponential(0)) : null,
-            legacy: isLegacy(t) });
-        } else if (t) {
-          miss.push({ x: tau, id: t.id, status: t.status,
-            reason: (t.status === "done" && isLegacy(t)) ? "legacy, 1-R² not retained" : t.status });
-        }
-      });
-      return { label: gammaLabel(s.gamma), color: gammaColor(s.gamma), points: pts, missing: miss };
-    }).filter(s => s.points.length > 0 || s.missing.length > 0);
-
-    drawChart(svgTau, tauChartSeries, {
-      xMin: 0.25, xMax: 22, xLog: true, yMin: 0, yMax: 0.17,
-      xLabel: "τ (signal precision)", yLabel: "1 − R²",
-      xTicks: [0.3, 0.5, 1, 2, 3, 5, 10, 15, 20],
-      yTicks: [0, 0.02, 0.04, 0.06, 0.08, 0.10, 0.12, 0.14, 0.16],
+    const map = new Map();
+    (taskData.tasks||[]).forEach(t => {
+      if (t.gamma == null || t.test) return;
+      if (!map.has(t.gamma)) map.set(t.gamma, []);
+      map.get(t.gamma).push(t);
     });
 
-    // ── Fig 1B: γ-sweep at τ=2
-    const gammaSwpGammas = [0.25, 0.35, 0.5, 1.0, 1.4, 2.0, 4.0];
-    const svgGam = document.getElementById("chart-gamma-sweep");
-    const gPts = [], gMiss = [];
-    gammaSwpGammas.forEach(g => {
-      const t = lookup(map, g, 2.0);
-      const r2 = taskR2(t);
-      const fm = taskFmax(t);
-      if (r2 != null) {
-        gPts.push({ x: g, y: r2, id: t ? t.id : "?",
-          fmax: fm ? (fm.exact ? fm.val.toExponential(2) : "≤"+fm.val.toExponential(0)) : null,
-          legacy: t ? isLegacy(t) : false });
-      } else {
-        gMiss.push({ x: g, id: t ? t.id : "—",
-          status: t ? t.status : "—",
-          reason: t ? (t.status === "done" && isLegacy(t) ? "legacy" : t.status) : "no task" });
-      }
-    });
-    drawChart(svgGam,
-      [{ label: "τ = 2.0", color: "#555", points: gPts, missing: gMiss }],
-      { xMin: 0.2, xMax: 5, xLog: true, yMin: 0, yMax: 0.11,
-        xLabel: "γ (risk aversion)", yLabel: "1 − R²",
-        xTicks: [0.25, 0.5, 1, 2, 4],
-        yTicks: [0, 0.02, 0.04, 0.06, 0.08, 0.10],
-      });
+    el.innerHTML = `
+    <div class="paper-section">
+      <h2>Fig. 1 — No-learning 1‑R² heatmap <span class="nl-badge">no-learning</span></h2>
+      <p style="font-size:0.85rem;color:#555">Weighted 1‑R² in the no-learning equilibrium (agents use only own signal, not price).
+         Rows: γ (risk aversion). Columns: τ (signal precision). CARA (γ=100≈∞) gives 1‑R²≈0 at all τ.</p>
+      <div id="fig-nl-table"></div>
+    </div>
 
-    // ── Tables
-    const g050Taus = [0.3,0.5,0.8,1.0,1.5,2.0,3.0,4.0,5.0,7.0,10.0,15.0,20.0];
-    const g100Taus = [0.3,0.5,0.8,1.0,1.5,2.0,3.0,4.0,5.0,7.0,10.0,15.0,20.0];
-    const g400Taus = [0.3,0.5,0.8,1.0,1.5,2.0,3.0,4.0,5.0,7.0,10.0,15.0,20.0];
-    renderTauTable("tbl-g050", 0.5,  g050Taus, map);
-    renderTauTable("tbl-g100", 1.0,  g100Taus, map);
-    renderTauTable("tbl-g400", 4.0,  g400Taus, map);
-    renderGammaTable("tbl-gamma-sweep", [0.25, 0.35, 0.5, 1.0, 1.4, 2.0, 4.0], 2.0, map);
+    <div class="paper-section">
+      <h2>Fig. 2 — No-learning 1‑R² vs τ <span class="nl-badge">no-learning</span></h2>
+      <p style="font-size:0.85rem;color:#555">How price informativeness varies with signal precision under no-learning.
+         Each line is one γ value. Non-monotone for low γ: at low τ signals are noisy so prices are uninformative;
+         at high τ signals are precise and the contour becomes close to the CARA straight line.</p>
+      <div class="chart-wrap" id="chart-nl-tau"></div>
+      <h3>REE vs no-learning comparison (at completed tasks)</h3>
+      <p style="font-size:0.85rem;color:#555">Filled markers = REE (from solver). Open markers = no-learning. REE is always more informative (lower 1‑R²).</p>
+      <div class="chart-wrap" id="chart-ree-vs-nl"></div>
+    </div>
+
+    <div class="paper-section">
+      <h2>Fig. 3 — Market-clearing contours: CARA vs CRRA <span class="nl-badge">no-learning</span></h2>
+      <p style="font-size:0.85rem;color:#555">Contour C(u₁, p₀) = {(u₂, u₃) : market clears at p₀} for a fixed agent
+         with signal u₁=0 at τ=2. Under CARA the contour is a straight line (T*=const).
+         Under CRRA (γ=0.5) it bows inward. The curvature is the geometric source of 1‑R²&gt;0.</p>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap">
+        <div><strong>CRRA (γ=0.5)</strong><div class="chart-wrap" id="chart-contour-crca"></div></div>
+        <div><strong>CARA (γ→∞)</strong><div class="chart-wrap" id="chart-contour-cara"></div></div>
+      </div>
+    </div>
+
+    <div class="paper-section">
+      <h2>Fig. 4 — REE 1‑R² vs τ (solver output)</h2>
+      <p style="font-size:0.85rem;color:#555">From completed solver tasks. Dots are converged REE fixed points.</p>
+      <div class="chart-wrap">${renderScatter(map)}</div>
+    </div>
+
+    <div class="paper-section">
+      <h2>Fig. 5 / Table D — γ-sweep at τ = 1.0 (cross-section)</h2>
+      <p style="font-size:0.85rem;color:#555">1‑R² as a function of risk aversion γ at fixed τ=1.0.
+         Shows knife-edge: CARA is the unique class giving 0.</p>
+      <div id="tbl-gamma-sweep"></div>
+    </div>
+
+    <div class="paper-section">
+      <h2>Grid parameters / all done tasks</h2>
+      <div id="tbl-grid"></div>
+    </div>
+
+    <div class="paper-section">
+      <h2>Fig. 7 — Trading volume vs γ <span class="nl-badge">no-learning</span></h2>
+      <p style="font-size:0.85rem;color:#555">Expected absolute demand E[|x|] in no-learning equilibrium at τ=2.
+         Monotone decreasing in γ: more risk-averse agents trade less.</p>
+      <div class="chart-wrap" id="chart-fig7"></div>
+    </div>
+
+    <div class="paper-section">
+      <h2>Fig. 8 — Value of information vs τ <span class="nl-badge">no-learning</span></h2>
+      <p style="font-size:0.85rem;color:#555">V(τ) = E[U(trade on signal)] − E[U(no trade)] in no-learning equilibrium.
+         Negative: adverse-selection costs exceed information gains (no-learning only; full REE would differ).</p>
+      <div class="chart-wrap" id="chart-fig8"></div>
+    </div>
+
+    <div class="paper-section">
+      <h2>Fig. 10 — 1‑R² vs number of agents K <span class="nl-badge">no-learning</span></h2>
+      <p style="font-size:0.85rem;color:#555">No-learning 1‑R² as a function of K agents at τ=2.
+         All γ converge toward 0 as K→∞ (more agents → price more informative).</p>
+      <div class="chart-wrap" id="chart-fig10"></div>
+    </div>
+
+    <p style="font-size:0.78rem;color:#aaa;margin-top:2rem">
+      <span id="figdata-status">loading figure data…</span>
+    </p>
+    `;
+
+    renderGammaTable("tbl-gamma-sweep", [0.25, 0.35, 0.5, 1.0, 1.4, 2.0, 4.0], 1.0, map);
     renderGridTable("tbl-grid", map);
+    renderPaperFigures(map);
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PAPER FIGURES DATA + RENDERING
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  async function loadFiguresData() {
+    try {
+      FIGDATA = await fetchJson(rawUrl("docs/figures_data.json"));
+      document.getElementById("figdata-status").textContent = "data loaded";
+    } catch (e) {
+      document.getElementById("figdata-status").textContent = "figures data unavailable";
+    }
+  }
+
+  const NL_GAMMA_COLOR = {
+    "0.1": "#9c27b0", "0.25": "#d62728", "0.5": "#1f77b4",
+    "1.0": "#ff7f0e", "1.4": "#bcbd22", "2.0": "#9467bd",
+    "4.0": "#2ca02c", "10.0": "#8c564b", "100.0": "#aaa",
+  };
+  function nlGammaColor(g) { return NL_GAMMA_COLOR[String(g)] || "#888"; }
+
+  function heatColor(v, lo, hi) {
+    const t = Math.max(0, Math.min(1, (v - lo) / (hi - lo)));
+    const r = Math.round(255 * t), b = Math.round(200 * (1 - t));
+    return `rgb(${r},${Math.round(40 + 40*(1-t))},${b})`;
+  }
+
+  function renderFig1(data) {
+    const gammas = ["0.1","0.25","0.5","1.0","1.4","2.0","4.0","10.0","100.0"];
+    const taus   = ["0.5","1.0","2.0","3.0"];
+    const allVals = gammas.flatMap(g => taus.map(t => data[g][t] || 0));
+    const lo = 0, hi = Math.max(...allVals);
+    let html = `<table class="nl-table"><thead><tr><th>γ \ τ</th>${taus.map(t=>`<th>${t}</th>`).join("")}</tr></thead><tbody>`;
+    for (const g of gammas) {
+      const label = g === "100.0" ? "100 (≈CARA)" : g;
+      html += `<tr><td><strong>${label}</strong></td>${taus.map(t => {
+        const v = data[g]?.[t];
+        if (v == null) return `<td class="heatcell" style="color:#ccc">—</td>`;
+        const bg = heatColor(v, lo, hi);
+        return `<td class="heatcell" style="background:${bg};color:#fff;padding:0.3rem 0.6rem">${v.toFixed(3)}</td>`;
+      }).join("")}</tr>`;
+    }
+    html += `</tbody></table>`;
+    const el = document.getElementById("fig-nl-table");
+    if (el) el.innerHTML = html;
+  }
+
+  function renderFig2(data, elId, yMax) {
+    const el = document.getElementById(elId);
+    if (!el) return;
+    const gammas = Object.keys(data);
+    const series = gammas.map(g => ({
+      label: `γ=${g}`,
+      color: nlGammaColor(g),
+      pts: data[g].map(([x,y]) => ({x, y}))
+    }));
+    el.innerHTML = miniChart({series, xLabel:"τ", yLabel:"1‑R² (no-learning)",
+                              xLog:true, xMin:0.1, xMax:10, yMin:0, yMax: yMax||0.16,
+                              hLines:[{y:0,color:"#999",dash:"2 2"}]});
+  }
+
+  function renderFig3(data) {
+    const crra = data.crra, cara = data.cara;
+    // CRRA contour: project to (u2, u3) space — data is [u1, u2, u3]
+    const crraEl = document.getElementById("chart-contour-crca");
+    const caraEl = document.getElementById("chart-contour-cara");
+
+    function contourChart(pts, color, title) {
+      const u2 = pts.map(p=>p[1]), u3 = pts.map(p=>p[2]);
+      const mn = Math.min(...u2,...u3), mx = Math.max(...u2,...u3);
+      const W=260, H=220, pad=35;
+      const sc = v => pad + (v-mn)/(mx-mn)*(W-2*pad);
+      const pts2 = pts.map(p => [sc(p[1]), H-pad-(sc(p[2])-pad)]);
+      let svg = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" class="chart">`;
+      // axes
+      svg += `<line x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${H-pad}" stroke="#ccc" stroke-width="1"/>`;
+      svg += `<line x1="${pad}" y1="${pad}" x2="${pad}" y2="${H-pad}" stroke="#ccc" stroke-width="1"/>`;
+      // diagonal reference
+      svg += `<line x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${pad}" stroke="#ddd" stroke-dasharray="4 2" stroke-width="1"/>`;
+      // contour path
+      const d = pts2.map((p,i)=>`${i===0?"M":"L"}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" ");
+      svg += `<path d="${d}" fill="none" stroke="${color}" stroke-width="2"/>`;
+      svg += `<text x="${W/2}" y="15" text-anchor="middle" class="axis-label" font-size="11">${title}</text>`;
+      svg += `<text x="${W/2}" y="${H-3}" text-anchor="middle" class="axis-label">u₂</text>`;
+      svg += `<text x="10" y="${H/2}" text-anchor="middle" class="axis-label" transform="rotate(-90,10,${H/2})">u₃</text>`;
+      svg += `</svg>`;
+      return svg;
+    }
+
+    if (crraEl) crraEl.innerHTML = contourChart(crra, "#1f77b4", `CRRA γ=${data.gamma_crra} τ=${data.tau}`);
+    if (caraEl) caraEl.innerHTML = contourChart(cara, "#d62728", `CARA τ=${data.tau}`);
+  }
+
+  function renderFig7(data) {
+    const el = document.getElementById("chart-fig7");
+    if (!el) return;
+    const pts = data.map(([x,y]) => ({x, y}));
+    el.innerHTML = miniChart({data:pts, xLabel:"γ", yLabel:"E[|x|]",
+                              xLog:true, xMin:0.1, xMax:100, yMin:0, yMax:1.6,
+                              lines:true, dots:true,
+                              hLines:[{y:0,color:"#ccc",dash:"2 2"}]});
+  }
+
+  function renderFig8(data) {
+    const el = document.getElementById("chart-fig8");
+    if (!el) return;
+    const gammas = Object.keys(data);
+    const allY = gammas.flatMap(g => data[g].map(([,y])=>y));
+    const yMin = Math.min(...allY)*1.1, yMax = 0;
+    const series = gammas.map(g => ({
+      label: `γ=${g}`,
+      color: nlGammaColor(g),
+      pts: data[g].map(([x,y]) => ({x, y}))
+    }));
+    el.innerHTML = miniChart({series, xLabel:"τ", yLabel:"V(τ)",
+                              xMin:0, xMax:5.5, yMin, yMax,
+                              hLines:[{y:0,color:"#999",dash:"2 2"}]});
+  }
+
+  function renderFig10(data) {
+    const el = document.getElementById("chart-fig10");
+    if (!el) return;
+    const gammas = Object.keys(data);
+    const allY = gammas.flatMap(g => data[g].map(([,y])=>y));
+    const yMax = Math.max(...allY)*1.05;
+    const series = gammas.map(g => ({
+      label: `γ=${g}`,
+      color: nlGammaColor(g),
+      pts: data[g].map(([x,y]) => ({x, y}))
+    }));
+    el.innerHTML = miniChart({series, xLabel:"K (agents)", yLabel:"1‑R² (no-learning)",
+                              xMin:3, xMax:10, yMin:0, yMax,
+                              dots:true, lines:true,
+                              hLines:[{y:0,color:"#999",dash:"2 2"}]});
+  }
+
+  function renderReeVsNl(map, nlData) {
+    const el = document.getElementById("chart-ree-vs-nl");
+    if (!el || !nlData) return;
+    const gammas = [0.25, 0.5, 1.0, 4.0];
+    const colors = ["#d62728","#1f77b4","#ff7f0e","#2ca02c"];
+    const series = [];
+    gammas.forEach((g, gi) => {
+      const color = colors[gi];
+      // REE points
+      const reePts = (map.get(g)||[]).filter(t=>t.result?.["1-R2"]!=null)
+                                      .map(t=>({x:t.tau, y:t.result["1-R2"]}));
+      if (reePts.length) series.push({label:`γ=${g} REE`, color, pts:reePts});
+      // NL points
+      const nlKey = String(g);
+      const nlPts = (nlData[nlKey]||[]).map(([x,y])=>({x,y}));
+      if (nlPts.length) series.push({label:`γ=${g} NL`, color, pts:nlPts.map(p=>({...p,_open:true}))});
+    });
+    el.innerHTML = miniChart({series, xLabel:"τ", yLabel:"1‑R²",
+                              xLog:false, xMin:0, xMax:11, yMin:0, yMax:0.14,
+                              hLines:[{y:0,color:"#ccc",dash:"2 2"}]});
+  }
+
+  function renderPaperFigures(map) {
+    if (!FIGDATA) return;
+    try { renderFig1(FIGDATA.fig1); } catch(e) { console.error("fig1", e); }
+    try { renderFig2(FIGDATA.fig2, "chart-nl-tau", 0.16); } catch(e) { console.error("fig2", e); }
+    try { renderFig3(FIGDATA.fig3); } catch(e) { console.error("fig3", e); }
+    try { renderFig7(FIGDATA.fig7); } catch(e) { console.error("fig7", e); }
+    try { renderFig8(FIGDATA.fig8); } catch(e) { console.error("fig8", e); }
+    try { renderFig10(FIGDATA.fig10); } catch(e) { console.error("fig10", e); }
+    try { renderReeVsNl(map, FIGDATA.fig2); } catch(e) { console.error("reeVsNl", e); }
   }
 
 </script>
