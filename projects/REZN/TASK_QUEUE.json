@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-08T03:34:52.353472Z",
+  "updated_at": "2026-05-08T03:43:44.316180Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -651,20 +651,19 @@
         "g050_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "\u03b3-sweep root. Conservative solver: 200 presmooth steps \u03b1=0.01, rdiff=1e-5. Auto-requeue will insert \u03b3-ladder if this also fails. fig4B: 1-R\u00b2=0.025 / slope=0.59.",
+      "note": "Auto-requeued (attempt 1): noise perturbation noise_level=0.002.",
       "solver_params": {
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
         "inner_rdiff": 1e-05,
-        "inner_max_iter": 50
+        "inner_max_iter": 50,
+        "noise_level": 0.002
       },
-      "requeue_count": 0,
-      "claimed_by": "gha-25534916917-g200_t0200",
-      "claimed_at": "2026-05-08T03:35:03Z"
+      "requeue_count": 1
     },
     {
       "id": "g200_t0150",
