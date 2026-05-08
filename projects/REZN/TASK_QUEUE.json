@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-08T10:54:02.604566Z",
+  "updated_at": "2026-05-08T11:01:33.636608Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -1012,8 +1012,8 @@
         "g050_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
-      "checkpoint": "projects/REZN/checkpoints/g200_t0200.npz",
+      "status": "ready",
+      "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 1): noise perturbation noise_level=0.002.",
       "solver_params": {
@@ -1030,11 +1030,10 @@
         "mp_iters": 20,
         "lgmres_tol": 1e-10,
         "lgmres_inner_m": 30,
-        "lgmres_outer": 10
+        "lgmres_outer": 10,
+        "noise_level": 0.002
       },
-      "requeue_count": 0,
-      "claimed_by": "claude-local-1",
-      "claimed_at": "2026-05-08T10:54:02.602367Z"
+      "requeue_count": 1
     },
     {
       "id": "g200_t0150",
@@ -1225,8 +1224,8 @@
   "summary": {
     "total": 54,
     "done": 26,
-    "ready": 6,
-    "claimed": 0,
+    "ready": 2,
+    "claimed": 4,
     "blocked": 18,
     "bailed": 0,
     "skip": 4
