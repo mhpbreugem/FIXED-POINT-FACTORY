@@ -1,0 +1,9 @@
+{
+  "task_id": "g200_t0500",
+  "worker_id": "claude-local-1",
+  "started_at": "2026-05-08T13:28:39Z",
+  "last_update": "2026-05-08T13:28:39Z",
+  "iter": null,
+  "ftol": null,
+  "extra": {}
+}
