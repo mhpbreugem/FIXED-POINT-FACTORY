@@ -631,10 +631,12 @@
         "g050_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
-      "note": "\u03b3-sweep root. Bailed at F=0.026 (pre-auto-requeue deploy). Re-queued: solver got close, worth retrying. fig4B: 1-R\u00b2=0.025 / slope=0.59."
+      "note": "\u03b3-sweep root. Bailed at F=0.026 (pre-auto-requeue deploy). Re-queued: solver got close, worth retrying. fig4B: 1-R\u00b2=0.025 / slope=0.59.",
+      "claimed_by": "gha-25534545522-g200_t0200",
+      "claimed_at": "2026-05-08T03:13:58Z"
     },
     {
       "id": "g200_t0150",
