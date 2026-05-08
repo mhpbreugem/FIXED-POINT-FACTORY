@@ -323,11 +323,21 @@
       "depends_on": [
         "g100_t0400"
       ],
-      "status": "bailed",
+      "status": "ready",
       "checkpoint": null,
-      "result": {
-        "reason": "did not converge below ||F||=1e-3 at G=20"
-      }
+      "result": null,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07
+      },
+      "requeue_count": 0,
+      "note": "Requeued with pure_picard mode. Cold start (no .npz dep available)."
     },
     {
       "id": "g100_t0700",
@@ -520,15 +530,25 @@
       "tau": 10.0,
       "depends_on": [
         "g400_t0700",
-        "g050_t0200"
+        "g050_t0200",
+        "g200_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "bailed",
+      "status": "blocked",
       "checkpoint": null,
-      "result": {
-        "reason": "||F||inf=3.327e-01 > bail threshold 1e-04"
+      "result": null,
+      "note": "Warm-start from g200_t0200 .npz once available. pure_picard \u03b1=0.005 for stability at \u03b3=4 \u03c4=10.",
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.005,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 500000,
+        "picard_tol": 1e-07
       },
-      "note": "Genuinely stuck: both g400_t0700 (.json, not .npz) and g050_t0200 (.npz) tried. F=0.333 \u2014 too far from REE. Needs a \u03b3=4 .npz checkpoint (e.g. g400_t0200 re-solved by new solver) before retrying."
+      "requeue_count": 0
     },
     {
       "id": "g400_t1500",
@@ -552,7 +572,18 @@
       "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "\u03b3-ladder between g050_t0200 (\u03b3=0.5) and g025_t0200 (\u03b3=0.25) at \u03c4=2.0."
+      "note": "\u03b3-ladder between g050_t0200 (\u03b3=0.5) and g025_t0200 (\u03b3=0.25) at \u03c4=2.0.",
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07
+      },
+      "requeue_count": 0
     },
     {
       "id": "g025_t0200",
@@ -570,7 +601,10 @@
         "presmooth_alpha": 0.01,
         "max_stages": 8,
         "inner_rdiff": 1e-05,
-        "inner_max_iter": 50
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07
       },
       "requeue_count": 1,
       "deps_satisfy": "any"
@@ -661,7 +695,9 @@
         "max_stages": 8,
         "inner_rdiff": 1e-05,
         "inner_max_iter": 50,
-        "noise_level": 0.002
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07
       },
       "requeue_count": 1
     },
@@ -786,11 +822,12 @@
     }
   ],
   "summary": {
-    "total": 52,
-    "done": 25,
+    "total": 54,
+    "done": 26,
     "ready": 4,
-    "blocked": 18,
-    "bailed": 3,
+    "claimed": 0,
+    "blocked": 19,
+    "bailed": 1,
     "skip": 4
   },
   "fanout": {

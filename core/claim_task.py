@@ -198,6 +198,8 @@ def mark_done(project: str, task_id: str, checkpoint: str | None,
     task.pop("claimed_by", None)
     task.pop("claimed_at", None)
 
+    newly_ready = _unblock_downstream(queue)
+    _update_summary(queue)
     save_queue(project, queue)
     _stage_queue(project)
 
@@ -207,7 +209,8 @@ def mark_done(project: str, task_id: str, checkpoint: str | None,
             _git("add", checkpoint)
 
     metric_str = _result_summary(result)
-    _git("commit", "-m", f"{task_id}: {metric_str} done")
+    unblock_str = f" unblocked:{','.join(newly_ready)}" if newly_ready else ""
+    _git("commit", "-m", f"{task_id}: {metric_str} done{unblock_str}")
 
     for attempt in range(5):
         if _push(branch):
@@ -223,14 +226,53 @@ def mark_done(project: str, task_id: str, checkpoint: str | None,
             task["completed_at"] = _now()
             task.pop("claimed_by", None)
             task.pop("claimed_at", None)
+            newly_ready = _unblock_downstream(queue)
+            _update_summary(queue)
             save_queue(project, queue)
             _stage_queue(project)
             if checkpoint:
                 cp_abs = os.path.join(repo_root(), checkpoint)
                 if os.path.exists(cp_abs):
                     _git("add", checkpoint)
-            _git("commit", "-m", f"{task_id}: {metric_str} done")
+            _git("commit", "-m", f"{task_id}: {metric_str} done{unblock_str}")
     return False
+
+
+def _update_summary(queue: dict) -> None:
+    counts: dict[str, int] = {}
+    for t in queue["tasks"]:
+        counts[t["status"]] = counts.get(t["status"], 0) + 1
+    queue["summary"] = {
+        "total":   len(queue["tasks"]),
+        "done":    counts.get("done", 0),
+        "ready":   counts.get("ready", 0),
+        "claimed": counts.get("claimed", 0),
+        "blocked": counts.get("blocked", 0),
+        "bailed":  counts.get("bailed", 0),
+        "skip":    counts.get("skip", 0),
+    }
+
+
+def _unblock_downstream(queue: dict) -> list[str]:
+    """Flip blocked tasks whose deps are now fully satisfied to ready."""
+    done_ids = {t["id"] for t in queue["tasks"] if t["status"] == "done"}
+    default_mode = queue.get("deps_semantics", {}).get("default", "all")
+    unblocked = []
+    for t in queue["tasks"]:
+        if t["status"] != "blocked":
+            continue
+        deps = set(t.get("depends_on", []))
+        mode = t.get("deps_satisfy", default_mode)
+        if not deps:
+            satisfied = True
+        elif mode == "any":
+            satisfied = bool(deps & done_ids)
+        else:
+            satisfied = deps <= done_ids
+        if satisfied:
+            t["status"] = "ready"
+            unblocked.append(t["id"])
+    return unblocked
 
 
 def _make_ladder_id(gamma: float, tau: float) -> str:
@@ -408,6 +450,7 @@ def mark_failed(project: str, task_id: str, reason: str,
     requeued = _auto_requeue_bailed(queue, task)
     action = "requeued" if requeued else "bailed"
 
+    _update_summary(queue)
     save_queue(project, queue)
     _stage_queue(project)
     _git("commit", "-m", f"{task_id}: {action}")

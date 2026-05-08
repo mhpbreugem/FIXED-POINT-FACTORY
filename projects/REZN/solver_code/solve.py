@@ -326,23 +326,62 @@ def main() -> None:
               f"max_stages={max_stages} inner_rdiff={inner_rdiff:.0e} "
               f"inner_max_iter={inner_max_iter}", flush=True)
 
-        P_inner_final, history = staggered_solve(
-            phi_full_fn, u_full, inner_lo, inner_hi,
-            u_grid_inner=u_grid_inner, tau_vec=tau_vec, K=K,
-            halo_initial=halo, inner_initial=P_inner_seed,
-            max_stages=max_stages,
-            stage_tol=1.0e-3,
-            inner_method="lgmres",
-            inner_max_iter=inner_max_iter,
-            inner_tol=tol,
-            inner_outer_k=40,
-            inner_inner_maxiter=80,
-            inner_rdiff=inner_rdiff,
-            presmooth_steps=presmooth,
-            presmooth_alpha=presmooth_alpha,
-            halo_update="no_learning",
-            heartbeat_s=30.0,
-        )
+        if sp.get("pure_picard"):
+            # Bypass staggered_solve entirely — pure damped Picard, no Newton.
+            # Avoids the oscillation where Newton accepts a bad iterate and
+            # stalls the solver in an indefinite presmooth/Newton cycle.
+            max_picard_iters = int(sp.get("picard_iters", 200000))
+            picard_tol = float(sp.get("picard_tol", tol))
+            print(f"[solve] pure_picard mode: alpha={presmooth_alpha} "
+                  f"max_iters={max_picard_iters} tol={picard_tol:.0e}", flush=True)
+
+            P_full_cur = replace_inner(halo, P_inner_seed, inner_lo, inner_hi)
+            F_inf_cur = float("inf")
+            for _i in range(max_picard_iters):
+                P_new = phi_full_fn(P_full_cur)
+                F_inf_cur = float(np.max(np.abs(
+                    extract_inner(P_new, inner_lo, inner_hi)
+                    - extract_inner(P_full_cur, inner_lo, inner_hi)
+                )))
+                P_full_cur = (1.0 - presmooth_alpha) * P_full_cur + presmooth_alpha * P_new
+                if F_inf_cur < picard_tol:
+                    print(f"[solve] pure_picard converged at iter={_i+1} F={F_inf_cur:.4e}",
+                          flush=True)
+                    break
+            else:
+                print(f"[solve] pure_picard reached max_iters={max_picard_iters} "
+                      f"F={F_inf_cur:.4e}", flush=True)
+
+            P_inner_final = extract_inner(P_full_cur, inner_lo, inner_hi)
+
+            class _Stage:
+                def __init__(self, F, d):
+                    self.F_inner_inf = F
+                    self.deficit_f128 = d
+
+            class _History:
+                def __init__(self, F):
+                    self.stages = [_Stage(F, 0.0)]
+
+            history = _History(F_inf_cur)
+        else:
+            P_inner_final, history = staggered_solve(
+                phi_full_fn, u_full, inner_lo, inner_hi,
+                u_grid_inner=u_grid_inner, tau_vec=tau_vec, K=K,
+                halo_initial=halo, inner_initial=P_inner_seed,
+                max_stages=max_stages,
+                stage_tol=1.0e-3,
+                inner_method="lgmres",
+                inner_max_iter=inner_max_iter,
+                inner_tol=tol,
+                inner_outer_k=40,
+                inner_inner_maxiter=80,
+                inner_rdiff=inner_rdiff,
+                presmooth_steps=presmooth,
+                presmooth_alpha=presmooth_alpha,
+                halo_update="no_learning",
+                heartbeat_s=30.0,
+            )
 
         # Final diagnostics
         P_full_final = replace_inner(halo, P_inner_final, inner_lo, inner_hi)
