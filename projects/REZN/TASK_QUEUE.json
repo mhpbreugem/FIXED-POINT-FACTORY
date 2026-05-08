@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-08T11:37:55.126268Z",
+  "updated_at": "2026-05-08T12:02:16.564602Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -1022,9 +1022,15 @@
         "g050_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "done",
       "checkpoint": "projects/REZN/checkpoints/g200_t0200.npz",
-      "result": null,
+      "result": {
+        "1-R2": 0.08305015,
+        "F_max": 5.8518e-54,
+        "n_stages": 1,
+        "phi_calls": 2,
+        "wall_s": 1979.8
+      },
       "note": "Restored checkpoint after Newton sign-fix; noise_level removed.",
       "solver_params": {
         "presmooth": 200,
@@ -1043,8 +1049,7 @@
         "lgmres_outer": 10
       },
       "requeue_count": 0,
-      "claimed_by": "claude-local-1",
-      "claimed_at": "2026-05-08T11:30:11.232007+00:00"
+      "completed_at": "2026-05-08T12:02:16.562411Z"
     },
     {
       "id": "g200_t0150",
@@ -1053,7 +1058,7 @@
       "depends_on": [
         "g200_t0200"
       ],
-      "status": "blocked",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -1108,7 +1113,7 @@
       "depends_on": [
         "g200_t0200"
       ],
-      "status": "blocked",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -1234,10 +1239,10 @@
   ],
   "summary": {
     "total": 55,
-    "done": 26,
-    "ready": 5,
-    "claimed": 2,
-    "blocked": 18,
+    "done": 27,
+    "ready": 7,
+    "claimed": 1,
+    "blocked": 16,
     "bailed": 0,
     "skip": 4
   },
