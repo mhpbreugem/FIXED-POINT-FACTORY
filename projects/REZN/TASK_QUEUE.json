@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-07T23:36:25.281671Z",
+  "updated_at": "2026-05-08T03:08:52.856690Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -548,12 +548,12 @@
       "depends_on": [
         "g050_t0200"
       ],
-      "status": "claimed",
+      "status": "bailed",
       "checkpoint": null,
-      "result": null,
-      "note": "\u03b3-sweep root. Bailed at F=0.014 (pre-auto-requeue deploy). Re-queued: solver got close, worth retrying. fig4B: 1-R\u00b2=0.133 / slope=0.51.",
-      "claimed_by": "gha-25534308120-g025_t0200",
-      "claimed_at": "2026-05-08T03:05:22Z"
+      "result": {
+        "reason": "||F||inf=2.286e-02 > bail threshold 1e-04"
+      },
+      "note": "\u03b3-sweep root. Bailed at F=0.014 (pre-auto-requeue deploy). Re-queued: solver got close, worth retrying. fig4B: 1-R\u00b2=0.133 / slope=0.51."
     },
     {
       "id": "g025_t0150",
