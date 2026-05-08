@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-08T11:02:23.811699Z",
+  "updated_at": "2026-05-08T11:26:57.197934Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -716,19 +716,30 @@
       }
     },
     {
+      "id": "g140_t1000",
+      "gamma": 1.4,
+      "tau": 10.0,
+      "depends_on": [
+        "g050_t0200"
+      ],
+      "deps_satisfy": "any",
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "note": "\u03b3-ladder between g050_t0200 (\u03b3=0.5) and g400_t1000 (\u03b3=4.0) at \u03c4=10.0."
+    },
+    {
       "id": "g400_t1000",
       "gamma": 4.0,
       "tau": 10.0,
       "depends_on": [
-        "g400_t0700",
-        "g050_t0200",
-        "g200_t0200"
+        "g140_t1000"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "Warm-start from g200_t0200 .npz once available. pure_picard \u03b1=0.005 for stability at \u03b3=4 \u03c4=10.",
+      "note": "Auto-requeued (attempt 1): via new ladder g140_t1000. \u03b3-ladder at \u03b3=1.4",
       "solver_params": {
         "presmooth": 200,
         "presmooth_alpha": 0.01,
@@ -745,9 +756,7 @@
         "lgmres_inner_m": 30,
         "lgmres_outer": 10
       },
-      "requeue_count": 0,
-      "claimed_by": "gha-25549032408-g400_t1000",
-      "claimed_at": "2026-05-08T10:38:24Z"
+      "requeue_count": 1
     },
     {
       "id": "g400_t1500",
@@ -1223,9 +1232,9 @@
     }
   ],
   "summary": {
-    "total": 54,
+    "total": 55,
     "done": 26,
-    "ready": 2,
+    "ready": 3,
     "claimed": 4,
     "blocked": 18,
     "bailed": 0,
