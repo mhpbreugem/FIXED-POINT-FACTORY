@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-08T04:34:24.234186Z",
+  "updated_at": "2026-05-08T04:34:24.739182Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -597,7 +597,7 @@
         "picard_tol": 1e-07
       },
       "requeue_count": 0,
-      "completed_at": "2026-05-08T04:34:24.233078Z"
+      "completed_at": "2026-05-08T04:34:24.738166Z"
     },
     {
       "id": "g025_t0200",
