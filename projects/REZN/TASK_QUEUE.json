@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-08T17:17:41.660266Z",
+  "updated_at": "2026-05-08T17:34:19.285024Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -300,9 +300,15 @@
       "depends_on": [
         "g050_t1000"
       ],
-      "status": "claimed",
-      "checkpoint": null,
-      "result": null,
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g050_t1500.npz",
+      "result": {
+        "1-R2": 0.06503577,
+        "F_max": 1.8852e-53,
+        "n_stages": 1,
+        "phi_calls": 1269,
+        "wall_s": 1163.0
+      },
       "solver_params": {
         "presmooth": 200,
         "presmooth_alpha": 0.01,
@@ -319,8 +325,7 @@
         "lgmres_inner_m": 30,
         "lgmres_outer": 10
       },
-      "claimed_by": "gha-25569069588-g050_t1500",
-      "claimed_at": "2026-05-08T17:14:25Z"
+      "completed_at": "2026-05-08T17:34:19.283586Z"
     },
     {
       "id": "g050_t2000",
@@ -330,7 +335,7 @@
         "g050_t1500"
       ],
       "deps_satisfy": "all",
-      "status": "blocked",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "note": "tau=20 extension of gamma=0.5 sweep",
@@ -1511,10 +1516,10 @@
   ],
   "summary": {
     "total": 61,
-    "done": 43,
-    "ready": 6,
-    "claimed": 2,
-    "blocked": 6,
+    "done": 44,
+    "ready": 7,
+    "claimed": 1,
+    "blocked": 5,
     "bailed": 0,
     "skip": 4
   },
