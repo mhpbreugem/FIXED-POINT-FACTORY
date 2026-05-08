@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-08T12:50:52.621537Z",
+  "updated_at": "2026-05-08T12:53:43.472559Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -746,9 +746,15 @@
         "g140_t1000"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
-      "checkpoint": null,
-      "result": null,
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g400_t1000.npz",
+      "result": {
+        "1-R2": 0.04436996,
+        "F_max": 1.6894e-51,
+        "n_stages": 1,
+        "phi_calls": 2068,
+        "wall_s": 2082.0
+      },
       "note": "Auto-requeued (attempt 1): via new ladder g140_t1000. \u03b3-ladder at \u03b3=1.4",
       "solver_params": {
         "presmooth": 200,
@@ -767,8 +773,7 @@
         "lgmres_outer": 10
       },
       "requeue_count": 1,
-      "claimed_by": "gha-25555129405-g400_t1000",
-      "claimed_at": "2026-05-08T12:18:37Z"
+      "completed_at": "2026-05-08T12:53:43.471008Z"
     },
     {
       "id": "g400_t1500",
@@ -777,7 +782,7 @@
       "depends_on": [
         "g400_t1000"
       ],
-      "status": "blocked",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -1268,10 +1273,10 @@
   ],
   "summary": {
     "total": 55,
-    "done": 30,
-    "ready": 5,
-    "claimed": 3,
-    "blocked": 13,
+    "done": 31,
+    "ready": 4,
+    "claimed": 4,
+    "blocked": 12,
     "bailed": 0,
     "skip": 4
   },
