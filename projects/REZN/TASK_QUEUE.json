@@ -415,15 +415,15 @@
         "g100_t0500",
         "g200_t0100"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
       "deps_satisfy": "any",
       "note": "Auto-requeued (attempt 1): warm-start from g200_t0100 (log-dist=0.73).",
       "requeue_count": 1,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25608083650-g100_t0080",
+      "claimed_at": "2026-05-09T18:04:02Z"
     },
     {
       "id": "g100_t0100",
@@ -434,15 +434,15 @@
         "g100_t0500",
         "g200_t0100"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
       "deps_satisfy": "any",
       "note": "Auto-requeued (attempt 1): warm-start from g200_t0100 (log-dist=0.69).",
       "requeue_count": 1,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25608083650-g100_t0100",
+      "claimed_at": "2026-05-09T18:04:02Z"
     },
     {
       "id": "g100_t0150",
@@ -453,15 +453,15 @@
         "g100_t0500",
         "g140_t0240"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
       "deps_satisfy": "any",
       "note": "Auto-requeued (attempt 1): warm-start from g140_t0240 (log-dist=0.58).",
       "requeue_count": 1,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25608083650-g100_t0150",
+      "claimed_at": "2026-05-09T18:04:02Z"
     },
     {
       "id": "g100_t0200",
@@ -471,14 +471,14 @@
         "g100_t0500",
         "g050_t0200"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
       "deps_satisfy": "any",
       "note": "RERUN: previous 1-R\u00b2=0.0467 from results/full_ree/task3_g100_t0200_mp50.json; warm-start any-of ['g100_t0500', 'g050_t0200'].",
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25608083650-g100_t0200",
+      "claimed_at": "2026-05-09T18:04:02Z"
     },
     {
       "id": "g140_t0200",
@@ -526,12 +526,12 @@
         "g100_t0500"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "note": "\u03c4-ladder between g100_t0500 (\u03c4=5.0) and g100_t0390 (\u03c4=3.9).",
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25608083650-g100_t0440",
+      "claimed_at": "2026-05-09T18:04:02Z"
     },
     {
       "id": "g100_t0390",
@@ -542,13 +542,13 @@
         "g100_t0500"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 2): warm-start from g100_t0500 (log-dist=0.25).",
       "requeue_count": 2,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25608083650-g100_t0390",
+      "claimed_at": "2026-05-09T18:04:02Z"
     },
     {
       "id": "g100_t0300",
@@ -558,15 +558,15 @@
         "g100_t0390",
         "g140_t0330"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
       "deps_satisfy": "any",
       "note": "Auto-requeued (attempt 3): warm-start from g140_t0330 (log-dist=0.35).",
       "requeue_count": 3,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25608083650-g100_t0300",
+      "claimed_at": "2026-05-09T18:04:02Z"
     },
     {
       "id": "g100_t0450",
