@@ -193,8 +193,10 @@
       const fmaxStr = fmax != null ? Number(fmax).toExponential(1) : "";
       const pr = progressData[t.id];
       let liveStr = "";
-      if (t.status === "claimed" && pr) {
-        liveStr = `<div class="live">${pr.iter} · ${pr.ftol != null ? Number(pr.ftol).toExponential(1) : ""}</div>`;
+      if ((t.status === "claimed" || t.status === "in-progress") && pr) {
+        const iterStr = pr.iter != null ? pr.iter : "—";
+        const ftolStr = pr.ftol != null ? Number(pr.ftol).toExponential(1) : "—";
+        liveStr = `<div class="live">${iterStr} · ${ftolStr}</div>`;
       }
       const ckpt = t.checkpoint;
       const ckptCell = ckpt
@@ -250,18 +252,17 @@
   function renderWorkersInline() {
     const el = document.getElementById("workers-inline");
     if (!el) return;
-    if (!workerData || workerData.length === 0) {
-      el.innerHTML = "<em>no active workers</em>";
-      return;
-    }
     const now = Date.now();
-    const rows = workerData.map(f => {
+
+    // Heartbeat-based rows
+    const hbWorkers = new Set((workerData || []).map(f => f.name.replace(".txt","")));
+    const hbRows = (workerData || []).map(f => {
       const workerName = f.name.replace(".txt","");
       const hbAge = f.last_modified ? Math.round((now - new Date(f.last_modified).getTime())/60000) : null;
       const isStale = hbAge != null && hbAge > 10;
       const pr = progressData[workerName] || Object.values(progressData).find(p => p.worker_id === workerName);
       const taskId = pr ? pr.task_id : "—";
-      const iter   = pr ? pr.iter : "—";
+      const iter   = pr?.iter != null ? pr.iter : "—";
       const ftol   = pr?.ftol != null ? Number(pr.ftol).toExponential(1) : "—";
       const ageStr = hbAge != null ? (isStale ? `<span class="stale">${hbAge}m ago</span>` : `${hbAge}m ago`) : "?";
       return `<tr>
@@ -271,11 +272,35 @@
         <td>${iter}</td>
         <td class="mono">${ftol}</td>
       </tr>`;
-    }).join("");
+    });
+
+    // Progress-file workers not in heartbeats (e.g. local claude-cpu workers)
+    const progRows = Object.values(progressData)
+      .filter(p => p.worker_id && !hbWorkers.has(p.worker_id))
+      .map(p => {
+        const age = p.last_update ? Math.round((now - new Date(p.last_update).getTime())/60000) : null;
+        const isStale = age != null && age > 10;
+        const ageStr = age != null ? (isStale ? `<span class="stale">${age}m ago</span>` : `${age}m ago`) : "?";
+        const iter = p.iter != null ? p.iter : "—";
+        const ftol = p.ftol != null ? Number(p.ftol).toExponential(1) : "—";
+        return `<tr>
+          <td class="mono">${esc(p.worker_id)}</td>
+          <td class="mono">${esc(p.task_id)}</td>
+          <td>${ageStr} <span style="color:#bbb;font-size:0.75rem">(progress)</span></td>
+          <td>${iter}</td>
+          <td class="mono">${ftol}</td>
+        </tr>`;
+      });
+
+    const allRows = [...hbRows, ...progRows];
+    if (!allRows.length) {
+      el.innerHTML = "<em>no active workers</em>";
+      return;
+    }
     el.innerHTML = `<strong>Workers</strong>
       <table style="font-size:0.82rem;margin-top:0.4rem">
-        <thead><tr><th>worker</th><th>task</th><th>heartbeat</th><th>iter</th><th>ftol</th></tr></thead>
-        <tbody>${rows}</tbody>
+        <thead><tr><th>worker</th><th>task</th><th>last seen</th><th>iter</th><th>ftol</th></tr></thead>
+        <tbody>${allRows.join("")}</tbody>
       </table>`;
   }
 
