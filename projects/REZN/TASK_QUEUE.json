@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T13:18:27.522545Z",
+  "updated_at": "2026-05-09T13:19:39.383831Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -591,18 +591,18 @@
         "g100_t0500"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "bailed",
       "checkpoint": null,
-      "result": null,
+      "result": {
+        "reason": "||F||inf=1.249e-01 > bail threshold 1e-04"
+      },
       "note": "Auto-requeued (attempt 5): noise perturbation noise_level=0.032.",
       "solver_params": {
         "noise_level": 0.032,
         "presmooth": 100,
         "presmooth_alpha": 0.02
       },
-      "requeue_count": 5,
-      "claimed_by": "gha-25602013101-g100_t0590",
-      "claimed_at": "2026-05-09T13:13:59Z"
+      "requeue_count": 5
     },
     {
       "id": "g100_t0700",
@@ -2427,9 +2427,9 @@
     "total": 100,
     "done": 60,
     "ready": 7,
-    "claimed": 17,
+    "claimed": 16,
     "blocked": 12,
-    "bailed": 3,
+    "bailed": 4,
     "skip": 1
   },
   "fanout": {
