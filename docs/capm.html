@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Capital Asset Pricing Model (CAPM)</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: auto; padding: 2rem; line-height: 1.6; background:#f7f7f8; color:#222; }
+    .formula { background:#eef3ff; padding:1rem; border-left:4px solid #1f6feb; margin:1rem 0; border-radius:8px; overflow-x:auto; }
+    .card { background:white; padding:1.2rem; border-radius:12px; margin:1rem 0; border:1px solid #ddd; }
+    table { width:100%; border-collapse:collapse; }
+    th, td { border:1px solid #ddd; padding:0.6rem; text-align:left; }
+    th { background:#f0f0f0; }
+  </style>
+</head>
+<body>
+<h1>The Capital Asset Pricing Model (CAPM)</h1>
+
+<div class="card">
+<p>CAPM links expected return to systematic market risk.</p>
+
+<div class="formula">
+$$
+E[R_i] = R_f + \beta_i(E[R_m]-R_f)
+$$
+</div>
+
+<table>
+<tr><th>Symbol</th><th>Meaning</th></tr>
+<tr><td>$E[R_i]$</td><td>Expected return on asset $i$</td></tr>
+<tr><td>$R_f$</td><td>Risk-free rate</td></tr>
+<tr><td>$E[R_m]$</td><td>Expected market return</td></tr>
+<tr><td>$\beta_i$</td><td>Market beta</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h2>Beta</h2>
+<p>Beta measures sensitivity to market movements.</p>
+
+<div class="formula">
+$$
+\beta_i = \frac{\mathrm{Cov}(R_i,R_m)}{\mathrm{Var}(R_m)}
+$$
+</div>
+</div>
+
+<div class="card">
+<h2>Example</h2>
+<p>Suppose:</p>
+<ul>
+<li>$R_f = 3\%$</li>
+<li>$E[R_m] = 9\%$</li>
+<li>$\beta_i = 1.5$</li>
+</ul>
+
+<div class="formula">
+$$
+E[R_i] = 3\% + 1.5(9\%-3\%) = 12\%
+$$
+</div>
+</div>
+
+<div class="card">
+<h2>Security Market Line</h2>
+<p>The slope equals the market risk premium:</p>
+
+<div class="formula">
+$$
+\text{slope} = E[R_m]-R_f
+$$
+</div>
+</div>
+
+</body>
+</html>
