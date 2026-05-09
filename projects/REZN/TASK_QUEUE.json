@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T03:58:43.822650Z",
+  "updated_at": "2026-05-09T03:58:44.433781Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -1742,7 +1742,7 @@
         "phi_calls": 2106,
         "wall_s": 59.4
       },
-      "completed_at": "2026-05-09T03:58:43.821356Z"
+      "completed_at": "2026-05-09T03:58:44.432698Z"
     },
     {
       "id": "extract_volume_g010",
