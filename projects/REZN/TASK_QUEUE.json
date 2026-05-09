@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T15:23:45.099568Z",
+  "updated_at": "2026-05-09T15:24:21.470684Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -1853,17 +1853,20 @@
       "id": "g010_t0100",
       "gamma": 0.1,
       "tau": 1.0,
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "depends_on": [
         "g010_t0120"
       ],
       "deps_satisfy": "any",
-      "requeue_count": 4,
-      "note": "Auto-requeued (attempt 4): via new ladder g010_t0120. \u03c4-ladder at \u03c4=1.2",
-      "claimed_by": "gha-25604498824-g010_t0100",
-      "claimed_at": "2026-05-09T15:17:01Z"
+      "requeue_count": 5,
+      "note": "Auto-requeued (attempt 5): noise perturbation noise_level=0.002.",
+      "solver_params": {
+        "noise_level": 0.002,
+        "presmooth": 100,
+        "presmooth_alpha": 0.02
+      }
     },
     {
       "id": "g010_t0150",
@@ -2529,8 +2532,8 @@
   "summary": {
     "total": 103,
     "done": 65,
-    "ready": 4,
-    "claimed": 19,
+    "ready": 5,
+    "claimed": 18,
     "blocked": 12,
     "bailed": 2,
     "skip": 1
