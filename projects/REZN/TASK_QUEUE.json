@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T13:23:14.223148Z",
+  "updated_at": "2026-05-09T13:44:33.791883Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -476,9 +476,15 @@
         "g200_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
-      "checkpoint": null,
-      "result": null,
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g140_t0200.npz",
+      "result": {
+        "1-R2": 0.08762276,
+        "F_max": 1.0661e-54,
+        "n_stages": 1,
+        "phi_calls": 1611,
+        "wall_s": 1808.5
+      },
       "note": "Added to fill gamma-sweep at tau=2.0; warmstart from g200_t0200 (closest checkpoint). | RERUN: previous 1-R\u00b2=0.08388755 from projects/REZN/checkpoints/g140_t0200.npz; warm-start any-of ['g140_t0240', 'g050_t0200', 'g200_t0200'].",
       "solver_params": {
         "presmooth": 200,
@@ -496,9 +502,7 @@
         "lgmres_inner_m": 30,
         "lgmres_outer": 10
       },
-      "completed_at": null,
-      "claimed_by": "gha-25602013101-g140_t0200",
-      "claimed_at": "2026-05-09T13:13:59Z"
+      "completed_at": "2026-05-09T13:44:33.790469Z"
     },
     {
       "id": "g100_t0300",
@@ -2444,9 +2448,9 @@
   ],
   "summary": {
     "total": 101,
-    "done": 61,
+    "done": 62,
     "ready": 11,
-    "claimed": 12,
+    "claimed": 11,
     "blocked": 12,
     "bailed": 4,
     "skip": 1
