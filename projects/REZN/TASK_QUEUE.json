@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T06:10:24.284286Z",
+  "updated_at": "2026-05-09T06:10:27.313135Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -2099,7 +2099,7 @@
       "id": "extract_value_info_g400",
       "gamma": 4.0,
       "tau": null,
-      "status": "claimed",
+      "status": "done",
       "deps_satisfy": "any",
       "depends_on": [
         "g200_t0100",
@@ -2118,11 +2118,16 @@
         "g400_t2000"
       ],
       "note": "Auto-requeued (attempt 1): warm-start from g200_t0100 (log-dist=0.69).",
-      "result": null,
-      "checkpoint": null,
+      "result": {
+        "1-R2": 0.08201709,
+        "F_max": 5.2392e-13,
+        "n_stages": 3,
+        "phi_calls": 85,
+        "wall_s": 4.5
+      },
+      "checkpoint": "projects/REZN/checkpoints/extract_value_info_g400.npz",
       "requeue_count": 1,
-      "claimed_by": "gha-25593751263-extract_value_info_g400",
-      "claimed_at": "2026-05-09T06:09:50Z"
+      "completed_at": "2026-05-09T06:10:27.311819Z"
     },
     {
       "id": "symK3_g050_t0200_G15",
@@ -2276,9 +2281,9 @@
   ],
   "summary": {
     "total": 94,
-    "done": 61,
+    "done": 62,
     "ready": 0,
-    "claimed": 14,
+    "claimed": 13,
     "blocked": 14,
     "bailed": 3,
     "skip": 1
