@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T06:10:27.313135Z",
+  "updated_at": "2026-05-09T06:10:27.779046Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -2127,7 +2127,7 @@
       },
       "checkpoint": "projects/REZN/checkpoints/extract_value_info_g400.npz",
       "requeue_count": 1,
-      "completed_at": "2026-05-09T06:10:27.311819Z"
+      "completed_at": "2026-05-09T06:10:27.777767Z"
     },
     {
       "id": "symK3_g050_t0200_G15",
