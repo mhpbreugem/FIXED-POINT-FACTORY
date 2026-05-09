@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T20:01:54.196027Z",
+  "updated_at": "2026-05-09T20:02:08.759890Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -684,10 +684,10 @@
         "g100_t0500"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "bailed",
       "checkpoint": null,
       "result": {
-        "reason": "||F||inf=6.527e-01 > bail threshold 1e-04"
+        "reason": "||F||inf=2.082e-03 > bail threshold 1e-04"
       },
       "note": "Auto-requeued (attempt 5): noise perturbation noise_level=0.032. | RESET: stale claim from None (no active workers)",
       "solver_params": {
@@ -695,9 +695,7 @@
         "presmooth": 100,
         "presmooth_alpha": 0.02
       },
-      "requeue_count": 5,
-      "claimed_by": "gha-25610412738-g100_t0590",
-      "claimed_at": "2026-05-09T19:57:31Z"
+      "requeue_count": 5
     },
     {
       "id": "g100_t0700",
@@ -2579,9 +2577,9 @@
     "total": 104,
     "done": 67,
     "ready": 7,
-    "claimed": 14,
+    "claimed": 13,
     "blocked": 12,
-    "bailed": 3,
+    "bailed": 4,
     "skip": 1
   },
   "fanout": {
