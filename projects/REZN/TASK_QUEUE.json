@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T13:17:48.034422Z",
+  "updated_at": "2026-05-09T13:18:25.048454Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -1774,12 +1774,17 @@
         "g010_t0150"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
-      "checkpoint": null,
-      "result": null,
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g010_t0120.npz",
+      "result": {
+        "1-R2": 0.08973989,
+        "F_max": 2.7797e-12,
+        "n_stages": 4,
+        "phi_calls": 407,
+        "wall_s": 12.3
+      },
       "note": "\u03c4-ladder between g010_t0150 (\u03c4=1.5) and g010_t0100 (\u03c4=1.0).",
-      "claimed_by": "gha-25602013101-g010_t0120",
-      "claimed_at": "2026-05-09T13:13:59Z"
+      "completed_at": "2026-05-09T13:18:25.046959Z"
     },
     {
       "id": "g010_t0100",
@@ -2420,9 +2425,9 @@
   ],
   "summary": {
     "total": 100,
-    "done": 59,
+    "done": 60,
     "ready": 7,
-    "claimed": 18,
+    "claimed": 17,
     "blocked": 12,
     "bailed": 3,
     "skip": 1
