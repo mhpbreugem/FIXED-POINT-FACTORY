@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T20:47:41.770968+00:00",
+  "updated_at": "2026-05-09T21:02:12.177787Z",
   "params": {
     "G": 20,
     "UMAX": 5,
@@ -2596,9 +2596,11 @@
       "symmetric": true,
       "depends_on": [],
       "deps_satisfy": "all",
-      "status": "claimed",
+      "status": "bailed",
       "checkpoint": null,
-      "result": null,
+      "result": {
+        "reason": "TypeError: lgmres() got an unexpected keyword argument 'm'"
+      },
       "note": "Symmetric K=3 baseline; cold start.",
       "solver_params": {
         "u_max": 3.0,
@@ -2606,9 +2608,7 @@
         "tol": 5e-07,
         "max_iters": 100,
         "inner_m": 50
-      },
-      "claimed_by": "gha-25611722869-symK3_g050_t0200_G15",
-      "claimed_at": "2026-05-09T21:01:46Z"
+      }
     },
     {
       "id": "symK4_g050_t0200_G15",
@@ -2732,12 +2732,13 @@
     }
   ],
   "summary": {
-    "total": 108,
-    "done": 102,
-    "running": 0,
-    "ready": 6,
-    "waiting": 0,
-    "bailed": 0
+    "total": 159,
+    "done": 146,
+    "ready": 0,
+    "claimed": 7,
+    "blocked": 5,
+    "bailed": 1,
+    "skip": 0
   },
   "fanout": {
     "g050": [
