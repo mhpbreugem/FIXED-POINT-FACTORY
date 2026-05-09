@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T12:04:10.525403Z",
+  "updated_at": "2026-05-09T11:53:34.579103Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -30,7 +30,7 @@
         "smoke": true,
         "1-R2": 0.00015319,
         "F_max": 0.20528,
-        "note": "CI smoke test \u2014 one phi eval, no convergence required"
+        "note": "CI smoke test — one phi eval, no convergence required"
       },
       "completed_at": "2026-05-07T18:31:51.999548Z"
     },
@@ -48,7 +48,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -65,7 +65,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -82,7 +82,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -99,7 +99,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -116,7 +116,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -149,7 +149,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -369,123 +369,117 @@
       "gamma": 1.0,
       "tau": 0.3,
       "depends_on": [
-        "g100_t0050"
+        "g100_t0500",
+        "g050_t0200"
       ],
-      "status": "done",
-      "checkpoint": "results/full_ree/task3_g100_t0030_mp50.json",
-      "result": {
-        "1-R2": 0.03,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
-      }
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "deps_satisfy": "any",
+      "note": "RERUN: previous 1-R²=0.03 from results/full_ree/task3_g100_t0030_mp50.json; warm-start any-of ['g100_t0500', 'g050_t0200']."
     },
     {
       "id": "g100_t0050",
       "gamma": 1.0,
       "tau": 0.5,
       "depends_on": [
-        "g100_t0080"
+        "g100_t0500",
+        "g050_t0200"
       ],
-      "status": "done",
-      "checkpoint": "results/full_ree/task3_g100_t0050_mp50.json",
-      "result": {
-        "1-R2": 0.026,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
-      }
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "deps_satisfy": "any",
+      "note": "RERUN: previous 1-R²=0.026 from results/full_ree/task3_g100_t0050_mp50.json; warm-start any-of ['g100_t0500', 'g050_t0200']."
     },
     {
       "id": "g100_t0080",
       "gamma": 1.0,
       "tau": 0.8,
       "depends_on": [
-        "g100_t0100"
+        "g100_t0500",
+        "g050_t0200"
       ],
-      "status": "done",
-      "checkpoint": "results/full_ree/task3_g100_t0080_mp50.json",
-      "result": {
-        "1-R2": 0.031,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
-      }
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "deps_satisfy": "any",
+      "note": "RERUN: previous 1-R²=0.031 from results/full_ree/task3_g100_t0080_mp50.json; warm-start any-of ['g100_t0500', 'g050_t0200']."
     },
     {
       "id": "g100_t0100",
       "gamma": 1.0,
       "tau": 1.0,
       "depends_on": [
-        "g100_t0150"
+        "g100_t0500",
+        "g050_t0200"
       ],
-      "status": "done",
-      "checkpoint": "results/full_ree/task3_g100_t0100_mp50.json",
-      "result": {
-        "1-R2": 0.033,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
-      }
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "deps_satisfy": "any",
+      "note": "RERUN: previous 1-R²=0.033 from results/full_ree/task3_g100_t0100_mp50.json; warm-start any-of ['g100_t0500', 'g050_t0200']."
     },
     {
       "id": "g100_t0150",
       "gamma": 1.0,
       "tau": 1.5,
       "depends_on": [
-        "g100_t0200"
+        "g100_t0500",
+        "g050_t0200"
       ],
-      "status": "done",
-      "checkpoint": "results/full_ree/task3_g100_t0150_mp50.json",
-      "result": {
-        "1-R2": 0.04,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
-      }
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "deps_satisfy": "any",
+      "note": "RERUN: previous 1-R²=0.04 from results/full_ree/task3_g100_t0150_mp50.json; warm-start any-of ['g100_t0500', 'g050_t0200']."
     },
     {
       "id": "g100_t0200",
       "gamma": 1.0,
       "tau": 2.0,
       "depends_on": [
+        "g100_t0500",
         "g050_t0200"
       ],
-      "status": "done",
-      "checkpoint": "results/full_ree/task3_g100_t0200_mp50.json",
-      "result": {
-        "1-R2": 0.0467,
-        "slope": 0.55,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
-      }
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "deps_satisfy": "any",
+      "note": "RERUN: previous 1-R²=0.0467 from results/full_ree/task3_g100_t0200_mp50.json; warm-start any-of ['g100_t0500', 'g050_t0200']."
     },
     {
       "id": "g140_t0200",
       "gamma": 1.4,
       "tau": 2.0,
       "depends_on": [
-        "g100_t0200",
+        "g140_t0240",
+        "g050_t0200",
         "g200_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "done",
-      "checkpoint": "projects/REZN/checkpoints/g140_t0200.npz",
-      "result": {
-        "1-R2": 0.08388755,
-        "F_max": 1.7296e-53,
-        "n_stages": 1,
-        "phi_calls": 1216,
-        "wall_s": 2047.6
-      },
-      "note": "Added to fill gamma-sweep at tau=2.0; warmstart from g200_t0200 (closest checkpoint).",
-      "requeue_count": 0,
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "note": "Added to fill gamma-sweep at tau=2.0; warmstart from g200_t0200 (closest checkpoint). | RERUN: previous 1-R²=0.08388755 from projects/REZN/checkpoints/g140_t0200.npz; warm-start any-of ['g140_t0240', 'g050_t0200', 'g200_t0200'].",
       "solver_params": {
         "presmooth": 200,
         "presmooth_alpha": 0.01,
@@ -502,42 +496,43 @@
         "lgmres_inner_m": 30,
         "lgmres_outer": 10
       },
-      "completed_at": "2026-05-08T14:18:51.248303Z"
+      "completed_at": null,
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g100_t0300",
       "gamma": 1.0,
       "tau": 3.0,
       "depends_on": [
-        "g100_t0200"
+        "g100_t0500",
+        "g050_t0200"
       ],
-      "status": "done",
-      "checkpoint": "results/full_ree/task3_g100_t0300_mp50.json",
-      "result": {
-        "1-R2": 0.066,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
-      }
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "deps_satisfy": "any",
+      "note": "RERUN: previous 1-R²=0.066 from results/full_ree/task3_g100_t0300_mp50.json; warm-start any-of ['g100_t0500', 'g050_t0200']."
     },
     {
       "id": "g100_t0400",
       "gamma": 1.0,
       "tau": 4.0,
       "depends_on": [
-        "g100_t0300"
+        "g100_t0500",
+        "g050_t0200"
       ],
-      "status": "done",
-      "checkpoint": "results/full_ree/task3_g100_t0400_mp50.json",
-      "result": {
-        "1-R2": 0.09,
-        "slope": null,
-        "n_triples": 8000,
-        "note": "marginal: F_max ~ 2.3e-5",
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
-      }
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "deps_satisfy": "any",
+      "note": "RERUN: previous 1-R²=0.09 from results/full_ree/task3_g100_t0400_mp50.json; warm-start any-of ['g100_t0500', 'g050_t0200']."
     },
     {
       "id": "g100_t0500",
@@ -585,7 +580,7 @@
         "g100_t0500"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 5): noise perturbation noise_level=0.032.",
@@ -594,9 +589,7 @@
         "presmooth": 100,
         "presmooth_alpha": 0.02
       },
-      "requeue_count": 5,
-      "claimed_by": "gha-25600608982-g100_t0590",
-      "claimed_at": "2026-05-09T12:00:45Z"
+      "requeue_count": 5
     },
     {
       "id": "g100_t0700",
@@ -634,7 +627,7 @@
       },
       "requeue_count": 6,
       "deps_satisfy": "any",
-      "note": "Re-queued (attempt 6): relaxed mp_tol 1e-50\u21921e-49 (F_inf=2.494e-50 was just above old threshold).",
+      "note": "Re-queued (attempt 6): relaxed mp_tol 1e-50→1e-49 (F_inf=2.494e-50 was just above old threshold).",
       "completed_at": "2026-05-09T06:34:13.795349Z"
     },
     {
@@ -757,7 +750,7 @@
         "n_triples": 8000,
         "note": "redo of original Terminal-3 run",
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -774,7 +767,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -791,7 +784,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -808,7 +801,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -825,7 +818,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -841,9 +834,9 @@
         "1-R2": 0.0163,
         "slope": 0.605,
         "n_triples": 8000,
-        "note": "from \u03b3-sweep at \u03c4=2 (Task 2)",
+        "note": "from γ-sweep at τ=2 (Task 2)",
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -860,7 +853,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -877,7 +870,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -894,7 +887,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -911,7 +904,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -931,7 +924,7 @@
         "phi_calls": 402,
         "wall_s": 11.3
       },
-      "note": "\u03c4-ladder between g140_t0200 (\u03c4=2.0) and g140_t0300 (\u03c4=3.0).",
+      "note": "τ-ladder between g140_t0200 (τ=2.0) and g140_t0300 (τ=3.0).",
       "completed_at": "2026-05-08T19:38:53.639409Z"
     },
     {
@@ -951,7 +944,7 @@
         "phi_calls": 108,
         "wall_s": 4.9
       },
-      "note": "\u03c4-ladder between g140_t0240 (\u03c4=2.4) and g140_t0300 (\u03c4=3.0).",
+      "note": "τ-ladder between g140_t0240 (τ=2.4) and g140_t0300 (τ=3.0).",
       "completed_at": "2026-05-08T20:04:53.998379Z"
     },
     {
@@ -992,7 +985,7 @@
         "phi_calls": 125,
         "wall_s": 4.3
       },
-      "note": "\u03c4-ladder between g140_t0240 (\u03c4=2.4) and g140_t0450 (\u03c4=4.5).",
+      "note": "τ-ladder between g140_t0240 (τ=2.4) and g140_t0450 (τ=4.5).",
       "completed_at": "2026-05-08T20:48:34.230586Z"
     },
     {
@@ -1012,7 +1005,7 @@
         "phi_calls": 53,
         "wall_s": 3.8
       },
-      "note": "Auto-requeued (attempt 4): via new ladder g140_t0330. \u03c4-ladder at \u03c4=3.3",
+      "note": "Auto-requeued (attempt 4): via new ladder g140_t0330. τ-ladder at τ=3.3",
       "requeue_count": 4,
       "completed_at": "2026-05-08T23:10:31.879142Z"
     },
@@ -1033,7 +1026,7 @@
         "phi_calls": 54,
         "wall_s": 3.8
       },
-      "note": "\u03c4-ladder between g140_t0330 (\u03c4=3.3) and g140_t0570 (\u03c4=5.7).",
+      "note": "τ-ladder between g140_t0330 (τ=3.3) and g140_t0570 (τ=5.7).",
       "completed_at": "2026-05-08T23:10:35.364819Z"
     },
     {
@@ -1053,7 +1046,7 @@
         "phi_calls": 51,
         "wall_s": 3.7
       },
-      "note": "\u03c4-ladder between g140_t0450 (\u03c4=4.5) and g140_t0570 (\u03c4=5.7).",
+      "note": "τ-ladder between g140_t0450 (τ=4.5) and g140_t0570 (τ=5.7).",
       "completed_at": "2026-05-08T23:18:16.822603Z"
     },
     {
@@ -1090,7 +1083,7 @@
       "result": {
         "reason": "||F||inf=3.777e-01 > bail threshold 1e-04"
       },
-      "note": "Auto-requeued (attempt 5): via new ladder g140_t0570. \u03c4-ladder at \u03c4=5.7",
+      "note": "Auto-requeued (attempt 5): via new ladder g140_t0570. τ-ladder at τ=5.7",
       "requeue_count": 5
     },
     {
@@ -1110,7 +1103,7 @@
         "phi_calls": 2068,
         "wall_s": 2082.0
       },
-      "note": "Auto-requeued (attempt 1): via new ladder g140_t1000. \u03b3-ladder at \u03b3=1.4",
+      "note": "Auto-requeued (attempt 1): via new ladder g140_t1000. γ-ladder at γ=1.4",
       "solver_params": {
         "presmooth": 200,
         "presmooth_alpha": 0.01,
@@ -1218,7 +1211,7 @@
         "phi_calls": 2,
         "wall_s": 2855.9
       },
-      "note": "\u03b3-ladder between g050_t0200 (\u03b3=0.5) and g025_t0200 (\u03b3=0.25) at \u03c4=2.0.",
+      "note": "γ-ladder between g050_t0200 (γ=0.5) and g025_t0200 (γ=0.25) at τ=2.0.",
       "solver_params": {
         "presmooth": 200,
         "presmooth_alpha": 0.01,
@@ -1254,7 +1247,7 @@
         "phi_calls": 2,
         "wall_s": 2313.0
       },
-      "note": "Auto-requeued (attempt 1): via new ladder g035_t0200. \u03b3-ladder at \u03b3=0.35000000000000003",
+      "note": "Auto-requeued (attempt 1): via new ladder g035_t0200. γ-ladder at γ=0.35000000000000003",
       "solver_params": {
         "presmooth": 200,
         "presmooth_alpha": 0.01,
@@ -1684,7 +1677,7 @@
         "phi_calls": 118,
         "wall_s": 5.0
       },
-      "note": "\u03b3-ladder between g025_t0050 (\u03b3=0.25) and g010_t0050 (\u03b3=0.1) at \u03c4=0.5.",
+      "note": "γ-ladder between g025_t0050 (γ=0.25) and g010_t0050 (γ=0.1) at τ=0.5.",
       "completed_at": "2026-05-09T06:10:24.283243Z"
     },
     {
@@ -1695,7 +1688,7 @@
         "g016_t0050"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "result": null,
       "note": "Auto-requeued (attempt 4): noise perturbation noise_level=0.016.",
       "solver_params": {
@@ -1704,9 +1697,7 @@
         "presmooth_alpha": 0.02
       },
       "requeue_count": 4,
-      "checkpoint": null,
-      "claimed_by": "gha-25600608982-g013_t0050",
-      "claimed_at": "2026-05-09T12:00:45Z"
+      "checkpoint": null
     },
     {
       "id": "g010_t0050",
@@ -1720,7 +1711,7 @@
       ],
       "deps_satisfy": "any",
       "requeue_count": 3,
-      "note": "Auto-requeued (attempt 3): via new ladder g013_t0050. \u03b3-ladder at \u03b3=0.13",
+      "note": "Auto-requeued (attempt 3): via new ladder g013_t0050. γ-ladder at γ=0.13",
       "claimed_by": "gha-25600067059-g010_t0050",
       "claimed_at": "2026-05-09T11:31:15Z"
     },
@@ -1741,7 +1732,7 @@
         "phi_calls": 88,
         "wall_s": 4.5
       },
-      "note": "\u03c4-ladder between g010_t0200 (\u03c4=2.0) and g010_t0140 (\u03c4=1.4).",
+      "note": "τ-ladder between g010_t0200 (τ=2.0) and g010_t0140 (τ=1.4).",
       "completed_at": "2026-05-09T07:39:46.737679Z"
     },
     {
@@ -1755,7 +1746,7 @@
       "status": "claimed",
       "checkpoint": null,
       "result": null,
-      "note": "Auto-requeued (attempt 1): via new ladder g010_t0170. \u03c4-ladder at \u03c4=1.7",
+      "note": "Auto-requeued (attempt 1): via new ladder g010_t0170. τ-ladder at τ=1.7",
       "requeue_count": 1,
       "claimed_by": "gha-25600067059-g010_t0140",
       "claimed_at": "2026-05-09T11:31:15Z"
@@ -1768,23 +1759,16 @@
         "g010_t0150"
       ],
       "deps_satisfy": "any",
-      "status": "done",
-      "checkpoint": "projects/REZN/checkpoints/g010_t0120.npz",
-      "result": {
-        "1-R2": 0.08973989,
-        "F_max": 8.2417e-13,
-        "n_stages": 4,
-        "phi_calls": 419,
-        "wall_s": 11.7
-      },
-      "note": "\u03c4-ladder between g010_t0150 (\u03c4=1.5) and g010_t0100 (\u03c4=1.0).",
-      "completed_at": "2026-05-09T12:01:21.584126Z"
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "note": "τ-ladder between g010_t0150 (τ=1.5) and g010_t0100 (τ=1.0)."
     },
     {
       "id": "g010_t0100",
       "gamma": 0.1,
       "tau": 1.0,
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "depends_on": [
@@ -1792,9 +1776,7 @@
       ],
       "deps_satisfy": "any",
       "requeue_count": 4,
-      "note": "Auto-requeued (attempt 4): via new ladder g010_t0120. \u03c4-ladder at \u03c4=1.2",
-      "claimed_by": "gha-25600608982-g010_t0100",
-      "claimed_at": "2026-05-09T12:00:45Z"
+      "note": "Auto-requeued (attempt 4): via new ladder g010_t0120. τ-ladder at τ=1.2"
     },
     {
       "id": "g010_t0150",
@@ -1849,13 +1831,7 @@
       "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "Auto-requeued (attempt 1): noise perturbation noise_level=0.002.",
-      "solver_params": {
-        "noise_level": 0.002,
-        "presmooth": 100,
-        "presmooth_alpha": 0.02
-      },
-      "requeue_count": 1
+      "note": "τ-ladder between g010_t0200 (τ=2.0) and g010_t0300 (τ=3.0)."
     },
     {
       "id": "g010_t0300",
@@ -1865,12 +1841,11 @@
       "checkpoint": null,
       "result": null,
       "depends_on": [
-        "g010_t0200",
         "g010_t0240"
       ],
       "deps_satisfy": "any",
-      "requeue_count": 3,
-      "note": "Auto-requeued (attempt 3): warm-start from g010_t0200 (log-dist=0.41)."
+      "requeue_count": 2,
+      "note": "Auto-requeued (attempt 2): via new ladder g010_t0240. τ-ladder at τ=2.4"
     },
     {
       "id": "g010_t0500",
@@ -1946,7 +1921,7 @@
       "id": "extract_volume_g025",
       "gamma": 0.25,
       "tau": null,
-      "status": "claimed",
+      "status": "ready",
       "deps_satisfy": "all",
       "depends_on": [
         "g025_t0030",
@@ -1965,8 +1940,8 @@
         "presmooth_alpha": 0.02
       },
       "requeue_count": 1,
-      "claimed_by": "gha-25600608982-extract_volume_g025",
-      "claimed_at": "2026-05-09T12:00:45Z"
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "extract_value_info_g025",
@@ -2033,7 +2008,7 @@
       "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "\u03c4-ladder between g050_t0200 (\u03c4=2.0) and extract_value_info_g050 (\u03c4=1.0).",
+      "note": "τ-ladder between g050_t0200 (τ=2.0) and extract_value_info_g050 (τ=1.0).",
       "claimed_by": null,
       "claimed_at": null
     },
@@ -2060,7 +2035,7 @@
         "g050_t2000",
         "g050_t0140"
       ],
-      "note": "Auto-requeued (attempt 1): via new ladder g050_t0140. \u03c4-ladder at \u03c4=1.4",
+      "note": "Auto-requeued (attempt 1): via new ladder g050_t0140. τ-ladder at τ=1.4",
       "result": null,
       "checkpoint": null,
       "requeue_count": 1
@@ -2419,9 +2394,9 @@
   ],
   "summary": {
     "total": 99,
-    "done": 69,
-    "ready": 7,
-    "claimed": 6,
+    "done": 68,
+    "ready": 12,
+    "claimed": 2,
     "blocked": 12,
     "bailed": 3,
     "skip": 1
@@ -2438,11 +2413,11 @@
     "any": "Tasks may declare deps_satisfy='any', meaning the task is ready as soon as ANY listed dependency is done."
   },
   "notes": [
-    "\u03b3=0.5 high-\u03c4 (\u03c4 \u2265 4) bailed; the 7-point \u03b3=0.5 curve (\u03c4\u2208[0.3,3.0]) is the accepted answer for Fig 4A.",
-    "\u03b3=1.0 high-\u03c4 (\u03c4 \u2265 5) bailed; the 8-point \u03b3=1.0 curve (\u03c4\u2208[0.3,4.0]) is the accepted answer.",
-    "\u03b3=4.0 sweep: \u03c4 \u2208 [0.3, 7.0] done. Only \u03c4=10 is ready and \u03c4=15 is blocked on it.",
-    "\u03b3=0.25 and \u03b3=2.0 \u03c4-sweeps added as parallel chains.",
-    "All 1-R\u00b2 values are weighted by ex-ante probability (see EQUATIONS.md \u00a77).",
+    "γ=0.5 high-τ (τ ≥ 4) bailed; the 7-point γ=0.5 curve (τ∈[0.3,3.0]) is the accepted answer for Fig 4A.",
+    "γ=1.0 high-τ (τ ≥ 5) bailed; the 8-point γ=1.0 curve (τ∈[0.3,4.0]) is the accepted answer.",
+    "γ=4.0 sweep: τ ∈ [0.3, 7.0] done. Only τ=10 is ready and τ=15 is blocked on it.",
+    "γ=0.25 and γ=2.0 τ-sweeps added as parallel chains.",
+    "All 1-R² values are weighted by ex-ante probability (see EQUATIONS.md §7).",
     "Checkpoints listed for done tasks are the expected paths."
   ]
 }
