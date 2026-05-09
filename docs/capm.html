@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Capital Asset Pricing Model (CAPM)</title>
+  <style>
+    :root {
+      --bg: #f7f7f8;
+      --fg: #202124;
+      --muted: #666;
+      --card: #fff;
+      --accent: #1f6feb;
+      --border: #ddd;
+      --formula: #f1f5ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.55;
+    }
+    main {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+    }
+    header {
+      background: linear-gradient(135deg, #111827, #1f6feb);
+      color: white;
+      padding: 2.5rem 1.25rem;
+      border-bottom: 1px solid #0b1220;
+    }
+    header .inner { max-width: 920px; margin: 0 auto; }
+    h1 { margin: 0 0 0.5rem; font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.05; }
+    h2 { margin-top: 2rem; font-size: 1.35rem; }
+    h3 { margin-top: 1.25rem; font-size: 1.05rem; }
+    p.lead { margin: 0.5rem 0 0; max-width: 760px; font-size: 1.1rem; color: #e5e7eb; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.1rem 1.25rem;
+      margin: 1rem 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    }
+    .formula {
+      background: var(--formula);
+      border-left: 4px solid var(--accent);
+      padding: 1rem;
+      border-radius: 10px;
+      font-family: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+      font-size: 1.2rem;
+      overflow-x: auto;
+    }
+    .muted { color: var(--muted); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td { text-align: left; padding: 0.65rem 0.75rem; border-bottom: 1px solid #eee; }
+    th { background: #f0f0f2; }
+    tr:last-child td { border-bottom: none; }
+    code {
+      background: #eee;
+      padding: 0.1rem 0.3rem;
+      border-radius: 4px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+    .pill {
+      display: inline-block;
+      background: #e8f0ff;
+      color: #174ea6;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    footer { margin-top: 2.5rem; color: var(--muted); font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="inner">
+      <div class="pill">Finance note</div>
+      <h1>The Capital Asset Pricing Model</h1>
+      <p class="lead">CAPM is a benchmark model that links an asset's expected return to its systematic risk: the risk that cannot be diversified away.</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>1. The main idea</h2>
+      <p>
+        The Capital Asset Pricing Model, usually called <strong>CAPM</strong>, says that investors should be compensated only for bearing <em>systematic risk</em>. This is the part of risk that moves with the whole market. Firm-specific risk can be diversified away by holding many assets, so CAPM says it should not earn an extra risk premium.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>2. The CAPM equation</h2>
+      <div class="formula">
+        E[R_i] = R_f + \beta_i \bigl(E[R_m] - R_f\bigr)
+      </div>
+      <p>Where:</p>
+      <table>
+        <thead>
+          <tr><th>Symbol</th><th>Meaning</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>E[R_i]</code></td><td>Expected return on asset <code>i</code></td></tr>
+          <tr><td><code>R_f</code></td><td>Risk-free rate</td></tr>
+          <tr><td><code>E[R_m]</code></td><td>Expected return on the market portfolio</td></tr>
+          <tr><td><code>E[R_m] - R_f</code></td><td>Market risk premium</td></tr>
+          <tr><td><code>β_i</code></td><td>Beta of the asset: its exposure to market risk</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>3. What beta means</h2>
+      <p>
+        Beta measures how sensitive an asset is to movements in the market. A stock with beta 1 tends to move like the market. A stock with beta above 1 is more exposed to market movements. A stock with beta below 1 is less exposed.
+      </p>
+      <div class="grid">
+        <div class="card">
+          <h3>β = 0</h3>
+          <p class="muted">No market-risk exposure. CAPM predicts the risk-free return.</p>
+        </div>
+        <div class="card">
+          <h3>β = 1</h3>
+          <p class="muted">Same systematic risk as the market. CAPM predicts the market return.</p>
+        </div>
+        <div class="card">
+          <h3>β &gt; 1</h3>
+          <p class="muted">More systematic risk than the market. CAPM predicts a higher expected return.</p>
+        </div>
+      </div>
+      <p>The statistical definition is:</p>
+      <div class="formula">
+        \beta_i = \frac{\operatorname{Cov}(R_i, R_m)}{\operatorname{Var}(R_m)}
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>4. Worked example</h2>
+      <p>Suppose:</p>
+      <ul>
+        <li>Risk-free rate: <code>R_f = 3%</code></li>
+        <li>Expected market return: <code>E[R_m] = 9%</code></li>
+        <li>Asset beta: <code>β_i = 1.5</code></li>
+      </ul>
+      <p>Then:</p>
+      <div class="formula">
+        E[R_i] = 3\% + 1.5(9\% - 3\%) = 12\%
+      </div>
+      <p>
+        CAPM predicts that this asset should have an expected return of <strong>12%</strong>. The asset earns the risk-free rate plus 1.5 times the market risk premium.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>5. The Security Market Line</h2>
+      <p>
+        CAPM can be drawn as a straight line relating beta to expected return. This is called the <strong>Security Market Line</strong>. The intercept is the risk-free rate, and the slope is the market risk premium.
+      </p>
+      <div class="formula">
+        \text{slope} = E[R_m] - R_f
+      </div>
+      <p>
+        Assets above the line look undervalued because their expected return is high relative to their beta. Assets below the line look overvalued because their expected return is low relative to their beta.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>6. Assumptions</h2>
+      <p>CAPM relies on strong assumptions, including:</p>
+      <ul>
+        <li>Investors care only about mean and variance of returns.</li>
+        <li>Investors can borrow and lend at the risk-free rate.</li>
+        <li>All investors have the same beliefs about expected returns, variances, and covariances.</li>
+        <li>Markets are frictionless: no taxes, no transaction costs, and no short-sale constraints.</li>
+        <li>The market portfolio contains all risky assets.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>7. Why CAPM matters</h2>
+      <p>
+        CAPM is used as a benchmark for estimating required returns, cost of equity, portfolio performance, and risk-adjusted pricing. Even though its assumptions are unrealistic, it remains a central model because it gives a clear prediction: only covariance with the market should be priced.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>8. Limitations</h2>
+      <p>
+        Empirically, CAPM does not explain all return patterns. Size, value, momentum, profitability, and investment factors are examples of return patterns that motivated multifactor models such as the Fama-French models. Still, CAPM remains the cleanest baseline model for thinking about systematic risk and expected return.
+      </p>
+    </section>
+
+    <footer>
+      Created for the fixed-point-factory repository. This page is educational and not investment advice.
+    </footer>
+  </main>
+</body>
+</html>
