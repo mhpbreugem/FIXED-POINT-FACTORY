@@ -556,6 +556,15 @@
     </div>
 
     <div class="paper-section">
+      <h2>Symmetric K-sweep — REE (γ=0.5, τ=2, G=15)</h2>
+      <p style="font-size:0.85rem;color:#555">Revelation deficit 1−R² vs number of agents K at the symmetric REE
+         (homogeneous γ=0.5, τ=2). Uses the sorted-tuple contour solver;
+         K=3 warm-starts cold, K=4..8 warm-start from K-1.</p>
+      <div class="chart-wrap" id="chart-symk"></div>
+      <div id="tbl-symk"></div>
+    </div>
+
+    <div class="paper-section">
       <h2>All completed REE tasks</h2>
       <div id="tbl-grid"></div>
     </div>
@@ -570,6 +579,7 @@
     renderFig3b(map);
     renderFig4(map);
     renderAllPaperFigures(map);
+    renderSymKSweep(taskData.tasks || []);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -831,6 +841,48 @@
     try { renderFig8(FIGDATA.fig7_voi_nl); } catch(e) { console.error("fig8",e); }
     try { renderFig9(FIGDATA.fig9_mechanisms); } catch(e) { console.error("fig9",e); }
     try { renderFig10(FIGDATA.fig10a_K); } catch(e) { console.error("fig10",e); }
+  }
+
+  // ——— Symmetric K-sweep chart ———
+  function renderSymKSweep(tasks) {
+    const el = document.getElementById("chart-symk");
+    const tbl = document.getElementById("tbl-symk");
+    const symTasks = tasks.filter(t => t.symmetric && /^symK\d/.test(t.id))
+                          .sort((a,b) => (a.K||0)-(b.K||0));
+    if (!el) return;
+    if (!symTasks.length) {
+      el.innerHTML = `<p style="color:#aaa;font-size:0.82rem">No symmetric K tasks found in queue.</p>`;
+      return;
+    }
+    const donePts = symTasks.filter(t => t.result?.["1-R2"] != null)
+                            .map(t => ({x: t.K, y: t.result["1-R2"]}));
+    if (donePts.length >= 2) {
+      el.innerHTML = miniChart({
+        data: donePts,
+        xLabel: "K (agents)", yLabel: "1−R² (sym REE)",
+        xMin: 3, xMax: 8, yMin: 0,
+        yMax: Math.max(...donePts.map(p=>p.y)) * 1.2,
+        dots: true, lines: true,
+        hLines: [{y:0,color:"#ccc",dash:"2 2"}]
+      });
+    } else if (donePts.length === 1) {
+      el.innerHTML = `<p style="color:#888;font-size:0.82rem">1 result so far (K=${donePts[0].x}: 1-R²=${donePts[0].y.toFixed(6)}). More tasks pending.</p>`;
+    } else {
+      el.innerHTML = `<p style="color:#aaa;font-size:0.82rem">Awaiting first symK result.</p>`;
+    }
+    if (tbl) {
+      tbl.innerHTML = `<table style="font-size:0.82rem;margin-top:0.5rem">
+        <thead><tr><th>K</th><th>Status</th><th>1-R²</th><th>F_max</th><th>cells</th><th>wall_s</th></tr></thead>
+        <tbody>${symTasks.map(t=>`<tr>
+          <td>${t.K}</td>
+          <td class="status ${t.status}">${t.status}</td>
+          <td>${t.result?.["1-R2"] != null ? t.result["1-R2"].toFixed(6) : '<span style="color:#aaa">—</span>'}</td>
+          <td class="mono">${t.result?.F_max != null ? Number(t.result.F_max).toExponential(1) : ''}</td>
+          <td class="mono">${t.result?.n_cells ?? ''}</td>
+          <td>${t.result?.wall_s != null ? t.result.wall_s+'s' : ''}</td>
+        </tr>`).join('')}</tbody>
+      </table>`;
+    }
   }
 
   // ——— Fig 1: NL 1-R² vs tau line chart ———

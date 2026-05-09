@@ -194,6 +194,153 @@ def claim_bail(project: str, task_id: str, branch: str, reason: str) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Symmetric-K solver path
+# ---------------------------------------------------------------------------
+
+def _save_sym_checkpoint(project: str, task_id: str,
+                         P_sorted: np.ndarray, sg, u_grid: np.ndarray,
+                         gamma: float, tau: float, metrics: dict) -> str:
+    out_dir = ROOT / "projects" / project / "checkpoints"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    path = out_dir / f"{task_id}.npz"
+    np.savez_compressed(
+        path,
+        P_sorted=P_sorted,
+        u_grid=u_grid,
+        K=sg.K, G=sg.G,
+        gamma=gamma, tau=tau,
+        one_minus_r2=metrics["1-R2"],
+    )
+    return str(path.relative_to(ROOT))
+
+
+def _try_load_sym_npz(ckpt_path: Path, K: int, G: int):
+    """Return P_sorted from a symmetric checkpoint, or None."""
+    if not ckpt_path.exists() or ckpt_path.suffix != ".npz":
+        return None
+    try:
+        arr = np.load(ckpt_path)
+        if "P_sorted" in arr and int(arr["K"]) == K and int(arr["G"]) == G:
+            return arr["P_sorted"].astype(np.float64)
+    except Exception as e:
+        print(f"[solve] sym npz load failed ({e}): {ckpt_path.name}", flush=True)
+    return None
+
+
+def _run_sym_task(args, task: dict, gamma: float, tau: float) -> None:
+    from contour_KN_sym import (  # noqa: PLC0415
+        SymGrid, sym_phi, sym_weighted_R2, sym_init_no_learning,
+    )
+
+    K = int(task.get("K", 3))
+    sp = task.get("solver_params") or {}
+    G = int(sp.get("G", 15))
+    u_max = float(sp.get("u_max", 3.0))
+    alpha = float(sp.get("alpha", 0.3))
+    max_iters = int(sp.get("max_iters", 5000))
+    tol = float(sp.get("tol", 5e-7))
+    W = float(sp.get("W", 1.0))
+
+    u_grid = np.linspace(-u_max, u_max, G)
+    sg = SymGrid.build(G, K)
+
+    reporter = ProgressReporter(
+        project=args.project, task_id=args.task_id,
+        worker_id=args.worker_id, branch=args.branch, interval=30,
+        repo_root=ROOT,
+    )
+    reporter.start()
+
+    t_start = time.perf_counter()
+    exit_code = 0
+
+    try:
+        # Warm-start: own checkpoint, then dependency checkpoint, then cold
+        P_sorted = None
+        own_ckpt = task.get("checkpoint")
+        if own_ckpt:
+            P_sorted = _try_load_sym_npz(ROOT / own_ckpt, K, G)
+            if P_sorted is not None:
+                print(f"[solve] sym warm-start from own checkpoint", flush=True)
+
+        if P_sorted is None:
+            queue = load_queue(args.project)
+            by_id = {t["id"]: t for t in queue["tasks"]}
+            for dep_id in task.get("depends_on") or []:
+                dep = by_id.get(dep_id)
+                if not dep or dep.get("status") != "done":
+                    continue
+                ckpt = dep.get("checkpoint")
+                if not ckpt:
+                    continue
+                P_sorted = _try_load_sym_npz(ROOT / ckpt, K, G)
+                if P_sorted is not None:
+                    print(f"[solve] sym warm-start from dep {dep_id}", flush=True)
+                    break
+
+        if P_sorted is None:
+            print("[solve] sym cold start (no-learning init)", flush=True)
+            P_sorted = sym_init_no_learning(sg, u_grid, tau, gamma, W)
+
+        print(f"[solve] sym K={K} G={G} γ={gamma} τ={tau} "
+              f"alpha={alpha} max_iters={max_iters} tol={tol:.0e}", flush=True)
+
+        F_inf = float("inf")
+        for i in range(max_iters):
+            P_new = sym_phi(P_sorted, sg, u_grid, tau, gamma, W)
+            F_inf = float(np.max(np.abs(P_new - P_sorted)))
+            P_sorted = (1.0 - alpha) * P_sorted + alpha * P_new
+            reporter.update(iter=i + 1, ftol=F_inf)
+            if i % 100 == 0:
+                print(f"[solve] sym iter {i:5d}  ||F||={F_inf:.4e}", flush=True)
+            if F_inf < tol:
+                print(f"[solve] sym converged at iter {i+1}  ||F||={F_inf:.4e}", flush=True)
+                break
+        else:
+            print(f"[solve] sym reached max_iters={max_iters}  ||F||={F_inf:.4e}", flush=True)
+
+        metrics = sym_weighted_R2(P_sorted, sg, u_grid, tau)
+        wall_s = time.perf_counter() - t_start
+        print(f"[solve] sym done  1-R²={metrics['1-R2']:.6e}  "
+              f"||F||={F_inf:.4e}  wall={wall_s:.0f}s", flush=True)
+
+        ckpt_rel = _save_sym_checkpoint(
+            args.project, args.task_id, P_sorted, sg, u_grid, gamma, tau, metrics
+        )
+
+        result = {
+            "1-R2":      round(metrics["1-R2"], 8),
+            "slope":     round(metrics["slope"], 6),
+            "F_max":     float(f"{F_inf:.4e}"),
+            "n_cells":   int(sg.n),
+            "K":         K,
+            "G":         G,
+            "wall_s":    round(wall_s, 1),
+        }
+
+        BAIL_THRESHOLD = 1e-4
+        if F_inf > BAIL_THRESHOLD:
+            claim_bail(args.project, args.task_id, args.branch,
+                       f"sym ||F||={F_inf:.3e} > {BAIL_THRESHOLD:.0e}")
+            exit_code = 1
+        else:
+            claim_done(args.project, args.task_id, args.branch, ckpt_rel, result)
+            exit_code = 0
+
+    except Exception as e:
+        import traceback
+        reason = f"{type(e).__name__}: {e}"
+        traceback.print_exc()
+        claim_bail(args.project, args.task_id, args.branch, reason)
+        exit_code = 2
+
+    finally:
+        reporter.stop(delete=True)
+
+    sys.exit(exit_code)
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -251,10 +398,18 @@ def main() -> None:
     # Reject tasks with an unrecognised kind (e.g. meta-tasks).
     # ------------------------------------------------------------------
     task_kind = task.get("kind")
-    if task_kind is not None and task_kind not in ("ree", "ree_k3"):
+    if task_kind is not None and task_kind not in ("ree", "ree_k3", "solver"):
         print(f"[solve] task {args.task_id} has kind={task_kind!r} — not a solver task, skipping",
               flush=True)
         sys.exit(0)
+
+    # ------------------------------------------------------------------
+    # Symmetric-K dispatch: tasks with "symmetric": true use the
+    # contour_KN_sym solver for K = 3..8 in sorted-tuple storage.
+    # ------------------------------------------------------------------
+    if task.get("symmetric"):
+        _run_sym_task(args, task, gamma, tau)
+        return
 
     # ------------------------------------------------------------------
     # CI smoke-test: task flagged "test": true — just verify the full
