@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T18:04:25.438986Z",
+  "updated_at": "2026-05-09T19:58:00.865721Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -563,15 +563,19 @@
         "g100_t0390",
         "g140_t0330"
       ],
-      "status": "claimed",
-      "checkpoint": null,
-      "result": null,
-      "completed_at": null,
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g100_t0300.npz",
+      "result": {
+        "1-R2": 0.10420905,
+        "F_max": 1.2168e-12,
+        "n_stages": 3,
+        "phi_calls": 61,
+        "wall_s": 3.9
+      },
+      "completed_at": "2026-05-09T19:58:00.864348Z",
       "deps_satisfy": "any",
       "note": "Auto-requeued (attempt 3): warm-start from g140_t0330 (log-dist=0.35). | RESET: stale claim from None (no active workers)",
-      "requeue_count": 3,
-      "claimed_by": "gha-25610412738-g100_t0300",
-      "claimed_at": "2026-05-09T19:57:31Z"
+      "requeue_count": 3
     },
     {
       "id": "g100_t0450",
@@ -2556,9 +2560,9 @@
   ],
   "summary": {
     "total": 103,
-    "done": 65,
-    "ready": 11,
-    "claimed": 12,
+    "done": 66,
+    "ready": 3,
+    "claimed": 19,
     "blocked": 12,
     "bailed": 2,
     "skip": 1
