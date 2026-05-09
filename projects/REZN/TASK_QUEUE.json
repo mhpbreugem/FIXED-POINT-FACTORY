@@ -30,10 +30,12 @@
         "smoke": true,
         "1-R2": 0.00015319,
         "F_max": 0.20528,
-        "note": "CI smoke test — one phi eval, no convergence required"
+        "note": "CI smoke test \u2014 one phi eval, no convergence required"
       },
       "completed_at": "2026-05-07T18:31:51.999548Z"
     }
   ],
-  "notes": ["placeholder"]
+  "notes": [
+    "placeholder"
+  ]
 }
