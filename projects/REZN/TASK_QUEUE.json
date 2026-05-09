@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T21:04:32.262826Z",
+  "updated_at": "2026-05-09T21:04:58.491864Z",
   "params": {
     "G": 20,
     "UMAX": 5,
@@ -259,10 +259,11 @@
       "depends_on": [
         "g100_t0080"
       ],
-      "status": "claimed",
-      "checkpoint": "",
-      "claimed_by": "gha-25611714555-g100_t0050",
-      "claimed_at": "2026-05-09T21:01:22Z"
+      "status": "bailed",
+      "checkpoint": null,
+      "result": {
+        "reason": "||F||inf=7.260e-03 > bail threshold 1e-04"
+      }
     },
     {
       "id": "g100_t0080",
@@ -2736,9 +2737,9 @@
     "total": 159,
     "done": 146,
     "ready": 0,
-    "claimed": 6,
+    "claimed": 5,
     "blocked": 5,
-    "bailed": 2,
+    "bailed": 3,
     "skip": 0
   },
   "fanout": {
