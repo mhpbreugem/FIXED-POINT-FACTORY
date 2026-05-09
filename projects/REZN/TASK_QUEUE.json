@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T00:11:54.861768Z",
+  "updated_at": "2026-05-09T00:12:07.844358Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -1040,18 +1040,16 @@
         "g140_t0510"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "Auto-requeued (attempt 4): noise perturbation noise_level=0.002.",
-      "requeue_count": 4,
+      "note": "Auto-requeued (attempt 5): noise perturbation noise_level=0.004.",
+      "requeue_count": 5,
       "solver_params": {
-        "noise_level": 0.002,
+        "noise_level": 0.004,
         "presmooth": 100,
         "presmooth_alpha": 0.02
-      },
-      "claimed_by": "gha-25585712828-g140_t0570",
-      "claimed_at": "2026-05-09T00:08:39Z"
+      }
     },
     {
       "id": "g140_t1000",
@@ -1995,8 +1993,8 @@
   "summary": {
     "total": 86,
     "done": 56,
-    "ready": 11,
-    "claimed": 5,
+    "ready": 12,
+    "claimed": 4,
     "blocked": 11,
     "bailed": 2,
     "skip": 1
