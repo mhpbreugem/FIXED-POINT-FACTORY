@@ -2596,7 +2596,7 @@
       "symmetric": true,
       "depends_on": [],
       "deps_satisfy": "all",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "note": "Symmetric K=3 baseline; cold start.",
@@ -2606,7 +2606,9 @@
         "tol": 5e-07,
         "max_iters": 100,
         "inner_m": 50
-      }
+      },
+      "claimed_by": "gha-25611722869-symK3_g050_t0200_G15",
+      "claimed_at": "2026-05-09T21:01:46Z"
     },
     {
       "id": "symK4_g050_t0200_G15",
