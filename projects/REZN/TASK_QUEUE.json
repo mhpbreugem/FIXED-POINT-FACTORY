@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T20:30:56.163749Z",
+  "updated_at": "2026-05-09T20:31:01.095391Z",
   "params": {
     "G": 20,
     "UMAX": 5,
@@ -407,19 +407,31 @@
       "claimed_at": "2026-05-09T20:27:51Z"
     },
     {
+      "id": "g100_t0063",
+      "gamma": 1.0,
+      "tau": 0.63,
+      "depends_on": [
+        "g100_t0080"
+      ],
+      "deps_satisfy": "any",
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "note": "\u03c4-ladder between g100_t0080 (\u03c4=0.8) and g100_t0049 (\u03c4=0.49000000000000005)."
+    },
+    {
       "id": "g100_t0049",
       "gamma": 1,
       "tau": 0.49000000000000005,
       "depends_on": [
-        "g100_t0030"
+        "g100_t0063"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "\u03c4-ladder between g100_t0030 (\u03c4=0.3) and g100_t0080 (\u03c4=0.8).",
-      "claimed_by": "gha-25611036524-g100_t0049",
-      "claimed_at": "2026-05-09T20:27:51Z"
+      "note": "Auto-requeued (attempt 1): via new ladder g100_t0063. \u03c4-ladder at \u03c4=0.63",
+      "requeue_count": 1
     },
     {
       "id": "g100_t0080",
@@ -2618,10 +2630,10 @@
     }
   ],
   "summary": {
-    "total": 107,
+    "total": 108,
     "done": 69,
-    "ready": 14,
-    "claimed": 5,
+    "ready": 16,
+    "claimed": 4,
     "blocked": 12,
     "bailed": 6,
     "skip": 1
