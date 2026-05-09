@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T15:14:01.563041Z",
+  "updated_at": "2026-05-09T15:14:21.016692Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -552,18 +552,16 @@
         "g100_t0500"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "Auto-requeued (attempt 1): noise perturbation noise_level=0.002.",
+      "note": "Auto-requeued (attempt 2): noise perturbation noise_level=0.004.",
       "solver_params": {
-        "noise_level": 0.002,
+        "noise_level": 0.004,
         "presmooth": 100,
         "presmooth_alpha": 0.02
       },
-      "requeue_count": 1,
-      "claimed_by": "gha-25604376254-g100_t0450",
-      "claimed_at": "2026-05-09T15:10:55Z"
+      "requeue_count": 2
     },
     {
       "id": "g100_t0400",
@@ -2491,8 +2489,8 @@
   "summary": {
     "total": 102,
     "done": 63,
-    "ready": 17,
-    "claimed": 5,
+    "ready": 18,
+    "claimed": 4,
     "blocked": 12,
     "bailed": 4,
     "skip": 1
