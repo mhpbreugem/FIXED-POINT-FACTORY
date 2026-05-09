@@ -1649,16 +1649,18 @@
         "g025_t0050"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
-      "note": "\u03b3-ladder between g025_t0050 (\u03b3=0.25) and g010_t0050 (\u03b3=0.1) at \u03c4=0.5."
+      "note": "\u03b3-ladder between g025_t0050 (\u03b3=0.25) and g010_t0050 (\u03b3=0.1) at \u03c4=0.5.",
+      "claimed_by": "gha-25593751263-g016_t0050",
+      "claimed_at": "2026-05-09T06:09:50Z"
     },
     {
       "id": "g010_t0050",
       "gamma": 0.1,
       "tau": 0.5,
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "depends_on": [
@@ -1666,7 +1668,9 @@
       ],
       "deps_satisfy": "any",
       "requeue_count": 2,
-      "note": "Auto-requeued (attempt 2): via new ladder g016_t0050. \u03b3-ladder at \u03b3=0.16000000000000003"
+      "note": "Auto-requeued (attempt 2): via new ladder g016_t0050. \u03b3-ladder at \u03b3=0.16000000000000003",
+      "claimed_by": "gha-25593751263-g010_t0050",
+      "claimed_at": "2026-05-09T06:09:50Z"
     },
     {
       "id": "g010_t0140",
@@ -1676,16 +1680,18 @@
         "g010_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
-      "note": "\u03c4-ladder between g010_t0200 (\u03c4=2.0) and g010_t0100 (\u03c4=1.0)."
+      "note": "\u03c4-ladder between g010_t0200 (\u03c4=2.0) and g010_t0100 (\u03c4=1.0).",
+      "claimed_by": "gha-25593751263-g010_t0140",
+      "claimed_at": "2026-05-09T06:09:50Z"
     },
     {
       "id": "g010_t0100",
       "gamma": 0.1,
       "tau": 1.0,
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "depends_on": [
@@ -1693,7 +1699,9 @@
       ],
       "deps_satisfy": "any",
       "requeue_count": 2,
-      "note": "Auto-requeued (attempt 2): via new ladder g010_t0140. \u03c4-ladder at \u03c4=1.4"
+      "note": "Auto-requeued (attempt 2): via new ladder g010_t0140. \u03c4-ladder at \u03c4=1.4",
+      "claimed_by": "gha-25593751263-g010_t0100",
+      "claimed_at": "2026-05-09T06:09:50Z"
     },
     {
       "id": "g010_t0150",
@@ -2086,7 +2094,7 @@
       "id": "extract_value_info_g400",
       "gamma": 4.0,
       "tau": null,
-      "status": "ready",
+      "status": "claimed",
       "deps_satisfy": "any",
       "depends_on": [
         "g200_t0100",
@@ -2107,7 +2115,9 @@
       "note": "Auto-requeued (attempt 1): warm-start from g200_t0100 (log-dist=0.69).",
       "result": null,
       "checkpoint": null,
-      "requeue_count": 1
+      "requeue_count": 1,
+      "claimed_by": "gha-25593751263-extract_value_info_g400",
+      "claimed_at": "2026-05-09T06:09:50Z"
     },
     {
       "id": "symK3_g050_t0200_G15",
