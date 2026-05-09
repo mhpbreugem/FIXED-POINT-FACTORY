@@ -2017,6 +2017,148 @@
       ],
       "note": "Fig 8 extraction for gamma=4.0",
       "result": null
+    },
+    {
+      "id": "symK3_g050_t0200_G15",
+      "kind": "solver",
+      "K": 3,
+      "gamma": 0.5,
+      "tau": 2.0,
+      "G": 15,
+      "symmetric": true,
+      "depends_on": [],
+      "deps_satisfy": "all",
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "note": "Symmetric K=3 baseline; cold start (no-learning init).",
+      "solver_params": {
+        "G": 15,
+        "u_max": 3.0,
+        "alpha": 0.3,
+        "max_iters": 5000,
+        "tol": 5e-07
+      }
+    },
+    {
+      "id": "symK4_g050_t0200_G15",
+      "kind": "solver",
+      "K": 4,
+      "gamma": 0.5,
+      "tau": 2.0,
+      "G": 15,
+      "symmetric": true,
+      "depends_on": [
+        "symK3_g050_t0200_G15"
+      ],
+      "deps_satisfy": "all",
+      "status": "blocked",
+      "checkpoint": null,
+      "result": null,
+      "note": "Symmetric K=4; warm-starts from symK3.",
+      "solver_params": {
+        "G": 15,
+        "u_max": 3.0,
+        "alpha": 0.3,
+        "max_iters": 5000,
+        "tol": 5e-07
+      }
+    },
+    {
+      "id": "symK5_g050_t0200_G15",
+      "kind": "solver",
+      "K": 5,
+      "gamma": 0.5,
+      "tau": 2.0,
+      "G": 15,
+      "symmetric": true,
+      "depends_on": [
+        "symK4_g050_t0200_G15"
+      ],
+      "deps_satisfy": "all",
+      "status": "blocked",
+      "checkpoint": null,
+      "result": null,
+      "note": "Symmetric K=5; warm-starts from symK4.",
+      "solver_params": {
+        "G": 15,
+        "u_max": 3.0,
+        "alpha": 0.3,
+        "max_iters": 5000,
+        "tol": 5e-07
+      }
+    },
+    {
+      "id": "symK6_g050_t0200_G15",
+      "kind": "solver",
+      "K": 6,
+      "gamma": 0.5,
+      "tau": 2.0,
+      "G": 15,
+      "symmetric": true,
+      "depends_on": [
+        "symK5_g050_t0200_G15"
+      ],
+      "deps_satisfy": "all",
+      "status": "blocked",
+      "checkpoint": null,
+      "result": null,
+      "note": "Symmetric K=6; warm-starts from symK5.",
+      "solver_params": {
+        "G": 15,
+        "u_max": 3.0,
+        "alpha": 0.3,
+        "max_iters": 5000,
+        "tol": 5e-07
+      }
+    },
+    {
+      "id": "symK7_g050_t0200_G15",
+      "kind": "solver",
+      "K": 7,
+      "gamma": 0.5,
+      "tau": 2.0,
+      "G": 15,
+      "symmetric": true,
+      "depends_on": [
+        "symK6_g050_t0200_G15"
+      ],
+      "deps_satisfy": "all",
+      "status": "blocked",
+      "checkpoint": null,
+      "result": null,
+      "note": "Symmetric K=7; warm-starts from symK6.",
+      "solver_params": {
+        "G": 15,
+        "u_max": 3.0,
+        "alpha": 0.3,
+        "max_iters": 5000,
+        "tol": 5e-07
+      }
+    },
+    {
+      "id": "symK8_g050_t0200_G15",
+      "kind": "solver",
+      "K": 8,
+      "gamma": 0.5,
+      "tau": 2.0,
+      "G": 15,
+      "symmetric": true,
+      "depends_on": [
+        "symK7_g050_t0200_G15"
+      ],
+      "deps_satisfy": "all",
+      "status": "blocked",
+      "checkpoint": null,
+      "result": null,
+      "note": "Symmetric K=8; warm-starts from symK7.",
+      "solver_params": {
+        "G": 15,
+        "u_max": 3.0,
+        "alpha": 0.3,
+        "max_iters": 5000,
+        "tol": 5e-07
+      }
     }
   ],
   "summary": {
