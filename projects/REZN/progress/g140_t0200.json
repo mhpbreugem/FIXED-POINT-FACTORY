@@ -2,8 +2,8 @@
   "task_id": "g140_t0200",
   "worker_id": "gha-25602013101-g140_t0200",
   "started_at": "2026-05-09T13:14:25Z",
-  "last_update": "2026-05-09T13:15:01Z",
-  "iter": 1611,
+  "last_update": "2026-05-09T13:17:58Z",
+  "iter": 1,
   "ftol": "9.909044e-08",
   "extra": {}
 }
