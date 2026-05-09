@@ -2,8 +2,8 @@
   "task_id": "extract_volume_g050",
   "worker_id": "gha-25592999918-extract_volume_g050",
   "started_at": "2026-05-09T05:33:25Z",
-  "last_update": "2026-05-09T05:33:25Z",
-  "iter": null,
-  "ftol": null,
+  "last_update": "2026-05-09T05:34:04Z",
+  "iter": 1702,
+  "ftol": "8.677596e-02",
   "extra": {}
 }
