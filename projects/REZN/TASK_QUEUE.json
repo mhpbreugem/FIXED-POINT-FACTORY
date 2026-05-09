@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T20:28:18.965399Z",
+  "updated_at": "2026-05-09T20:28:19.381547Z",
   "params": {
     "G": 20,
     "UMAX": 5,
@@ -480,7 +480,7 @@
         "wall_s": 5.8
       },
       "note": "\u03c4-ladder between g100_t0300 (\u03c4=3.0) and g100_t0210 (\u03c4=2.1).",
-      "completed_at": "2026-05-09T20:28:18.963890Z"
+      "completed_at": "2026-05-09T20:28:19.380139Z"
     },
     {
       "id": "g100_t0210",
