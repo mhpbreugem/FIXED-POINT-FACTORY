@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T17:11:22.848713Z",
+  "updated_at": "2026-05-09T18:04:25.438986Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -542,13 +542,16 @@
         "g100_t0500"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "Auto-requeued (attempt 2): warm-start from g100_t0500 (log-dist=0.25).",
-      "requeue_count": 2,
-      "claimed_by": "gha-25608083650-g100_t0390",
-      "claimed_at": "2026-05-09T18:04:02Z"
+      "note": "Auto-requeued (attempt 3): noise perturbation noise_level=0.002.",
+      "requeue_count": 3,
+      "solver_params": {
+        "noise_level": 0.002,
+        "presmooth": 100,
+        "presmooth_alpha": 0.02
+      }
     },
     {
       "id": "g100_t0300",
@@ -2538,8 +2541,8 @@
   "summary": {
     "total": 103,
     "done": 65,
-    "ready": 10,
-    "claimed": 13,
+    "ready": 11,
+    "claimed": 12,
     "blocked": 12,
     "bailed": 2,
     "skip": 1
