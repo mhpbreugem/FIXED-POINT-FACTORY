@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T03:57:02.995354Z",
+  "updated_at": "2026-05-09T03:57:52.014457Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -1967,7 +1967,7 @@
       "id": "extract_volume_g200",
       "gamma": 2.0,
       "tau": null,
-      "status": "claimed",
+      "status": "done",
       "deps_satisfy": "all",
       "depends_on": [
         "g200_t0100",
@@ -1977,16 +1977,21 @@
         "g200_t0500"
       ],
       "note": "Auto-requeued (attempt 1): noise perturbation noise_level=0.002.",
-      "result": null,
-      "checkpoint": null,
+      "result": {
+        "1-R2": 0.08301088,
+        "F_max": 1.1733e-12,
+        "n_stages": 3,
+        "phi_calls": 246,
+        "wall_s": 8.2
+      },
+      "checkpoint": "projects/REZN/checkpoints/extract_volume_g200.npz",
       "solver_params": {
         "noise_level": 0.002,
         "presmooth": 100,
         "presmooth_alpha": 0.02
       },
       "requeue_count": 1,
-      "claimed_by": "gha-25591058601-extract_volume_g200",
-      "claimed_at": "2026-05-09T03:57:02Z"
+      "completed_at": "2026-05-09T03:57:52.013350Z"
     },
     {
       "id": "extract_value_info_g200",
@@ -2205,9 +2210,9 @@
   ],
   "summary": {
     "total": 92,
-    "done": 58,
-    "ready": 11,
-    "claimed": 3,
+    "done": 59,
+    "ready": 4,
+    "claimed": 9,
     "blocked": 16,
     "bailed": 3,
     "skip": 1
