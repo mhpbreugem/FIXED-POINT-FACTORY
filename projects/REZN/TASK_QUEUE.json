@@ -585,7 +585,7 @@
         "g100_t0500"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 5): noise perturbation noise_level=0.032.",
@@ -594,7 +594,9 @@
         "presmooth": 100,
         "presmooth_alpha": 0.02
       },
-      "requeue_count": 5
+      "requeue_count": 5,
+      "claimed_by": "gha-25600608982-g100_t0590",
+      "claimed_at": "2026-05-09T12:00:45Z"
     },
     {
       "id": "g100_t0700",
@@ -1693,7 +1695,7 @@
         "g016_t0050"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "result": null,
       "note": "Auto-requeued (attempt 4): noise perturbation noise_level=0.016.",
       "solver_params": {
@@ -1702,7 +1704,9 @@
         "presmooth_alpha": 0.02
       },
       "requeue_count": 4,
-      "checkpoint": null
+      "checkpoint": null,
+      "claimed_by": "gha-25600608982-g013_t0050",
+      "claimed_at": "2026-05-09T12:00:45Z"
     },
     {
       "id": "g010_t0050",
@@ -1764,16 +1768,18 @@
         "g010_t0150"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
-      "note": "\u03c4-ladder between g010_t0150 (\u03c4=1.5) and g010_t0100 (\u03c4=1.0)."
+      "note": "\u03c4-ladder between g010_t0150 (\u03c4=1.5) and g010_t0100 (\u03c4=1.0).",
+      "claimed_by": "gha-25600608982-g010_t0120",
+      "claimed_at": "2026-05-09T12:00:45Z"
     },
     {
       "id": "g010_t0100",
       "gamma": 0.1,
       "tau": 1.0,
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "depends_on": [
@@ -1781,7 +1787,9 @@
       ],
       "deps_satisfy": "any",
       "requeue_count": 4,
-      "note": "Auto-requeued (attempt 4): via new ladder g010_t0120. \u03c4-ladder at \u03c4=1.2"
+      "note": "Auto-requeued (attempt 4): via new ladder g010_t0120. \u03c4-ladder at \u03c4=1.2",
+      "claimed_by": "gha-25600608982-g010_t0100",
+      "claimed_at": "2026-05-09T12:00:45Z"
     },
     {
       "id": "g010_t0150",
@@ -1833,16 +1841,18 @@
         "g010_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
-      "note": "\u03c4-ladder between g010_t0200 (\u03c4=2.0) and g010_t0300 (\u03c4=3.0)."
+      "note": "\u03c4-ladder between g010_t0200 (\u03c4=2.0) and g010_t0300 (\u03c4=3.0).",
+      "claimed_by": "gha-25600608982-g010_t0240",
+      "claimed_at": "2026-05-09T12:00:45Z"
     },
     {
       "id": "g010_t0300",
       "gamma": 0.1,
       "tau": 3.0,
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "depends_on": [
@@ -1850,7 +1860,9 @@
       ],
       "deps_satisfy": "any",
       "requeue_count": 2,
-      "note": "Auto-requeued (attempt 2): via new ladder g010_t0240. \u03c4-ladder at \u03c4=2.4"
+      "note": "Auto-requeued (attempt 2): via new ladder g010_t0240. \u03c4-ladder at \u03c4=2.4",
+      "claimed_by": "gha-25600608982-g010_t0300",
+      "claimed_at": "2026-05-09T12:00:45Z"
     },
     {
       "id": "g010_t0500",
@@ -1926,7 +1938,7 @@
       "id": "extract_volume_g025",
       "gamma": 0.25,
       "tau": null,
-      "status": "ready",
+      "status": "claimed",
       "deps_satisfy": "all",
       "depends_on": [
         "g025_t0030",
@@ -1945,8 +1957,8 @@
         "presmooth_alpha": 0.02
       },
       "requeue_count": 1,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25600608982-extract_volume_g025",
+      "claimed_at": "2026-05-09T12:00:45Z"
     },
     {
       "id": "extract_value_info_g025",
