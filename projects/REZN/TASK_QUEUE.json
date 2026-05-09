@@ -396,13 +396,15 @@
         "g100_t0030",
         "g100_t0500"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
       "deps_satisfy": "any",
       "note": "Auto-requeued (attempt 1): warm-start from g100_t0030 (log-dist=0.51).",
-      "requeue_count": 1
+      "requeue_count": 1,
+      "claimed_by": "gha-25606884630-g100_t0050",
+      "claimed_at": "2026-05-09T17:10:58Z"
     },
     {
       "id": "g100_t0080",
@@ -574,7 +576,7 @@
         "g100_t0500"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 2): noise perturbation noise_level=0.004.",
@@ -583,7 +585,9 @@
         "presmooth": 100,
         "presmooth_alpha": 0.02
       },
-      "requeue_count": 2
+      "requeue_count": 2,
+      "claimed_by": "gha-25606884630-g100_t0450",
+      "claimed_at": "2026-05-09T17:10:58Z"
     },
     {
       "id": "g100_t0400",
@@ -593,7 +597,7 @@
         "g100_t0450",
         "g100_t0500"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
@@ -604,7 +608,9 @@
         "noise_level": 0.008,
         "presmooth": 100,
         "presmooth_alpha": 0.02
-      }
+      },
+      "claimed_by": "gha-25606884630-g100_t0400",
+      "claimed_at": "2026-05-09T17:10:58Z"
     },
     {
       "id": "g100_t0500",
@@ -652,7 +658,7 @@
         "g100_t0500"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": {
         "reason": "||F||inf=6.527e-01 > bail threshold 1e-04"
@@ -663,7 +669,9 @@
         "presmooth": 100,
         "presmooth_alpha": 0.02
       },
-      "requeue_count": 5
+      "requeue_count": 5,
+      "claimed_by": "gha-25606884630-g100_t0590",
+      "claimed_at": "2026-05-09T17:10:58Z"
     },
     {
       "id": "g100_t0700",
@@ -1029,7 +1037,7 @@
         "g140_t0270"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": {
         "reason": "||F||inf=2.887e-01 > bail threshold 1e-04"
@@ -1040,7 +1048,9 @@
         "noise_level": 0.008,
         "presmooth": 100,
         "presmooth_alpha": 0.02
-      }
+      },
+      "claimed_by": "gha-25606884630-g140_t0300",
+      "claimed_at": "2026-05-09T17:10:58Z"
     },
     {
       "id": "g140_t0330",
@@ -1131,7 +1141,7 @@
         "g140_t0510"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": {
         "reason": "||F||inf=3.885e-01 > bail threshold 1e-04"
@@ -1142,7 +1152,9 @@
         "noise_level": 0.004,
         "presmooth": 100,
         "presmooth_alpha": 0.02
-      }
+      },
+      "claimed_by": "gha-25606884630-g140_t0570",
+      "claimed_at": "2026-05-09T17:10:58Z"
     },
     {
       "id": "g140_t1000",
@@ -1762,7 +1774,7 @@
         "g016_t0050"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "result": null,
       "note": "Auto-requeued (attempt 5): noise perturbation noise_level=0.032.",
       "solver_params": {
@@ -1771,7 +1783,9 @@
         "presmooth_alpha": 0.02
       },
       "requeue_count": 5,
-      "checkpoint": null
+      "checkpoint": null,
+      "claimed_by": "gha-25606884630-g013_t0050",
+      "claimed_at": "2026-05-09T17:10:58Z"
     },
     {
       "id": "g010_t0050",
