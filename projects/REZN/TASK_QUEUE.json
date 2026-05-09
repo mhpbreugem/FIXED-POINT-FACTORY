@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T15:14:28.664599Z",
+  "updated_at": "2026-05-09T15:18:33.505996Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -2300,7 +2300,7 @@
       "id": "extract_volume_g400",
       "gamma": 4.0,
       "tau": null,
-      "status": "claimed",
+      "status": "done",
       "deps_satisfy": "any",
       "depends_on": [
         "extract_value_info_g400",
@@ -2319,11 +2319,16 @@
         "g400_t2000"
       ],
       "note": "Auto-requeued (attempt 1): warm-start from extract_value_info_g400 (log-dist=0.00).",
-      "result": null,
-      "checkpoint": null,
+      "result": {
+        "1-R2": 0.08201709,
+        "F_max": 7.2164e-15,
+        "n_stages": 3,
+        "phi_calls": 80,
+        "wall_s": 4.3
+      },
+      "checkpoint": "projects/REZN/checkpoints/extract_volume_g400.npz",
       "requeue_count": 1,
-      "claimed_by": "gha-25604516780-extract_volume_g400",
-      "claimed_at": "2026-05-09T15:17:56Z"
+      "completed_at": "2026-05-09T15:18:33.504467Z"
     },
     {
       "id": "extract_value_info_g400",
@@ -2512,11 +2517,11 @@
   ],
   "summary": {
     "total": 102,
-    "done": 63,
-    "ready": 19,
-    "claimed": 3,
+    "done": 64,
+    "ready": 0,
+    "claimed": 25,
     "blocked": 12,
-    "bailed": 4,
+    "bailed": 0,
     "skip": 1
   },
   "fanout": {
