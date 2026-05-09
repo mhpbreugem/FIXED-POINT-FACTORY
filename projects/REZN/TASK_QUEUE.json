@@ -1665,7 +1665,7 @@
       "id": "g010_t0150",
       "gamma": 0.1,
       "tau": 1.5,
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "depends_on": [
@@ -1673,13 +1673,15 @@
       ],
       "deps_satisfy": "any",
       "requeue_count": 1,
-      "note": "Auto-requeued (attempt 1): warm-start from g025_t0150 (log-dist=0.92)."
+      "note": "Auto-requeued (attempt 1): warm-start from g025_t0150 (log-dist=0.92).",
+      "claimed_by": "gha-25590989105-g010_t0150",
+      "claimed_at": "2026-05-09T03:53:32Z"
     },
     {
       "id": "g010_t0200",
       "gamma": 0.1,
       "tau": 2.0,
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "depends_on": [
@@ -1687,7 +1689,9 @@
       ],
       "deps_satisfy": "any",
       "requeue_count": 1,
-      "note": "Auto-requeued (attempt 1): warm-start from g025_t0200 (log-dist=0.92)."
+      "note": "Auto-requeued (attempt 1): warm-start from g025_t0200 (log-dist=0.92).",
+      "claimed_by": "gha-25590989105-g010_t0200",
+      "claimed_at": "2026-05-09T03:53:32Z"
     },
     {
       "id": "g010_t0300",
@@ -1703,7 +1707,7 @@
       "id": "g010_t0500",
       "gamma": 0.1,
       "tau": 5.0,
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "depends_on": [
@@ -1711,7 +1715,9 @@
       ],
       "deps_satisfy": "any",
       "requeue_count": 1,
-      "note": "Auto-requeued (attempt 1): warm-start from g025_t0300 (log-dist=1.05)."
+      "note": "Auto-requeued (attempt 1): warm-start from g025_t0300 (log-dist=1.05).",
+      "claimed_by": "gha-25590989105-g010_t0500",
+      "claimed_at": "2026-05-09T03:53:32Z"
     },
     {
       "id": "g050_t1200",
@@ -1761,7 +1767,7 @@
       "id": "extract_volume_g025",
       "gamma": 0.25,
       "tau": null,
-      "status": "ready",
+      "status": "claimed",
       "deps_satisfy": "all",
       "depends_on": [
         "g025_t0030",
@@ -1780,13 +1786,15 @@
         "presmooth": 100,
         "presmooth_alpha": 0.02
       },
-      "requeue_count": 1
+      "requeue_count": 1,
+      "claimed_by": "gha-25590989105-extract_volume_g025",
+      "claimed_at": "2026-05-09T03:53:32Z"
     },
     {
       "id": "extract_value_info_g025",
       "gamma": 0.25,
       "tau": null,
-      "status": "ready",
+      "status": "claimed",
       "deps_satisfy": "all",
       "depends_on": [
         "g025_t0030",
@@ -1798,7 +1806,9 @@
         "g025_t0300"
       ],
       "note": "Fig 8 extraction for gamma=0.25",
-      "result": null
+      "result": null,
+      "claimed_by": "gha-25590989105-extract_value_info_g025",
+      "claimed_at": "2026-05-09T03:53:32Z"
     },
     {
       "id": "extract_volume_g050",
@@ -1942,7 +1952,7 @@
       "id": "extract_volume_g200",
       "gamma": 2.0,
       "tau": null,
-      "status": "ready",
+      "status": "claimed",
       "deps_satisfy": "all",
       "depends_on": [
         "g200_t0100",
@@ -1952,13 +1962,15 @@
         "g200_t0500"
       ],
       "note": "Fig 7 extraction for gamma=2.0",
-      "result": null
+      "result": null,
+      "claimed_by": "gha-25590989105-extract_volume_g200",
+      "claimed_at": "2026-05-09T03:53:32Z"
     },
     {
       "id": "extract_value_info_g200",
       "gamma": 2.0,
       "tau": null,
-      "status": "ready",
+      "status": "claimed",
       "deps_satisfy": "all",
       "depends_on": [
         "g200_t0100",
@@ -1968,7 +1980,9 @@
         "g200_t0500"
       ],
       "note": "Fig 8 extraction for gamma=2.0",
-      "result": null
+      "result": null,
+      "claimed_by": "gha-25590989105-extract_value_info_g200",
+      "claimed_at": "2026-05-09T03:53:32Z"
     },
     {
       "id": "extract_volume_g400",
