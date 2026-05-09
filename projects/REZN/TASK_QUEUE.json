@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T20:28:19.381547Z",
+  "updated_at": "2026-05-09T20:30:56.163749Z",
   "params": {
     "G": 20,
     "UMAX": 5,
@@ -449,18 +449,17 @@
       "tau": 1,
       "depends_on": [
         "g050_t0200",
+        "g100_t0080",
         "g100_t0500",
         "g200_t0100"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
       "deps_satisfy": "any",
-      "note": "Auto-requeued (attempt 1): warm-start from g200_t0100 (log-dist=0.69). | RESET: stale claim from None (no active workers)",
-      "requeue_count": 1,
-      "claimed_by": "gha-25611036524-g100_t0100",
-      "claimed_at": "2026-05-09T20:27:51Z"
+      "note": "Auto-requeued (attempt 2): warm-start from g100_t0080 (log-dist=0.22).",
+      "requeue_count": 2
     },
     {
       "id": "g100_t0250",
@@ -2621,8 +2620,8 @@
   "summary": {
     "total": 107,
     "done": 69,
-    "ready": 13,
-    "claimed": 6,
+    "ready": 14,
+    "claimed": 5,
     "blocked": 12,
     "bailed": 6,
     "skip": 1
