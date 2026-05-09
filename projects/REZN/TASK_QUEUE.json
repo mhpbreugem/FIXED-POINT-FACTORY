@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-08T19:10:00Z",
+  "updated_at": "2026-05-09T18:04:25.438986Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -17,15 +17,6 @@
     "checkpoint": "results/full_ree/posterior_v3_G20_umax5_notrim_mp300.json",
     "F_max": "7.4e-119",
     "dps": 300
-  },
-  "summary": {
-    "total": 72,
-    "done": 44,
-    "ready": 11,
-    "claimed": 3,
-    "blocked": 10,
-    "bailed": 0,
-    "skip": 4
   },
   "tasks": [
     {
@@ -104,7 +95,7 @@
       "status": "done",
       "checkpoint": "results/full_ree/task3_g050_t0100_mp50.json",
       "result": {
-        "1-R2": 0.051,
+        "1-R2": 0.052,
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
@@ -132,18 +123,17 @@
       "id": "g050_t0200",
       "gamma": 0.5,
       "tau": 2.0,
-      "depends_on": [
-        "g050_t0300"
-      ],
+      "depends_on": [],
       "status": "done",
-      "checkpoint": "results/full_ree/posterior_v3_G20_umax5_notrim_mp300.json",
+      "checkpoint": "results/full_ree/seed_g050_t0200_3d.npz",
       "result": {
         "1-R2": 0.085,
         "slope": 0.543,
         "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "seed checkpoint F_tol=1e-25"
-      }
+        "F_max": 7.4e-119,
+        "F_source": "original mp300 solver (posterior_v3_G20_umax5_notrim_mp300)"
+      },
+      "note": "seed at mp300 converted to 3D .npz; downstream tasks warm-start from here"
     },
     {
       "id": "g050_t0300",
@@ -155,113 +145,412 @@
       "status": "done",
       "checkpoint": "results/full_ree/task3_g050_t0300_mp50.json",
       "result": {
-        "1-R2": 0.085,
+        "1-R2": 0.138,
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
         "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
+    },
+    {
+      "id": "g050_t0400",
+      "gamma": 0.5,
+      "tau": 4.0,
+      "depends_on": [
+        "g050_t0200",
+        "g050_t0300",
+        "g100_t0500"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g050_t0400.npz",
+      "result": {
+        "1-R2": 0.10294311,
+        "F_max": 2.1051e-53,
+        "n_stages": 1,
+        "phi_calls": 1697,
+        "wall_s": 1898.7
+      },
+      "deps_satisfy": "any",
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "requeue_count": 1,
+      "note": "Auto-requeued (attempt 1): warm-start from g050_t0200 (log-dist=0.69).",
+      "completed_at": "2026-05-08T12:50:37.285484Z"
+    },
+    {
+      "id": "g050_t0500",
+      "gamma": 0.5,
+      "tau": 5.0,
+      "depends_on": [
+        "g050_t0400"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g050_t0500.npz",
+      "result": {
+        "1-R2": 0.09541927,
+        "F_max": 8.2188e-53,
+        "n_stages": 1,
+        "phi_calls": 1918,
+        "wall_s": 1388.7
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-08T13:44:42.736236Z"
+    },
+    {
+      "id": "g050_t0700",
+      "gamma": 0.5,
+      "tau": 7.0,
+      "depends_on": [
+        "g050_t0500"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g050_t0700.npz",
+      "result": {
+        "1-R2": 0.08354414,
+        "F_max": 2.9731e-52,
+        "n_stages": 1,
+        "phi_calls": 4639,
+        "wall_s": 1996.0
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-08T16:31:03.793253Z"
+    },
+    {
+      "id": "g050_t1000",
+      "gamma": 0.5,
+      "tau": 10.0,
+      "depends_on": [
+        "g050_t0700"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g050_t1000.npz",
+      "result": {
+        "1-R2": 0.06889042,
+        "F_max": 1.3965e-53,
+        "n_stages": 1,
+        "phi_calls": 1676,
+        "wall_s": 1591.6
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-08T17:08:08.185153Z"
+    },
+    {
+      "id": "g050_t1500",
+      "gamma": 0.5,
+      "tau": 15.0,
+      "depends_on": [
+        "g050_t1000"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g050_t1500.npz",
+      "result": {
+        "1-R2": 0.06503577,
+        "F_max": 1.8852e-53,
+        "n_stages": 1,
+        "phi_calls": 1269,
+        "wall_s": 1163.0
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-08T17:34:19.283586Z"
+    },
+    {
+      "id": "g050_t2000",
+      "gamma": 0.5,
+      "tau": 20.0,
+      "depends_on": [
+        "g050_t1500"
+      ],
+      "deps_satisfy": "all",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g050_t2000.npz",
+      "result": {
+        "1-R2": 0.23058634,
+        "F_max": 1.15e-51,
+        "n_stages": 1,
+        "phi_calls": 1146,
+        "wall_s": 1237.2
+      },
+      "note": "tau=20 extension of gamma=0.5 sweep",
+      "requeue_count": 0,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-08T18:37:04.138013Z"
     },
     {
       "id": "g100_t0030",
       "gamma": 1.0,
       "tau": 0.3,
       "depends_on": [
-        "g100_t0050"
+        "g025_t0030",
+        "g050_t0200",
+        "g100_t0500"
       ],
       "status": "done",
-      "checkpoint": "results/full_ree/task3_g100_t0030_mp50.json",
+      "checkpoint": "projects/REZN/checkpoints/g100_t0030.npz",
       "result": {
-        "1-R2": 0.009,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
-      }
+        "1-R2": 0.06458463,
+        "F_max": 4.1115e-12,
+        "n_stages": 3,
+        "phi_calls": 80,
+        "wall_s": 4.2
+      },
+      "completed_at": "2026-05-09T14:04:59.829518Z",
+      "deps_satisfy": "any",
+      "note": "Auto-requeued (attempt 1): warm-start from g025_t0030 (log-dist=1.39).",
+      "requeue_count": 1
     },
     {
       "id": "g100_t0050",
       "gamma": 1.0,
       "tau": 0.5,
       "depends_on": [
-        "g100_t0080"
+        "g050_t0200",
+        "g100_t0030",
+        "g100_t0500"
       ],
-      "status": "done",
-      "checkpoint": "results/full_ree/task3_g100_t0050_mp50.json",
-      "result": {
-        "1-R2": 0.011,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
-      }
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "completed_at": null,
+      "deps_satisfy": "any",
+      "note": "Auto-requeued (attempt 1): warm-start from g100_t0030 (log-dist=0.51). | RESET: stale claim from None (no active workers)",
+      "requeue_count": 1,
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g100_t0080",
       "gamma": 1.0,
       "tau": 0.8,
       "depends_on": [
-        "g100_t0100"
+        "g050_t0200",
+        "g100_t0500",
+        "g200_t0100"
       ],
-      "status": "done",
-      "checkpoint": "results/full_ree/task3_g100_t0080_mp50.json",
-      "result": {
-        "1-R2": 0.013,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
-      }
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "completed_at": null,
+      "deps_satisfy": "any",
+      "note": "Auto-requeued (attempt 1): warm-start from g200_t0100 (log-dist=0.73). | RESET: stale claim from None (no active workers)",
+      "requeue_count": 1,
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g100_t0100",
       "gamma": 1.0,
       "tau": 1.0,
       "depends_on": [
-        "g100_t0150"
+        "g050_t0200",
+        "g100_t0500",
+        "g200_t0100"
       ],
-      "status": "done",
-      "checkpoint": "results/full_ree/task3_g100_t0100_mp50.json",
-      "result": {
-        "1-R2": 0.014,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
-      }
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "completed_at": null,
+      "deps_satisfy": "any",
+      "note": "Auto-requeued (attempt 1): warm-start from g200_t0100 (log-dist=0.69). | RESET: stale claim from None (no active workers)",
+      "requeue_count": 1,
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g100_t0150",
       "gamma": 1.0,
       "tau": 1.5,
       "depends_on": [
-        "g100_t0200"
+        "g050_t0200",
+        "g100_t0500",
+        "g140_t0240"
       ],
-      "status": "done",
-      "checkpoint": "results/full_ree/task3_g100_t0150_mp50.json",
-      "result": {
-        "1-R2": 0.021,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
-      }
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "completed_at": null,
+      "deps_satisfy": "any",
+      "note": "Auto-requeued (attempt 1): warm-start from g140_t0240 (log-dist=0.58). | RESET: stale claim from None (no active workers)",
+      "requeue_count": 1,
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g100_t0200",
       "gamma": 1.0,
       "tau": 2.0,
       "depends_on": [
-        "g100_t0300"
+        "g100_t0500",
+        "g050_t0200"
       ],
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "completed_at": null,
+      "deps_satisfy": "any",
+      "note": "RERUN: previous 1-R\u00b2=0.0467 from results/full_ree/task3_g100_t0200_mp50.json; warm-start any-of ['g100_t0500', 'g050_t0200']. | RESET: stale claim from None (no active workers)",
+      "claimed_by": null,
+      "claimed_at": null
+    },
+    {
+      "id": "g140_t0200",
+      "gamma": 1.4,
+      "tau": 2.0,
+      "depends_on": [
+        "g140_t0240",
+        "g050_t0200",
+        "g200_t0200"
+      ],
+      "deps_satisfy": "any",
       "status": "done",
-      "checkpoint": "results/full_ree/task3_g100_t0200_mp50.json",
+      "checkpoint": "projects/REZN/checkpoints/g140_t0200.npz",
       "result": {
-        "1-R2": 0.029,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "1-R2": 0.08762276,
+        "F_max": 1.0661e-54,
+        "n_stages": 1,
+        "phi_calls": 1611,
+        "wall_s": 1808.5
+      },
+      "note": "Added to fill gamma-sweep at tau=2.0; warmstart from g200_t0200 (closest checkpoint). | RERUN: previous 1-R\u00b2=0.08388755 from projects/REZN/checkpoints/g140_t0200.npz; warm-start any-of ['g140_t0240', 'g050_t0200', 'g200_t0200'].",
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-09T13:44:33.790469Z"
+    },
+    {
+      "id": "g100_t0440",
+      "gamma": 1.0,
+      "tau": 4.4,
+      "depends_on": [
+        "g100_t0500"
+      ],
+      "deps_satisfy": "any",
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "note": "\u03c4-ladder between g100_t0500 (\u03c4=5.0) and g100_t0390 (\u03c4=3.9). | RESET: stale claim from None (no active workers)",
+      "claimed_by": null,
+      "claimed_at": null
+    },
+    {
+      "id": "g100_t0390",
+      "gamma": 1.0,
+      "tau": 3.9,
+      "depends_on": [
+        "g100_t0440",
+        "g100_t0500"
+      ],
+      "deps_satisfy": "any",
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "note": "Auto-requeued (attempt 3): noise perturbation noise_level=0.002.",
+      "requeue_count": 3,
+      "solver_params": {
+        "noise_level": 0.002,
+        "presmooth": 100,
+        "presmooth_alpha": 0.02
       }
     },
     {
@@ -269,70 +558,267 @@
       "gamma": 1.0,
       "tau": 3.0,
       "depends_on": [
-        "g100_t0200"
+        "g100_t0390",
+        "g140_t0330"
       ],
-      "status": "done",
-      "checkpoint": "results/full_ree/task3_g100_t0300_mp50.json",
-      "result": {
-        "1-R2": 0.042,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
-      }
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "completed_at": null,
+      "deps_satisfy": "any",
+      "note": "Auto-requeued (attempt 3): warm-start from g140_t0330 (log-dist=0.35). | RESET: stale claim from None (no active workers)",
+      "requeue_count": 3,
+      "claimed_by": null,
+      "claimed_at": null
+    },
+    {
+      "id": "g100_t0450",
+      "gamma": 1.0,
+      "tau": 4.5,
+      "depends_on": [
+        "g100_t0500"
+      ],
+      "deps_satisfy": "any",
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "note": "Auto-requeued (attempt 2): noise perturbation noise_level=0.004. | RESET: stale claim from None (no active workers)",
+      "solver_params": {
+        "noise_level": 0.004,
+        "presmooth": 100,
+        "presmooth_alpha": 0.02
+      },
+      "requeue_count": 2,
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g100_t0400",
       "gamma": 1.0,
       "tau": 4.0,
       "depends_on": [
-        "g100_t0300"
+        "g100_t0450",
+        "g100_t0500"
       ],
-      "status": "done",
-      "checkpoint": "checkpoints/g100_t0400.npz",
-      "result": {
-        "1-R2": 0.052,
-        "slope": 0.4,
-        "n_triples": 8000,
-        "F_max": 5.6e-26
-      }
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "completed_at": null,
+      "deps_satisfy": "any",
+      "note": "Auto-requeued (attempt 5): noise perturbation noise_level=0.008. | RESET: stale claim from None (no active workers)",
+      "requeue_count": 5,
+      "solver_params": {
+        "noise_level": 0.008,
+        "presmooth": 100,
+        "presmooth_alpha": 0.02
+      },
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
-      "id": "g100_t0490",
+      "id": "g100_t0500",
       "gamma": 1.0,
-      "tau": 4.9,
+      "tau": 5.0,
       "depends_on": [
+        "g050_t0200",
         "g100_t0400"
       ],
-      "status": "claimed",
-      "claimed_by": "solver-1",
-      "claimed_at": "2026-05-08T12:00:00Z",
-      "checkpoint": null,
-      "result": null
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g100_t0500.npz",
+      "result": {
+        "1-R2": 0.09234331,
+        "F_max": 3.7019e-51,
+        "n_stages": 1,
+        "phi_calls": 2,
+        "wall_s": 3380.3
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "requeue_count": 1,
+      "note": "Auto-requeued (attempt 1): warm-start from g050_t0200 (log-dist=1.15).",
+      "deps_satisfy": "any",
+      "completed_at": "2026-05-08T12:59:37.017571Z"
     },
     {
       "id": "g100_t0590",
       "gamma": 1.0,
       "tau": 5.9,
       "depends_on": [
-        "g100_t0490"
+        "g100_t0500"
       ],
-      "status": "claimed",
-      "claimed_by": "solver-2",
-      "claimed_at": "2026-05-08T12:00:00Z",
+      "deps_satisfy": "any",
+      "status": "ready",
       "checkpoint": null,
-      "result": null
+      "result": {
+        "reason": "||F||inf=6.527e-01 > bail threshold 1e-04"
+      },
+      "note": "Auto-requeued (attempt 5): noise perturbation noise_level=0.032. | RESET: stale claim from None (no active workers)",
+      "solver_params": {
+        "noise_level": 0.032,
+        "presmooth": 100,
+        "presmooth_alpha": 0.02
+      },
+      "requeue_count": 5,
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g100_t0700",
       "gamma": 1.0,
       "tau": 7.0,
       "depends_on": [
+        "g100_t0500",
         "g100_t0590"
       ],
-      "status": "blocked",
-      "checkpoint": null,
-      "result": null
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g100_t0700.npz",
+      "result": {
+        "1-R2": 0.08108241,
+        "F_max": 2.4952e-50,
+        "n_stages": 1,
+        "phi_calls": 9790,
+        "wall_s": 3646.4
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-49",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10,
+        "noise_level": 0.008
+      },
+      "requeue_count": 6,
+      "deps_satisfy": "any",
+      "note": "Re-queued (attempt 6): relaxed mp_tol 1e-50\u2192 1e-49 (F_inf=2.494e-50 was just above old threshold).",
+      "completed_at": "2026-05-09T06:34:13.795349Z"
+    },
+    {
+      "id": "g100_t1000",
+      "gamma": 1.0,
+      "tau": 10.0,
+      "depends_on": [
+        "g100_t0700"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g100_t1000.npz",
+      "result": {
+        "1-R2": 0.05933509,
+        "F_max": 3.6729e-54,
+        "n_stages": 1,
+        "phi_calls": 1648,
+        "wall_s": 1736.4
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-09T08:08:47.008313Z"
+    },
+    {
+      "id": "g100_t1500",
+      "gamma": 1.0,
+      "tau": 15.0,
+      "depends_on": [
+        "g100_t1000"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g100_t1500.npz",
+      "result": {
+        "1-R2": 0.04154132,
+        "F_max": 2.1891e-55,
+        "n_stages": 1,
+        "phi_calls": 1253,
+        "wall_s": 1729.8
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-09T08:38:16.033254Z"
+    },
+    {
+      "id": "g100_t2000",
+      "gamma": 1.0,
+      "tau": 20.0,
+      "depends_on": [
+        "g100_t1500"
+      ],
+      "deps_satisfy": "all",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g100_t2000.npz",
+      "result": {
+        "1-R2": 0.2299075,
+        "F_max": 2.091e-51,
+        "n_stages": 1,
+        "phi_calls": 1126,
+        "wall_s": 1312.0
+      },
+      "note": "tau=20 extension of gamma=1.0 sweep",
+      "requeue_count": 0,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-09T11:53:34.577624Z"
     },
     {
       "id": "g400_t0030",
@@ -344,9 +830,10 @@
       "status": "done",
       "checkpoint": "results/full_ree/task3_g400_t0030_mp50.json",
       "result": {
-        "1-R2": 0.001,
+        "1-R2": null,
         "slope": null,
         "n_triples": 8000,
+        "note": "redo of original Terminal-3 run",
         "F_max_bound": 1e-25,
         "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
@@ -361,7 +848,7 @@
       "status": "done",
       "checkpoint": "results/full_ree/task3_g400_t0050_mp50.json",
       "result": {
-        "1-R2": 0.001,
+        "1-R2": null,
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
@@ -378,7 +865,7 @@
       "status": "done",
       "checkpoint": "results/full_ree/task3_g400_t0080_mp50.json",
       "result": {
-        "1-R2": 0.001,
+        "1-R2": null,
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
@@ -390,29 +877,16 @@
       "gamma": 4.0,
       "tau": 1.0,
       "depends_on": [
-        "g400_t1000",
-        "g400_t1500"
+        "g400_t0150"
       ],
-      "deps_satisfy": "any",
-      "status": "ready",
-      "checkpoint": null,
-      "result": null,
-      "note": "Re-solve with new K3 solver to get 1-R\u00b2 for \u03b3-sweep at \u03c4=1.0. Warm-start from g400_t1000 (nearest new-format .npz at \u03b3=4).",
-      "solver_params": {
-        "presmooth": 200,
-        "presmooth_alpha": 0.01,
-        "max_stages": 8,
-        "inner_rdiff": 1e-05,
-        "inner_max_iter": 50,
-        "pure_picard": true,
-        "picard_iters": 300000,
-        "picard_tol": 1e-07,
-        "mp_dps": 100,
-        "mp_tol": "1e-50",
-        "mp_iters": 20,
-        "lgmres_tol": 1e-10,
-        "lgmres_inner_m": 30,
-        "lgmres_outer": 10
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g400_t0100_mp50.json",
+      "result": {
+        "1-R2": null,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -425,7 +899,7 @@
       "status": "done",
       "checkpoint": "results/full_ree/task3_g400_t0150_mp50.json",
       "result": {
-        "1-R2": 0.002,
+        "1-R2": null,
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
@@ -437,11 +911,18 @@
       "gamma": 4.0,
       "tau": 2.0,
       "depends_on": [
-        "g400_t0300"
+        "g050_t0200"
       ],
-      "status": "ready",
-      "checkpoint": null,
-      "result": null
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g400_t0200_mp50.json",
+      "result": {
+        "1-R2": 0.0163,
+        "slope": 0.605,
+        "n_triples": 8000,
+        "note": "from \u03b3-sweep at \u03c4=2 (Task 2)",
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      }
     },
     {
       "id": "g400_t0300",
@@ -453,7 +934,24 @@
       "status": "done",
       "checkpoint": "results/full_ree/task3_g400_t0300_mp50.json",
       "result": {
-        "1-R2": 0.006,
+        "1-R2": null,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      }
+    },
+    {
+      "id": "g400_t0400",
+      "gamma": 4.0,
+      "tau": 4.0,
+      "depends_on": [
+        "g400_t0300"
+      ],
+      "status": "done",
+      "checkpoint": "results/full_ree/task3_g400_t0400_mp50.json",
+      "result": {
+        "1-R2": null,
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
@@ -465,15 +963,16 @@
       "gamma": 4.0,
       "tau": 5.0,
       "depends_on": [
-        "g400_t0300"
+        "g400_t0400"
       ],
       "status": "done",
-      "checkpoint": "checkpoints/g400_t0500.npz",
+      "checkpoint": "results/full_ree/task3_g400_t0500_mp50.json",
       "result": {
-        "1-R2": 0.009,
-        "slope": 0.267,
+        "1-R2": null,
+        "slope": null,
         "n_triples": 8000,
-        "F_max": 9.3e-26
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -484,70 +983,216 @@
         "g400_t0500"
       ],
       "status": "done",
-      "checkpoint": "checkpoints/g400_t0700.npz",
+      "checkpoint": "results/full_ree/task3_g400_t0700_mp50.json",
       "result": {
-        "1-R2": 0.013,
-        "slope": 0.317,
+        "1-R2": null,
+        "slope": null,
         "n_triples": 8000,
-        "F_max": 3.2e-26
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
       }
+    },
+    {
+      "id": "g140_t0240",
+      "gamma": 1.4,
+      "tau": 2.4,
+      "depends_on": [
+        "g140_t0200"
+      ],
+      "deps_satisfy": "any",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g140_t0240.npz",
+      "result": {
+        "1-R2": 0.08257998,
+        "F_max": 2.6112e-12,
+        "n_stages": 4,
+        "phi_calls": 402,
+        "wall_s": 11.3
+      },
+      "note": "\u03c4-ladder between g140_t0200 (\u03c4=2.0) and g140_t0300 (\u03c4=3.0).",
+      "completed_at": "2026-05-08T19:38:53.639409Z"
+    },
+    {
+      "id": "g140_t0270",
+      "gamma": 1.4,
+      "tau": 2.7,
+      "depends_on": [
+        "g140_t0240"
+      ],
+      "deps_satisfy": "any",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g140_t0270.npz",
+      "result": {
+        "1-R2": 0.07843365,
+        "F_max": 4.8068e-12,
+        "n_stages": 3,
+        "phi_calls": 108,
+        "wall_s": 4.9
+      },
+      "note": "\u03c4-ladder between g140_t0240 (\u03c4=2.4) and g140_t0300 (\u03c4=3.0).",
+      "completed_at": "2026-05-08T20:04:53.998379Z"
+    },
+    {
+      "id": "g140_t0300",
+      "gamma": 1.4,
+      "tau": 3.0,
+      "depends_on": [
+        "g140_t0270"
+      ],
+      "deps_satisfy": "any",
+      "status": "ready",
+      "checkpoint": null,
+      "result": {
+        "reason": "||F||inf=2.887e-01 > bail threshold 1e-04"
+      },
+      "note": "Auto-requeued (attempt 5): noise perturbation noise_level=0.008. | RESET: stale claim from None (no active workers)",
+      "requeue_count": 5,
+      "solver_params": {
+        "noise_level": 0.008,
+        "presmooth": 100,
+        "presmooth_alpha": 0.02
+      },
+      "claimed_by": null,
+      "claimed_at": null
+    },
+    {
+      "id": "g140_t0330",
+      "gamma": 1.4,
+      "tau": 3.3,
+      "depends_on": [
+        "g140_t0240"
+      ],
+      "deps_satisfy": "any",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g140_t0330.npz",
+      "result": {
+        "1-R2": 0.10235603,
+        "F_max": 9.2371e-14,
+        "n_stages": 3,
+        "phi_calls": 125,
+        "wall_s": 4.3
+      },
+      "note": "\u03c4-ladder between g140_t0240 (\u03c4=2.4) and g140_t0450 (\u03c4=4.5).",
+      "completed_at": "2026-05-08T20:48:34.230586Z"
+    },
+    {
+      "id": "g140_t0450",
+      "gamma": 1.4,
+      "tau": 4.5,
+      "depends_on": [
+        "g140_t0330"
+      ],
+      "deps_satisfy": "any",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g140_t0450.npz",
+      "result": {
+        "1-R2": 0.09440228,
+        "F_max": 3.7081e-14,
+        "n_stages": 3,
+        "phi_calls": 53,
+        "wall_s": 3.8
+      },
+      "note": "Auto-requeued (attempt 4): via new ladder g140_t0330. \u03c4-ladder at \u03c4=3.3",
+      "requeue_count": 4,
+      "completed_at": "2026-05-08T23:10:31.879142Z"
+    },
+    {
+      "id": "g140_t0430",
+      "gamma": 1.4,
+      "tau": 4.3,
+      "depends_on": [
+        "g140_t0330"
+      ],
+      "deps_satisfy": "any",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g140_t0430.npz",
+      "result": {
+        "1-R2": 0.09584701,
+        "F_max": 4.0702e-14,
+        "n_stages": 3,
+        "phi_calls": 54,
+        "wall_s": 3.8
+      },
+      "note": "\u03c4-ladder between g140_t0330 (\u03c4=3.3) and g140_t0570 (\u03c4=5.7).",
+      "completed_at": "2026-05-08T23:10:35.364819Z"
+    },
+    {
+      "id": "g140_t0510",
+      "gamma": 1.4,
+      "tau": 5.1,
+      "depends_on": [
+        "g140_t0450"
+      ],
+      "deps_satisfy": "any",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g140_t0510.npz",
+      "result": {
+        "1-R2": 0.0902624,
+        "F_max": 1.7486e-14,
+        "n_stages": 3,
+        "phi_calls": 51,
+        "wall_s": 3.7
+      },
+      "note": "\u03c4-ladder between g140_t0450 (\u03c4=4.5) and g140_t0570 (\u03c4=5.7).",
+      "completed_at": "2026-05-08T23:18:16.822603Z"
+    },
+    {
+      "id": "g140_t0570",
+      "gamma": 1.4,
+      "tau": 5.7,
+      "depends_on": [
+        "g140_t0510"
+      ],
+      "deps_satisfy": "any",
+      "status": "ready",
+      "checkpoint": null,
+      "result": {
+        "reason": "||F||inf=3.885e-01 > bail threshold 1e-04"
+      },
+      "note": "Auto-requeued (attempt 5): noise perturbation noise_level=0.004. | RESET: stale claim from None (no active workers)",
+      "requeue_count": 5,
+      "solver_params": {
+        "noise_level": 0.004,
+        "presmooth": 100,
+        "presmooth_alpha": 0.02
+      },
+      "claimed_by": null,
+      "claimed_at": null
+    },
+    {
+      "id": "g140_t1000",
+      "gamma": 1.4,
+      "tau": 10.0,
+      "depends_on": [
+        "g140_t0570"
+      ],
+      "deps_satisfy": "any",
+      "status": "bailed",
+      "checkpoint": null,
+      "result": {
+        "reason": "TypeError: staggered_solve() got an unexpected keyword argument 'stage_callback'"
+      },
+      "note": "Auto-requeued (attempt 5): via new ladder g140_t0570. \u03c4-ladder at \u03c4=5.7",
+      "requeue_count": 5
     },
     {
       "id": "g400_t1000",
       "gamma": 4.0,
       "tau": 10.0,
       "depends_on": [
-        "g400_t0700"
-      ],
-      "status": "done",
-      "checkpoint": "checkpoints/g400_t1000.npz",
-      "result": {
-        "1-R2": 0.018,
-        "slope": 0.363,
-        "n_triples": 8000,
-        "F_max": 1.1e-26
-      }
-    },
-    {
-      "id": "g400_t1500",
-      "gamma": 4.0,
-      "tau": 15.0,
-      "depends_on": [
-        "g400_t1000"
-      ],
-      "status": "ready",
-      "checkpoint": null,
-      "result": null
-    },
-    {
-      "id": "g025_t0100",
-      "gamma": 0.25,
-      "tau": 1.0,
-      "depends_on": [
-        "g025_t0200"
-      ],
-      "status": "done",
-      "checkpoint": "checkpoints/g025_t0100.npz",
-      "result": {
-        "1-R2": 0.071,
-        "slope": 0.589,
-        "n_triples": 8000,
-        "F_max": 2.4e-26
-      }
-    },
-    {
-      "id": "g035_t0100",
-      "gamma": 0.35,
-      "tau": 1.0,
-      "depends_on": [
-        "g035_t0200",
-        "g050_t0100"
+        "g140_t1000"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
-      "checkpoint": null,
-      "result": null,
-      "note": "\u03b3-sweep at \u03c4=1.0: \u03b3=0.35 point. Warm-start from g035_t0200 (nearest .npz at \u03b3=0.35).",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g400_t1000.npz",
+      "result": {
+        "1-R2": 0.04436996,
+        "F_max": 1.6894e-51,
+        "n_stages": 1,
+        "phi_calls": 2068,
+        "wall_s": 2082.0
+      },
+      "note": "Auto-requeued (attempt 1): via new ladder g140_t1000. \u03b3-ladder at \u03b3=1.4",
       "solver_params": {
         "presmooth": 200,
         "presmooth_alpha": 0.01,
@@ -563,23 +1208,325 @@
         "lgmres_tol": 1e-10,
         "lgmres_inner_m": 30,
         "lgmres_outer": 10
-      }
+      },
+      "requeue_count": 1,
+      "completed_at": "2026-05-08T12:53:43.998012Z"
+    },
+    {
+      "id": "g400_t1500",
+      "gamma": 4.0,
+      "tau": 15.0,
+      "depends_on": [
+        "g400_t1000"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g400_t1500.npz",
+      "result": {
+        "1-R2": 0.0213335,
+        "F_max": 1.0065e-52,
+        "n_stages": 1,
+        "phi_calls": 1131,
+        "wall_s": 1107.9
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-08T14:40:15.444579Z"
+    },
+    {
+      "id": "g400_t2000",
+      "gamma": 4.0,
+      "tau": 20.0,
+      "depends_on": [
+        "g400_t1500"
+      ],
+      "deps_satisfy": "all",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g400_t2000.npz",
+      "result": {
+        "1-R2": 5.109e-05,
+        "F_max": 6.8496e-53,
+        "n_stages": 1,
+        "phi_calls": 1005,
+        "wall_s": 1519.4
+      },
+      "note": "tau=20 extension of gamma=4.0 sweep",
+      "requeue_count": 0,
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-08T20:03:57.406822Z"
+    },
+    {
+      "id": "g035_t0200",
+      "gamma": 0.35000000000000003,
+      "tau": 2.0,
+      "depends_on": [
+        "g050_t0200"
+      ],
+      "deps_satisfy": "any",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g035_t0200.npz",
+      "result": {
+        "1-R2": 0.08953636,
+        "F_max": 1.2276e-53,
+        "n_stages": 1,
+        "phi_calls": 2,
+        "wall_s": 2855.9
+      },
+      "note": "\u03b3-ladder between g050_t0200 (\u03b3=0.5) and g025_t0200 (\u03b3=0.25) at \u03c4=2.0.",
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "requeue_count": 0,
+      "completed_at": "2026-05-08T12:50:52.618375Z"
     },
     {
       "id": "g025_t0200",
       "gamma": 0.25,
       "tau": 2.0,
       "depends_on": [
-        "g025_t0300"
+        "g035_t0200"
       ],
       "status": "done",
-      "checkpoint": "checkpoints/g025_t0200.npz",
+      "checkpoint": "projects/REZN/checkpoints/g025_t0200.npz",
       "result": {
-        "1-R2": 0.109,
-        "slope": 0.621,
-        "n_triples": 8000,
-        "F_max": 8.1e-26
-      }
+        "1-R2": 0.09218914,
+        "F_max": 3.0122e-52,
+        "n_stages": 1,
+        "phi_calls": 2,
+        "wall_s": 2313.0
+      },
+      "note": "Auto-requeued (attempt 1): via new ladder g035_t0200. \u03b3-ladder at \u03b3=0.35000000000000003",
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "requeue_count": 0,
+      "deps_satisfy": "any",
+      "completed_at": "2026-05-08T12:17:08.321970Z"
+    },
+    {
+      "id": "g025_t0150",
+      "gamma": 0.25,
+      "tau": 1.5,
+      "depends_on": [
+        "g025_t0200"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g025_t0150.npz",
+      "result": {
+        "1-R2": 0.09459724,
+        "F_max": 3.3206e-54,
+        "n_stages": 1,
+        "phi_calls": 3532,
+        "wall_s": 2249.0
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "requeue_count": 0,
+      "completed_at": "2026-05-08T12:56:32.057730Z"
+    },
+    {
+      "id": "g025_t0100",
+      "gamma": 0.25,
+      "tau": 1.0,
+      "depends_on": [
+        "g025_t0150"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g025_t0100.npz",
+      "result": {
+        "1-R2": 0.04164972,
+        "F_max": 3.0256e-53,
+        "n_stages": 1,
+        "phi_calls": 3928,
+        "wall_s": 2068.6
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-08T16:32:11.401304Z"
+    },
+    {
+      "id": "g025_t0080",
+      "gamma": 0.25,
+      "tau": 0.8,
+      "depends_on": [
+        "g025_t0100"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g025_t0080.npz",
+      "result": {
+        "1-R2": 0.04439197,
+        "F_max": 5.2024e-51,
+        "n_stages": 1,
+        "phi_calls": 2821,
+        "wall_s": 2213.8
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-08T21:25:24.473252Z"
+    },
+    {
+      "id": "g025_t0050",
+      "gamma": 0.25,
+      "tau": 0.5,
+      "depends_on": [
+        "g025_t0080"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g025_t0050.npz",
+      "result": {
+        "1-R2": 0.05364659,
+        "F_max": 1.9602e-53,
+        "n_stages": 1,
+        "phi_calls": 5247,
+        "wall_s": 2522.7
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-08T22:10:59.521142Z"
+    },
+    {
+      "id": "g025_t0030",
+      "gamma": 0.25,
+      "tau": 0.3,
+      "depends_on": [
+        "g025_t0050"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g025_t0030.npz",
+      "result": {
+        "1-R2": 0.06521073,
+        "F_max": 1.0421e-53,
+        "n_stages": 1,
+        "phi_calls": 4098,
+        "wall_s": 2126.6
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-08T23:53:34.101804Z"
     },
     {
       "id": "g025_t0300",
@@ -589,74 +1536,14 @@
         "g025_t0200"
       ],
       "status": "done",
-      "checkpoint": "checkpoints/g025_t0300.npz",
+      "checkpoint": "projects/REZN/checkpoints/g025_t0300.npz",
       "result": {
-        "1-R2": 0.118,
-        "slope": 0.617,
-        "n_triples": 8000,
-        "F_max": 3.7e-26
-      }
-    },
-    {
-      "id": "g025_t0400",
-      "gamma": 0.25,
-      "tau": 4.0,
-      "depends_on": [
-        "g025_t0300"
-      ],
-      "status": "done",
-      "checkpoint": "checkpoints/g025_t0400.npz",
-      "result": {
-        "1-R2": 0.112,
-        "slope": 0.598,
-        "n_triples": 8000,
-        "F_max": 5.2e-26
-      }
-    },
-    {
-      "id": "g025_t0500",
-      "gamma": 0.25,
-      "tau": 5.0,
-      "depends_on": [
-        "g025_t0400"
-      ],
-      "status": "done",
-      "checkpoint": "checkpoints/g025_t0500.npz",
-      "result": {
-        "1-R2": 0.099,
-        "slope": 0.571,
-        "n_triples": 8000,
-        "F_max": 4.8e-26
-      }
-    },
-    {
-      "id": "g025_t0700",
-      "gamma": 0.25,
-      "tau": 7.0,
-      "depends_on": [
-        "g025_t0500"
-      ],
-      "status": "done",
-      "checkpoint": "checkpoints/g025_t0700.npz",
-      "result": {
-        "1-R2": 0.089,
-        "slope": 0.547,
-        "n_triples": 8000,
-        "F_max": 6.1e-26
-      }
-    },
-    {
-      "id": "g140_t0100",
-      "gamma": 1.4,
-      "tau": 1.0,
-      "depends_on": [
-        "g140_t0200"
-      ],
-      "deps_satisfy": "any",
-      "status": "ready",
-      "checkpoint": null,
-      "result": null,
-      "note": "\u03b3-sweep at \u03c4=1.0: \u03b3=1.4 point. Warm-start from g140_t0200 (nearest .npz at \u03b3=1.4).",
+        "1-R2": 0.11226708,
+        "F_max": 6.5089e-53,
+        "n_stages": 1,
+        "phi_calls": 2523,
+        "wall_s": 2810.5
+      },
       "solver_params": {
         "presmooth": 200,
         "presmooth_alpha": 0.01,
@@ -672,111 +1559,117 @@
         "lgmres_tol": 1e-10,
         "lgmres_inner_m": 30,
         "lgmres_outer": 10
-      }
-    },
-    {
-      "id": "g140_t0200",
-      "gamma": 1.4,
-      "tau": 2.0,
-      "depends_on": [
-        "g140_t0240"
-      ],
-      "status": "ready",
-      "checkpoint": null,
-      "result": null
-    },
-    {
-      "id": "g140_t0240",
-      "gamma": 1.4,
-      "tau": 2.4,
-      "depends_on": [
-        "g140_t0200"
-      ],
-      "status": "done",
-      "checkpoint": "checkpoints/g140_t0240.npz",
-      "result": {
-        "1-R2": 0.022,
-        "slope": 0.382,
-        "n_triples": 8000,
-        "F_max": 4.9e-26
-      }
-    },
-    {
-      "id": "g140_t0300",
-      "gamma": 1.4,
-      "tau": 3.0,
-      "depends_on": [
-        "g140_t0240"
-      ],
-      "status": "done",
-      "checkpoint": "checkpoints/g140_t0300.npz",
-      "result": {
-        "1-R2": 0.027,
-        "slope": 0.399,
-        "n_triples": 8000,
-        "F_max": 3.8e-26
-      }
-    },
-    {
-      "id": "g140_t0500",
-      "gamma": 1.4,
-      "tau": 5.0,
-      "depends_on": [
-        "g140_t0300"
-      ],
-      "status": "done",
-      "checkpoint": "checkpoints/g140_t0500.npz",
-      "result": {
-        "1-R2": 0.038,
-        "slope": 0.427,
-        "n_triples": 8000,
-        "F_max": 2.1e-26
-      }
-    },
-    {
-      "id": "g140_t1000",
-      "gamma": 1.4,
-      "tau": 10.0,
-      "depends_on": [
-        "g140_t0500"
-      ],
-      "status": "claimed",
-      "claimed_by": "solver-3",
-      "claimed_at": "2026-05-08T12:00:00Z",
-      "checkpoint": null,
-      "result": null
-    },
-    {
-      "id": "g200_t0100",
-      "gamma": 2.0,
-      "tau": 1.0,
-      "depends_on": [
-        "g200_t0200"
-      ],
-      "status": "done",
-      "checkpoint": "checkpoints/g200_t0100.npz",
-      "result": {
-        "1-R2": 0.011,
-        "slope": 0.289,
-        "n_triples": 8000,
-        "F_max": 4.6e-26
-      }
+      },
+      "requeue_count": 0,
+      "completed_at": "2026-05-08T14:15:29.885050Z"
     },
     {
       "id": "g200_t0200",
       "gamma": 2.0,
       "tau": 2.0,
       "depends_on": [
-        "g200_t0300"
+        "g100_t0200",
+        "g400_t0200",
+        "g050_t0200"
+      ],
+      "deps_satisfy": "any",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g200_t0200.npz",
+      "result": {
+        "1-R2": 0.08305015,
+        "F_max": 5.8518e-54,
+        "n_stages": 1,
+        "phi_calls": 2,
+        "wall_s": 1979.8
+      },
+      "note": "Restored checkpoint after Newton sign-fix; noise_level removed.",
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "requeue_count": 0,
+      "completed_at": "2026-05-08T12:02:16.562411Z"
+    },
+    {
+      "id": "g200_t0150",
+      "gamma": 2.0,
+      "tau": 1.5,
+      "depends_on": [
+        "g200_t0200"
       ],
       "status": "done",
-      "checkpoint": "checkpoints/g200_t0200.npz",
+      "checkpoint": "projects/REZN/checkpoints/g200_t0150.npz",
       "result": {
-        "1-R2": 0.016,
-        "slope": 0.335,
-        "n_triples": 8000,
-        "F_max": 5.9e-26
-      }
+        "1-R2": 0.07966269,
+        "F_max": 8.9809e-51,
+        "n_stages": 1,
+        "phi_calls": 4736,
+        "wall_s": 2844.0
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "requeue_count": 0,
+      "completed_at": "2026-05-08T13:39:30.407103Z"
+    },
+    {
+      "id": "g200_t0100",
+      "gamma": 2.0,
+      "tau": 1.0,
+      "depends_on": [
+        "g200_t0150"
+      ],
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g200_t0100.npz",
+      "result": {
+        "1-R2": 0.04907112,
+        "F_max": 9.0242e-53,
+        "n_stages": 1,
+        "phi_calls": 2285,
+        "wall_s": 1823.6
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-08T21:45:21.315781Z"
     },
     {
       "id": "g200_t0300",
@@ -786,13 +1679,32 @@
         "g200_t0200"
       ],
       "status": "done",
-      "checkpoint": "checkpoints/g200_t0300.npz",
+      "checkpoint": "projects/REZN/checkpoints/g200_t0300.npz",
       "result": {
-        "1-R2": 0.021,
-        "slope": 0.354,
-        "n_triples": 8000,
-        "F_max": 3.3e-26
-      }
+        "1-R2": 0.10160492,
+        "F_max": 1.1648e-52,
+        "n_stages": 1,
+        "phi_calls": 3313,
+        "wall_s": 2137.9
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "requeue_count": 0,
+      "completed_at": "2026-05-08T13:27:44.265953Z"
     },
     {
       "id": "g200_t0500",
@@ -802,198 +1714,81 @@
         "g200_t0300"
       ],
       "status": "done",
-      "checkpoint": "checkpoints/g200_t0500.npz",
+      "checkpoint": "projects/REZN/checkpoints/g200_t0500.npz",
       "result": {
-        "1-R2": 0.028,
-        "slope": 0.377,
-        "n_triples": 8000,
-        "F_max": 2.7e-26
-      }
+        "1-R2": 0.08969444,
+        "F_max": 2.3143e-56,
+        "n_stages": 1,
+        "phi_calls": 1384,
+        "wall_s": 2082.8
+      },
+      "solver_params": {
+        "presmooth": 200,
+        "presmooth_alpha": 0.01,
+        "max_stages": 8,
+        "inner_rdiff": 1e-05,
+        "inner_max_iter": 50,
+        "pure_picard": true,
+        "picard_iters": 300000,
+        "picard_tol": 1e-07,
+        "mp_dps": 100,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "lgmres_tol": 1e-10,
+        "lgmres_inner_m": 30,
+        "lgmres_outer": 10
+      },
+      "completed_at": "2026-05-08T14:03:22.247118Z"
     },
     {
-      "id": "g035_t0200",
-      "gamma": 0.35,
-      "tau": 2.0,
-      "depends_on": [
-        "g035_t0300"
-      ],
-      "status": "done",
-      "checkpoint": "checkpoints/g035_t0200.npz",
-      "result": {
-        "1-R2": 0.097,
-        "slope": 0.598,
-        "n_triples": 8000,
-        "F_max": 6.4e-26
-      }
-    },
-    {
-      "id": "g035_t0300",
-      "gamma": 0.35,
-      "tau": 3.0,
-      "depends_on": [
-        "g035_t0200"
-      ],
-      "status": "done",
-      "checkpoint": "checkpoints/g035_t0300.npz",
-      "result": {
-        "1-R2": 0.109,
-        "slope": 0.608,
-        "n_triples": 8000,
-        "F_max": 4.2e-26
-      }
-    },
-    {
-      "id": "g035_t0500",
-      "gamma": 0.35,
-      "tau": 5.0,
-      "depends_on": [
-        "g035_t0300"
-      ],
-      "status": "done",
-      "checkpoint": "checkpoints/g035_t0500.npz",
-      "result": {
-        "1-R2": 0.104,
-        "slope": 0.591,
-        "n_triples": 8000,
-        "F_max": 5.5e-26
-      }
-    },
-    {
-      "id": "nl_r2_g050",
-      "gamma": 0.5,
-      "tau": null,
+      "id": "requeue_bailed",
+      "kind": "requeue_bailed",
+      "depends_on": [],
       "status": "skip",
-      "note": "No-learning 1-R2 for gamma=0.5; computed analytically, no solver needed",
+      "checkpoint": null,
+      "result": null,
+      "note": "Retired: auto-requeue is now built into mark_failed() in claim_task.py. Removed from ready queue to prevent solver from mistakenly claiming it."
+    },
+    {
+      "id": "g016_t0050",
+      "gamma": 0.16000000000000003,
+      "tau": 0.5,
+      "depends_on": [
+        "g025_t0050"
+      ],
+      "deps_satisfy": "any",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g016_t0050.npz",
       "result": {
-        "1-R2_nl": 0.062
-      }
+        "1-R2": 0.05535164,
+        "F_max": 1.7956e-10,
+        "n_stages": 3,
+        "phi_calls": 118,
+        "wall_s": 5.0
+      },
+      "note": "\u03b3-ladder between g025_t0050 (\u03b3=0.25) and g010_t0050 (\u03b3=0.1) at \u03c4=0.5.",
+      "completed_at": "2026-05-09T06:10:24.283243Z"
     },
     {
-      "id": "nl_r2_g100",
-      "gamma": 1.0,
-      "tau": null,
-      "status": "skip",
-      "note": "No-learning 1-R2 for gamma=1.0; computed analytically, no solver needed",
+      "id": "g013_t0050",
+      "gamma": 0.13,
+      "tau": 0.5,
+      "depends_on": [
+        "g016_t0050"
+      ],
+      "deps_satisfy": "any",
+      "status": "bailed",
       "result": {
-        "1-R2_nl": 0.03
-      }
-    },
-    {
-      "id": "nl_r2_g400",
-      "gamma": 4.0,
-      "tau": null,
-      "status": "skip",
-      "note": "No-learning 1-R2 for gamma=4.0; computed analytically, no solver needed",
-      "result": {
-        "1-R2_nl": 0.004
-      }
-    },
-    {
-      "id": "g200_t1000",
-      "gamma": 2.0,
-      "tau": 10.0,
-      "depends_on": [
-        "g200_t0500"
-      ],
-      "status": "ready",
-      "checkpoint": null,
-      "result": null
-    },
-    {
-      "id": "g025_t1000",
-      "gamma": 0.25,
-      "tau": 10.0,
-      "depends_on": [
-        "g025_t0700"
-      ],
-      "status": "ready",
-      "checkpoint": null,
-      "result": null
-    },
-    {
-      "id": "g035_t1000",
-      "gamma": 0.35,
-      "tau": 10.0,
-      "depends_on": [
-        "g035_t0500"
-      ],
-      "status": "ready",
-      "checkpoint": null,
-      "result": null
-    },
-    {
-      "id": "g200_t1500",
-      "gamma": 2.0,
-      "tau": 15.0,
-      "depends_on": [
-        "g200_t1000"
-      ],
-      "status": "blocked",
-      "checkpoint": null,
-      "result": null
-    },
-    {
-      "id": "g025_t1500",
-      "gamma": 0.25,
-      "tau": 15.0,
-      "depends_on": [
-        "g025_t1000"
-      ],
-      "status": "blocked",
-      "checkpoint": null,
-      "result": null
-    },
-    {
-      "id": "g035_t1500",
-      "gamma": 0.35,
-      "tau": 15.0,
-      "depends_on": [
-        "g035_t1000"
-      ],
-      "status": "blocked",
-      "checkpoint": null,
-      "result": null
-    },
-    {
-      "id": "g140_t1500",
-      "gamma": 1.4,
-      "tau": 15.0,
-      "depends_on": [
-        "g140_t1000"
-      ],
-      "status": "blocked",
-      "checkpoint": null,
-      "result": null
-    },
-    {
-      "id": "g100_t0500",
-      "gamma": 1.0,
-      "tau": 5.0,
-      "depends_on": [
-        "g100_t0400"
-      ],
-      "status": "ready",
-      "checkpoint": null,
-      "result": null
-    },
-    {
-      "id": "g100_t0800",
-      "gamma": 1.0,
-      "tau": 8.0,
-      "depends_on": [
-        "g100_t0700"
-      ],
-      "status": "ready",
-      "checkpoint": null,
-      "result": null
-    },
-    {
-      "id": "g050_t0400",
-      "gamma": 0.5,
-      "tau": 4.0,
-      "status": "ready",
-      "checkpoint": null,
-      "result": null
+        "reason": "TypeError: staggered_solve() got an unexpected keyword argument 'stage_callback'"
+      },
+      "note": "Auto-requeued (attempt 5): noise perturbation noise_level=0.032.",
+      "solver_params": {
+        "noise_level": 0.032,
+        "presmooth": 100,
+        "presmooth_alpha": 0.02
+      },
+      "requeue_count": 5,
+      "checkpoint": null
     },
     {
       "id": "g010_t0050",
@@ -1001,7 +1796,76 @@
       "tau": 0.5,
       "status": "ready",
       "checkpoint": null,
-      "result": null
+      "result": null,
+      "depends_on": [
+        "g013_t0050",
+        "g016_t0050"
+      ],
+      "deps_satisfy": "any",
+      "requeue_count": 4,
+      "note": "Auto-requeued (attempt 4): warm-start from g016_t0050 (log-dist=0.47)."
+    },
+    {
+      "id": "g010_t0170",
+      "gamma": 0.1,
+      "tau": 1.7,
+      "depends_on": [
+        "g010_t0200"
+      ],
+      "deps_satisfy": "any",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g010_t0170.npz",
+      "result": {
+        "1-R2": 0.09821594,
+        "F_max": 5.924e-11,
+        "n_stages": 3,
+        "phi_calls": 88,
+        "wall_s": 4.5
+      },
+      "note": "\u03c4-ladder between g010_t0200 (\u03c4=2.0) and g010_t0140 (\u03c4=1.4).",
+      "completed_at": "2026-05-09T07:39:46.737679Z"
+    },
+    {
+      "id": "g010_t0140",
+      "gamma": 0.1,
+      "tau": 1.4,
+      "depends_on": [
+        "g010_t0150",
+        "g010_t0170"
+      ],
+      "deps_satisfy": "any",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g010_t0140.npz",
+      "result": {
+        "1-R2": 0.09970811,
+        "F_max": 4.6695e-10,
+        "n_stages": 3,
+        "phi_calls": 109,
+        "wall_s": 4.9
+      },
+      "note": "Auto-requeued (attempt 2): warm-start from g010_t0150 (log-dist=0.07).",
+      "requeue_count": 2,
+      "completed_at": "2026-05-09T15:21:25.197855Z"
+    },
+    {
+      "id": "g010_t0120",
+      "gamma": 0.1,
+      "tau": 1.2,
+      "depends_on": [
+        "g010_t0150"
+      ],
+      "deps_satisfy": "any",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g010_t0120.npz",
+      "result": {
+        "1-R2": 0.08973989,
+        "F_max": 2.7797e-12,
+        "n_stages": 4,
+        "phi_calls": 407,
+        "wall_s": 12.3
+      },
+      "note": "\u03c4-ladder between g010_t0150 (\u03c4=1.5) and g010_t0100 (\u03c4=1.0).",
+      "completed_at": "2026-05-09T13:18:27.521480Z"
     },
     {
       "id": "g010_t0100",
@@ -1009,23 +1873,79 @@
       "tau": 1.0,
       "status": "ready",
       "checkpoint": null,
-      "result": null
+      "result": null,
+      "depends_on": [
+        "g010_t0120"
+      ],
+      "deps_satisfy": "any",
+      "requeue_count": 5,
+      "note": "Auto-requeued (attempt 5): noise perturbation noise_level=0.002.",
+      "solver_params": {
+        "noise_level": 0.002,
+        "presmooth": 100,
+        "presmooth_alpha": 0.02
+      }
     },
     {
       "id": "g010_t0150",
       "gamma": 0.1,
       "tau": 1.5,
-      "status": "ready",
-      "checkpoint": null,
-      "result": null
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g010_t0150.npz",
+      "result": {
+        "1-R2": 0.099878,
+        "F_max": 4.6425e-11,
+        "n_stages": 3,
+        "phi_calls": 86,
+        "wall_s": 4.2
+      },
+      "depends_on": [
+        "g025_t0150"
+      ],
+      "deps_satisfy": "any",
+      "requeue_count": 1,
+      "note": "Auto-requeued (attempt 1): warm-start from g025_t0150 (log-dist=0.92).",
+      "completed_at": "2026-05-09T09:25:08.444074Z"
     },
     {
       "id": "g010_t0200",
       "gamma": 0.1,
       "tau": 2.0,
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g010_t0200.npz",
+      "result": {
+        "1-R2": 0.09480727,
+        "F_max": 9.4369e-15,
+        "n_stages": 3,
+        "phi_calls": 77,
+        "wall_s": 4.3
+      },
+      "depends_on": [
+        "g025_t0200"
+      ],
+      "deps_satisfy": "any",
+      "requeue_count": 1,
+      "note": "Auto-requeued (attempt 1): warm-start from g025_t0200 (log-dist=0.92).",
+      "completed_at": "2026-05-09T03:54:02.125235Z"
+    },
+    {
+      "id": "g010_t0240",
+      "gamma": 0.1,
+      "tau": 2.4,
+      "depends_on": [
+        "g010_t0200"
+      ],
+      "deps_satisfy": "any",
       "status": "ready",
       "checkpoint": null,
-      "result": null
+      "result": null,
+      "note": "Auto-requeued (attempt 2): noise perturbation noise_level=0.004.",
+      "solver_params": {
+        "noise_level": 0.004,
+        "presmooth": 100,
+        "presmooth_alpha": 0.02
+      },
+      "requeue_count": 2
     },
     {
       "id": "g010_t0300",
@@ -1033,31 +1953,55 @@
       "tau": 3.0,
       "status": "ready",
       "checkpoint": null,
-      "result": null
+      "result": null,
+      "depends_on": [
+        "g010_t0200",
+        "g010_t0240"
+      ],
+      "deps_satisfy": "any",
+      "requeue_count": 4,
+      "note": "Auto-requeued (attempt 4): noise perturbation noise_level=0.002.",
+      "solver_params": {
+        "noise_level": 0.002,
+        "presmooth": 100,
+        "presmooth_alpha": 0.02
+      }
     },
     {
       "id": "g010_t0500",
       "gamma": 0.1,
       "tau": 5.0,
-      "status": "ready",
-      "checkpoint": null,
-      "result": null
-    },
-    {
-      "id": "g050_t2000",
-      "gamma": 0.5,
-      "tau": 20.0,
-      "status": "skip",
-      "note": "outlier - excluded from fit",
-      "result": null
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g010_t0500.npz",
+      "result": {
+        "1-R2": 0.09917035,
+        "F_max": 4.3299e-15,
+        "n_stages": 5,
+        "phi_calls": 515,
+        "wall_s": 15.5
+      },
+      "depends_on": [
+        "g025_t0300"
+      ],
+      "deps_satisfy": "any",
+      "requeue_count": 1,
+      "note": "Auto-requeued (attempt 1): warm-start from g025_t0300 (log-dist=1.05).",
+      "completed_at": "2026-05-09T03:54:14.296502Z"
     },
     {
       "id": "g050_t1200",
       "gamma": 0.5,
       "tau": 12.0,
-      "status": "ready",
-      "checkpoint": null,
-      "result": null
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g050_t1200.npz",
+      "result": {
+        "1-R2": 0.06548071,
+        "F_max": 1.4871e-09,
+        "n_stages": 7,
+        "phi_calls": 2106,
+        "wall_s": 59.4
+      },
+      "completed_at": "2026-05-09T03:58:44.432698Z"
     },
     {
       "id": "extract_volume_g010",
@@ -1097,45 +2041,57 @@
       "id": "extract_volume_g025",
       "gamma": 0.25,
       "tau": null,
-      "status": "blocked",
+      "status": "ready",
       "deps_satisfy": "all",
       "depends_on": [
+        "g025_t0030",
+        "g025_t0050",
+        "g025_t0080",
         "g025_t0100",
+        "g025_t0150",
         "g025_t0200",
-        "g025_t0300",
-        "g025_t0400",
-        "g025_t0500",
-        "g025_t0700",
-        "g025_t1000",
-        "g025_t1500"
+        "g025_t0300"
       ],
-      "note": "Fig 7 extraction for gamma=0.25",
-      "result": null
+      "note": "Auto-requeued (attempt 2): noise perturbation noise_level=0.004.",
+      "result": null,
+      "solver_params": {
+        "noise_level": 0.004,
+        "presmooth": 100,
+        "presmooth_alpha": 0.02
+      },
+      "requeue_count": 2,
+      "checkpoint": null
     },
     {
       "id": "extract_value_info_g025",
       "gamma": 0.25,
       "tau": null,
-      "status": "blocked",
+      "status": "ready",
       "deps_satisfy": "all",
       "depends_on": [
+        "g025_t0030",
+        "g025_t0050",
+        "g025_t0080",
         "g025_t0100",
+        "g025_t0150",
         "g025_t0200",
-        "g025_t0300",
-        "g025_t0400",
-        "g025_t0500",
-        "g025_t0700",
-        "g025_t1000",
-        "g025_t1500"
+        "g025_t0300"
       ],
-      "note": "Fig 8 extraction for gamma=0.25",
-      "result": null
+      "note": "Auto-requeued (attempt 1): noise perturbation noise_level=0.002.",
+      "result": null,
+      "checkpoint": null,
+      "solver_params": {
+        "noise_level": 0.002,
+        "presmooth": 100,
+        "presmooth_alpha": 0.02
+      },
+      "requeue_count": 1
     },
     {
       "id": "extract_volume_g050",
       "gamma": 0.5,
       "tau": null,
-      "status": "blocked",
+      "status": "ready",
       "deps_satisfy": "all",
       "depends_on": [
         "g050_t0030",
@@ -1146,10 +2102,48 @@
         "g050_t0200",
         "g050_t0300",
         "g050_t0400",
-        "g050_t1200"
+        "g050_t0500",
+        "g050_t0700",
+        "g050_t1000",
+        "g050_t1200",
+        "g050_t1500",
+        "g050_t2000"
       ],
       "note": "Fig 7 extraction for gamma=0.5",
       "result": null
+    },
+    {
+      "id": "g050_t0170",
+      "gamma": 0.5,
+      "tau": 1.7,
+      "depends_on": [
+        "g050_t0200"
+      ],
+      "deps_satisfy": "any",
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "note": "Auto-requeued (attempt 1): noise perturbation noise_level=0.002.",
+      "solver_params": {
+        "noise_level": 0.002,
+        "presmooth": 100,
+        "presmooth_alpha": 0.02
+      },
+      "requeue_count": 1
+    },
+    {
+      "id": "g050_t0140",
+      "gamma": 0.5,
+      "tau": 1.4,
+      "depends_on": [
+        "g050_t0170"
+      ],
+      "deps_satisfy": "any",
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "note": "Auto-requeued (attempt 1): via new ladder g050_t0170. \u03c4-ladder at \u03c4=1.7",
+      "requeue_count": 1
     },
     {
       "id": "extract_value_info_g050",
@@ -1166,10 +2160,18 @@
         "g050_t0200",
         "g050_t0300",
         "g050_t0400",
-        "g050_t1200"
+        "g050_t0500",
+        "g050_t0700",
+        "g050_t1000",
+        "g050_t1200",
+        "g050_t1500",
+        "g050_t2000",
+        "g050_t0140"
       ],
-      "note": "Fig 8 extraction for gamma=0.5",
-      "result": null
+      "note": "Auto-requeued (attempt 1): via new ladder g050_t0140. \u03c4-ladder at \u03c4=1.4",
+      "result": null,
+      "checkpoint": null,
+      "requeue_count": 1
     },
     {
       "id": "extract_volume_g100",
@@ -1186,11 +2188,12 @@
         "g100_t0200",
         "g100_t0300",
         "g100_t0400",
-        "g100_t0490",
         "g100_t0500",
         "g100_t0590",
         "g100_t0700",
-        "g100_t0800"
+        "g100_t1000",
+        "g100_t1500",
+        "g100_t2000"
       ],
       "note": "Fig 7 extraction for gamma=1.0",
       "result": null
@@ -1210,11 +2213,12 @@
         "g100_t0200",
         "g100_t0300",
         "g100_t0400",
-        "g100_t0490",
         "g100_t0500",
         "g100_t0590",
         "g100_t0700",
-        "g100_t0800"
+        "g100_t1000",
+        "g100_t1500",
+        "g100_t2000"
       ],
       "note": "Fig 8 extraction for gamma=1.0",
       "result": null
@@ -1226,13 +2230,14 @@
       "status": "blocked",
       "deps_satisfy": "all",
       "depends_on": [
-        "g140_t0100",
         "g140_t0200",
         "g140_t0240",
+        "g140_t0270",
         "g140_t0300",
-        "g140_t0500",
-        "g140_t1000",
-        "g140_t1500"
+        "g140_t0330",
+        "g140_t0450",
+        "g140_t0570",
+        "g140_t1000"
       ],
       "note": "Fig 7 extraction for gamma=1.4",
       "result": null
@@ -1244,13 +2249,14 @@
       "status": "blocked",
       "deps_satisfy": "all",
       "depends_on": [
-        "g140_t0100",
         "g140_t0200",
         "g140_t0240",
+        "g140_t0270",
         "g140_t0300",
-        "g140_t0500",
-        "g140_t1000",
-        "g140_t1500"
+        "g140_t0330",
+        "g140_t0450",
+        "g140_t0570",
+        "g140_t1000"
       ],
       "note": "Fig 8 extraction for gamma=1.4",
       "result": null
@@ -1259,43 +2265,70 @@
       "id": "extract_volume_g200",
       "gamma": 2.0,
       "tau": null,
-      "status": "blocked",
+      "status": "done",
       "deps_satisfy": "all",
       "depends_on": [
         "g200_t0100",
+        "g200_t0150",
         "g200_t0200",
         "g200_t0300",
-        "g200_t0500",
-        "g200_t1000",
-        "g200_t1500"
+        "g200_t0500"
       ],
-      "note": "Fig 7 extraction for gamma=2.0",
-      "result": null
+      "note": "Auto-requeued (attempt 1): noise perturbation noise_level=0.002.",
+      "result": {
+        "1-R2": 0.08301088,
+        "F_max": 1.1733e-12,
+        "n_stages": 3,
+        "phi_calls": 246,
+        "wall_s": 8.2
+      },
+      "checkpoint": "projects/REZN/checkpoints/extract_volume_g200.npz",
+      "solver_params": {
+        "noise_level": 0.002,
+        "presmooth": 100,
+        "presmooth_alpha": 0.02
+      },
+      "requeue_count": 1,
+      "completed_at": "2026-05-09T03:57:52.550969Z"
     },
     {
       "id": "extract_value_info_g200",
       "gamma": 2.0,
       "tau": null,
-      "status": "blocked",
+      "status": "done",
       "deps_satisfy": "all",
       "depends_on": [
         "g200_t0100",
+        "g200_t0150",
         "g200_t0200",
         "g200_t0300",
-        "g200_t0500",
-        "g200_t1000",
-        "g200_t1500"
+        "g200_t0500"
       ],
-      "note": "Fig 8 extraction for gamma=2.0",
-      "result": null
+      "note": "Auto-requeued (attempt 1): noise perturbation noise_level=0.002.",
+      "result": {
+        "1-R2": 0.08301088,
+        "F_max": 1.231e-12,
+        "n_stages": 3,
+        "phi_calls": 246,
+        "wall_s": 7.8
+      },
+      "checkpoint": "projects/REZN/checkpoints/extract_value_info_g200.npz",
+      "solver_params": {
+        "noise_level": 0.002,
+        "presmooth": 100,
+        "presmooth_alpha": 0.02
+      },
+      "requeue_count": 1,
+      "completed_at": "2026-05-09T13:21:40.004240Z"
     },
     {
       "id": "extract_volume_g400",
       "gamma": 4.0,
       "tau": null,
-      "status": "blocked",
-      "deps_satisfy": "all",
+      "status": "done",
+      "deps_satisfy": "any",
       "depends_on": [
+        "extract_value_info_g400",
         "g400_t0030",
         "g400_t0050",
         "g400_t0080",
@@ -1303,21 +2336,33 @@
         "g400_t0150",
         "g400_t0200",
         "g400_t0300",
+        "g400_t0400",
         "g400_t0500",
         "g400_t0700",
         "g400_t1000",
-        "g400_t1500"
+        "g400_t1500",
+        "g400_t2000"
       ],
-      "note": "Fig 7 extraction for gamma=4.0",
-      "result": null
+      "note": "Auto-requeued (attempt 1): warm-start from extract_value_info_g400 (log-dist=0.00).",
+      "result": {
+        "1-R2": 0.08201709,
+        "F_max": 7.2164e-15,
+        "n_stages": 3,
+        "phi_calls": 80,
+        "wall_s": 4.3
+      },
+      "checkpoint": "projects/REZN/checkpoints/extract_volume_g400.npz",
+      "requeue_count": 1,
+      "completed_at": "2026-05-09T15:18:33.504467Z"
     },
     {
       "id": "extract_value_info_g400",
       "gamma": 4.0,
       "tau": null,
-      "status": "blocked",
-      "deps_satisfy": "all",
+      "status": "done",
+      "deps_satisfy": "any",
       "depends_on": [
+        "g200_t0100",
         "g400_t0030",
         "g400_t0050",
         "g400_t0080",
@@ -1325,13 +2370,24 @@
         "g400_t0150",
         "g400_t0200",
         "g400_t0300",
+        "g400_t0400",
         "g400_t0500",
         "g400_t0700",
         "g400_t1000",
-        "g400_t1500"
+        "g400_t1500",
+        "g400_t2000"
       ],
-      "note": "Fig 8 extraction for gamma=4.0",
-      "result": null
+      "note": "Auto-requeued (attempt 1): warm-start from g200_t0100 (log-dist=0.69).",
+      "result": {
+        "1-R2": 0.08201709,
+        "F_max": 5.2392e-13,
+        "n_stages": 3,
+        "phi_calls": 85,
+        "wall_s": 4.5
+      },
+      "checkpoint": "projects/REZN/checkpoints/extract_value_info_g400.npz",
+      "requeue_count": 1,
+      "completed_at": "2026-05-09T06:10:27.777767Z"
     },
     {
       "id": "symK3_g050_t0200_G15",
@@ -1347,7 +2403,14 @@
       "checkpoint": null,
       "result": null,
       "note": "Symmetric K=3 baseline; cold start (no-learning init).",
-      "solver_params": {"G": 15, "u_max": 3.0, "alpha": 0.3, "max_iters": 5000, "tol": 5e-7}
+      "solver_params": {
+        "u_max": 3.0,
+        "alpha": 0.3,
+        "max_iters": 5000,
+        "tol": 5e-07,
+        "G_inner": 15,
+        "pad": 4
+      }
     },
     {
       "id": "symK4_g050_t0200_G15",
@@ -1357,13 +2420,22 @@
       "tau": 2.0,
       "G": 15,
       "symmetric": true,
-      "depends_on": ["symK3_g050_t0200_G15"],
+      "depends_on": [
+        "symK3_g050_t0200_G15"
+      ],
       "deps_satisfy": "all",
       "status": "blocked",
       "checkpoint": null,
       "result": null,
       "note": "Symmetric K=4; warm-starts from symK3.",
-      "solver_params": {"G": 15, "u_max": 3.0, "alpha": 0.3, "max_iters": 5000, "tol": 5e-7}
+      "solver_params": {
+        "u_max": 3.0,
+        "alpha": 0.3,
+        "max_iters": 5000,
+        "tol": 5e-07,
+        "G_inner": 15,
+        "pad": 4
+      }
     },
     {
       "id": "symK5_g050_t0200_G15",
@@ -1373,13 +2445,22 @@
       "tau": 2.0,
       "G": 15,
       "symmetric": true,
-      "depends_on": ["symK4_g050_t0200_G15"],
+      "depends_on": [
+        "symK4_g050_t0200_G15"
+      ],
       "deps_satisfy": "all",
       "status": "blocked",
       "checkpoint": null,
       "result": null,
       "note": "Symmetric K=5; warm-starts from symK4.",
-      "solver_params": {"G": 15, "u_max": 3.0, "alpha": 0.3, "max_iters": 5000, "tol": 5e-7}
+      "solver_params": {
+        "u_max": 3.0,
+        "alpha": 0.3,
+        "max_iters": 5000,
+        "tol": 5e-07,
+        "G_inner": 15,
+        "pad": 4
+      }
     },
     {
       "id": "symK6_g050_t0200_G15",
@@ -1389,13 +2470,22 @@
       "tau": 2.0,
       "G": 15,
       "symmetric": true,
-      "depends_on": ["symK5_g050_t0200_G15"],
+      "depends_on": [
+        "symK5_g050_t0200_G15"
+      ],
       "deps_satisfy": "all",
       "status": "blocked",
       "checkpoint": null,
       "result": null,
       "note": "Symmetric K=6; warm-starts from symK5.",
-      "solver_params": {"G": 15, "u_max": 3.0, "alpha": 0.3, "max_iters": 5000, "tol": 5e-7}
+      "solver_params": {
+        "u_max": 3.0,
+        "alpha": 0.3,
+        "max_iters": 5000,
+        "tol": 5e-07,
+        "G_inner": 15,
+        "pad": 4
+      }
     },
     {
       "id": "symK7_g050_t0200_G15",
@@ -1405,13 +2495,22 @@
       "tau": 2.0,
       "G": 15,
       "symmetric": true,
-      "depends_on": ["symK6_g050_t0200_G15"],
+      "depends_on": [
+        "symK6_g050_t0200_G15"
+      ],
       "deps_satisfy": "all",
       "status": "blocked",
       "checkpoint": null,
       "result": null,
       "note": "Symmetric K=7; warm-starts from symK6.",
-      "solver_params": {"G": 15, "u_max": 3.0, "alpha": 0.3, "max_iters": 5000, "tol": 5e-7}
+      "solver_params": {
+        "u_max": 3.0,
+        "alpha": 0.3,
+        "max_iters": 5000,
+        "tol": 5e-07,
+        "G_inner": 15,
+        "pad": 4
+      }
     },
     {
       "id": "symK8_g050_t0200_G15",
@@ -1421,13 +2520,50 @@
       "tau": 2.0,
       "G": 15,
       "symmetric": true,
-      "depends_on": ["symK7_g050_t0200_G15"],
+      "depends_on": [
+        "symK7_g050_t0200_G15"
+      ],
       "deps_satisfy": "all",
       "status": "blocked",
       "checkpoint": null,
       "result": null,
       "note": "Symmetric K=8; warm-starts from symK7.",
-      "solver_params": {"G": 15, "u_max": 3.0, "alpha": 0.3, "max_iters": 5000, "tol": 5e-7}
+      "solver_params": {
+        "u_max": 3.0,
+        "alpha": 0.3,
+        "max_iters": 5000,
+        "tol": 5e-07,
+        "G_inner": 15,
+        "pad": 4
+      }
     }
+  ],
+  "summary": {
+    "total": 103,
+    "done": 65,
+    "ready": 11,
+    "claimed": 12,
+    "blocked": 12,
+    "bailed": 2,
+    "skip": 1
+  },
+  "fanout": {
+    "ready_tasks": [
+      "g025_t0200",
+      "g200_t0200"
+    ],
+    "rationale": "Three computation tasks plus one intervention task."
+  },
+  "deps_semantics": {
+    "default": "all",
+    "any": "Tasks may declare deps_satisfy='any', meaning the task is ready as soon as ANY listed dependency is done."
+  },
+  "notes": [
+    "\u03b3=0.5 high-\u03c4 (\u03c4 \u2265 4) bailed; the 7-point \u03b3=0.5 curve (\u03c4\u2208[0.3,3.0]) is the accepted answer for Fig 4A.",
+    "\u03b3=1.0 high-\u03c4 (\u03c4 \u2265 5) bailed; the 8-point \u03b3=1.0 curve (\u03c4\u2208[0.3,4.0]) is the accepted answer.",
+    "\u03b3=4.0 sweep: \u03c4 \u2208 [0.3, 7.0] done. Only \u03c4=10 is ready and \u03c4=15 is blocked on it.",
+    "\u03b3=0.25 and \u03b3=2.0 \u03c4-sweeps added as parallel chains.",
+    "All 1-R\u00b2 values are weighted by ex-ante probability (see EQUATIONS.md \u00a77).",
+    "Checkpoints listed for done tasks are the expected paths."
   ]
 }
