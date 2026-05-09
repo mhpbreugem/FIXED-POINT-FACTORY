@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T05:36:26.383694Z",
+  "updated_at": "2026-05-09T05:36:36.012957Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -1669,20 +1669,31 @@
       "note": "Auto-requeued (attempt 2): via new ladder g016_t0050. \u03b3-ladder at \u03b3=0.16000000000000003"
     },
     {
-      "id": "g010_t0100",
+      "id": "g010_t0140",
       "gamma": 0.1,
-      "tau": 1.0,
-      "status": "claimed",
-      "checkpoint": null,
-      "result": null,
+      "tau": 1.4,
       "depends_on": [
         "g010_t0200"
       ],
       "deps_satisfy": "any",
-      "requeue_count": 1,
-      "note": "Auto-requeued (attempt 1): warm-start from g010_t0200 (log-dist=0.69).",
-      "claimed_by": "gha-25592999918-g010_t0100",
-      "claimed_at": "2026-05-09T05:32:55Z"
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "note": "\u03c4-ladder between g010_t0200 (\u03c4=2.0) and g010_t0100 (\u03c4=1.0)."
+    },
+    {
+      "id": "g010_t0100",
+      "gamma": 0.1,
+      "tau": 1.0,
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "depends_on": [
+        "g010_t0140"
+      ],
+      "deps_satisfy": "any",
+      "requeue_count": 2,
+      "note": "Auto-requeued (attempt 2): via new ladder g010_t0140. \u03c4-ladder at \u03c4=1.4"
     },
     {
       "id": "g010_t0150",
@@ -2249,10 +2260,10 @@
     }
   ],
   "summary": {
-    "total": 93,
+    "total": 94,
     "done": 60,
-    "ready": 3,
-    "claimed": 11,
+    "ready": 5,
+    "claimed": 10,
     "blocked": 14,
     "bailed": 3,
     "skip": 1
