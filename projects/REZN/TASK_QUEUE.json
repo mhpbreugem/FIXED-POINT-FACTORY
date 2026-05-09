@@ -2145,7 +2145,7 @@
       "id": "extract_value_info_g200",
       "gamma": 2.0,
       "tau": null,
-      "status": "ready",
+      "status": "claimed",
       "deps_satisfy": "all",
       "depends_on": [
         "g200_t0100",
@@ -2156,14 +2156,14 @@
       ],
       "note": "Fig 8 extraction for gamma=2.0",
       "result": null,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25599034559-extract_value_info_g200",
+      "claimed_at": "2026-05-09T10:36:52Z"
     },
     {
       "id": "extract_volume_g400",
       "gamma": 4.0,
       "tau": null,
-      "status": "ready",
+      "status": "claimed",
       "deps_satisfy": "all",
       "depends_on": [
         "g400_t0030",
@@ -2182,8 +2182,8 @@
       ],
       "note": "Fig 7 extraction for gamma=4.0",
       "result": null,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25599034559-extract_volume_g400",
+      "claimed_at": "2026-05-09T10:36:52Z"
     },
     {
       "id": "extract_value_info_g400",
