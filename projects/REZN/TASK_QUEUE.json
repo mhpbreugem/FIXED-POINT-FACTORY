@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T15:24:21.470684Z",
+  "updated_at": "2026-05-09T15:24:25.691282Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -1775,17 +1775,16 @@
       "id": "g010_t0050",
       "gamma": 0.1,
       "tau": 0.5,
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "depends_on": [
-        "g013_t0050"
+        "g013_t0050",
+        "g016_t0050"
       ],
       "deps_satisfy": "any",
-      "requeue_count": 3,
-      "note": "Auto-requeued (attempt 3): via new ladder g013_t0050. \u03b3-ladder at \u03b3=0.13",
-      "claimed_by": "gha-25604498824-g010_t0050",
-      "claimed_at": "2026-05-09T15:17:01Z"
+      "requeue_count": 4,
+      "note": "Auto-requeued (attempt 4): warm-start from g016_t0050 (log-dist=0.47)."
     },
     {
       "id": "g010_t0170",
@@ -2532,8 +2531,8 @@
   "summary": {
     "total": 103,
     "done": 65,
-    "ready": 5,
-    "claimed": 18,
+    "ready": 6,
+    "claimed": 17,
     "blocked": 12,
     "bailed": 2,
     "skip": 1
