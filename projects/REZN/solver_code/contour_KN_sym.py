@@ -245,51 +245,47 @@ def _clear_crra_sym(mu_vec: list[float], gamma: float, W: float) -> float:
 # =====================================================================
 
 def sym_phi(P_sorted: np.ndarray, sg: SymGrid, u_grid: np.ndarray,
-            tau: float, gamma: float, W: float) -> np.ndarray:
+            tau: float, gamma: float, W: float,
+            pad: int = 0, G_inner: int | None = None) -> np.ndarray:
     """One iteration of the Phi map on sorted storage.
 
-    For each sorted cell (i_1,...,i_K):
-    1. For each agent k, extract the (K-1)-D slice fixing dimension k at i_k.
-       By symmetry of P (homogeneous model), np.take(P_full, i_k, axis=k)
-       gives the correct contour slice for agent k.
-    2. Compute agent k's contour integral A0, A1 via _contour_integral_kd,
-       using linear interpolation exactly as _agent_evidence_K3 does.
-    3. Bayes-update: mu_k = f1(u_{i_k}) * A1 / (f0 * A0 + f1 * A1).
-    4. Market-clear all K posteriors: p_new = argzero sum_k x_crra(mu_k, p).
-
-    At K=3, this exactly reproduces phi_K3_halo (same scan logic, same
-    bisection) and must agree to ≤1e-6 on weighted 1-R².
+    pad / G_inner: halo support (mirrors phi_K3_halo boundary conditions).
+      - sg is built on the FULL grid (G_full = G_inner + 2*pad).
+      - Cells where any index falls outside [pad, pad+G_inner) are halo cells
+        and are copied through unchanged (they hold no-learning prices).
+      - Inner cells are updated by the contour-integral + Bayes + market-clear.
+      - Contour integrals scan the full grid, so inner cells near the boundary
+        see the no-learning halo values, preventing the FR fixed point.
+      - With pad=0 (default) all cells are updated; converges to FR fixed point.
     """
     G, K = sg.G, sg.K
+    if G_inner is None:
+        G_inner = G - 2 * pad
     eps = 1e-12
 
     f0 = np.sqrt(tau / (2.0 * np.pi)) * np.exp(-0.5 * tau * (u_grid + 0.5) ** 2)
     f1 = np.sqrt(tau / (2.0 * np.pi)) * np.exp(-0.5 * tau * (u_grid - 0.5) ** 2)
 
-    # Materialise full G^K tensor for slice extraction.
-    # At K=8, G=15: 15^8 = 2.6 GB — too large; the GHA worker uses the
-    # agent-0-fixed slice path below via _phi_k8_slice() instead.
-    # For K<=7, G=15 (max 170 MB at K=7) this is fine.
     if K >= 8:
-        return _sym_phi_large(P_sorted, sg, u_grid, tau, gamma, W, f0, f1)
+        return _sym_phi_large(P_sorted, sg, u_grid, tau, gamma, W, f0, f1, pad, G_inner)
 
     P_full = sym_to_full(P_sorted, sg)
-    new_P_sorted = np.empty(sg.n, dtype=np.float64)
+    new_P_sorted = P_sorted.copy()   # halo cells copy through unchanged
 
     for s in range(sg.n):
         i_tuple = sg.tuples[s]
-        p = float(P_full[tuple(i_tuple)])
+        # Halo cell: any index outside inner range → keep no-learning value
+        if pad > 0 and any(int(i) < pad or int(i) >= pad + G_inner for i in i_tuple):
+            continue
 
+        p = float(P_full[tuple(i_tuple)])
         mu_list: list[float] = []
-        # Cache: if two agents have the same signal index their slice and
-        # hence contour integral and posterior are identical.
         cache: dict[int, float] = {}
         for k in range(K):
             i_k = int(i_tuple[k])
             if i_k in cache:
                 mu_list.append(cache[i_k])
                 continue
-            # (K-1)-D slice fixing dimension k at i_k
             P_slice = np.take(P_full, i_k, axis=k)
             A0, A1 = _contour_integral_kd(P_slice, p, u_grid, f0, f1, tau)
             f0k = float(f0[i_k])
@@ -308,7 +304,8 @@ def sym_phi(P_sorted: np.ndarray, sg: SymGrid, u_grid: np.ndarray,
 
 def _sym_phi_large(P_sorted: np.ndarray, sg: SymGrid, u_grid: np.ndarray,
                    tau: float, gamma: float, W: float,
-                   f0: np.ndarray, f1: np.ndarray) -> np.ndarray:
+                   f0: np.ndarray, f1: np.ndarray,
+                   pad: int = 0, G_inner: int | None = None) -> np.ndarray:
     """K=8 memory-efficient variant: materialise one G^(K-1) slice at a time.
 
     For each unique first-index value i in 0..G-1, build the (K-1)-D slice
@@ -317,8 +314,10 @@ def _sym_phi_large(P_sorted: np.ndarray, sg: SymGrid, u_grid: np.ndarray,
     15^7 ≈ 170 MB — fits comfortably.
     """
     G, K = sg.G, sg.K
+    if G_inner is None:
+        G_inner = G - 2 * pad
     eps = 1e-12
-    new_P_sorted = np.empty(sg.n, dtype=np.float64)
+    new_P_sorted = P_sorted.copy()   # halo cells copy through unchanged
 
     # Build mapping: unique index value -> list of (cell_s, agent_k, cell_price)
     # We need per-cell prices, so we first need P values for all sorted cells.
@@ -381,11 +380,14 @@ def _sym_phi_large(P_sorted: np.ndarray, sg: SymGrid, u_grid: np.ndarray,
             A0_arr[s, k] = A0
             A1_arr[s, k] = A1
 
-    # Step 3: assemble posteriors and market-clear
+    # Step 3: assemble posteriors and market-clear (skip halo cells)
     for s in range(sg.n):
+        i_tuple = sg.tuples[s]
+        if pad > 0 and any(int(i) < pad or int(i) >= pad + G_inner for i in i_tuple):
+            continue
         mu_list: list[float] = []
         for k in range(K):
-            i_k = int(sg.tuples[s, k])
+            i_k = int(i_tuple[k])
             A0 = A0_arr[s, k]
             A1 = A1_arr[s, k]
             f0k = float(f0[i_k])
@@ -464,30 +466,43 @@ def sym_picard(sg: SymGrid, u_grid: np.ndarray,
 # =====================================================================
 
 def sym_weighted_R2(P_sorted: np.ndarray, sg: SymGrid,
-                    u_grid: np.ndarray, tau: float) -> dict:
-    """Weighted 1-R^2 of logit(p) on T* = tau * sum(u_k)."""
+                    u_grid: np.ndarray, tau: float,
+                    pad: int = 0, G_inner: int | None = None) -> dict:
+    """Weighted 1-R^2 of logit(p) on T* = tau * sum(u_k).
+
+    When pad > 0, only inner cells (all indices in [pad, pad+G_inner)) are
+    included; halo cells are excluded from the regression.
+    """
     K = sg.K
+    G = sg.G
+    if G_inner is None:
+        G_inner = G - 2 * pad
     eps = 1e-12
 
     f0 = np.sqrt(tau / (2 * np.pi)) * np.exp(-tau / 2 * (u_grid + 0.5) ** 2)
     f1 = np.sqrt(tau / (2 * np.pi)) * np.exp(-tau / 2 * (u_grid - 0.5) ** 2)
 
-    Tstar = np.empty(sg.n)
-    logit_p = np.empty(sg.n)
-    weights = np.empty(sg.n)
+    Tstar_list, logit_list, weight_list = [], [], []
+    n_inner = 0
 
     for s in range(sg.n):
         t = sg.tuples[s]
+        if pad > 0 and any(int(i) < pad or int(i) >= pad + G_inner for i in t):
+            continue
+        n_inner += 1
         u_vals = u_grid[t]
-        Tstar[s] = tau * u_vals.sum()
+        Tstar_list.append(tau * float(u_vals.sum()))
         p = float(P_sorted[s])
         p = min(max(p, eps), 1 - eps)
-        logit_p[s] = math.log(p / (1 - p))
+        logit_list.append(math.log(p / (1 - p)))
         prod0 = float(np.prod(f0[t]))
         prod1 = float(np.prod(f1[t]))
         mult = sg.multiplicity(s)
-        weights[s] = mult * 0.5 * (prod0 + prod1)
+        weight_list.append(mult * 0.5 * (prod0 + prod1))
 
+    Tstar = np.array(Tstar_list)
+    logit_p = np.array(logit_list)
+    weights = np.array(weight_list)
     weights /= weights.sum()
     slope, intercept = np.polyfit(Tstar, logit_p, 1, w=np.sqrt(weights))
     pred = slope * Tstar + intercept
@@ -500,7 +515,7 @@ def sym_weighted_R2(P_sorted: np.ndarray, sg: SymGrid,
         "1-R2": one_minus_r2,
         "slope": float(slope),
         "intercept": float(intercept),
-        "n_cells": int(sg.n),
+        "n_cells": n_inner,
     }
 
 
