@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T20:00:16.235318Z",
+  "updated_at": "2026-05-09T20:00:16.667504Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -605,7 +605,7 @@
         "presmooth_alpha": 0.02
       },
       "requeue_count": 2,
-      "completed_at": "2026-05-09T20:00:16.233887Z"
+      "completed_at": "2026-05-09T20:00:16.665905Z"
     },
     {
       "id": "g100_t0400",
