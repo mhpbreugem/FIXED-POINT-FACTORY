@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T15:21:24.383559Z",
+  "updated_at": "2026-05-09T15:21:24.794931Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -1831,7 +1831,7 @@
       },
       "note": "Auto-requeued (attempt 2): warm-start from g010_t0150 (log-dist=0.07).",
       "requeue_count": 2,
-      "completed_at": "2026-05-09T15:21:24.382199Z"
+      "completed_at": "2026-05-09T15:21:24.793617Z"
     },
     {
       "id": "g010_t0120",
