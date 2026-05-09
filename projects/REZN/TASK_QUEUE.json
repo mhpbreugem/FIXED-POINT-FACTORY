@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-08T23:53:34.103262Z",
+  "updated_at": "2026-05-09T00:11:38.315894Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -1063,15 +1063,13 @@
         "g140_t0570"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "bailed",
       "checkpoint": null,
       "result": {
         "reason": "||F||inf=3.777e-01 > bail threshold 1e-04"
       },
       "note": "Auto-requeued (attempt 5): via new ladder g140_t0570. \u03c4-ladder at \u03c4=5.7",
-      "requeue_count": 5,
-      "claimed_by": "gha-25585712828-g140_t1000",
-      "claimed_at": "2026-05-09T00:08:39Z"
+      "requeue_count": 5
     },
     {
       "id": "g400_t1000",
@@ -1999,10 +1997,10 @@
   "summary": {
     "total": 86,
     "done": 56,
-    "ready": 18,
-    "claimed": 0,
+    "ready": 11,
+    "claimed": 6,
     "blocked": 11,
-    "bailed": 0,
+    "bailed": 1,
     "skip": 1
   },
   "fanout": {
