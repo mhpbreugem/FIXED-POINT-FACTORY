@@ -264,9 +264,19 @@
       const isClaimed = t.status === "claimed" || t.status === "in-progress";
       let liveStr = "", workerStr = "";
       if (isClaimed && pr) {
-        const iterStr = pr.iter != null ? pr.iter : "—";
         const ftolStr = pr.ftol != null ? Number(pr.ftol).toExponential(1) : "—";
-        liveStr = `<span class="live">${iterStr} · ${ftolStr}</span>`;
+        const ex = pr.extra || {};
+        let phaseLabel;
+        if (ex.phase === "newton") {
+          phaseLabel = `newton s${ex.stage ?? "?"}·${ex.newton_iter ?? "?"}`;
+        } else if (ex.phase === "presmooth") {
+          phaseLabel = `smooth s${ex.stage ?? "?"}·${ex.newton_iter ?? "?"}`;
+        } else if (ex.phase === "picard") {
+          phaseLabel = `picard·${ex.newton_iter ?? pr.iter ?? "?"}`;
+        } else {
+          phaseLabel = `φ${pr.iter ?? "?"}`;
+        }
+        liveStr = `<span class="live">${phaseLabel} ‖F‖=${ftolStr}</span>`;
         if (pr.worker_id) workerStr = `<span class="mono" style="font-size:0.78rem">${esc(pr.worker_id)}</span>`;
       } else if (isClaimed && t.worker_id) {
         workerStr = `<span class="mono" style="font-size:0.78rem">${esc(t.worker_id)}</span>`;

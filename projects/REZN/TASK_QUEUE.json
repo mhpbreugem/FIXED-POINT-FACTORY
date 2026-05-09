@@ -395,11 +395,9 @@
         "g100_t0500",
         "g050_t0200"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
-      "claimed_by": "gha-25604498824-g100_t0050",
-      "claimed_at": "2026-05-09T15:17:01Z",
       "completed_at": null,
       "deps_satisfy": "any",
       "note": "RERUN: previous 1-R\u00b2=0.026 from results/full_ree/task3_g100_t0050_mp50.json; warm-start any-of ['g100_t0500', 'g050_t0200']."
@@ -412,11 +410,9 @@
         "g100_t0500",
         "g050_t0200"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
-      "claimed_by": "gha-25604498824-g100_t0080",
-      "claimed_at": "2026-05-09T15:17:01Z",
       "completed_at": null,
       "deps_satisfy": "any",
       "note": "RERUN: previous 1-R\u00b2=0.031 from results/full_ree/task3_g100_t0080_mp50.json; warm-start any-of ['g100_t0500', 'g050_t0200']."
@@ -447,15 +443,13 @@
         "g100_t0500",
         "g140_t0240"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
       "deps_satisfy": "any",
       "note": "Auto-requeued (attempt 1): warm-start from g140_t0240 (log-dist=0.58).",
-      "requeue_count": 1,
-      "claimed_by": "gha-25604498824-g100_t0150",
-      "claimed_at": "2026-05-09T15:17:01Z"
+      "requeue_count": 1
     },
     {
       "id": "g100_t0200",
@@ -465,11 +459,9 @@
         "g100_t0500",
         "g050_t0200"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
-      "claimed_by": "gha-25604498824-g100_t0200",
-      "claimed_at": "2026-05-09T15:17:01Z",
       "completed_at": null,
       "deps_satisfy": "any",
       "note": "RERUN: previous 1-R\u00b2=0.0467 from results/full_ree/task3_g100_t0200_mp50.json; warm-start any-of ['g100_t0500', 'g050_t0200']."
@@ -546,15 +538,13 @@
       "depends_on": [
         "g100_t0390"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
       "deps_satisfy": "any",
       "note": "Auto-requeued (attempt 2): via new ladder g100_t0390. \u03c4-ladder at \u03c4=3.9",
-      "requeue_count": 2,
-      "claimed_by": "gha-25604498824-g100_t0300",
-      "claimed_at": "2026-05-09T15:17:01Z"
+      "requeue_count": 2
     },
     {
       "id": "g100_t0450",
@@ -564,7 +554,7 @@
         "g100_t0500"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 2): noise perturbation noise_level=0.004.",
@@ -573,9 +563,7 @@
         "presmooth": 100,
         "presmooth_alpha": 0.02
       },
-      "requeue_count": 2,
-      "claimed_by": "gha-25604498824-g100_t0450",
-      "claimed_at": "2026-05-09T15:17:01Z"
+      "requeue_count": 2
     },
     {
       "id": "g100_t0400",
@@ -644,7 +632,7 @@
         "g100_t0500"
       ],
       "deps_satisfy": "any",
-      "status": "bailed",
+      "status": "ready",
       "checkpoint": null,
       "result": {
         "reason": "||F||inf=6.527e-01 > bail threshold 1e-04"
@@ -1021,7 +1009,7 @@
         "g140_t0270"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": {
         "reason": "||F||inf=2.887e-01 > bail threshold 1e-04"
@@ -1032,9 +1020,7 @@
         "noise_level": 0.008,
         "presmooth": 100,
         "presmooth_alpha": 0.02
-      },
-      "claimed_by": "gha-25604498824-g140_t0300",
-      "claimed_at": "2026-05-09T15:17:01Z"
+      }
     },
     {
       "id": "g140_t0330",
@@ -1125,7 +1111,7 @@
         "g140_t0510"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": {
         "reason": "||F||inf=3.885e-01 > bail threshold 1e-04"
@@ -1136,9 +1122,7 @@
         "noise_level": 0.004,
         "presmooth": 100,
         "presmooth_alpha": 0.02
-      },
-      "claimed_by": "gha-25604498824-g140_t0570",
-      "claimed_at": "2026-05-09T15:17:01Z"
+      }
     },
     {
       "id": "g140_t1000",
@@ -1148,7 +1132,7 @@
         "g140_t0570"
       ],
       "deps_satisfy": "any",
-      "status": "bailed",
+      "status": "ready",
       "checkpoint": null,
       "result": {
         "reason": "||F||inf=3.777e-01 > bail threshold 1e-04"
@@ -1758,7 +1742,7 @@
         "g016_t0050"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "result": null,
       "note": "Auto-requeued (attempt 5): noise perturbation noise_level=0.032.",
       "solver_params": {
@@ -1767,9 +1751,7 @@
         "presmooth_alpha": 0.02
       },
       "requeue_count": 5,
-      "checkpoint": null,
-      "claimed_by": "gha-25604498824-g013_t0050",
-      "claimed_at": "2026-05-09T15:17:01Z"
+      "checkpoint": null
     },
     {
       "id": "g010_t0050",
@@ -1932,7 +1914,7 @@
       "id": "g010_t0300",
       "gamma": 0.1,
       "tau": 3.0,
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "depends_on": [
@@ -1940,9 +1922,7 @@
       ],
       "deps_satisfy": "any",
       "requeue_count": 2,
-      "note": "Auto-requeued (attempt 2): via new ladder g010_t0240. \u03c4-ladder at \u03c4=2.4",
-      "claimed_by": "gha-25604498824-g010_t0300",
-      "claimed_at": "2026-05-09T15:17:01Z"
+      "note": "Auto-requeued (attempt 2): via new ladder g010_t0240. \u03c4-ladder at \u03c4=2.4"
     },
     {
       "id": "g010_t0500",
@@ -2043,7 +2023,7 @@
       "id": "extract_value_info_g025",
       "gamma": 0.25,
       "tau": null,
-      "status": "claimed",
+      "status": "ready",
       "deps_satisfy": "all",
       "depends_on": [
         "g025_t0030",
@@ -2062,15 +2042,13 @@
         "presmooth": 100,
         "presmooth_alpha": 0.02
       },
-      "requeue_count": 1,
-      "claimed_by": "gha-25604516780-extract_value_info_g025",
-      "claimed_at": "2026-05-09T15:17:56Z"
+      "requeue_count": 1
     },
     {
       "id": "extract_volume_g050",
       "gamma": 0.5,
       "tau": null,
-      "status": "claimed",
+      "status": "ready",
       "deps_satisfy": "all",
       "depends_on": [
         "g050_t0030",
@@ -2089,9 +2067,7 @@
         "g050_t2000"
       ],
       "note": "Fig 7 extraction for gamma=0.5",
-      "result": null,
-      "claimed_by": "gha-25604516780-extract_volume_g050",
-      "claimed_at": "2026-05-09T15:17:56Z"
+      "result": null
     },
     {
       "id": "g050_t0170",
@@ -2101,7 +2077,7 @@
         "g050_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 1): noise perturbation noise_level=0.002.",
@@ -2110,9 +2086,7 @@
         "presmooth": 100,
         "presmooth_alpha": 0.02
       },
-      "requeue_count": 1,
-      "claimed_by": "gha-25604516780-g050_t0170",
-      "claimed_at": "2026-05-09T15:17:56Z"
+      "requeue_count": 1
     },
     {
       "id": "g050_t0140",
@@ -2122,13 +2096,11 @@
         "g050_t0170"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 1): via new ladder g050_t0170. \u03c4-ladder at \u03c4=1.7",
-      "requeue_count": 1,
-      "claimed_by": "gha-25604516780-g050_t0140",
-      "claimed_at": "2026-05-09T15:17:56Z"
+      "requeue_count": 1
     },
     {
       "id": "extract_value_info_g050",
@@ -2384,7 +2356,7 @@
       "symmetric": true,
       "depends_on": [],
       "deps_satisfy": "all",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "note": "Symmetric K=3 baseline; cold start (no-learning init).",
@@ -2395,9 +2367,7 @@
         "tol": 5e-07,
         "G_inner": 15,
         "pad": 4
-      },
-      "claimed_by": "gha-25604516780-symK3_g050_t0200_G15",
-      "claimed_at": "2026-05-09T15:17:56Z"
+      }
     },
     {
       "id": "symK4_g050_t0200_G15",

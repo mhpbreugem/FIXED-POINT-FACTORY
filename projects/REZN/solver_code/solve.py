@@ -491,7 +491,7 @@ def main() -> None:
             print(f"[solve] noise perturbation applied: level={noise_level}", flush=True)
 
         # phi closure — wrap to update reporter on each evaluation
-        phi_calls = {"n": 0}
+        phi_calls = {"n": 0, "phase": "init", "stage": 0, "newton_iter": 0}
 
         def phi_full_fn(P_full: np.ndarray) -> np.ndarray:
             out = phi_K3_halo_smooth(
@@ -499,11 +499,15 @@ def main() -> None:
                 tau_vec, gamma_vec, W_vec, kernel_h,
             )
             phi_calls["n"] += 1
-            # Light residual estimate for live dashboard (float64, cheap)
             P_in = extract_inner(P_full, inner_lo, inner_hi)
             P_in_new = extract_inner(out, inner_lo, inner_hi)
             F_inf = float(np.max(np.abs(P_in - P_in_new)))
-            reporter.update(iter=phi_calls["n"], ftol=F_inf)
+            reporter.update(
+                iter=phi_calls["n"], ftol=F_inf,
+                phase=phi_calls["phase"],
+                stage=phi_calls["stage"],
+                newton_iter=phi_calls["newton_iter"],
+            )
             return out
 
         print(f"[solve] params: presmooth={presmooth} alpha={presmooth_alpha} "
@@ -519,9 +523,11 @@ def main() -> None:
             print(f"[solve] pure_picard mode: alpha={presmooth_alpha} "
                   f"max_iters={max_picard_iters} tol={picard_tol:.0e}", flush=True)
 
+            phi_calls["phase"] = "picard"
             P_full_cur = replace_inner(halo, P_inner_seed, inner_lo, inner_hi)
             F_inf_cur = float("inf")
             for _i in range(max_picard_iters):
+                phi_calls["newton_iter"] = _i + 1
                 P_new = phi_full_fn(P_full_cur)
                 F_inf_cur = float(np.max(np.abs(
                     extract_inner(P_new, inner_lo, inner_hi)
@@ -549,6 +555,15 @@ def main() -> None:
 
             history = _History(F_inf_cur)
         else:
+            def _on_stage(s, phase):
+                phi_calls["stage"] = s
+                phi_calls["phase"] = phase
+                phi_calls["newton_iter"] = 0
+
+            def _on_newton(n):
+                phi_calls["phase"] = "newton"
+                phi_calls["newton_iter"] = n
+
             P_inner_final, history = staggered_solve(
                 phi_full_fn, u_full, inner_lo, inner_hi,
                 u_grid_inner=u_grid_inner, tau_vec=tau_vec, K=K,
@@ -565,6 +580,8 @@ def main() -> None:
                 presmooth_alpha=presmooth_alpha,
                 halo_update="no_learning",
                 heartbeat_s=30.0,
+                stage_callback=_on_stage,
+                newton_iter_callback=_on_newton,
             )
 
         # Final diagnostics (float64)
