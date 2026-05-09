@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T13:21:04.233566Z",
+  "updated_at": "2026-05-09T13:21:16.638589Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -1850,12 +1850,16 @@
         "g010_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "\u03c4-ladder between g010_t0200 (\u03c4=2.0) and g010_t0300 (\u03c4=3.0).",
-      "claimed_by": "gha-25602013101-g010_t0240",
-      "claimed_at": "2026-05-09T13:13:59Z"
+      "note": "Auto-requeued (attempt 1): noise perturbation noise_level=0.002.",
+      "solver_params": {
+        "noise_level": 0.002,
+        "presmooth": 100,
+        "presmooth_alpha": 0.02
+      },
+      "requeue_count": 1
     },
     {
       "id": "g010_t0300",
@@ -2424,8 +2428,8 @@
   "summary": {
     "total": 100,
     "done": 60,
-    "ready": 8,
-    "claimed": 15,
+    "ready": 9,
+    "claimed": 14,
     "blocked": 12,
     "bailed": 4,
     "skip": 1
