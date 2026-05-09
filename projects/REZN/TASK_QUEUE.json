@@ -2080,7 +2080,7 @@
       "symmetric": true,
       "depends_on": [],
       "deps_satisfy": "all",
-      "status": "claimed",
+      "status": "in-progress",
       "checkpoint": null,
       "result": null,
       "note": "Symmetric K=3 baseline; cold start (no-learning init).",
@@ -2092,8 +2092,7 @@
         "G_inner": 15,
         "pad": 4
       },
-      "claimed_by": "claude-cpu-symK3",
-      "claimed_at": "2026-05-09T04:04:50Z"
+      "claimed_by": "claude-cpu-symK3"
     },
     {
       "id": "symK4_g050_t0200_G15",
