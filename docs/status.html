@@ -55,7 +55,23 @@
   .enorm { font-size: 0.8rem; color: var(--done);    font-family: ui-monospace, monospace; }
   .controls { margin: 0.5rem 0 0.8rem 0; display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
   .controls input { padding: 0.3rem 0.5rem; border: 1px solid #ccc; border-radius: 0.3rem; width: 220px; }
-  .workers-inline { margin-top: 1.2rem; font-size: 0.82rem; color: var(--muted); }
+  .topbar { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;
+            margin-bottom: 0.8rem; padding: 0.5rem 0.7rem; background: #f0f0f0;
+            border-radius: 0.4rem; font-size: 0.85rem; }
+  .topbar input { padding: 0.25rem 0.5rem; border: 1px solid #ccc; border-radius: 0.3rem;
+                  width: 260px; font-family: ui-monospace, monospace; font-size: 0.8rem; }
+  .btn-action { padding: 0.3rem 0.8rem; border: none; border-radius: 0.3rem; cursor: pointer;
+                color: white; font-weight: 600; font-size: 0.85rem; }
+  .btn-action:hover { opacity: 0.85; }
+  .btn-action:disabled { opacity: 0.5; cursor: default; }
+  .btn-bailed  { background: var(--bailed); }
+  .btn-claimed { background: var(--claimed); }
+  .workers-inline { font-size: 0.82rem; color: var(--muted); }
+  .workers-box { background: #fffbe6; border: 1px solid #e6c800; border-radius: 0.4rem;
+                 padding: 0.5rem 0.8rem; margin-bottom: 0.8rem; }
+  .workers-box table { background: transparent; font-size: 0.82rem; }
+  .workers-box th  { background: #f5e98a; }
+  tr.row-claimed td { background: #fffbe6 !important; }
   svg.chart { overflow: visible; }
   .chart-wrap { margin: 0.5rem 0 1.5rem 0; }
   /* mini chart axis */
@@ -74,6 +90,13 @@
 <h1>fixed-point-factory — <span id="project-label">REZN</span></h1>
 <p class="meta" id="meta">loading…</p>
 
+<div class="topbar">
+  <input type="password" id="pat-input" placeholder="GitHub PAT (stored locally)" oninput="savePat()">
+  <button class="btn-action btn-bailed" id="btn-reset-bailed" onclick="resetByStatus('bailed')">Reset bailed → ready</button>
+  <button class="btn-action btn-claimed" id="btn-reset-claimed" onclick="resetByStatus('claimed')">Release claimed → ready</button>
+  <span id="reset-status" style="font-size:0.8rem;color:#555"></span>
+</div>
+
 <div class="tabs">
   <button class="tab active" onclick="switchTab(this,'tasks')">Tasks</button>
   <button class="tab" onclick="switchTab(this,'figures')">Figures</button>
@@ -81,6 +104,7 @@
 
 <div id="tab-tasks" class="tab-content active">
   <div class="summary" id="summary"></div>
+  <div class="workers-box workers-inline" id="workers-inline"></div>
   <div class="controls">
     <input type="text" id="filter" placeholder="filter id, status, γ…" oninput="renderTasks()">
     <button onclick="loadAll()">refresh now</button>
@@ -91,6 +115,7 @@
       <th onclick="sortBy('status')">status</th>
       <th onclick="sortBy('gamma')">&#947;</th>
       <th onclick="sortBy('tau')">&#964;</th>
+      <th>worker</th>
       <th>live iter · ftol</th>
       <th onclick="sortBy('F_max')">&#8214;F&#8214;&#8734;</th>
       <th onclick="sortBy('1-R2')">1&#8209;R²</th>
@@ -98,7 +123,6 @@
     </tr></thead>
     <tbody id="task-body"></tbody>
   </table>
-  <div class="workers-inline" id="workers-inline"></div>
 </div>
 
 <div id="tab-figures" class="tab-content">
@@ -111,6 +135,51 @@
   let taskData = null, workerData = null, progressData = {};
   let sortCol = "id", sortAsc = true;
   let FIGDATA = null;
+
+  // ── PAT storage ──────────────────────────────────────────────────────────
+  function savePat() {
+    const v = document.getElementById('pat-input').value.trim();
+    if (v) localStorage.setItem('fpf_pat', v); else localStorage.removeItem('fpf_pat');
+  }
+  function getPat() { return localStorage.getItem('fpf_pat') || ''; }
+  window.addEventListener('DOMContentLoaded', () => {
+    const p = getPat(); if (p) document.getElementById('pat-input').value = p;
+  });
+
+  // ── Reset tasks by status → ready ────────────────────────────────────────
+  async function resetByStatus(fromStatus) {
+    const pat = getPat();
+    if (!pat) { alert('Paste a GitHub PAT in the box first.'); return; }
+    const btnId = fromStatus === 'bailed' ? 'btn-reset-bailed' : 'btn-reset-claimed';
+    const btn = document.getElementById(btnId);
+    const st  = document.getElementById('reset-status');
+    btn.disabled = true; st.textContent = 'Fetching…';
+    const qpath = `projects/${PROJECT}/TASK_QUEUE.json`;
+    try {
+      const meta = await fetch(
+        `https://api.github.com/repos/${OWNER}/${REPO}/contents/${qpath}?ref=${BRANCH}`,
+        { headers: { Authorization: `token ${pat}` } }).then(r => r.json());
+      const content = JSON.parse(atob(meta.content.replace(/\n/g, '')));
+      let n = 0;
+      for (const t of content.tasks) {
+        if (t.status === fromStatus) {
+          t.status = 'ready';
+          ['worker','claimed_by','claimed_at','worker_id'].forEach(k => delete t[k]);
+          n++;
+        }
+      }
+      if (n === 0) { st.textContent = `No ${fromStatus} tasks found.`; btn.disabled = false; return; }
+      const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2))));
+      const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${qpath}`, {
+        method: 'PUT',
+        headers: { Authorization: `token ${pat}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: `Reset ${n} ${fromStatus} → ready`, content: newContent, sha: meta.sha, branch: BRANCH })
+      });
+      if (!res.ok) throw new Error(`GitHub API ${res.status}`);
+      st.textContent = `✓ Reset ${n} ${fromStatus} → ready`;
+      setTimeout(() => { loadAll(); st.textContent = ''; btn.disabled = false; }, 2000);
+    } catch(e) { st.textContent = `Error: ${e.message}`; btn.disabled = false; }
+  }
 
   function rawUrl(path) {
     return `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${path}`;
@@ -192,21 +261,27 @@
       const fmax = t.result?.F_max ?? t.result?.F_max_bound;
       const fmaxStr = fmax != null ? Number(fmax).toExponential(1) : "";
       const pr = progressData[t.id];
-      let liveStr = "";
-      if ((t.status === "claimed" || t.status === "in-progress") && pr) {
+      const isClaimed = t.status === "claimed" || t.status === "in-progress";
+      let liveStr = "", workerStr = "";
+      if (isClaimed && pr) {
         const iterStr = pr.iter != null ? pr.iter : "—";
         const ftolStr = pr.ftol != null ? Number(pr.ftol).toExponential(1) : "—";
-        liveStr = `<div class="live">${iterStr} · ${ftolStr}</div>`;
+        liveStr = `<span class="live">${iterStr} · ${ftolStr}</span>`;
+        if (pr.worker_id) workerStr = `<span class="mono" style="font-size:0.78rem">${esc(pr.worker_id)}</span>`;
+      } else if (isClaimed && t.worker_id) {
+        workerStr = `<span class="mono" style="font-size:0.78rem">${esc(t.worker_id)}</span>`;
       }
       const ckpt = t.checkpoint;
       const ckptCell = ckpt
         ? `<a href="https://github.com/${OWNER}/${REPO}/blob/${BRANCH}/${ckpt}" target="_blank" class="mono" style="font-size:0.78rem">${ckpt.split("/").pop()}</a>`
         : "";
-      return `<tr>
+      const rowCls = isClaimed ? " class=\"row-claimed\"" : "";
+      return `<tr${rowCls}>
         <td class="mono">${esc(t.id)}</td>
         <td class="status ${t.status}">${t.status}</td>
         <td>${t.gamma != null ? t.gamma : ""}</td>
         <td>${t.tau  != null ? t.tau  : ""}</td>
+        <td>${workerStr}</td>
         <td>${liveStr}</td>
         <td class="enorm">${fmaxStr}</td>
         <td>${r2str}</td>
@@ -294,11 +369,11 @@
 
     const allRows = [...hbRows, ...progRows];
     if (!allRows.length) {
-      el.innerHTML = "<em>no active workers</em>";
+      el.innerHTML = "<span style='color:#888;font-size:0.82rem'>no active workers</span>";
       return;
     }
-    el.innerHTML = `<strong>Workers</strong>
-      <table style="font-size:0.82rem;margin-top:0.4rem">
+    el.innerHTML = `<strong>Active workers (${allRows.length})</strong>
+      <table style="margin-top:0.4rem;width:auto">
         <thead><tr><th>worker</th><th>task</th><th>last seen</th><th>iter</th><th>ftol</th></tr></thead>
         <tbody>${allRows.join("")}</tbody>
       </table>`;
