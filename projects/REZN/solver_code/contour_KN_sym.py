@@ -18,7 +18,7 @@ At G=15:
 Public API:
     SymGrid(G, K)              — precomputed sorted-index machinery
     sym_phi(P_sorted, ...)      — Phi map operating on sorted storage
-    sym_picard(...)             — damped Picard iteration to convergence
+    sym_newton(...)             — Newton-Krylov fixed-point solver
     sym_to_full(P_sorted, sg)  — reconstruct full K-rank tensor (for plotting)
     sym_weighted_R2(...)       — weighted 1-R^2 with multiplicity counting
 
@@ -423,40 +423,44 @@ def sym_init_no_learning(sg: SymGrid, u_grid: np.ndarray,
 
 
 # =====================================================================
-# Picard iteration
+# Newton-Krylov solver
 # =====================================================================
 
-def sym_picard(sg: SymGrid, u_grid: np.ndarray,
+def sym_newton(sg: SymGrid, u_grid: np.ndarray,
                tau: float, gamma: float, W: float,
                P_init: np.ndarray | None = None,
-               alpha: float = 0.5,
                tol: float = 1e-7,
-               max_iter: int = 5000,
-               verbose: bool = True) -> tuple[np.ndarray, list[float]]:
-    """Damped Picard iteration on sorted storage.
+               max_iter: int = 100,
+               verbose: bool = True,
+               inner_m: int = 50) -> tuple[np.ndarray, list[float]]:
+    """Newton-Krylov fixed-point solver on sorted storage.
 
-    P_{n+1} = (1-alpha)*P_n + alpha*Phi(P_n)
+    Solves F(P) = Phi(P) - P = 0 using scipy.optimize.newton_krylov
+    (matrix-free Newton with LGMRES inner Krylov solver).
+    Quadratic convergence; typically < 20 outer iterations.
 
     Returns (P_converged, residual_history).
     """
-    if P_init is None:
-        P = sym_init_no_learning(sg, u_grid, tau, gamma, W)
-    else:
-        P = P_init.copy()
+    from scipy.optimize import newton_krylov  # noqa: PLC0415
 
+    P0 = sym_init_no_learning(sg, u_grid, tau, gamma, W) if P_init is None else P_init.copy()
     history: list[float] = []
-    for i in range(max_iter):
-        P_new = sym_phi(P, sg, u_grid, tau, gamma, W)
-        res = float(np.max(np.abs(P_new - P)))
-        history.append(res)
-        if verbose and (i % 10 == 0 or res < tol):
-            print(f"  iter {i:4d}  ||F||inf={res:.4e}", flush=True)
-        P = (1.0 - alpha) * P + alpha * P_new
-        if res < tol:
-            if verbose:
-                print(f"  converged at iter {i}  ||F||inf={res:.4e}", flush=True)
-            break
-    return P, history
+
+    def residual(P_flat: np.ndarray) -> np.ndarray:
+        phi_P = sym_phi(P_flat, sg, u_grid, tau, gamma, W)
+        F = phi_P - P_flat
+        history.append(float(np.max(np.abs(F))))
+        if verbose and len(history) % 10 == 1:
+            print(f"  newton eval {len(history):4d}  ||F||inf={history[-1]:.4e}", flush=True)
+        return F
+
+    P_sol = newton_krylov(
+        residual, P0, f_tol=tol, maxiter=max_iter,
+        method="lgmres", inner_m=inner_m, verbose=False,
+    )
+    if verbose:
+        print(f"  newton done  evals={len(history)}  ||F||inf={history[-1]:.4e}", flush=True)
+    return P_sol, history
 
 
 # =====================================================================
