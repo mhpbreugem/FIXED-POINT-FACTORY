@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T20:09:51.485633Z",
+  "updated_at": "2026-05-09T20:10:27.730527Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -1844,17 +1844,17 @@
       "id": "g010_t0050",
       "gamma": 0.1,
       "tau": 0.5,
-      "status": "claimed",
+      "status": "bailed",
       "checkpoint": null,
-      "result": null,
+      "result": {
+        "reason": "||F||inf=3.580e-02 > bail threshold 1e-04"
+      },
       "depends_on": [
         "g010_t0077"
       ],
       "deps_satisfy": "any",
       "requeue_count": 5,
-      "note": "Auto-requeued (attempt 5): via new ladder g010_t0077. \u03c4-ladder at \u03c4=0.77",
-      "claimed_by": "gha-25610607879-g010_t0050",
-      "claimed_at": "2026-05-09T20:06:54Z"
+      "note": "Auto-requeued (attempt 5): via new ladder g010_t0077. \u03c4-ladder at \u03c4=0.77"
     },
     {
       "id": "g010_t0170",
@@ -2608,9 +2608,9 @@
     "total": 106,
     "done": 67,
     "ready": 7,
-    "claimed": 14,
+    "claimed": 13,
     "blocked": 12,
-    "bailed": 5,
+    "bailed": 6,
     "skip": 1
   },
   "fanout": {
