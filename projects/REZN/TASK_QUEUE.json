@@ -3,8 +3,8 @@
   "updated_at": "2026-05-09T20:19:10.752559Z",
   "params": {
     "G": 20,
-    "UMAX": 5.0,
-    "trim": 0.0,
+    "UMAX": 5,
+    "trim": 0,
     "K": 3,
     "dps": 50,
     "F_tol": "1e-25",
@@ -13,7 +13,7 @@
   "seed": {
     "id": "seed",
     "gamma": 0.5,
-    "tau": 2.0,
+    "tau": 2,
     "checkpoint": "results/full_ree/posterior_v3_G20_umax5_notrim_mp300.json",
     "F_max": "7.4e-119",
     "dps": 300
@@ -21,7 +21,7 @@
   "tasks": [
     {
       "id": "test_ci_smoke",
-      "gamma": 1.0,
+      "gamma": 1,
       "tau": 0.3,
       "test": true,
       "status": "done",
@@ -30,7 +30,7 @@
         "smoke": true,
         "1-R2": 0.00015319,
         "F_max": 0.20528,
-        "note": "CI smoke test \u2014 one phi eval, no convergence required"
+        "note": "CI smoke test — one phi eval, no convergence required"
       },
       "completed_at": "2026-05-07T18:31:51.999548Z"
     },
@@ -48,7 +48,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -65,7 +65,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -82,13 +82,13 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
       "id": "g050_t0100",
       "gamma": 0.5,
-      "tau": 1.0,
+      "tau": 1,
       "depends_on": [
         "g050_t0150"
       ],
@@ -99,7 +99,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -116,13 +116,13 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
       "id": "g050_t0200",
       "gamma": 0.5,
-      "tau": 2.0,
+      "tau": 2,
       "depends_on": [],
       "status": "done",
       "checkpoint": "results/full_ree/seed_g050_t0200_3d.npz",
@@ -138,7 +138,7 @@
     {
       "id": "g050_t0300",
       "gamma": 0.5,
-      "tau": 3.0,
+      "tau": 3,
       "depends_on": [
         "g050_t0200"
       ],
@@ -149,13 +149,13 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
       "id": "g050_t0400",
       "gamma": 0.5,
-      "tau": 4.0,
+      "tau": 4,
       "depends_on": [
         "g050_t0200",
         "g050_t0300",
@@ -175,11 +175,11 @@
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -194,7 +194,7 @@
     {
       "id": "g050_t0500",
       "gamma": 0.5,
-      "tau": 5.0,
+      "tau": 5,
       "depends_on": [
         "g050_t0400"
       ],
@@ -211,11 +211,11 @@
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -228,7 +228,7 @@
     {
       "id": "g050_t0700",
       "gamma": 0.5,
-      "tau": 7.0,
+      "tau": 7,
       "depends_on": [
         "g050_t0500"
       ],
@@ -239,17 +239,17 @@
         "F_max": 2.9731e-52,
         "n_stages": 1,
         "phi_calls": 4639,
-        "wall_s": 1996.0
+        "wall_s": 1996
       },
       "solver_params": {
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -262,7 +262,7 @@
     {
       "id": "g050_t1000",
       "gamma": 0.5,
-      "tau": 10.0,
+      "tau": 10,
       "depends_on": [
         "g050_t0700"
       ],
@@ -279,11 +279,11 @@
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -296,7 +296,7 @@
     {
       "id": "g050_t1500",
       "gamma": 0.5,
-      "tau": 15.0,
+      "tau": 15,
       "depends_on": [
         "g050_t1000"
       ],
@@ -307,17 +307,17 @@
         "F_max": 1.8852e-53,
         "n_stages": 1,
         "phi_calls": 1269,
-        "wall_s": 1163.0
+        "wall_s": 1163
       },
       "solver_params": {
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -330,7 +330,7 @@
     {
       "id": "g050_t2000",
       "gamma": 0.5,
-      "tau": 20.0,
+      "tau": 20,
       "depends_on": [
         "g050_t1500"
       ],
@@ -350,11 +350,11 @@
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -366,7 +366,7 @@
     },
     {
       "id": "g100_t0030",
-      "gamma": 1.0,
+      "gamma": 1,
       "tau": 0.3,
       "depends_on": [
         "g025_t0030",
@@ -389,41 +389,37 @@
     },
     {
       "id": "g100_t0050",
-      "gamma": 1.0,
+      "gamma": 1,
       "tau": 0.5,
       "depends_on": [
         "g050_t0200",
         "g100_t0030",
         "g100_t0500"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
       "deps_satisfy": "any",
       "note": "Auto-requeued (attempt 1): warm-start from g100_t0030 (log-dist=0.51). | RESET: stale claim from None (no active workers)",
-      "requeue_count": 1,
-      "claimed_by": "gha-25610412738-g100_t0050",
-      "claimed_at": "2026-05-09T19:57:31Z"
+      "requeue_count": 1
     },
     {
       "id": "g100_t0049",
-      "gamma": 1.0,
+      "gamma": 1,
       "tau": 0.49000000000000005,
       "depends_on": [
         "g100_t0030"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "\u03c4-ladder between g100_t0030 (\u03c4=0.3) and g100_t0080 (\u03c4=0.8).",
-      "claimed_by": "gha-25610607879-g100_t0049",
-      "claimed_at": "2026-05-09T20:06:54Z"
+      "note": "τ-ladder between g100_t0030 (τ=0.3) and g100_t0080 (τ=0.8)."
     },
     {
       "id": "g100_t0080",
-      "gamma": 1.0,
+      "gamma": 1,
       "tau": 0.8,
       "depends_on": [
         "g100_t0049",
@@ -445,26 +441,24 @@
     },
     {
       "id": "g100_t0100",
-      "gamma": 1.0,
-      "tau": 1.0,
+      "gamma": 1,
+      "tau": 1,
       "depends_on": [
         "g050_t0200",
         "g100_t0500",
         "g200_t0100"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
       "deps_satisfy": "any",
       "note": "Auto-requeued (attempt 1): warm-start from g200_t0100 (log-dist=0.69). | RESET: stale claim from None (no active workers)",
-      "requeue_count": 1,
-      "claimed_by": "gha-25610412738-g100_t0100",
-      "claimed_at": "2026-05-09T19:57:31Z"
+      "requeue_count": 1
     },
     {
       "id": "g100_t0250",
-      "gamma": 1.0,
+      "gamma": 1,
       "tau": 2.5,
       "depends_on": [
         "g100_t0300"
@@ -473,11 +467,11 @@
       "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "\u03c4-ladder between g100_t0300 (\u03c4=3.0) and g100_t0210 (\u03c4=2.1)."
+      "note": "τ-ladder between g100_t0300 (τ=3.0) and g100_t0210 (τ=2.1)."
     },
     {
       "id": "g100_t0210",
-      "gamma": 1.0,
+      "gamma": 1,
       "tau": 2.1,
       "depends_on": [
         "g100_t0250"
@@ -486,47 +480,43 @@
       "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "Auto-requeued (attempt 1): via new ladder g100_t0250. \u03c4-ladder at \u03c4=2.5",
+      "note": "Auto-requeued (attempt 1): via new ladder g100_t0250. τ-ladder at τ=2.5",
       "requeue_count": 1
     },
     {
       "id": "g100_t0150",
-      "gamma": 1.0,
+      "gamma": 1,
       "tau": 1.5,
       "depends_on": [
         "g100_t0210"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
       "deps_satisfy": "any",
-      "note": "Auto-requeued (attempt 3): via new ladder g100_t0210. \u03c4-ladder at \u03c4=2.1",
-      "requeue_count": 3,
-      "claimed_by": "gha-25610772910-g100_t0150",
-      "claimed_at": "2026-05-09T20:15:11Z"
+      "note": "Auto-requeued (attempt 3): via new ladder g100_t0210. τ-ladder at τ=2.1",
+      "requeue_count": 3
     },
     {
       "id": "g100_t0200",
-      "gamma": 1.0,
-      "tau": 2.0,
+      "gamma": 1,
+      "tau": 2,
       "depends_on": [
         "g100_t0500",
         "g050_t0200"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
       "deps_satisfy": "any",
-      "note": "RERUN: previous 1-R\u00b2=0.0467 from results/full_ree/task3_g100_t0200_mp50.json; warm-start any-of ['g100_t0500', 'g050_t0200']. | RESET: stale claim from None (no active workers)",
-      "claimed_by": "gha-25610412738-g100_t0200",
-      "claimed_at": "2026-05-09T19:57:31Z"
+      "note": "RERUN: previous 1-R²=0.0467 from results/full_ree/task3_g100_t0200_mp50.json; warm-start any-of ['g100_t0500', 'g050_t0200']. | RESET: stale claim from None (no active workers)"
     },
     {
       "id": "g140_t0200",
       "gamma": 1.4,
-      "tau": 2.0,
+      "tau": 2,
       "depends_on": [
         "g140_t0240",
         "g050_t0200",
@@ -542,16 +532,16 @@
         "phi_calls": 1611,
         "wall_s": 1808.5
       },
-      "note": "Added to fill gamma-sweep at tau=2.0; warmstart from g200_t0200 (closest checkpoint). | RERUN: previous 1-R\u00b2=0.08388755 from projects/REZN/checkpoints/g140_t0200.npz; warm-start any-of ['g140_t0240', 'g050_t0200', 'g200_t0200'].",
+      "note": "Added to fill gamma-sweep at tau=2.0; warmstart from g200_t0200 (closest checkpoint). | RERUN: previous 1-R²=0.08388755 from projects/REZN/checkpoints/g140_t0200.npz; warm-start any-of ['g140_t0240', 'g050_t0200', 'g200_t0200'].",
       "solver_params": {
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -563,13 +553,13 @@
     },
     {
       "id": "g100_t0440",
-      "gamma": 1.0,
+      "gamma": 1,
       "tau": 4.4,
       "depends_on": [
         "g100_t0500"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 1): noise perturbation noise_level=0.002.",
@@ -578,20 +568,18 @@
         "presmooth": 100,
         "presmooth_alpha": 0.02
       },
-      "requeue_count": 1,
-      "claimed_by": "gha-25610607879-g100_t0440",
-      "claimed_at": "2026-05-09T20:06:54Z"
+      "requeue_count": 1
     },
     {
       "id": "g100_t0390",
-      "gamma": 1.0,
+      "gamma": 1,
       "tau": 3.9,
       "depends_on": [
         "g100_t0440",
         "g100_t0500"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 3): noise perturbation noise_level=0.002.",
@@ -600,14 +588,12 @@
         "noise_level": 0.002,
         "presmooth": 100,
         "presmooth_alpha": 0.02
-      },
-      "claimed_by": "gha-25610412738-g100_t0390",
-      "claimed_at": "2026-05-09T19:57:31Z"
+      }
     },
     {
       "id": "g100_t0300",
-      "gamma": 1.0,
-      "tau": 3.0,
+      "gamma": 1,
+      "tau": 3,
       "depends_on": [
         "g100_t0390",
         "g140_t0330"
@@ -628,7 +614,7 @@
     },
     {
       "id": "g100_t0450",
-      "gamma": 1.0,
+      "gamma": 1,
       "tau": 4.5,
       "depends_on": [
         "g100_t0500"
@@ -638,7 +624,7 @@
       "checkpoint": "projects/REZN/checkpoints/g100_t0450.npz",
       "result": {
         "1-R2": 0.09585252,
-        "F_max": 5.5832e-09,
+        "F_max": 5.5832e-9,
         "n_stages": 7,
         "phi_calls": 6085,
         "wall_s": 134.6
@@ -654,8 +640,8 @@
     },
     {
       "id": "g100_t0400",
-      "gamma": 1.0,
-      "tau": 4.0,
+      "gamma": 1,
+      "tau": 4,
       "depends_on": [
         "g100_t0450",
         "g100_t0500"
@@ -677,8 +663,8 @@
     },
     {
       "id": "g100_t0500",
-      "gamma": 1.0,
-      "tau": 5.0,
+      "gamma": 1,
+      "tau": 5,
       "depends_on": [
         "g050_t0200",
         "g100_t0400"
@@ -696,11 +682,11 @@
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -715,7 +701,7 @@
     },
     {
       "id": "g100_t0590",
-      "gamma": 1.0,
+      "gamma": 1,
       "tau": 5.9,
       "depends_on": [
         "g100_t0500"
@@ -736,8 +722,8 @@
     },
     {
       "id": "g100_t0700",
-      "gamma": 1.0,
-      "tau": 7.0,
+      "gamma": 1,
+      "tau": 7,
       "depends_on": [
         "g100_t0500",
         "g100_t0590"
@@ -755,11 +741,11 @@
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-49",
         "mp_iters": 20,
@@ -770,13 +756,13 @@
       },
       "requeue_count": 6,
       "deps_satisfy": "any",
-      "note": "Re-queued (attempt 6): relaxed mp_tol 1e-50\u2192 1e-49 (F_inf=2.494e-50 was just above old threshold).",
+      "note": "Re-queued (attempt 6): relaxed mp_tol 1e-50→ 1e-49 (F_inf=2.494e-50 was just above old threshold).",
       "completed_at": "2026-05-09T06:34:13.795349Z"
     },
     {
       "id": "g100_t1000",
-      "gamma": 1.0,
-      "tau": 10.0,
+      "gamma": 1,
+      "tau": 10,
       "depends_on": [
         "g100_t0700"
       ],
@@ -793,11 +779,11 @@
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -809,8 +795,8 @@
     },
     {
       "id": "g100_t1500",
-      "gamma": 1.0,
-      "tau": 15.0,
+      "gamma": 1,
+      "tau": 15,
       "depends_on": [
         "g100_t1000"
       ],
@@ -827,11 +813,11 @@
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -843,8 +829,8 @@
     },
     {
       "id": "g100_t2000",
-      "gamma": 1.0,
-      "tau": 20.0,
+      "gamma": 1,
+      "tau": 20,
       "depends_on": [
         "g100_t1500"
       ],
@@ -856,7 +842,7 @@
         "F_max": 2.091e-51,
         "n_stages": 1,
         "phi_calls": 1126,
-        "wall_s": 1312.0
+        "wall_s": 1312
       },
       "note": "tau=20 extension of gamma=1.0 sweep",
       "requeue_count": 0,
@@ -864,11 +850,11 @@
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -880,7 +866,7 @@
     },
     {
       "id": "g400_t0030",
-      "gamma": 4.0,
+      "gamma": 4,
       "tau": 0.3,
       "depends_on": [
         "g400_t0050"
@@ -893,12 +879,12 @@
         "n_triples": 8000,
         "note": "redo of original Terminal-3 run",
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
       "id": "g400_t0050",
-      "gamma": 4.0,
+      "gamma": 4,
       "tau": 0.5,
       "depends_on": [
         "g400_t0080"
@@ -910,12 +896,12 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
       "id": "g400_t0080",
-      "gamma": 4.0,
+      "gamma": 4,
       "tau": 0.8,
       "depends_on": [
         "g400_t0100"
@@ -927,13 +913,13 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
       "id": "g400_t0100",
-      "gamma": 4.0,
-      "tau": 1.0,
+      "gamma": 4,
+      "tau": 1,
       "depends_on": [
         "g400_t0150"
       ],
@@ -944,12 +930,12 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
       "id": "g400_t0150",
-      "gamma": 4.0,
+      "gamma": 4,
       "tau": 1.5,
       "depends_on": [
         "g400_t0200"
@@ -961,13 +947,13 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
       "id": "g400_t0200",
-      "gamma": 4.0,
-      "tau": 2.0,
+      "gamma": 4,
+      "tau": 2,
       "depends_on": [
         "g050_t0200"
       ],
@@ -977,15 +963,15 @@
         "1-R2": 0.0163,
         "slope": 0.605,
         "n_triples": 8000,
-        "note": "from \u03b3-sweep at \u03c4=2 (Task 2)",
+        "note": "from γ-sweep at τ=2 (Task 2)",
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
       "id": "g400_t0300",
-      "gamma": 4.0,
-      "tau": 3.0,
+      "gamma": 4,
+      "tau": 3,
       "depends_on": [
         "g400_t0200"
       ],
@@ -996,13 +982,13 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
       "id": "g400_t0400",
-      "gamma": 4.0,
-      "tau": 4.0,
+      "gamma": 4,
+      "tau": 4,
       "depends_on": [
         "g400_t0300"
       ],
@@ -1013,13 +999,13 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
       "id": "g400_t0500",
-      "gamma": 4.0,
-      "tau": 5.0,
+      "gamma": 4,
+      "tau": 5,
       "depends_on": [
         "g400_t0400"
       ],
@@ -1030,13 +1016,13 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
       "id": "g400_t0700",
-      "gamma": 4.0,
-      "tau": 7.0,
+      "gamma": 4,
+      "tau": 7,
       "depends_on": [
         "g400_t0500"
       ],
@@ -1047,7 +1033,7 @@
         "slope": null,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
     },
     {
@@ -1067,7 +1053,7 @@
         "phi_calls": 402,
         "wall_s": 11.3
       },
-      "note": "\u03c4-ladder between g140_t0200 (\u03c4=2.0) and g140_t0300 (\u03c4=3.0).",
+      "note": "τ-ladder between g140_t0200 (τ=2.0) and g140_t0300 (τ=3.0).",
       "completed_at": "2026-05-08T19:38:53.639409Z"
     },
     {
@@ -1087,18 +1073,18 @@
         "phi_calls": 108,
         "wall_s": 4.9
       },
-      "note": "\u03c4-ladder between g140_t0240 (\u03c4=2.4) and g140_t0300 (\u03c4=3.0).",
+      "note": "τ-ladder between g140_t0240 (τ=2.4) and g140_t0300 (τ=3.0).",
       "completed_at": "2026-05-08T20:04:53.998379Z"
     },
     {
       "id": "g140_t0300",
       "gamma": 1.4,
-      "tau": 3.0,
+      "tau": 3,
       "depends_on": [
         "g140_t0270"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": {
         "reason": "||F||inf=2.887e-01 > bail threshold 1e-04"
@@ -1109,9 +1095,7 @@
         "noise_level": 0.008,
         "presmooth": 100,
         "presmooth_alpha": 0.02
-      },
-      "claimed_by": "gha-25610412738-g140_t0300",
-      "claimed_at": "2026-05-09T19:57:31Z"
+      }
     },
     {
       "id": "g140_t0330",
@@ -1130,7 +1114,7 @@
         "phi_calls": 125,
         "wall_s": 4.3
       },
-      "note": "\u03c4-ladder between g140_t0240 (\u03c4=2.4) and g140_t0450 (\u03c4=4.5).",
+      "note": "τ-ladder between g140_t0240 (τ=2.4) and g140_t0450 (τ=4.5).",
       "completed_at": "2026-05-08T20:48:34.230586Z"
     },
     {
@@ -1150,7 +1134,7 @@
         "phi_calls": 53,
         "wall_s": 3.8
       },
-      "note": "Auto-requeued (attempt 4): via new ladder g140_t0330. \u03c4-ladder at \u03c4=3.3",
+      "note": "Auto-requeued (attempt 4): via new ladder g140_t0330. τ-ladder at τ=3.3",
       "requeue_count": 4,
       "completed_at": "2026-05-08T23:10:31.879142Z"
     },
@@ -1171,7 +1155,7 @@
         "phi_calls": 54,
         "wall_s": 3.8
       },
-      "note": "\u03c4-ladder between g140_t0330 (\u03c4=3.3) and g140_t0570 (\u03c4=5.7).",
+      "note": "τ-ladder between g140_t0330 (τ=3.3) and g140_t0570 (τ=5.7).",
       "completed_at": "2026-05-08T23:10:35.364819Z"
     },
     {
@@ -1191,7 +1175,7 @@
         "phi_calls": 51,
         "wall_s": 3.7
       },
-      "note": "\u03c4-ladder between g140_t0450 (\u03c4=4.5) and g140_t0570 (\u03c4=5.7).",
+      "note": "τ-ladder between g140_t0450 (τ=4.5) and g140_t0570 (τ=5.7).",
       "completed_at": "2026-05-08T23:18:16.822603Z"
     },
     {
@@ -1218,7 +1202,7 @@
     {
       "id": "g140_t1000",
       "gamma": 1.4,
-      "tau": 10.0,
+      "tau": 10,
       "depends_on": [
         "g140_t0570"
       ],
@@ -1228,13 +1212,13 @@
       "result": {
         "reason": "TypeError: staggered_solve() got an unexpected keyword argument 'stage_callback'"
       },
-      "note": "Auto-requeued (attempt 5): via new ladder g140_t0570. \u03c4-ladder at \u03c4=5.7",
+      "note": "Auto-requeued (attempt 5): via new ladder g140_t0570. τ-ladder at τ=5.7",
       "requeue_count": 5
     },
     {
       "id": "g400_t1000",
-      "gamma": 4.0,
-      "tau": 10.0,
+      "gamma": 4,
+      "tau": 10,
       "depends_on": [
         "g140_t1000"
       ],
@@ -1246,18 +1230,18 @@
         "F_max": 1.6894e-51,
         "n_stages": 1,
         "phi_calls": 2068,
-        "wall_s": 2082.0
+        "wall_s": 2082
       },
-      "note": "Auto-requeued (attempt 1): via new ladder g140_t1000. \u03b3-ladder at \u03b3=1.4",
+      "note": "Auto-requeued (attempt 1): via new ladder g140_t1000. γ-ladder at γ=1.4",
       "solver_params": {
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -1270,8 +1254,8 @@
     },
     {
       "id": "g400_t1500",
-      "gamma": 4.0,
-      "tau": 15.0,
+      "gamma": 4,
+      "tau": 15,
       "depends_on": [
         "g400_t1000"
       ],
@@ -1288,11 +1272,11 @@
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -1304,8 +1288,8 @@
     },
     {
       "id": "g400_t2000",
-      "gamma": 4.0,
-      "tau": 20.0,
+      "gamma": 4,
+      "tau": 20,
       "depends_on": [
         "g400_t1500"
       ],
@@ -1313,7 +1297,7 @@
       "status": "done",
       "checkpoint": "projects/REZN/checkpoints/g400_t2000.npz",
       "result": {
-        "1-R2": 5.109e-05,
+        "1-R2": 0.00005109,
         "F_max": 6.8496e-53,
         "n_stages": 1,
         "phi_calls": 1005,
@@ -1325,11 +1309,11 @@
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -1342,7 +1326,7 @@
     {
       "id": "g035_t0200",
       "gamma": 0.35000000000000003,
-      "tau": 2.0,
+      "tau": 2,
       "depends_on": [
         "g050_t0200"
       ],
@@ -1356,16 +1340,16 @@
         "phi_calls": 2,
         "wall_s": 2855.9
       },
-      "note": "\u03b3-ladder between g050_t0200 (\u03b3=0.5) and g025_t0200 (\u03b3=0.25) at \u03c4=2.0.",
+      "note": "γ-ladder between g050_t0200 (γ=0.5) and g025_t0200 (γ=0.25) at τ=2.0.",
       "solver_params": {
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -1379,7 +1363,7 @@
     {
       "id": "g025_t0200",
       "gamma": 0.25,
-      "tau": 2.0,
+      "tau": 2,
       "depends_on": [
         "g035_t0200"
       ],
@@ -1390,18 +1374,18 @@
         "F_max": 3.0122e-52,
         "n_stages": 1,
         "phi_calls": 2,
-        "wall_s": 2313.0
+        "wall_s": 2313
       },
-      "note": "Auto-requeued (attempt 1): via new ladder g035_t0200. \u03b3-ladder at \u03b3=0.35000000000000003",
+      "note": "Auto-requeued (attempt 1): via new ladder g035_t0200. γ-ladder at γ=0.35000000000000003",
       "solver_params": {
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -1427,17 +1411,17 @@
         "F_max": 3.3206e-54,
         "n_stages": 1,
         "phi_calls": 3532,
-        "wall_s": 2249.0
+        "wall_s": 2249
       },
       "solver_params": {
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -1451,7 +1435,7 @@
     {
       "id": "g025_t0100",
       "gamma": 0.25,
-      "tau": 1.0,
+      "tau": 1,
       "depends_on": [
         "g025_t0150"
       ],
@@ -1468,11 +1452,11 @@
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -1502,11 +1486,11 @@
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -1536,11 +1520,11 @@
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -1570,11 +1554,11 @@
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -1587,7 +1571,7 @@
     {
       "id": "g025_t0300",
       "gamma": 0.25,
-      "tau": 3.0,
+      "tau": 3,
       "depends_on": [
         "g025_t0200"
       ],
@@ -1604,11 +1588,11 @@
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -1621,8 +1605,8 @@
     },
     {
       "id": "g200_t0200",
-      "gamma": 2.0,
-      "tau": 2.0,
+      "gamma": 2,
+      "tau": 2,
       "depends_on": [
         "g100_t0200",
         "g400_t0200",
@@ -1643,11 +1627,11 @@
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -1660,7 +1644,7 @@
     },
     {
       "id": "g200_t0150",
-      "gamma": 2.0,
+      "gamma": 2,
       "tau": 1.5,
       "depends_on": [
         "g200_t0200"
@@ -1672,17 +1656,17 @@
         "F_max": 8.9809e-51,
         "n_stages": 1,
         "phi_calls": 4736,
-        "wall_s": 2844.0
+        "wall_s": 2844
       },
       "solver_params": {
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -1695,8 +1679,8 @@
     },
     {
       "id": "g200_t0100",
-      "gamma": 2.0,
-      "tau": 1.0,
+      "gamma": 2,
+      "tau": 1,
       "depends_on": [
         "g200_t0150"
       ],
@@ -1713,11 +1697,11 @@
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -1729,8 +1713,8 @@
     },
     {
       "id": "g200_t0300",
-      "gamma": 2.0,
-      "tau": 3.0,
+      "gamma": 2,
+      "tau": 3,
       "depends_on": [
         "g200_t0200"
       ],
@@ -1747,11 +1731,11 @@
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -1764,8 +1748,8 @@
     },
     {
       "id": "g200_t0500",
-      "gamma": 2.0,
-      "tau": 5.0,
+      "gamma": 2,
+      "tau": 5,
       "depends_on": [
         "g200_t0300"
       ],
@@ -1782,11 +1766,11 @@
         "presmooth": 200,
         "presmooth_alpha": 0.01,
         "max_stages": 8,
-        "inner_rdiff": 1e-05,
+        "inner_rdiff": 0.00001,
         "inner_max_iter": 50,
         "pure_picard": true,
         "picard_iters": 300000,
-        "picard_tol": 1e-07,
+        "picard_tol": 1e-7,
         "mp_dps": 100,
         "mp_tol": "1e-50",
         "mp_iters": 20,
@@ -1820,9 +1804,9 @@
         "F_max": 1.7956e-10,
         "n_stages": 3,
         "phi_calls": 118,
-        "wall_s": 5.0
+        "wall_s": 5
       },
-      "note": "\u03b3-ladder between g025_t0050 (\u03b3=0.25) and g010_t0050 (\u03b3=0.1) at \u03c4=0.5.",
+      "note": "γ-ladder between g025_t0050 (γ=0.25) and g010_t0050 (γ=0.1) at τ=0.5.",
       "completed_at": "2026-05-09T06:10:24.283243Z"
     },
     {
@@ -1854,12 +1838,10 @@
         "g010_t0120"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "\u03c4-ladder between g010_t0120 (\u03c4=1.2) and g010_t0050 (\u03c4=0.5).",
-      "claimed_by": "gha-25610607879-g010_t0077",
-      "claimed_at": "2026-05-09T20:06:54Z"
+      "note": "τ-ladder between g010_t0120 (τ=1.2) and g010_t0050 (τ=0.5)."
     },
     {
       "id": "g010_t0050",
@@ -1875,7 +1857,7 @@
       ],
       "deps_satisfy": "any",
       "requeue_count": 5,
-      "note": "Auto-requeued (attempt 5): via new ladder g010_t0077. \u03c4-ladder at \u03c4=0.77"
+      "note": "Auto-requeued (attempt 5): via new ladder g010_t0077. τ-ladder at τ=0.77"
     },
     {
       "id": "g010_t0170",
@@ -1894,7 +1876,7 @@
         "phi_calls": 88,
         "wall_s": 4.5
       },
-      "note": "\u03c4-ladder between g010_t0200 (\u03c4=2.0) and g010_t0140 (\u03c4=1.4).",
+      "note": "τ-ladder between g010_t0200 (τ=2.0) and g010_t0140 (τ=1.4).",
       "completed_at": "2026-05-09T07:39:46.737679Z"
     },
     {
@@ -1936,14 +1918,14 @@
         "phi_calls": 407,
         "wall_s": 12.3
       },
-      "note": "\u03c4-ladder between g010_t0150 (\u03c4=1.5) and g010_t0100 (\u03c4=1.0).",
+      "note": "τ-ladder between g010_t0150 (τ=1.5) and g010_t0100 (τ=1.0).",
       "completed_at": "2026-05-09T13:18:27.521480Z"
     },
     {
       "id": "g010_t0100",
       "gamma": 0.1,
-      "tau": 1.0,
-      "status": "claimed",
+      "tau": 1,
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "depends_on": [
@@ -1956,9 +1938,7 @@
         "noise_level": 0.002,
         "presmooth": 100,
         "presmooth_alpha": 0.02
-      },
-      "claimed_by": "gha-25610412738-g010_t0100",
-      "claimed_at": "2026-05-09T19:57:31Z"
+      }
     },
     {
       "id": "g010_t0150",
@@ -1984,7 +1964,7 @@
     {
       "id": "g010_t0200",
       "gamma": 0.1,
-      "tau": 2.0,
+      "tau": 2,
       "status": "done",
       "checkpoint": "projects/REZN/checkpoints/g010_t0200.npz",
       "result": {
@@ -2010,7 +1990,7 @@
         "g010_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 3): noise perturbation noise_level=0.008.",
@@ -2019,15 +1999,13 @@
         "presmooth": 100,
         "presmooth_alpha": 0.02
       },
-      "requeue_count": 3,
-      "claimed_by": "gha-25610607879-g010_t0240",
-      "claimed_at": "2026-05-09T20:06:54Z"
+      "requeue_count": 3
     },
     {
       "id": "g010_t0300",
       "gamma": 0.1,
-      "tau": 3.0,
-      "status": "claimed",
+      "tau": 3,
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "depends_on": [
@@ -2041,14 +2019,12 @@
         "noise_level": 0.002,
         "presmooth": 100,
         "presmooth_alpha": 0.02
-      },
-      "claimed_by": "gha-25610412738-g010_t0300",
-      "claimed_at": "2026-05-09T19:57:31Z"
+      }
     },
     {
       "id": "g010_t0500",
       "gamma": 0.1,
-      "tau": 5.0,
+      "tau": 5,
       "status": "done",
       "checkpoint": "projects/REZN/checkpoints/g010_t0500.npz",
       "result": {
@@ -2069,12 +2045,12 @@
     {
       "id": "g050_t1200",
       "gamma": 0.5,
-      "tau": 12.0,
+      "tau": 12,
       "status": "done",
       "checkpoint": "projects/REZN/checkpoints/g050_t1200.npz",
       "result": {
         "1-R2": 0.06548071,
-        "F_max": 1.4871e-09,
+        "F_max": 1.4871e-9,
         "n_stages": 7,
         "phi_calls": 2106,
         "wall_s": 59.4
@@ -2119,7 +2095,7 @@
       "id": "extract_volume_g025",
       "gamma": 0.25,
       "tau": null,
-      "status": "claimed",
+      "status": "ready",
       "deps_satisfy": "all",
       "depends_on": [
         "g025_t0030",
@@ -2138,9 +2114,7 @@
         "presmooth_alpha": 0.02
       },
       "requeue_count": 2,
-      "checkpoint": null,
-      "claimed_by": "gha-25610412738-extract_volume_g025",
-      "claimed_at": "2026-05-09T19:57:31Z"
+      "checkpoint": null
     },
     {
       "id": "extract_value_info_g025",
@@ -2171,7 +2145,7 @@
       "id": "extract_volume_g050",
       "gamma": 0.5,
       "tau": null,
-      "status": "claimed",
+      "status": "ready",
       "deps_satisfy": "all",
       "depends_on": [
         "g050_t0030",
@@ -2197,9 +2171,7 @@
         "presmooth": 100,
         "presmooth_alpha": 0.02
       },
-      "requeue_count": 1,
-      "claimed_by": "gha-25610772910-extract_volume_g050",
-      "claimed_at": "2026-05-09T20:15:11Z"
+      "requeue_count": 1
     },
     {
       "id": "g050_t0170",
@@ -2209,7 +2181,7 @@
         "g050_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 1): noise perturbation noise_level=0.002.",
@@ -2218,9 +2190,7 @@
         "presmooth": 100,
         "presmooth_alpha": 0.02
       },
-      "requeue_count": 1,
-      "claimed_by": "gha-25610772910-g050_t0170",
-      "claimed_at": "2026-05-09T20:15:11Z"
+      "requeue_count": 1
     },
     {
       "id": "g050_t0140",
@@ -2230,13 +2200,11 @@
         "g050_t0170"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "Auto-requeued (attempt 1): via new ladder g050_t0170. \u03c4-ladder at \u03c4=1.7",
-      "requeue_count": 1,
-      "claimed_by": "gha-25610772910-g050_t0140",
-      "claimed_at": "2026-05-09T20:15:11Z"
+      "note": "Auto-requeued (attempt 1): via new ladder g050_t0170. τ-ladder at τ=1.7",
+      "requeue_count": 1
     },
     {
       "id": "extract_value_info_g050",
@@ -2261,14 +2229,14 @@
         "g050_t2000",
         "g050_t0140"
       ],
-      "note": "Auto-requeued (attempt 1): via new ladder g050_t0140. \u03c4-ladder at \u03c4=1.4",
+      "note": "Auto-requeued (attempt 1): via new ladder g050_t0140. τ-ladder at τ=1.4",
       "result": null,
       "checkpoint": null,
       "requeue_count": 1
     },
     {
       "id": "extract_volume_g100",
-      "gamma": 1.0,
+      "gamma": 1,
       "tau": null,
       "status": "blocked",
       "deps_satisfy": "all",
@@ -2293,7 +2261,7 @@
     },
     {
       "id": "extract_value_info_g100",
-      "gamma": 1.0,
+      "gamma": 1,
       "tau": null,
       "status": "blocked",
       "deps_satisfy": "all",
@@ -2356,7 +2324,7 @@
     },
     {
       "id": "extract_volume_g200",
-      "gamma": 2.0,
+      "gamma": 2,
       "tau": null,
       "status": "done",
       "deps_satisfy": "all",
@@ -2386,7 +2354,7 @@
     },
     {
       "id": "extract_value_info_g200",
-      "gamma": 2.0,
+      "gamma": 2,
       "tau": null,
       "status": "done",
       "deps_satisfy": "all",
@@ -2416,7 +2384,7 @@
     },
     {
       "id": "extract_volume_g400",
-      "gamma": 4.0,
+      "gamma": 4,
       "tau": null,
       "status": "done",
       "deps_satisfy": "any",
@@ -2450,7 +2418,7 @@
     },
     {
       "id": "extract_value_info_g400",
-      "gamma": 4.0,
+      "gamma": 4,
       "tau": null,
       "status": "done",
       "deps_satisfy": "any",
@@ -2487,7 +2455,7 @@
       "kind": "solver",
       "K": 3,
       "gamma": 0.5,
-      "tau": 2.0,
+      "tau": 2,
       "G": 15,
       "symmetric": true,
       "depends_on": [],
@@ -2497,10 +2465,10 @@
       "result": null,
       "note": "Symmetric K=3 baseline; cold start (no-learning init).",
       "solver_params": {
-        "u_max": 3.0,
+        "u_max": 3,
         "alpha": 0.3,
         "max_iters": 5000,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15,
         "pad": 4
       }
@@ -2510,7 +2478,7 @@
       "kind": "solver",
       "K": 4,
       "gamma": 0.5,
-      "tau": 2.0,
+      "tau": 2,
       "G": 15,
       "symmetric": true,
       "depends_on": [
@@ -2522,10 +2490,10 @@
       "result": null,
       "note": "Symmetric K=4; warm-starts from symK3.",
       "solver_params": {
-        "u_max": 3.0,
+        "u_max": 3,
         "alpha": 0.3,
         "max_iters": 5000,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15,
         "pad": 4
       }
@@ -2535,7 +2503,7 @@
       "kind": "solver",
       "K": 5,
       "gamma": 0.5,
-      "tau": 2.0,
+      "tau": 2,
       "G": 15,
       "symmetric": true,
       "depends_on": [
@@ -2547,10 +2515,10 @@
       "result": null,
       "note": "Symmetric K=5; warm-starts from symK4.",
       "solver_params": {
-        "u_max": 3.0,
+        "u_max": 3,
         "alpha": 0.3,
         "max_iters": 5000,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15,
         "pad": 4
       }
@@ -2560,7 +2528,7 @@
       "kind": "solver",
       "K": 6,
       "gamma": 0.5,
-      "tau": 2.0,
+      "tau": 2,
       "G": 15,
       "symmetric": true,
       "depends_on": [
@@ -2572,10 +2540,10 @@
       "result": null,
       "note": "Symmetric K=6; warm-starts from symK5.",
       "solver_params": {
-        "u_max": 3.0,
+        "u_max": 3,
         "alpha": 0.3,
         "max_iters": 5000,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15,
         "pad": 4
       }
@@ -2585,7 +2553,7 @@
       "kind": "solver",
       "K": 7,
       "gamma": 0.5,
-      "tau": 2.0,
+      "tau": 2,
       "G": 15,
       "symmetric": true,
       "depends_on": [
@@ -2597,10 +2565,10 @@
       "result": null,
       "note": "Symmetric K=7; warm-starts from symK6.",
       "solver_params": {
-        "u_max": 3.0,
+        "u_max": 3,
         "alpha": 0.3,
         "max_iters": 5000,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15,
         "pad": 4
       }
@@ -2610,7 +2578,7 @@
       "kind": "solver",
       "K": 8,
       "gamma": 0.5,
-      "tau": 2.0,
+      "tau": 2,
       "G": 15,
       "symmetric": true,
       "depends_on": [
@@ -2622,10 +2590,10 @@
       "result": null,
       "note": "Symmetric K=8; warm-starts from symK7.",
       "solver_params": {
-        "u_max": 3.0,
+        "u_max": 3,
         "alpha": 0.3,
         "max_iters": 5000,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15,
         "pad": 4
       }
@@ -2652,11 +2620,11 @@
     "any": "Tasks may declare deps_satisfy='any', meaning the task is ready as soon as ANY listed dependency is done."
   },
   "notes": [
-    "\u03b3=0.5 high-\u03c4 (\u03c4 \u2265 4) bailed; the 7-point \u03b3=0.5 curve (\u03c4\u2208[0.3,3.0]) is the accepted answer for Fig 4A.",
-    "\u03b3=1.0 high-\u03c4 (\u03c4 \u2265 5) bailed; the 8-point \u03b3=1.0 curve (\u03c4\u2208[0.3,4.0]) is the accepted answer.",
-    "\u03b3=4.0 sweep: \u03c4 \u2208 [0.3, 7.0] done. Only \u03c4=10 is ready and \u03c4=15 is blocked on it.",
-    "\u03b3=0.25 and \u03b3=2.0 \u03c4-sweeps added as parallel chains.",
-    "All 1-R\u00b2 values are weighted by ex-ante probability (see EQUATIONS.md \u00a77).",
+    "γ=0.5 high-τ (τ ≥ 4) bailed; the 7-point γ=0.5 curve (τ∈[0.3,3.0]) is the accepted answer for Fig 4A.",
+    "γ=1.0 high-τ (τ ≥ 5) bailed; the 8-point γ=1.0 curve (τ∈[0.3,4.0]) is the accepted answer.",
+    "γ=4.0 sweep: τ ∈ [0.3, 7.0] done. Only τ=10 is ready and τ=15 is blocked on it.",
+    "γ=0.25 and γ=2.0 τ-sweeps added as parallel chains.",
+    "All 1-R² values are weighted by ex-ante probability (see EQUATIONS.md §7).",
     "Checkpoints listed for done tasks are the expected paths."
   ]
 }
