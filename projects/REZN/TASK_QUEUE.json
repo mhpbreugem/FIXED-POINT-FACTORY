@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T04:01:25.026493Z",
+  "updated_at": "2026-05-09T05:35:39.816377Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -1642,20 +1642,31 @@
       "note": "Retired: auto-requeue is now built into mark_failed() in claim_task.py. Removed from ready queue to prevent solver from mistakenly claiming it."
     },
     {
-      "id": "g010_t0050",
-      "gamma": 0.1,
+      "id": "g016_t0050",
+      "gamma": 0.16000000000000003,
       "tau": 0.5,
-      "status": "claimed",
-      "checkpoint": null,
-      "result": null,
       "depends_on": [
         "g025_t0050"
       ],
       "deps_satisfy": "any",
-      "requeue_count": 1,
-      "note": "Auto-requeued (attempt 1): warm-start from g025_t0050 (log-dist=0.92).",
-      "claimed_by": "gha-25592999918-g010_t0050",
-      "claimed_at": "2026-05-09T05:32:55Z"
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "note": "\u03b3-ladder between g025_t0050 (\u03b3=0.25) and g010_t0050 (\u03b3=0.1) at \u03c4=0.5."
+    },
+    {
+      "id": "g010_t0050",
+      "gamma": 0.1,
+      "tau": 0.5,
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "depends_on": [
+        "g016_t0050"
+      ],
+      "deps_satisfy": "any",
+      "requeue_count": 2,
+      "note": "Auto-requeued (attempt 2): via new ladder g016_t0050. \u03b3-ladder at \u03b3=0.16000000000000003"
     },
     {
       "id": "g010_t0100",
@@ -2237,12 +2248,12 @@
     }
   ],
   "summary": {
-    "total": 92,
+    "total": 93,
     "done": 60,
-    "ready": 9,
-    "claimed": 4,
+    "ready": 2,
+    "claimed": 12,
     "blocked": 14,
-    "bailed": 4,
+    "bailed": 3,
     "skip": 1
   },
   "fanout": {
