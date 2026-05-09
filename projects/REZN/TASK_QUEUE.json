@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T06:13:54.736254Z",
+  "updated_at": "2026-05-09T06:34:13.796724Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -606,9 +606,15 @@
         "g100_t0500",
         "g100_t0590"
       ],
-      "status": "claimed",
-      "checkpoint": null,
-      "result": null,
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g100_t0700.npz",
+      "result": {
+        "1-R2": 0.08108241,
+        "F_max": 2.4952e-50,
+        "n_stages": 1,
+        "phi_calls": 9790,
+        "wall_s": 3646.4
+      },
       "solver_params": {
         "presmooth": 200,
         "presmooth_alpha": 0.01,
@@ -629,8 +635,7 @@
       "requeue_count": 6,
       "deps_satisfy": "any",
       "note": "Re-queued (attempt 6): relaxed mp_tol 1e-50\u21921e-49 (F_inf=2.494e-50 was just above old threshold).",
-      "claimed_by": "gha-25592999918-g100_t0700",
-      "claimed_at": "2026-05-09T05:32:55Z"
+      "completed_at": "2026-05-09T06:34:13.795349Z"
     },
     {
       "id": "g100_t1000",
@@ -639,7 +644,7 @@
       "depends_on": [
         "g100_t0700"
       ],
-      "status": "blocked",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -2304,10 +2309,10 @@
   ],
   "summary": {
     "total": 96,
-    "done": 62,
-    "ready": 4,
-    "claimed": 11,
-    "blocked": 14,
+    "done": 63,
+    "ready": 9,
+    "claimed": 6,
+    "blocked": 13,
     "bailed": 3,
     "skip": 1
   },
