@@ -2033,11 +2033,12 @@
       "result": null,
       "note": "Symmetric K=3 baseline; cold start (no-learning init).",
       "solver_params": {
-        "G": 15,
         "u_max": 3.0,
         "alpha": 0.3,
         "max_iters": 5000,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15,
+        "pad": 4
       }
     },
     {
@@ -2057,11 +2058,12 @@
       "result": null,
       "note": "Symmetric K=4; warm-starts from symK3.",
       "solver_params": {
-        "G": 15,
         "u_max": 3.0,
         "alpha": 0.3,
         "max_iters": 5000,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15,
+        "pad": 4
       }
     },
     {
@@ -2081,11 +2083,12 @@
       "result": null,
       "note": "Symmetric K=5; warm-starts from symK4.",
       "solver_params": {
-        "G": 15,
         "u_max": 3.0,
         "alpha": 0.3,
         "max_iters": 5000,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15,
+        "pad": 4
       }
     },
     {
@@ -2105,11 +2108,12 @@
       "result": null,
       "note": "Symmetric K=6; warm-starts from symK5.",
       "solver_params": {
-        "G": 15,
         "u_max": 3.0,
         "alpha": 0.3,
         "max_iters": 5000,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15,
+        "pad": 4
       }
     },
     {
@@ -2129,11 +2133,12 @@
       "result": null,
       "note": "Symmetric K=7; warm-starts from symK6.",
       "solver_params": {
-        "G": 15,
         "u_max": 3.0,
         "alpha": 0.3,
         "max_iters": 5000,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15,
+        "pad": 4
       }
     },
     {
@@ -2153,11 +2158,12 @@
       "result": null,
       "note": "Symmetric K=8; warm-starts from symK7.",
       "solver_params": {
-        "G": 15,
         "u_max": 3.0,
         "alpha": 0.3,
         "max_iters": 5000,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15,
+        "pad": 4
       }
     }
   ],
