@@ -520,12 +520,10 @@
         "g100_t0500"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "\u03c4-ladder between g100_t0500 (\u03c4=5.0) and g100_t0300 (\u03c4=3.0).",
-      "claimed_by": "gha-25604376254-g100_t0390",
-      "claimed_at": "2026-05-09T15:10:55Z"
+      "note": "\u03c4-ladder between g100_t0500 (\u03c4=5.0) and g100_t0300 (\u03c4=3.0)."
     },
     {
       "id": "g100_t0300",
@@ -534,15 +532,13 @@
       "depends_on": [
         "g100_t0390"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
       "deps_satisfy": "any",
       "note": "Auto-requeued (attempt 2): via new ladder g100_t0390. \u03c4-ladder at \u03c4=3.9",
-      "requeue_count": 2,
-      "claimed_by": "gha-25604376254-g100_t0300",
-      "claimed_at": "2026-05-09T15:10:55Z"
+      "requeue_count": 2
     },
     {
       "id": "g100_t0450",
@@ -630,7 +626,7 @@
         "g100_t0500"
       ],
       "deps_satisfy": "any",
-      "status": "bailed",
+      "status": "ready",
       "checkpoint": null,
       "result": {
         "reason": "||F||inf=1.249e-01 > bail threshold 1e-04"
@@ -1007,7 +1003,7 @@
         "g140_t0270"
       ],
       "deps_satisfy": "any",
-      "status": "bailed",
+      "status": "ready",
       "checkpoint": null,
       "result": {
         "reason": "||F||inf=2.887e-01 > bail threshold 1e-04"
@@ -1109,7 +1105,7 @@
         "g140_t0510"
       ],
       "deps_satisfy": "any",
-      "status": "bailed",
+      "status": "ready",
       "checkpoint": null,
       "result": {
         "reason": "||F||inf=3.885e-01 > bail threshold 1e-04"
@@ -1130,7 +1126,7 @@
         "g140_t0570"
       ],
       "deps_satisfy": "any",
-      "status": "bailed",
+      "status": "ready",
       "checkpoint": null,
       "result": {
         "reason": "||F||inf=3.777e-01 > bail threshold 1e-04"
@@ -1890,7 +1886,7 @@
         "g010_t0200"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 1): noise perturbation noise_level=0.002.",
@@ -1899,9 +1895,7 @@
         "presmooth": 100,
         "presmooth_alpha": 0.02
       },
-      "requeue_count": 1,
-      "claimed_by": "gha-25604376254-g010_t0240",
-      "claimed_at": "2026-05-09T15:10:55Z"
+      "requeue_count": 1
     },
     {
       "id": "g010_t0300",
