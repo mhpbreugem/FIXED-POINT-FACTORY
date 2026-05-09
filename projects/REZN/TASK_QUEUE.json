@@ -678,7 +678,7 @@
       "depends_on": [
         "g100_t1000"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -696,7 +696,9 @@
         "lgmres_tol": 1e-10,
         "lgmres_inner_m": 30,
         "lgmres_outer": 10
-      }
+      },
+      "claimed_by": "gha-25596150365-g100_t1500",
+      "claimed_at": "2026-05-09T08:09:03Z"
     },
     {
       "id": "g100_t2000",
