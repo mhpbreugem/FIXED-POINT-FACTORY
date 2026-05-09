@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T11:34:37.895559Z",
+  "updated_at": "2026-05-09T11:53:34.579103Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -711,9 +711,15 @@
         "g100_t1500"
       ],
       "deps_satisfy": "all",
-      "status": "claimed",
-      "checkpoint": null,
-      "result": null,
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g100_t2000.npz",
+      "result": {
+        "1-R2": 0.2299075,
+        "F_max": 2.091e-51,
+        "n_stages": 1,
+        "phi_calls": 1126,
+        "wall_s": 1312.0
+      },
       "note": "tau=20 extension of gamma=1.0 sweep",
       "requeue_count": 0,
       "solver_params": {
@@ -732,8 +738,7 @@
         "lgmres_inner_m": 30,
         "lgmres_outer": 10
       },
-      "claimed_by": "gha-25600067059-g100_t2000",
-      "claimed_at": "2026-05-09T11:31:15Z"
+      "completed_at": "2026-05-09T11:53:34.577624Z"
     },
     {
       "id": "g400_t0030",
@@ -2394,9 +2399,9 @@
   ],
   "summary": {
     "total": 99,
-    "done": 67,
+    "done": 68,
     "ready": 12,
-    "claimed": 3,
+    "claimed": 2,
     "blocked": 12,
     "bailed": 3,
     "skip": 1
