@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T03:57:52.551983Z",
+  "updated_at": "2026-05-09T03:58:43.822650Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -1733,11 +1733,16 @@
       "id": "g050_t1200",
       "gamma": 0.5,
       "tau": 12.0,
-      "status": "claimed",
-      "checkpoint": null,
-      "result": null,
-      "claimed_by": "gha-25591058601-g050_t1200",
-      "claimed_at": "2026-05-09T03:57:02Z"
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g050_t1200.npz",
+      "result": {
+        "1-R2": 0.06548071,
+        "F_max": 1.4871e-09,
+        "n_stages": 7,
+        "phi_calls": 2106,
+        "wall_s": 59.4
+      },
+      "completed_at": "2026-05-09T03:58:43.821356Z"
     },
     {
       "id": "extract_volume_g010",
@@ -1829,7 +1834,7 @@
       "id": "extract_volume_g050",
       "gamma": 0.5,
       "tau": null,
-      "status": "blocked",
+      "status": "ready",
       "deps_satisfy": "all",
       "depends_on": [
         "g050_t0030",
@@ -1854,7 +1859,7 @@
       "id": "extract_value_info_g050",
       "gamma": 0.5,
       "tau": null,
-      "status": "blocked",
+      "status": "ready",
       "deps_satisfy": "all",
       "depends_on": [
         "g050_t0030",
@@ -2210,10 +2215,10 @@
   ],
   "summary": {
     "total": 92,
-    "done": 59,
-    "ready": 4,
-    "claimed": 9,
-    "blocked": 16,
+    "done": 60,
+    "ready": 6,
+    "claimed": 8,
+    "blocked": 14,
     "bailed": 3,
     "skip": 1
   },
