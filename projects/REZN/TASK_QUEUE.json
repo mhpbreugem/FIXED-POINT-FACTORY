@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T10:39:59.708954Z",
+  "updated_at": "2026-05-09T10:40:22.597493Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -2168,9 +2168,10 @@
       "id": "extract_volume_g400",
       "gamma": 4.0,
       "tau": null,
-      "status": "claimed",
-      "deps_satisfy": "all",
+      "status": "ready",
+      "deps_satisfy": "any",
       "depends_on": [
+        "extract_value_info_g400",
         "g400_t0030",
         "g400_t0050",
         "g400_t0080",
@@ -2185,10 +2186,10 @@
         "g400_t1500",
         "g400_t2000"
       ],
-      "note": "Fig 7 extraction for gamma=4.0",
+      "note": "Auto-requeued (attempt 1): warm-start from extract_value_info_g400 (log-dist=0.00).",
       "result": null,
-      "claimed_by": "gha-25599034559-extract_volume_g400",
-      "claimed_at": "2026-05-09T10:36:52Z"
+      "checkpoint": null,
+      "requeue_count": 1
     },
     {
       "id": "extract_value_info_g400",
@@ -2377,8 +2378,8 @@
   "summary": {
     "total": 97,
     "done": 67,
-    "ready": 1,
-    "claimed": 12,
+    "ready": 2,
+    "claimed": 11,
     "blocked": 12,
     "bailed": 3,
     "skip": 1
