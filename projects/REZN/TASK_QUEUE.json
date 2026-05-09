@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T11:53:34.579103Z",
+  "updated_at": "2026-05-09T13:16:33.624539Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -518,21 +518,32 @@
       "note": "RERUN: previous 1-R\u00b2=0.066 from results/full_ree/task3_g100_t0300_mp50.json; warm-start any-of ['g100_t0500', 'g050_t0200']."
     },
     {
+      "id": "g100_t0450",
+      "gamma": 1.0,
+      "tau": 4.5,
+      "depends_on": [
+        "g100_t0500"
+      ],
+      "deps_satisfy": "any",
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "note": "\u03c4-ladder between g100_t0500 (\u03c4=5.0) and g100_t0400 (\u03c4=4.0)."
+    },
+    {
       "id": "g100_t0400",
       "gamma": 1.0,
       "tau": 4.0,
       "depends_on": [
-        "g100_t0500",
-        "g050_t0200"
+        "g100_t0450"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
-      "claimed_by": "gha-25602013101-g100_t0400",
-      "claimed_at": "2026-05-09T13:13:59Z",
       "completed_at": null,
       "deps_satisfy": "any",
-      "note": "RERUN: previous 1-R\u00b2=0.09 from results/full_ree/task3_g100_t0400_mp50.json; warm-start any-of ['g100_t0500', 'g050_t0200']."
+      "note": "Auto-requeued (attempt 1): via new ladder g100_t0450. \u03c4-ladder at \u03c4=4.5",
+      "requeue_count": 1
     },
     {
       "id": "g100_t0500",
@@ -2408,10 +2419,10 @@
     }
   ],
   "summary": {
-    "total": 99,
-    "done": 68,
-    "ready": 12,
-    "claimed": 2,
+    "total": 100,
+    "done": 59,
+    "ready": 4,
+    "claimed": 21,
     "blocked": 12,
     "bailed": 3,
     "skip": 1
