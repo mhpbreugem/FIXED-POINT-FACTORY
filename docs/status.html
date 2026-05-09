@@ -232,9 +232,12 @@
     const counts = {};
     tasks.forEach(t => { counts[t.status] = (counts[t.status]||0)+1; });
     const pillOrder = ["done","ready","claimed","blocked","bailed","skip"];
+    const activeFilter = (document.getElementById("filter")?.value || "").toLowerCase();
     document.getElementById("summary").innerHTML =
-      pillOrder.filter(s => counts[s]).map(s =>
-        `<span class="pill ${s}">${s}: ${counts[s]}</span>`).join("") +
+      pillOrder.filter(s => counts[s]).map(s => {
+        const sel = activeFilter === s ? ' style="outline:2px solid #fff;opacity:1"' : '';
+        return `<span class="pill ${s}" onclick="(function(){var f=document.getElementById('filter');f.value=f.value.toLowerCase()===\'${s}\'?'':'${s}';renderTasks();})()" style="cursor:pointer"${sel}>${s}: ${counts[s]}</span>`;
+      }).join("") +
       `<span class="pill" style="background:#555">total: ${tasks.length}</span>`;
 
     // filter + sort
@@ -339,9 +342,12 @@
     if (!el) return;
     const now = Date.now();
 
-    // Heartbeat-based rows
+    // Heartbeat-based rows — only show workers with heartbeat < 30 min old
     const hbWorkers = new Set((workerData || []).map(f => f.name.replace(".txt","")));
-    const hbRows = (workerData || []).map(f => {
+    const hbRows = (workerData || []).filter(f => {
+      const age = f.last_modified ? (now - new Date(f.last_modified).getTime())/60000 : Infinity;
+      return age < 30;
+    }).map(f => {
       const workerName = f.name.replace(".txt","");
       const hbAge = f.last_modified ? Math.round((now - new Date(f.last_modified).getTime())/60000) : null;
       const isStale = hbAge != null && hbAge > 10;
@@ -359,9 +365,10 @@
       </tr>`;
     });
 
-    // Progress-file workers not in heartbeats (e.g. local claude-cpu workers)
+    // Progress-file workers not in heartbeats — only if updated < 30 min ago
     const progRows = Object.values(progressData)
       .filter(p => p.worker_id && !hbWorkers.has(p.worker_id))
+      .filter(p => { const age = p.last_update ? (now - new Date(p.last_update).getTime())/60000 : Infinity; return age < 30; })
       .map(p => {
         const age = p.last_update ? Math.round((now - new Date(p.last_update).getTime())/60000) : null;
         const isStale = age != null && age > 10;
