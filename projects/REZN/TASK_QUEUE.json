@@ -340,10 +340,10 @@
       "depends_on": [
         "g100_t0200"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "",
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25614669365-g100_t0210",
+      "claimed_at": "2026-05-09T23:38:47Z"
     },
     {
       "id": "g100_t0400",
@@ -352,10 +352,10 @@
       "depends_on": [
         "g100_t0590"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "",
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25614669365-g100_t0400",
+      "claimed_at": "2026-05-09T23:38:47Z"
     },
     {
       "id": "g100_t0590",
@@ -883,10 +883,10 @@
       "depends_on": [
         "g013_t0100"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "",
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25614669365-g013_t0050",
+      "claimed_at": "2026-05-09T23:38:47Z"
     },
     {
       "id": "g013_t0100",
@@ -994,10 +994,10 @@
       "depends_on": [
         "g010_t0100"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "",
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25614669365-g010_t0050",
+      "claimed_at": "2026-05-09T23:38:47Z"
     },
     {
       "id": "g010_t0100",
