@@ -2,8 +2,8 @@
   "task_id": "symK3_g050_t0200_G15",
   "worker_id": "gha-25604516780-symK3_g050_t0200_G15",
   "started_at": "2026-05-09T15:18:24Z",
-  "last_update": "2026-05-09T15:19:17Z",
-  "iter": 58,
-  "ftol": "5.354847e-03",
+  "last_update": "2026-05-09T15:20:35Z",
+  "iter": 143,
+  "ftol": "4.321908e-03",
   "extra": {}
 }
