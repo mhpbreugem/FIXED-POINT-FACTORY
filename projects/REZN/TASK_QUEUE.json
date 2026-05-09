@@ -1690,7 +1690,7 @@
         "g016_t0050"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "result": null,
       "note": "Auto-requeued (attempt 2): noise perturbation noise_level=0.004.",
       "solver_params": {
@@ -1699,7 +1699,9 @@
         "presmooth_alpha": 0.02
       },
       "requeue_count": 2,
-      "checkpoint": null
+      "checkpoint": null,
+      "claimed_by": "gha-25597974918-g013_t0050",
+      "claimed_at": "2026-05-09T09:42:47Z"
     },
     {
       "id": "g010_t0050",
@@ -1757,7 +1759,7 @@
       "id": "g010_t0100",
       "gamma": 0.1,
       "tau": 1.0,
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "depends_on": [
@@ -1766,7 +1768,9 @@
       ],
       "deps_satisfy": "any",
       "requeue_count": 3,
-      "note": "Auto-requeued (attempt 3): warm-start from g010_t0150 (log-dist=0.41)."
+      "note": "Auto-requeued (attempt 3): warm-start from g010_t0150 (log-dist=0.41).",
+      "claimed_by": "gha-25597974918-g010_t0100",
+      "claimed_at": "2026-05-09T09:42:47Z"
     },
     {
       "id": "g010_t0150",
@@ -1814,11 +1818,11 @@
       "id": "g010_t0300",
       "gamma": 0.1,
       "tau": 3.0,
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25597974918-g010_t0300",
+      "claimed_at": "2026-05-09T09:42:47Z"
     },
     {
       "id": "g010_t0500",
@@ -1894,7 +1898,7 @@
       "id": "extract_volume_g025",
       "gamma": 0.25,
       "tau": null,
-      "status": "ready",
+      "status": "claimed",
       "deps_satisfy": "all",
       "depends_on": [
         "g025_t0030",
@@ -1913,14 +1917,14 @@
         "presmooth_alpha": 0.02
       },
       "requeue_count": 1,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25597974918-extract_volume_g025",
+      "claimed_at": "2026-05-09T09:42:47Z"
     },
     {
       "id": "extract_value_info_g025",
       "gamma": 0.25,
       "tau": null,
-      "status": "ready",
+      "status": "claimed",
       "deps_satisfy": "all",
       "depends_on": [
         "g025_t0030",
@@ -1940,14 +1944,14 @@
         "presmooth_alpha": 0.02
       },
       "requeue_count": 1,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25597974918-extract_value_info_g025",
+      "claimed_at": "2026-05-09T09:42:47Z"
     },
     {
       "id": "extract_volume_g050",
       "gamma": 0.5,
       "tau": null,
-      "status": "ready",
+      "status": "claimed",
       "deps_satisfy": "all",
       "depends_on": [
         "g050_t0030",
@@ -1967,14 +1971,14 @@
       ],
       "note": "Fig 7 extraction for gamma=0.5",
       "result": null,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25597974918-extract_volume_g050",
+      "claimed_at": "2026-05-09T09:42:47Z"
     },
     {
       "id": "extract_value_info_g050",
       "gamma": 0.5,
       "tau": null,
-      "status": "ready",
+      "status": "claimed",
       "deps_satisfy": "all",
       "depends_on": [
         "g050_t0030",
@@ -1994,8 +1998,8 @@
       ],
       "note": "Fig 8 extraction for gamma=0.5",
       "result": null,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25597974918-extract_value_info_g050",
+      "claimed_at": "2026-05-09T09:42:47Z"
     },
     {
       "id": "extract_volume_g100",
