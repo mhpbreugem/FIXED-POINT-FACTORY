@@ -2,8 +2,8 @@
   "task_id": "extract_value_info_g400",
   "worker_id": "gha-25593751263-extract_value_info_g400",
   "started_at": "2026-05-09T06:10:22Z",
-  "last_update": "2026-05-09T06:10:22Z",
-  "iter": null,
-  "ftol": null,
+  "last_update": "2026-05-09T06:10:27Z",
+  "iter": 85,
+  "ftol": "5.239247e-13",
   "extra": {}
 }
