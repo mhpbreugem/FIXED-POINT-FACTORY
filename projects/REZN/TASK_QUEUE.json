@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T20:32:29.746661+00:00",
+  "updated_at": "2026-05-09T20:47:41.770968+00:00",
   "params": {
     "G": 20,
     "UMAX": 5,
@@ -2571,6 +2571,148 @@
         "F_max_bound": 1e-25,
         "F_source": "original mp50 solver — F_tol=1e-25 (exact F not retained)"
       }
+    },
+    {
+      "id": "symK3_g050_t0200_G15",
+      "kind": "solver",
+      "K": 3,
+      "gamma": 0.5,
+      "tau": 2.0,
+      "G": 15,
+      "symmetric": true,
+      "depends_on": [],
+      "deps_satisfy": "all",
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "note": "Symmetric K=3 baseline; cold start.",
+      "solver_params": {
+        "u_max": 3.0,
+        "G": 15,
+        "tol": 5e-07,
+        "max_iters": 100,
+        "inner_m": 50
+      }
+    },
+    {
+      "id": "symK4_g050_t0200_G15",
+      "kind": "solver",
+      "K": 4,
+      "gamma": 0.5,
+      "tau": 2.0,
+      "G": 15,
+      "symmetric": true,
+      "depends_on": [
+        "symK3_g050_t0200_G15"
+      ],
+      "deps_satisfy": "all",
+      "status": "blocked",
+      "checkpoint": null,
+      "result": null,
+      "note": "Symmetric K=4; warm-starts from K=3.",
+      "solver_params": {
+        "u_max": 3.0,
+        "G": 15,
+        "tol": 5e-07,
+        "max_iters": 100,
+        "inner_m": 50
+      }
+    },
+    {
+      "id": "symK5_g050_t0200_G15",
+      "kind": "solver",
+      "K": 5,
+      "gamma": 0.5,
+      "tau": 2.0,
+      "G": 15,
+      "symmetric": true,
+      "depends_on": [
+        "symK4_g050_t0200_G15"
+      ],
+      "deps_satisfy": "all",
+      "status": "blocked",
+      "checkpoint": null,
+      "result": null,
+      "note": "Symmetric K=5; warm-starts from K=4.",
+      "solver_params": {
+        "u_max": 3.0,
+        "G": 15,
+        "tol": 5e-07,
+        "max_iters": 100,
+        "inner_m": 50
+      }
+    },
+    {
+      "id": "symK6_g050_t0200_G15",
+      "kind": "solver",
+      "K": 6,
+      "gamma": 0.5,
+      "tau": 2.0,
+      "G": 15,
+      "symmetric": true,
+      "depends_on": [
+        "symK5_g050_t0200_G15"
+      ],
+      "deps_satisfy": "all",
+      "status": "blocked",
+      "checkpoint": null,
+      "result": null,
+      "note": "Symmetric K=6; warm-starts from K=5.",
+      "solver_params": {
+        "u_max": 3.0,
+        "G": 15,
+        "tol": 5e-07,
+        "max_iters": 100,
+        "inner_m": 50
+      }
+    },
+    {
+      "id": "symK7_g050_t0200_G15",
+      "kind": "solver",
+      "K": 7,
+      "gamma": 0.5,
+      "tau": 2.0,
+      "G": 15,
+      "symmetric": true,
+      "depends_on": [
+        "symK6_g050_t0200_G15"
+      ],
+      "deps_satisfy": "all",
+      "status": "blocked",
+      "checkpoint": null,
+      "result": null,
+      "note": "Symmetric K=7; warm-starts from K=6.",
+      "solver_params": {
+        "u_max": 3.0,
+        "G": 15,
+        "tol": 5e-07,
+        "max_iters": 100,
+        "inner_m": 50
+      }
+    },
+    {
+      "id": "symK8_g050_t0200_G15",
+      "kind": "solver",
+      "K": 8,
+      "gamma": 0.5,
+      "tau": 2.0,
+      "G": 15,
+      "symmetric": true,
+      "depends_on": [
+        "symK7_g050_t0200_G15"
+      ],
+      "deps_satisfy": "all",
+      "status": "blocked",
+      "checkpoint": null,
+      "result": null,
+      "note": "Symmetric K=8; warm-starts from K=7.",
+      "solver_params": {
+        "u_max": 3.0,
+        "G": 15,
+        "tol": 5e-07,
+        "max_iters": 100,
+        "inner_m": 50
+      }
     }
   ],
   "summary": {
@@ -2582,18 +2724,170 @@
     "bailed": 0
   },
   "fanout": {
-    "g050": [0.3, 0.5, 0.8, 1.0, 1.5, 2.0],
-    "g075": [0.3, 0.5, 0.8, 1.0, 1.5, 2.0],
-    "g100": [0.3, 0.5, 0.8, 1.0, 1.5, 2.0, 2.1, 4.0, 5.9, 6.0, 8.0, 10.0],
-    "g125": [0.3, 0.5, 0.8, 1.0, 1.5, 2.0, 4.0, 5.9, 6.0, 8.0, 10.0],
-    "g140": [0.3, 0.5, 0.8, 1.0, 1.5, 2.0, 4.0, 5.7, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0],
-    "g160": [0.3, 0.5, 0.8, 1.0, 1.5, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0],
-    "g180": [0.3, 0.5, 0.8, 1.0, 1.5, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0],
-    "g200": [0.3, 0.5, 0.8, 1.0, 1.5, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0],
-    "g300": [0.3, 0.5, 0.8, 1.0, 1.5, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0],
-    "g500": [0.3, 0.5, 0.8, 1.0, 1.5, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0],
-    "g010": [0.5, 1.0, 2.0, 4.0, 6.0, 8.0, 10.0],
-    "g013": [0.5, 1.0, 2.0, 4.0, 6.0, 8.0, 10.0]
+    "g050": [
+      0.3,
+      0.5,
+      0.8,
+      1.0,
+      1.5,
+      2.0
+    ],
+    "g075": [
+      0.3,
+      0.5,
+      0.8,
+      1.0,
+      1.5,
+      2.0
+    ],
+    "g100": [
+      0.3,
+      0.5,
+      0.8,
+      1.0,
+      1.5,
+      2.0,
+      2.1,
+      4.0,
+      5.9,
+      6.0,
+      8.0,
+      10.0
+    ],
+    "g125": [
+      0.3,
+      0.5,
+      0.8,
+      1.0,
+      1.5,
+      2.0,
+      4.0,
+      5.9,
+      6.0,
+      8.0,
+      10.0
+    ],
+    "g140": [
+      0.3,
+      0.5,
+      0.8,
+      1.0,
+      1.5,
+      2.0,
+      4.0,
+      5.7,
+      6.0,
+      8.0,
+      10.0,
+      12.0,
+      14.0,
+      16.0,
+      18.0,
+      20.0
+    ],
+    "g160": [
+      0.3,
+      0.5,
+      0.8,
+      1.0,
+      1.5,
+      2.0,
+      4.0,
+      6.0,
+      8.0,
+      10.0,
+      12.0,
+      14.0,
+      16.0,
+      18.0,
+      20.0
+    ],
+    "g180": [
+      0.3,
+      0.5,
+      0.8,
+      1.0,
+      1.5,
+      2.0,
+      4.0,
+      6.0,
+      8.0,
+      10.0,
+      12.0,
+      14.0,
+      16.0,
+      18.0,
+      20.0
+    ],
+    "g200": [
+      0.3,
+      0.5,
+      0.8,
+      1.0,
+      1.5,
+      2.0,
+      4.0,
+      6.0,
+      8.0,
+      10.0,
+      12.0,
+      14.0,
+      16.0,
+      18.0,
+      20.0
+    ],
+    "g300": [
+      0.3,
+      0.5,
+      0.8,
+      1.0,
+      1.5,
+      2.0,
+      4.0,
+      6.0,
+      8.0,
+      10.0,
+      12.0,
+      14.0,
+      16.0,
+      18.0,
+      20.0
+    ],
+    "g500": [
+      0.3,
+      0.5,
+      0.8,
+      1.0,
+      1.5,
+      2.0,
+      4.0,
+      6.0,
+      8.0,
+      10.0,
+      12.0,
+      14.0,
+      16.0,
+      18.0,
+      20.0
+    ],
+    "g010": [
+      0.5,
+      1.0,
+      2.0,
+      4.0,
+      6.0,
+      8.0,
+      10.0
+    ],
+    "g013": [
+      0.5,
+      1.0,
+      2.0,
+      4.0,
+      6.0,
+      8.0,
+      10.0
+    ]
   },
   "deps_semantics": "Each task depends on its right-neighbour in the tau-chain (higher tau = easier = solved first). nc4-sweeps are independent parallel chains.",
   "notes": [
