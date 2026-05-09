@@ -136,7 +136,7 @@
   let sortCol = "id", sortAsc = true;
   let FIGDATA = null;
 
-  // ── PAT storage ──────────────────────────────────────────────────────────
+  // ── PAT storage ──────────────────────────────────────────────────────────────────────
   function savePat() {
     const v = document.getElementById('pat-input').value.trim();
     if (v) localStorage.setItem('fpf_pat', v); else localStorage.removeItem('fpf_pat');
@@ -146,7 +146,7 @@
     const p = getPat(); if (p) document.getElementById('pat-input').value = p;
   });
 
-  // ── Reset tasks by status → ready ────────────────────────────────────────
+  // ── Reset tasks by status → ready ────────────────────────────────────────────────────────────────────
   async function resetByStatus(fromStatus) {
     const pat = getPat();
     if (!pat) { alert('Paste a GitHub PAT in the box first.'); return; }

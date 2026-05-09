@@ -234,20 +234,15 @@ def _run_sym_task(args, task: dict, gamma: float, tau: float) -> None:
 
     K = int(task.get("K", 3))
     sp = task.get("solver_params") or {}
-    G_inner = int(sp.get("G_inner", sp.get("G", 15)))
-    pad     = int(sp.get("pad", 4))
-    G_full  = G_inner + 2 * pad
-    u_max   = float(sp.get("u_max", 3.0))
-    alpha   = float(sp.get("alpha", 0.3))
+    G = int(sp.get("G", 15))
+    u_max = float(sp.get("u_max", 3.0))
+    alpha = float(sp.get("alpha", 0.3))
     max_iters = int(sp.get("max_iters", 5000))
-    tol     = float(sp.get("tol", 5e-7))
-    W       = float(sp.get("W", 1.0))
+    tol = float(sp.get("tol", 5e-7))
+    W = float(sp.get("W", 1.0))
 
-    # Build grid: inner spans [-u_max, u_max] with G_inner points;
-    # halo extends pad cells beyond each side with uniform spacing du.
-    du = 2.0 * u_max / (G_inner - 1)
-    u_grid = np.array([-u_max + (q - pad) * du for q in range(G_full)])
-    sg = SymGrid.build(G_full, K)
+    u_grid = np.linspace(-u_max, u_max, G)
+    sg = SymGrid.build(G, K)
 
     reporter = ProgressReporter(
         project=args.project, task_id=args.task_id,
@@ -260,11 +255,11 @@ def _run_sym_task(args, task: dict, gamma: float, tau: float) -> None:
     exit_code = 0
 
     try:
-        # Warm-start: own checkpoint; dep checkpoint only if same K and G_full.
+        # Warm-start: own checkpoint, then dependency checkpoint, then cold
         P_sorted = None
         own_ckpt = task.get("checkpoint")
         if own_ckpt:
-            P_sorted = _try_load_sym_npz(ROOT / own_ckpt, K, G_full)
+            P_sorted = _try_load_sym_npz(ROOT / own_ckpt, K, G)
             if P_sorted is not None:
                 print(f"[solve] sym warm-start from own checkpoint", flush=True)
 
@@ -278,7 +273,7 @@ def _run_sym_task(args, task: dict, gamma: float, tau: float) -> None:
                 ckpt = dep.get("checkpoint")
                 if not ckpt:
                     continue
-                P_sorted = _try_load_sym_npz(ROOT / ckpt, K, G_full)
+                P_sorted = _try_load_sym_npz(ROOT / ckpt, K, G)
                 if P_sorted is not None:
                     print(f"[solve] sym warm-start from dep {dep_id}", flush=True)
                     break
@@ -287,19 +282,13 @@ def _run_sym_task(args, task: dict, gamma: float, tau: float) -> None:
             print("[solve] sym cold start (no-learning init)", flush=True)
             P_sorted = sym_init_no_learning(sg, u_grid, tau, gamma, W)
 
-        print(f"[solve] sym K={K} G_inner={G_inner} pad={pad} G_full={G_full} "
-              f"γ={gamma} τ={tau} alpha={alpha} max_iters={max_iters} tol={tol:.0e}",
-              flush=True)
-
-        inner_mask = np.array([
-            all(pad <= int(j) < pad + G_inner for j in sg.tuples[s])
-            for s in range(sg.n)
-        ], dtype=bool)
+        print(f"[solve] sym K={K} G={G} γ={gamma} τ={tau} "
+              f"alpha={alpha} max_iters={max_iters} tol={tol:.0e}", flush=True)
 
         F_inf = float("inf")
         for i in range(max_iters):
-            P_new = sym_phi(P_sorted, sg, u_grid, tau, gamma, W, pad=pad, G_inner=G_inner)
-            F_inf = float(np.max(np.abs((P_new - P_sorted)[inner_mask])))
+            P_new = sym_phi(P_sorted, sg, u_grid, tau, gamma, W)
+            F_inf = float(np.max(np.abs(P_new - P_sorted)))
             P_sorted = (1.0 - alpha) * P_sorted + alpha * P_new
             reporter.update(iter=i + 1, ftol=F_inf)
             if i % 100 == 0:
@@ -310,7 +299,7 @@ def _run_sym_task(args, task: dict, gamma: float, tau: float) -> None:
         else:
             print(f"[solve] sym reached max_iters={max_iters}  ||F||={F_inf:.4e}", flush=True)
 
-        metrics = sym_weighted_R2(P_sorted, sg, u_grid, tau, pad=pad, G_inner=G_inner)
+        metrics = sym_weighted_R2(P_sorted, sg, u_grid, tau)
         wall_s = time.perf_counter() - t_start
         print(f"[solve] sym done  1-R²={metrics['1-R2']:.6e}  "
               f"||F||={F_inf:.4e}  wall={wall_s:.0f}s", flush=True)
@@ -323,10 +312,9 @@ def _run_sym_task(args, task: dict, gamma: float, tau: float) -> None:
             "1-R2":      round(metrics["1-R2"], 8),
             "slope":     round(metrics["slope"], 6),
             "F_max":     float(f"{F_inf:.4e}"),
-            "n_cells":   metrics["n_cells"],
+            "n_cells":   int(sg.n),
             "K":         K,
-            "G_inner":   G_inner,
-            "pad":       pad,
+            "G":         G,
             "wall_s":    round(wall_s, 1),
         }
 
@@ -491,7 +479,7 @@ def main() -> None:
             print(f"[solve] noise perturbation applied: level={noise_level}", flush=True)
 
         # phi closure — wrap to update reporter on each evaluation
-        phi_calls = {"n": 0, "phase": "init", "stage": 0, "newton_iter": 0}
+        phi_calls = {"n": 0}
 
         def phi_full_fn(P_full: np.ndarray) -> np.ndarray:
             out = phi_K3_halo_smooth(
@@ -499,15 +487,11 @@ def main() -> None:
                 tau_vec, gamma_vec, W_vec, kernel_h,
             )
             phi_calls["n"] += 1
+            # Light residual estimate for live dashboard (float64, cheap)
             P_in = extract_inner(P_full, inner_lo, inner_hi)
             P_in_new = extract_inner(out, inner_lo, inner_hi)
             F_inf = float(np.max(np.abs(P_in - P_in_new)))
-            reporter.update(
-                iter=phi_calls["n"], ftol=F_inf,
-                phase=phi_calls["phase"],
-                stage=phi_calls["stage"],
-                newton_iter=phi_calls["newton_iter"],
-            )
+            reporter.update(iter=phi_calls["n"], ftol=F_inf)
             return out
 
         print(f"[solve] params: presmooth={presmooth} alpha={presmooth_alpha} "
@@ -523,11 +507,9 @@ def main() -> None:
             print(f"[solve] pure_picard mode: alpha={presmooth_alpha} "
                   f"max_iters={max_picard_iters} tol={picard_tol:.0e}", flush=True)
 
-            phi_calls["phase"] = "picard"
             P_full_cur = replace_inner(halo, P_inner_seed, inner_lo, inner_hi)
             F_inf_cur = float("inf")
             for _i in range(max_picard_iters):
-                phi_calls["newton_iter"] = _i + 1
                 P_new = phi_full_fn(P_full_cur)
                 F_inf_cur = float(np.max(np.abs(
                     extract_inner(P_new, inner_lo, inner_hi)
@@ -555,15 +537,6 @@ def main() -> None:
 
             history = _History(F_inf_cur)
         else:
-            def _on_stage(s, phase):
-                phi_calls["stage"] = s
-                phi_calls["phase"] = phase
-                phi_calls["newton_iter"] = 0
-
-            def _on_newton(n):
-                phi_calls["phase"] = "newton"
-                phi_calls["newton_iter"] = n
-
             P_inner_final, history = staggered_solve(
                 phi_full_fn, u_full, inner_lo, inner_hi,
                 u_grid_inner=u_grid_inner, tau_vec=tau_vec, K=K,
@@ -580,8 +553,6 @@ def main() -> None:
                 presmooth_alpha=presmooth_alpha,
                 halo_update="no_learning",
                 heartbeat_s=30.0,
-                stage_callback=_on_stage,
-                newton_iter_callback=_on_newton,
             )
 
         # Final diagnostics (float64)
