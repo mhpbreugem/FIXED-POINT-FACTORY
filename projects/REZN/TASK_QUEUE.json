@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T15:24:46.581000Z",
+  "updated_at": "2026-05-09T15:26:57.414292Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -2018,7 +2018,7 @@
       "id": "extract_volume_g025",
       "gamma": 0.25,
       "tau": null,
-      "status": "claimed",
+      "status": "ready",
       "deps_satisfy": "all",
       "depends_on": [
         "g025_t0030",
@@ -2029,16 +2029,15 @@
         "g025_t0200",
         "g025_t0300"
       ],
-      "note": "Auto-requeued (attempt 1): noise perturbation noise_level=0.002.",
+      "note": "Auto-requeued (attempt 2): noise perturbation noise_level=0.004.",
       "result": null,
       "solver_params": {
-        "noise_level": 0.002,
+        "noise_level": 0.004,
         "presmooth": 100,
         "presmooth_alpha": 0.02
       },
-      "requeue_count": 1,
-      "claimed_by": "gha-25604498824-extract_volume_g025",
-      "claimed_at": "2026-05-09T15:17:01Z"
+      "requeue_count": 2,
+      "checkpoint": null
     },
     {
       "id": "extract_value_info_g025",
@@ -2529,8 +2528,8 @@
   "summary": {
     "total": 103,
     "done": 65,
-    "ready": 7,
-    "claimed": 16,
+    "ready": 8,
+    "claimed": 15,
     "blocked": 12,
     "bailed": 2,
     "skip": 1
