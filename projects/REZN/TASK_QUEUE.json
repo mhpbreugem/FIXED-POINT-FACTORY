@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T16:07:15.552784Z",
+  "updated_at": "2026-05-09T17:11:22.848713Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -1774,8 +1774,10 @@
         "g016_t0050"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
-      "result": null,
+      "status": "bailed",
+      "result": {
+        "reason": "TypeError: staggered_solve() got an unexpected keyword argument 'stage_callback'"
+      },
       "note": "Auto-requeued (attempt 5): noise perturbation noise_level=0.032.",
       "solver_params": {
         "noise_level": 0.032,
@@ -1783,9 +1785,7 @@
         "presmooth_alpha": 0.02
       },
       "requeue_count": 5,
-      "checkpoint": null,
-      "claimed_by": "gha-25606884630-g013_t0050",
-      "claimed_at": "2026-05-09T17:10:58Z"
+      "checkpoint": null
     },
     {
       "id": "g010_t0050",
@@ -2538,10 +2538,10 @@
   "summary": {
     "total": 103,
     "done": 65,
-    "ready": 17,
-    "claimed": 7,
+    "ready": 10,
+    "claimed": 13,
     "blocked": 12,
-    "bailed": 1,
+    "bailed": 2,
     "skip": 1
   },
   "fanout": {
