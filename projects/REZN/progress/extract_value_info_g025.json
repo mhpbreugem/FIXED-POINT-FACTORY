@@ -2,8 +2,8 @@
   "task_id": "extract_value_info_g025",
   "worker_id": "gha-25602013101-extract_value_info_g025",
   "started_at": "2026-05-09T13:18:19Z",
-  "last_update": "2026-05-09T13:19:57Z",
-  "iter": 4539,
-  "ftol": "1.986993e-01",
+  "last_update": "2026-05-09T13:20:30Z",
+  "iter": 6138,
+  "ftol": "1.338882e-01",
   "extra": {}
 }
