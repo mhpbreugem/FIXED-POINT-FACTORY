@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-09T19:58:01.701809Z",
+  "updated_at": "2026-05-09T19:59:37.248134Z",
   "params": {
     "G": 20,
     "UMAX": 5.0,
@@ -526,12 +526,16 @@
         "g100_t0500"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "\u03c4-ladder between g100_t0500 (\u03c4=5.0) and g100_t0390 (\u03c4=3.9). | RESET: stale claim from None (no active workers)",
-      "claimed_by": "gha-25610412738-g100_t0440",
-      "claimed_at": "2026-05-09T19:57:31Z"
+      "note": "Auto-requeued (attempt 1): noise perturbation noise_level=0.002.",
+      "solver_params": {
+        "noise_level": 0.002,
+        "presmooth": 100,
+        "presmooth_alpha": 0.02
+      },
+      "requeue_count": 1
     },
     {
       "id": "g100_t0390",
@@ -2561,8 +2565,8 @@
   "summary": {
     "total": 103,
     "done": 66,
-    "ready": 3,
-    "claimed": 19,
+    "ready": 4,
+    "claimed": 18,
     "blocked": 12,
     "bailed": 2,
     "skip": 1
