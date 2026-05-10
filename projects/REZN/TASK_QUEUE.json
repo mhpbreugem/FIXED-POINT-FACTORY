@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-10T14:15:35.174940Z",
+  "updated_at": "2026-05-10T14:16:27.403704Z",
   "params": {
     "G": 20,
     "UMAX": 5,
@@ -41,7 +41,7 @@
       "depends_on": [
         "g050_t0050"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "results/full_ree/task3_g050_t0030_mp50.json",
       "result": null,
       "completed_at": null,
@@ -54,8 +54,8 @@
         "G_inner": 15
       },
       "G": 15,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25621420221-g050_t0030",
+      "claimed_at": "2026-05-10T14:16:27.403704Z"
     },
     {
       "id": "g050_t0050",
@@ -64,7 +64,7 @@
       "depends_on": [
         "g050_t0080"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "results/full_ree/task3_g050_t0050_mp50.json",
       "result": null,
       "completed_at": null,
@@ -77,8 +77,8 @@
         "G_inner": 15
       },
       "G": 15,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25621109011-g050_t0050",
+      "claimed_at": "2026-05-10T14:16:27.403704Z"
     },
     {
       "id": "g050_t0080",
@@ -87,7 +87,7 @@
       "depends_on": [
         "g050_t0100"
       ],
-      "status": "blocked",
+      "status": "claimed",
       "checkpoint": "results/full_ree/task3_g050_t0080_mp50.json",
       "result": null,
       "completed_at": null,
@@ -99,7 +99,9 @@
         "tol": 5e-07,
         "G_inner": 15
       },
-      "G": 15
+      "G": 15,
+      "claimed_by": "gha-25621109011-g050_t0080",
+      "claimed_at": "2026-05-10T14:16:27.403704Z"
     },
     {
       "id": "g050_t0100",
@@ -178,7 +180,7 @@
       "depends_on": [
         "g075_t0050"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "results/full_ree/task3_g075_t0030_mp50.json",
       "result": null,
       "completed_at": null,
@@ -191,8 +193,8 @@
         "G_inner": 15
       },
       "G": 15,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25621109011-g075_t0030",
+      "claimed_at": "2026-05-10T14:16:27.403704Z"
     },
     {
       "id": "g075_t0050",
@@ -245,7 +247,7 @@
       "depends_on": [
         "g075_t0150"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "results/full_ree/task3_g075_t0100_mp50.json",
       "result": null,
       "completed_at": null,
@@ -258,8 +260,8 @@
         "G_inner": 15
       },
       "G": 15,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25621109011-g075_t0100",
+      "claimed_at": "2026-05-10T14:16:27.403704Z"
     },
     {
       "id": "g075_t0150",
@@ -268,7 +270,7 @@
       "depends_on": [
         "g075_t0200"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "results/full_ree/task3_g075_t0150_mp50.json",
       "result": null,
       "completed_at": null,
@@ -281,8 +283,8 @@
         "G_inner": 15
       },
       "G": 15,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25621109011-g075_t0150",
+      "claimed_at": "2026-05-10T14:16:27.403704Z"
     },
     {
       "id": "g075_t0200",
@@ -291,7 +293,7 @@
       "depends_on": [
         "g050_t0200"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "results/full_ree/task3_g075_t0200_mp50.json",
       "result": null,
       "completed_at": null,
@@ -304,8 +306,8 @@
         "G_inner": 15
       },
       "G": 15,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25621109011-g075_t0200",
+      "claimed_at": "2026-05-10T14:16:27.403704Z"
     },
     {
       "id": "g100_t0030",
@@ -314,7 +316,7 @@
       "depends_on": [
         "g100_t0050"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": {
         "reason": "ValueError: operands could not be broadcast together with shapes (12,12,12) (15,15,15) () "
@@ -329,8 +331,8 @@
         "G_inner": 15
       },
       "G": 15,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25621109011-g100_t0030",
+      "claimed_at": "2026-05-10T14:16:27.403704Z"
     },
     {
       "id": "g100_t0063",
@@ -340,7 +342,7 @@
         "g100_t0080"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "note": "\u00cf\u0084-ladder between g100_t0080 (\u00cf\u0084=0.8) and g100_t0050 (\u00cf\u0084=0.5).",
@@ -354,8 +356,8 @@
         "G_inner": 15
       },
       "G": 15,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25621109011-g100_t0063",
+      "claimed_at": "2026-05-10T14:16:27.403704Z"
     },
     {
       "id": "g100_t0050",
@@ -451,7 +453,7 @@
       "depends_on": [
         "g075_t0200"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "results/full_ree/task3_g100_t0200_mp50.json",
       "result": null,
       "completed_at": null,
@@ -464,8 +466,8 @@
         "G_inner": 15
       },
       "G": 15,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25621109011-g100_t0200",
+      "claimed_at": "2026-05-10T14:16:27.403704Z"
     },
     {
       "id": "g100_t0210",
@@ -474,7 +476,7 @@
       "depends_on": [
         "g100_t0200"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -488,8 +490,8 @@
       "note": "RESET bailed\u00e2\u0086\u0092ready",
       "completed_at": null,
       "G": 15,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25621109011-g100_t0210",
+      "claimed_at": "2026-05-10T14:16:27.403704Z"
     },
     {
       "id": "g100_t0400",
@@ -498,7 +500,7 @@
       "depends_on": [
         "g100_t0590"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -512,8 +514,8 @@
       "note": "RESET bailed\u00e2\u0086\u0092ready",
       "completed_at": null,
       "G": 15,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25621109011-g100_t0400",
+      "claimed_at": "2026-05-10T14:16:27.403704Z"
     },
     {
       "id": "g100_t0590",
