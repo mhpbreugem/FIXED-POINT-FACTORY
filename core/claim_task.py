@@ -212,9 +212,12 @@ def mark_done(project: str, task_id: str, checkpoint: str | None,
     unblock_str = f" unblocked:{','.join(newly_ready)}" if newly_ready else ""
     _git("commit", "-m", f"{task_id}: {metric_str} done{unblock_str}")
 
-    for attempt in range(5):
+    import random
+    for attempt in range(30):
         if _push(branch):
             return True
+        # Random jitter (0-3s) so concurrent done-pushes don't collide repeatedly
+        time.sleep(random.uniform(0, 3))
         _pull_rebase(branch)
         # Re-apply our done status after rebase (preserve all other done entries)
         queue = load_queue(project)
