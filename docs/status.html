@@ -261,7 +261,10 @@
     document.getElementById("task-body").innerHTML = sorted.map(t => {
       const r2 = t.result?.["1-R2"];
       const r2str = r2 != null ? r2.toPrecision(3) : "";
-      const fmax = t.result?.F_max ?? t.result?.F_max_bound;
+      const fmaxNote = t.note && (t.note.match(/\|\|F\|\|(?:inf|=)\s*[=]?\s*([\d.]+e[+-]?\d+)/i) ||
+                                  t.note.match(/F_max\s*=\s*([\d.]+e[+-]?\d+)/i));
+      const fmax = t.result?.F_max ?? t.result?.F_max_bound ??
+                   (fmaxNote ? parseFloat(fmaxNote[1]) : null);
       const fmaxStr = fmax != null ? Number(fmax).toExponential(1) : "";
       const pr = progressData[t.id];
       const isClaimed = t.status === "claimed" || t.status === "in-progress";
