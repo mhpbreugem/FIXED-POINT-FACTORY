@@ -30,7 +30,7 @@
         "smoke": true,
         "1-R2": 0.00015319,
         "F_max": 0.20528,
-        "note": "CI smoke test \u2014 one phi eval, no convergence required"
+        "note": "CI smoke test — one phi eval, no convergence required"
       },
       "completed_at": "2026-05-07T18:31:51.999548Z"
     },
@@ -41,18 +41,16 @@
       "depends_on": [
         "g050_t0050"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g050_t0030_mp50.json",
       "result": null,
-      "claimed_by": "gha-25621012209-g050_t0030",
-      "claimed_at": "2026-05-10T05:41:44Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -64,18 +62,16 @@
       "depends_on": [
         "g050_t0080"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g050_t0050_mp50.json",
       "result": null,
-      "claimed_by": "gha-25621012209-g050_t0050",
-      "claimed_at": "2026-05-10T05:41:44Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -87,18 +83,16 @@
       "depends_on": [
         "g050_t0100"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g050_t0080_mp50.json",
       "result": null,
-      "claimed_by": "gha-25621012209-g050_t0080",
-      "claimed_at": "2026-05-10T05:41:44Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -106,22 +100,20 @@
     {
       "id": "g050_t0100",
       "gamma": 0.5,
-      "tau": 1.0,
+      "tau": 1,
       "depends_on": [
         "g050_t0150"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g050_t0100_mp50.json",
       "result": null,
-      "claimed_by": "gha-25621012209-g050_t0100",
-      "claimed_at": "2026-05-10T05:41:44Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -133,18 +125,16 @@
       "depends_on": [
         "g050_t0200"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g050_t0150_mp50.json",
       "result": null,
-      "claimed_by": "gha-25621012209-g050_t0150",
-      "claimed_at": "2026-05-10T05:41:44Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -152,11 +142,11 @@
     {
       "id": "g050_t0200",
       "gamma": 0.5,
-      "tau": 2.0,
+      "tau": 2,
       "status": "done",
       "checkpoint": "results/full_ree/posterior_v3_G20_umax5_notrim_mp300.json",
       "result": {
-        "1-R2": 0.0,
+        "1-R2": 0,
         "slope": null,
         "n_triples": 8000,
         "F_max": "7.4e-119",
@@ -170,7 +160,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -182,18 +172,16 @@
       "depends_on": [
         "g075_t0050"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g075_t0030_mp50.json",
       "result": null,
-      "claimed_by": "gha-25621012209-g075_t0030",
-      "claimed_at": "2026-05-10T05:41:44Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -205,18 +193,16 @@
       "depends_on": [
         "g075_t0080"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g075_t0050_mp50.json",
       "result": null,
-      "claimed_by": "gha-25621012209-g075_t0050",
-      "claimed_at": "2026-05-10T05:41:44Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -228,18 +214,16 @@
       "depends_on": [
         "g075_t0100"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g075_t0080_mp50.json",
       "result": null,
-      "claimed_by": "gha-25621012209-g075_t0080",
-      "claimed_at": "2026-05-10T05:41:44Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -247,22 +231,20 @@
     {
       "id": "g075_t0100",
       "gamma": 0.75,
-      "tau": 1.0,
+      "tau": 1,
       "depends_on": [
         "g075_t0150"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g075_t0100_mp50.json",
       "result": null,
-      "claimed_by": "gha-25621012209-g075_t0100",
-      "claimed_at": "2026-05-10T05:41:44Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -274,18 +256,16 @@
       "depends_on": [
         "g075_t0200"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g075_t0150_mp50.json",
       "result": null,
-      "claimed_by": "gha-25621012209-g075_t0150",
-      "claimed_at": "2026-05-10T05:41:44Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -293,29 +273,27 @@
     {
       "id": "g075_t0200",
       "gamma": 0.75,
-      "tau": 2.0,
+      "tau": 2,
       "depends_on": [
         "g050_t0200"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g075_t0200_mp50.json",
       "result": null,
-      "claimed_by": "gha-25621012209-g075_t0200",
-      "claimed_at": "2026-05-10T05:41:44Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g100_t0030",
-      "gamma": 1.0,
+      "gamma": 1,
       "tau": 0.3,
       "depends_on": [
         "g100_t0050"
@@ -331,44 +309,42 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g100_t0063",
-      "gamma": 1.0,
+      "gamma": 1,
       "tau": 0.63,
       "depends_on": [
         "g100_t0080"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "\u03c4-ladder between g100_t0080 (\u03c4=0.8) and g100_t0050 (\u03c4=0.5).",
-      "claimed_by": "gha-25621012209-g100_t0063",
-      "claimed_at": "2026-05-10T05:41:44Z",
+      "note": "τ-ladder between g100_t0080 (τ=0.8) and g100_t0050 (τ=0.5).",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g100_t0050",
-      "gamma": 1.0,
+      "gamma": 1,
       "tau": 0.5,
       "depends_on": [
         "g100_t0063"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -376,117 +352,107 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
-      "note": "Auto-requeued (attempt 1): via new ladder g100_t0063. \u03c4-ladder at \u03c4=0.63",
+      "note": "Auto-requeued (attempt 1): via new ladder g100_t0063. τ-ladder at τ=0.63",
       "deps_satisfy": "any",
       "requeue_count": 1,
-      "claimed_by": "gha-25621012209-g100_t0050",
-      "claimed_at": "2026-05-10T05:41:44Z",
       "completed_at": null,
       "G": 15
     },
     {
       "id": "g100_t0080",
-      "gamma": 1.0,
+      "gamma": 1,
       "tau": 0.8,
       "depends_on": [
         "g100_t0100"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": "projects/REZN/checkpoints/g100_t0080.npz",
       "result": null,
-      "claimed_by": "gha-25621012209-g100_t0080",
-      "claimed_at": "2026-05-10T05:41:44Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g100_t0100",
-      "gamma": 1.0,
-      "tau": 1.0,
+      "gamma": 1,
+      "tau": 1,
       "depends_on": [
         "g100_t0150"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g100_t0100_mp50.json",
       "result": null,
-      "claimed_by": "gha-25621012209-g100_t0100",
-      "claimed_at": "2026-05-10T05:41:44Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g100_t0150",
-      "gamma": 1.0,
+      "gamma": 1,
       "tau": 1.5,
       "depends_on": [
         "g100_t0200"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g100_t0150_mp50.json",
       "result": null,
-      "claimed_by": "gha-25621012209-g100_t0150",
-      "claimed_at": "2026-05-10T05:41:44Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g100_t0200",
-      "gamma": 1.0,
-      "tau": 2.0,
+      "gamma": 1,
+      "tau": 2,
       "depends_on": [
         "g075_t0200"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g100_t0200_mp50.json",
       "result": null,
-      "claimed_by": "gha-25621012209-g100_t0200",
-      "claimed_at": "2026-05-10T05:41:44Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g100_t0210",
-      "gamma": 1.0,
+      "gamma": 1,
       "tau": 2.1,
       "depends_on": [
         "g100_t0200"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -494,23 +460,21 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
-      "note": "RESET bailed\u2192ready",
-      "claimed_by": "gha-25621012209-g100_t0210",
-      "claimed_at": "2026-05-10T05:41:44Z",
+      "note": "RESET bailed→ready",
       "completed_at": null,
       "G": 15
     },
     {
       "id": "g100_t0400",
-      "gamma": 1.0,
-      "tau": 4.0,
+      "gamma": 1,
+      "tau": 4,
       "depends_on": [
         "g100_t0590"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -518,18 +482,16 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
-      "note": "RESET bailed\u2192ready",
-      "claimed_by": "gha-25621012209-g100_t0400",
-      "claimed_at": "2026-05-10T05:41:44Z",
+      "note": "RESET bailed→ready",
       "completed_at": null,
       "G": 15
     },
     {
       "id": "g100_t0590",
-      "gamma": 1.0,
+      "gamma": 1,
       "tau": 5.9,
       "depends_on": [
         "g100_t0600"
@@ -542,10 +504,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
-      "note": "RESET bailed\u2192ready",
+      "note": "RESET bailed→ready",
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -553,8 +515,8 @@
     },
     {
       "id": "g100_t0600",
-      "gamma": 1.0,
-      "tau": 6.0,
+      "gamma": 1,
+      "tau": 6,
       "depends_on": [
         "g100_t0800"
       ],
@@ -569,15 +531,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g100_t0800",
-      "gamma": 1.0,
-      "tau": 8.0,
+      "gamma": 1,
+      "tau": 8,
       "depends_on": [
         "g100_t1000"
       ],
@@ -592,15 +554,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g100_t1000",
-      "gamma": 1.0,
-      "tau": 10.0,
+      "gamma": 1,
+      "tau": 10,
       "depends_on": [
         "g075_t0200"
       ],
@@ -615,7 +577,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -638,7 +600,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -661,7 +623,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -684,7 +646,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -692,7 +654,7 @@
     {
       "id": "g125_t0100",
       "gamma": 1.25,
-      "tau": 1.0,
+      "tau": 1,
       "depends_on": [
         "g125_t0150"
       ],
@@ -707,7 +669,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -730,7 +692,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -738,7 +700,7 @@
     {
       "id": "g125_t0200",
       "gamma": 1.25,
-      "tau": 2.0,
+      "tau": 2,
       "depends_on": [
         "g100_t0200"
       ],
@@ -753,7 +715,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -761,7 +723,7 @@
     {
       "id": "g125_t0400",
       "gamma": 1.25,
-      "tau": 4.0,
+      "tau": 4,
       "depends_on": [
         "g125_t0590"
       ],
@@ -776,7 +738,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -799,7 +761,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -807,7 +769,7 @@
     {
       "id": "g125_t0600",
       "gamma": 1.25,
-      "tau": 6.0,
+      "tau": 6,
       "depends_on": [
         "g125_t0800"
       ],
@@ -822,7 +784,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -830,7 +792,7 @@
     {
       "id": "g125_t0800",
       "gamma": 1.25,
-      "tau": 8.0,
+      "tau": 8,
       "depends_on": [
         "g125_t1000"
       ],
@@ -845,7 +807,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -853,7 +815,7 @@
     {
       "id": "g125_t1000",
       "gamma": 1.25,
-      "tau": 10.0,
+      "tau": 10,
       "depends_on": [
         "g100_t0200"
       ],
@@ -868,7 +830,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -891,7 +853,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -914,7 +876,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -937,7 +899,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -945,7 +907,7 @@
     {
       "id": "g140_t0100",
       "gamma": 1.4,
-      "tau": 1.0,
+      "tau": 1,
       "depends_on": [
         "g140_t0150"
       ],
@@ -960,7 +922,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -983,7 +945,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -991,7 +953,7 @@
     {
       "id": "g140_t0200",
       "gamma": 1.4,
-      "tau": 2.0,
+      "tau": 2,
       "depends_on": [
         "g125_t0200"
       ],
@@ -1006,7 +968,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1014,7 +976,7 @@
     {
       "id": "g140_t0400",
       "gamma": 1.4,
-      "tau": 4.0,
+      "tau": 4,
       "depends_on": [
         "g140_t0570"
       ],
@@ -1029,7 +991,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1050,7 +1012,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "note": "Auto-requeued (attempt 1): warm-start from g140_t0510 (log-dist=0.11).",
@@ -1064,7 +1026,7 @@
     {
       "id": "g140_t0600",
       "gamma": 1.4,
-      "tau": 6.0,
+      "tau": 6,
       "depends_on": [
         "g140_t0800"
       ],
@@ -1079,7 +1041,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1087,7 +1049,7 @@
     {
       "id": "g140_t0800",
       "gamma": 1.4,
-      "tau": 8.0,
+      "tau": 8,
       "depends_on": [
         "g140_t1000"
       ],
@@ -1102,7 +1064,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1110,7 +1072,7 @@
     {
       "id": "g140_t1000",
       "gamma": 1.4,
-      "tau": 10.0,
+      "tau": 10,
       "depends_on": [
         "g125_t0200"
       ],
@@ -1125,7 +1087,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1133,7 +1095,7 @@
     {
       "id": "g140_t1200",
       "gamma": 1.4,
-      "tau": 12.0,
+      "tau": 12,
       "depends_on": [
         "g140_t1000"
       ],
@@ -1148,7 +1110,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1156,7 +1118,7 @@
     {
       "id": "g140_t1400",
       "gamma": 1.4,
-      "tau": 14.0,
+      "tau": 14,
       "depends_on": [
         "g140_t1200"
       ],
@@ -1171,7 +1133,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1179,7 +1141,7 @@
     {
       "id": "g140_t1600",
       "gamma": 1.4,
-      "tau": 16.0,
+      "tau": 16,
       "depends_on": [
         "g140_t1400"
       ],
@@ -1194,7 +1156,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1202,7 +1164,7 @@
     {
       "id": "g140_t1800",
       "gamma": 1.4,
-      "tau": 18.0,
+      "tau": 18,
       "depends_on": [
         "g140_t1600"
       ],
@@ -1217,7 +1179,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1225,7 +1187,7 @@
     {
       "id": "g140_t2000",
       "gamma": 1.4,
-      "tau": 20.0,
+      "tau": 20,
       "depends_on": [
         "g140_t1800"
       ],
@@ -1240,7 +1202,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1263,7 +1225,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1271,7 +1233,7 @@
     {
       "id": "g013_t0100",
       "gamma": 0.13,
-      "tau": 1.0,
+      "tau": 1,
       "depends_on": [
         "g013_t0200"
       ],
@@ -1286,7 +1248,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1294,7 +1256,7 @@
     {
       "id": "g013_t0200",
       "gamma": 0.13,
-      "tau": 2.0,
+      "tau": 2,
       "depends_on": [
         "g013_t0400"
       ],
@@ -1309,7 +1271,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1317,7 +1279,7 @@
     {
       "id": "g013_t0400",
       "gamma": 0.13,
-      "tau": 4.0,
+      "tau": 4,
       "depends_on": [
         "g013_t0600"
       ],
@@ -1332,7 +1294,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1340,7 +1302,7 @@
     {
       "id": "g013_t0600",
       "gamma": 0.13,
-      "tau": 6.0,
+      "tau": 6,
       "depends_on": [
         "g013_t0800"
       ],
@@ -1355,7 +1317,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1363,7 +1325,7 @@
     {
       "id": "g013_t0800",
       "gamma": 0.13,
-      "tau": 8.0,
+      "tau": 8,
       "depends_on": [
         "g013_t1000"
       ],
@@ -1378,7 +1340,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1386,7 +1348,7 @@
     {
       "id": "g013_t1000",
       "gamma": 0.13,
-      "tau": 10.0,
+      "tau": 10,
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g013_t1000_mp50.json",
       "result": null,
@@ -1398,7 +1360,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1421,7 +1383,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1429,7 +1391,7 @@
     {
       "id": "g010_t0100",
       "gamma": 0.1,
-      "tau": 1.0,
+      "tau": 1,
       "depends_on": [
         "g010_t0200"
       ],
@@ -1444,7 +1406,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1452,7 +1414,7 @@
     {
       "id": "g010_t0200",
       "gamma": 0.1,
-      "tau": 2.0,
+      "tau": 2,
       "depends_on": [
         "g010_t0400"
       ],
@@ -1467,7 +1429,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1475,7 +1437,7 @@
     {
       "id": "g010_t0400",
       "gamma": 0.1,
-      "tau": 4.0,
+      "tau": 4,
       "depends_on": [
         "g010_t0600"
       ],
@@ -1490,7 +1452,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1498,7 +1460,7 @@
     {
       "id": "g010_t0600",
       "gamma": 0.1,
-      "tau": 6.0,
+      "tau": 6,
       "depends_on": [
         "g010_t0800"
       ],
@@ -1513,7 +1475,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1521,7 +1483,7 @@
     {
       "id": "g010_t0800",
       "gamma": 0.1,
-      "tau": 8.0,
+      "tau": 8,
       "depends_on": [
         "g010_t1000"
       ],
@@ -1536,7 +1498,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1544,7 +1506,7 @@
     {
       "id": "g010_t1000",
       "gamma": 0.1,
-      "tau": 10.0,
+      "tau": 10,
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g010_t1000_mp50.json",
       "result": null,
@@ -1556,7 +1518,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1579,7 +1541,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1602,7 +1564,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1625,7 +1587,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1633,7 +1595,7 @@
     {
       "id": "g160_t0100",
       "gamma": 1.6,
-      "tau": 1.0,
+      "tau": 1,
       "depends_on": [
         "g160_t0150"
       ],
@@ -1648,7 +1610,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1671,7 +1633,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1679,7 +1641,7 @@
     {
       "id": "g160_t0200",
       "gamma": 1.6,
-      "tau": 2.0,
+      "tau": 2,
       "depends_on": [
         "g140_t0200"
       ],
@@ -1694,7 +1656,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1702,7 +1664,7 @@
     {
       "id": "g160_t0400",
       "gamma": 1.6,
-      "tau": 4.0,
+      "tau": 4,
       "depends_on": [
         "g160_t0600"
       ],
@@ -1717,7 +1679,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1725,7 +1687,7 @@
     {
       "id": "g160_t0600",
       "gamma": 1.6,
-      "tau": 6.0,
+      "tau": 6,
       "depends_on": [
         "g160_t0800"
       ],
@@ -1740,7 +1702,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1748,7 +1710,7 @@
     {
       "id": "g160_t0800",
       "gamma": 1.6,
-      "tau": 8.0,
+      "tau": 8,
       "depends_on": [
         "g160_t1000"
       ],
@@ -1763,7 +1725,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1771,7 +1733,7 @@
     {
       "id": "g160_t1000",
       "gamma": 1.6,
-      "tau": 10.0,
+      "tau": 10,
       "depends_on": [
         "g140_t0200"
       ],
@@ -1786,7 +1748,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1794,7 +1756,7 @@
     {
       "id": "g160_t1200",
       "gamma": 1.6,
-      "tau": 12.0,
+      "tau": 12,
       "depends_on": [
         "g160_t1000"
       ],
@@ -1809,7 +1771,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1817,7 +1779,7 @@
     {
       "id": "g160_t1400",
       "gamma": 1.6,
-      "tau": 14.0,
+      "tau": 14,
       "depends_on": [
         "g160_t1200"
       ],
@@ -1832,7 +1794,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1840,7 +1802,7 @@
     {
       "id": "g160_t1600",
       "gamma": 1.6,
-      "tau": 16.0,
+      "tau": 16,
       "depends_on": [
         "g160_t1400"
       ],
@@ -1855,7 +1817,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1863,7 +1825,7 @@
     {
       "id": "g160_t1800",
       "gamma": 1.6,
-      "tau": 18.0,
+      "tau": 18,
       "depends_on": [
         "g160_t1600"
       ],
@@ -1878,7 +1840,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1886,7 +1848,7 @@
     {
       "id": "g160_t2000",
       "gamma": 1.6,
-      "tau": 20.0,
+      "tau": 20,
       "depends_on": [
         "g160_t1800"
       ],
@@ -1901,7 +1863,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1924,7 +1886,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1947,7 +1909,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1970,7 +1932,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -1978,7 +1940,7 @@
     {
       "id": "g180_t0100",
       "gamma": 1.8,
-      "tau": 1.0,
+      "tau": 1,
       "depends_on": [
         "g180_t0150"
       ],
@@ -1993,7 +1955,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -2016,7 +1978,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -2024,7 +1986,7 @@
     {
       "id": "g180_t0200",
       "gamma": 1.8,
-      "tau": 2.0,
+      "tau": 2,
       "depends_on": [
         "g160_t0200"
       ],
@@ -2039,7 +2001,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -2047,7 +2009,7 @@
     {
       "id": "g180_t0400",
       "gamma": 1.8,
-      "tau": 4.0,
+      "tau": 4,
       "depends_on": [
         "g180_t0600"
       ],
@@ -2062,7 +2024,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -2070,7 +2032,7 @@
     {
       "id": "g180_t0600",
       "gamma": 1.8,
-      "tau": 6.0,
+      "tau": 6,
       "depends_on": [
         "g180_t0800"
       ],
@@ -2085,7 +2047,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -2093,7 +2055,7 @@
     {
       "id": "g180_t0800",
       "gamma": 1.8,
-      "tau": 8.0,
+      "tau": 8,
       "depends_on": [
         "g180_t1000"
       ],
@@ -2108,7 +2070,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -2116,7 +2078,7 @@
     {
       "id": "g180_t1000",
       "gamma": 1.8,
-      "tau": 10.0,
+      "tau": 10,
       "depends_on": [
         "g160_t0200"
       ],
@@ -2131,7 +2093,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -2139,7 +2101,7 @@
     {
       "id": "g180_t1200",
       "gamma": 1.8,
-      "tau": 12.0,
+      "tau": 12,
       "depends_on": [
         "g180_t1000"
       ],
@@ -2154,7 +2116,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -2162,7 +2124,7 @@
     {
       "id": "g180_t1400",
       "gamma": 1.8,
-      "tau": 14.0,
+      "tau": 14,
       "depends_on": [
         "g180_t1200"
       ],
@@ -2177,7 +2139,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -2185,7 +2147,7 @@
     {
       "id": "g180_t1600",
       "gamma": 1.8,
-      "tau": 16.0,
+      "tau": 16,
       "depends_on": [
         "g180_t1400"
       ],
@@ -2200,7 +2162,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -2208,7 +2170,7 @@
     {
       "id": "g180_t1800",
       "gamma": 1.8,
-      "tau": 18.0,
+      "tau": 18,
       "depends_on": [
         "g180_t1600"
       ],
@@ -2223,7 +2185,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -2231,7 +2193,7 @@
     {
       "id": "g180_t2000",
       "gamma": 1.8,
-      "tau": 20.0,
+      "tau": 20,
       "depends_on": [
         "g180_t1800"
       ],
@@ -2246,14 +2208,14 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g200_t0030",
-      "gamma": 2.0,
+      "gamma": 2,
       "tau": 0.3,
       "depends_on": [
         "g200_t0050"
@@ -2269,14 +2231,14 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g200_t0050",
-      "gamma": 2.0,
+      "gamma": 2,
       "tau": 0.5,
       "depends_on": [
         "g200_t0080"
@@ -2292,14 +2254,14 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g200_t0080",
-      "gamma": 2.0,
+      "gamma": 2,
       "tau": 0.8,
       "depends_on": [
         "g200_t0100"
@@ -2315,15 +2277,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g200_t0100",
-      "gamma": 2.0,
-      "tau": 1.0,
+      "gamma": 2,
+      "tau": 1,
       "depends_on": [
         "g200_t0150"
       ],
@@ -2338,14 +2300,14 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g200_t0150",
-      "gamma": 2.0,
+      "gamma": 2,
       "tau": 1.5,
       "depends_on": [
         "g200_t0200"
@@ -2361,15 +2323,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g200_t0200",
-      "gamma": 2.0,
-      "tau": 2.0,
+      "gamma": 2,
+      "tau": 2,
       "depends_on": [
         "g180_t0200"
       ],
@@ -2384,15 +2346,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g200_t0400",
-      "gamma": 2.0,
-      "tau": 4.0,
+      "gamma": 2,
+      "tau": 4,
       "depends_on": [
         "g200_t0600"
       ],
@@ -2407,15 +2369,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g200_t0600",
-      "gamma": 2.0,
-      "tau": 6.0,
+      "gamma": 2,
+      "tau": 6,
       "depends_on": [
         "g200_t0800"
       ],
@@ -2430,15 +2392,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g200_t0800",
-      "gamma": 2.0,
-      "tau": 8.0,
+      "gamma": 2,
+      "tau": 8,
       "depends_on": [
         "g200_t1000"
       ],
@@ -2453,15 +2415,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g200_t1000",
-      "gamma": 2.0,
-      "tau": 10.0,
+      "gamma": 2,
+      "tau": 10,
       "depends_on": [
         "g180_t0200"
       ],
@@ -2476,15 +2438,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g200_t1200",
-      "gamma": 2.0,
-      "tau": 12.0,
+      "gamma": 2,
+      "tau": 12,
       "depends_on": [
         "g200_t1000"
       ],
@@ -2499,15 +2461,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g200_t1400",
-      "gamma": 2.0,
-      "tau": 14.0,
+      "gamma": 2,
+      "tau": 14,
       "depends_on": [
         "g200_t1200"
       ],
@@ -2522,15 +2484,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g200_t1600",
-      "gamma": 2.0,
-      "tau": 16.0,
+      "gamma": 2,
+      "tau": 16,
       "depends_on": [
         "g200_t1400"
       ],
@@ -2545,15 +2507,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g200_t1800",
-      "gamma": 2.0,
-      "tau": 18.0,
+      "gamma": 2,
+      "tau": 18,
       "depends_on": [
         "g200_t1600"
       ],
@@ -2568,15 +2530,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g200_t2000",
-      "gamma": 2.0,
-      "tau": 20.0,
+      "gamma": 2,
+      "tau": 20,
       "depends_on": [
         "g200_t1800"
       ],
@@ -2591,14 +2553,14 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g500_t0030",
-      "gamma": 5.0,
+      "gamma": 5,
       "tau": 0.3,
       "depends_on": [
         "g500_t0050"
@@ -2614,14 +2576,14 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g500_t0050",
-      "gamma": 5.0,
+      "gamma": 5,
       "tau": 0.5,
       "depends_on": [
         "g500_t0080"
@@ -2637,14 +2599,14 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g500_t0080",
-      "gamma": 5.0,
+      "gamma": 5,
       "tau": 0.8,
       "depends_on": [
         "g500_t0100"
@@ -2660,15 +2622,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g500_t0100",
-      "gamma": 5.0,
-      "tau": 1.0,
+      "gamma": 5,
+      "tau": 1,
       "depends_on": [
         "g500_t0150"
       ],
@@ -2683,14 +2645,14 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g500_t0150",
-      "gamma": 5.0,
+      "gamma": 5,
       "tau": 1.5,
       "depends_on": [
         "g500_t0200"
@@ -2706,15 +2668,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g500_t0200",
-      "gamma": 5.0,
-      "tau": 2.0,
+      "gamma": 5,
+      "tau": 2,
       "depends_on": [
         "g200_t0200"
       ],
@@ -2729,15 +2691,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g500_t0400",
-      "gamma": 5.0,
-      "tau": 4.0,
+      "gamma": 5,
+      "tau": 4,
       "depends_on": [
         "g500_t0600"
       ],
@@ -2752,15 +2714,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g500_t0600",
-      "gamma": 5.0,
-      "tau": 6.0,
+      "gamma": 5,
+      "tau": 6,
       "depends_on": [
         "g500_t0800"
       ],
@@ -2775,15 +2737,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g500_t0800",
-      "gamma": 5.0,
-      "tau": 8.0,
+      "gamma": 5,
+      "tau": 8,
       "depends_on": [
         "g500_t1000"
       ],
@@ -2798,15 +2760,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g500_t1000",
-      "gamma": 5.0,
-      "tau": 10.0,
+      "gamma": 5,
+      "tau": 10,
       "depends_on": [
         "g200_t0200"
       ],
@@ -2821,15 +2783,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g500_t1200",
-      "gamma": 5.0,
-      "tau": 12.0,
+      "gamma": 5,
+      "tau": 12,
       "depends_on": [
         "g500_t1000"
       ],
@@ -2844,15 +2806,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g500_t1400",
-      "gamma": 5.0,
-      "tau": 14.0,
+      "gamma": 5,
+      "tau": 14,
       "depends_on": [
         "g500_t1200"
       ],
@@ -2867,15 +2829,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g500_t1600",
-      "gamma": 5.0,
-      "tau": 16.0,
+      "gamma": 5,
+      "tau": 16,
       "depends_on": [
         "g500_t1400"
       ],
@@ -2890,15 +2852,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g500_t1800",
-      "gamma": 5.0,
-      "tau": 18.0,
+      "gamma": 5,
+      "tau": 18,
       "depends_on": [
         "g500_t1600"
       ],
@@ -2913,15 +2875,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g500_t2000",
-      "gamma": 5.0,
-      "tau": 20.0,
+      "gamma": 5,
+      "tau": 20,
       "depends_on": [
         "g500_t1800"
       ],
@@ -2936,14 +2898,14 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g300_t0030",
-      "gamma": 3.0,
+      "gamma": 3,
       "tau": 0.3,
       "depends_on": [
         "g300_t0050"
@@ -2959,14 +2921,14 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g300_t0050",
-      "gamma": 3.0,
+      "gamma": 3,
       "tau": 0.5,
       "depends_on": [
         "g300_t0080"
@@ -2982,14 +2944,14 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g300_t0080",
-      "gamma": 3.0,
+      "gamma": 3,
       "tau": 0.8,
       "depends_on": [
         "g300_t0100"
@@ -3005,15 +2967,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g300_t0100",
-      "gamma": 3.0,
-      "tau": 1.0,
+      "gamma": 3,
+      "tau": 1,
       "depends_on": [
         "g300_t0150"
       ],
@@ -3028,14 +2990,14 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g300_t0150",
-      "gamma": 3.0,
+      "gamma": 3,
       "tau": 1.5,
       "depends_on": [
         "g300_t0200"
@@ -3051,15 +3013,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g300_t0200",
-      "gamma": 3.0,
-      "tau": 2.0,
+      "gamma": 3,
+      "tau": 2,
       "depends_on": [
         "g200_t0200"
       ],
@@ -3074,15 +3036,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g300_t0400",
-      "gamma": 3.0,
-      "tau": 4.0,
+      "gamma": 3,
+      "tau": 4,
       "depends_on": [
         "g300_t0600"
       ],
@@ -3097,15 +3059,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g300_t0600",
-      "gamma": 3.0,
-      "tau": 6.0,
+      "gamma": 3,
+      "tau": 6,
       "depends_on": [
         "g300_t0800"
       ],
@@ -3120,15 +3082,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g300_t0800",
-      "gamma": 3.0,
-      "tau": 8.0,
+      "gamma": 3,
+      "tau": 8,
       "depends_on": [
         "g300_t1000"
       ],
@@ -3143,15 +3105,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g300_t1000",
-      "gamma": 3.0,
-      "tau": 10.0,
+      "gamma": 3,
+      "tau": 10,
       "depends_on": [
         "g200_t0200"
       ],
@@ -3166,15 +3128,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g300_t1200",
-      "gamma": 3.0,
-      "tau": 12.0,
+      "gamma": 3,
+      "tau": 12,
       "depends_on": [
         "g300_t1000"
       ],
@@ -3189,15 +3151,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g300_t1400",
-      "gamma": 3.0,
-      "tau": 14.0,
+      "gamma": 3,
+      "tau": 14,
       "depends_on": [
         "g300_t1200"
       ],
@@ -3212,15 +3174,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g300_t1600",
-      "gamma": 3.0,
-      "tau": 16.0,
+      "gamma": 3,
+      "tau": 16,
       "depends_on": [
         "g300_t1400"
       ],
@@ -3235,15 +3197,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g300_t1800",
-      "gamma": 3.0,
-      "tau": 18.0,
+      "gamma": 3,
+      "tau": 18,
       "depends_on": [
         "g300_t1600"
       ],
@@ -3258,15 +3220,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "g300_t2000",
-      "gamma": 3.0,
-      "tau": 20.0,
+      "gamma": 3,
+      "tau": 20,
       "depends_on": [
         "g300_t1800"
       ],
@@ -3281,7 +3243,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -3305,7 +3267,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -3329,7 +3291,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -3353,7 +3315,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -3377,14 +3339,14 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "nc4-g100",
-      "gamma": 1.0,
+      "gamma": 1,
       "tau": null,
       "nc4_sweep": true,
       "depends_on": [
@@ -3401,7 +3363,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -3425,7 +3387,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -3449,7 +3411,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -3473,7 +3435,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -3497,14 +3459,14 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "nc4-g200",
-      "gamma": 2.0,
+      "gamma": 2,
       "tau": null,
       "nc4_sweep": true,
       "depends_on": [
@@ -3521,14 +3483,14 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "nc4-g300",
-      "gamma": 3.0,
+      "gamma": 3,
       "tau": null,
       "nc4_sweep": true,
       "depends_on": [
@@ -3545,14 +3507,14 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
     },
     {
       "id": "nc4-g500",
-      "gamma": 5.0,
+      "gamma": 5,
       "tau": null,
       "nc4_sweep": true,
       "depends_on": [
@@ -3569,7 +3531,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       },
       "G": 15
@@ -3579,7 +3541,7 @@
       "kind": "solver",
       "K": 3,
       "gamma": 0.5,
-      "tau": 2.0,
+      "tau": 2,
       "G": 15,
       "symmetric": true,
       "depends_on": [
@@ -3591,9 +3553,9 @@
       "result": null,
       "note": "Auto-requeued (attempt 1): warm-start from seed_g050_t0200_3d (log-dist=0.00).",
       "solver_params": {
-        "u_max": 3.0,
+        "u_max": 3,
         "G": 15,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "max_iters": 2000,
         "anderson_m": 20
       },
@@ -3604,7 +3566,7 @@
       "kind": "solver",
       "K": 4,
       "gamma": 0.5,
-      "tau": 2.0,
+      "tau": 2,
       "G": 15,
       "symmetric": true,
       "depends_on": [
@@ -3616,9 +3578,9 @@
       "result": null,
       "note": "Symmetric K=4; warm-starts from K=3.",
       "solver_params": {
-        "u_max": 3.0,
+        "u_max": 3,
         "G": 15,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "max_iters": 2000,
         "anderson_m": 20
       }
@@ -3628,7 +3590,7 @@
       "kind": "solver",
       "K": 5,
       "gamma": 0.5,
-      "tau": 2.0,
+      "tau": 2,
       "G": 15,
       "symmetric": true,
       "depends_on": [
@@ -3640,9 +3602,9 @@
       "result": null,
       "note": "Symmetric K=5; warm-starts from K=4.",
       "solver_params": {
-        "u_max": 3.0,
+        "u_max": 3,
         "G": 15,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "max_iters": 2000,
         "anderson_m": 20
       }
@@ -3652,7 +3614,7 @@
       "kind": "solver",
       "K": 6,
       "gamma": 0.5,
-      "tau": 2.0,
+      "tau": 2,
       "G": 15,
       "symmetric": true,
       "depends_on": [
@@ -3664,9 +3626,9 @@
       "result": null,
       "note": "Symmetric K=6; warm-starts from K=5.",
       "solver_params": {
-        "u_max": 3.0,
+        "u_max": 3,
         "G": 15,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "max_iters": 2000,
         "anderson_m": 20
       }
@@ -3676,7 +3638,7 @@
       "kind": "solver",
       "K": 7,
       "gamma": 0.5,
-      "tau": 2.0,
+      "tau": 2,
       "G": 15,
       "symmetric": true,
       "depends_on": [
@@ -3688,9 +3650,9 @@
       "result": null,
       "note": "Symmetric K=7; warm-starts from K=6.",
       "solver_params": {
-        "u_max": 3.0,
+        "u_max": 3,
         "G": 15,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "max_iters": 2000,
         "anderson_m": 20
       }
@@ -3700,7 +3662,7 @@
       "kind": "solver",
       "K": 8,
       "gamma": 0.5,
-      "tau": 2.0,
+      "tau": 2,
       "G": 15,
       "symmetric": true,
       "depends_on": [
@@ -3712,9 +3674,9 @@
       "result": null,
       "note": "Symmetric K=8; warm-starts from K=7.",
       "solver_params": {
-        "u_max": 3.0,
+        "u_max": 3,
         "G": 15,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "max_iters": 2000,
         "anderson_m": 20
       }
@@ -3740,7 +3702,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -3765,7 +3727,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -3790,7 +3752,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -3815,7 +3777,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -3823,7 +3785,7 @@
       "id": "g010_t0500",
       "kind": "ree",
       "gamma": 0.1,
-      "tau": 5.0,
+      "tau": 5,
       "G": 15,
       "K": 3,
       "depends_on": [],
@@ -3840,7 +3802,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -3865,7 +3827,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -3890,7 +3852,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -3915,7 +3877,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -3940,7 +3902,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -3948,7 +3910,7 @@
       "id": "g025_t0100",
       "kind": "ree",
       "gamma": 0.25,
-      "tau": 1.0,
+      "tau": 1,
       "G": 15,
       "K": 3,
       "depends_on": [],
@@ -3965,7 +3927,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -3990,7 +3952,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -3998,7 +3960,7 @@
       "id": "g025_t0200",
       "kind": "ree",
       "gamma": 0.25,
-      "tau": 2.0,
+      "tau": 2,
       "G": 15,
       "K": 3,
       "depends_on": [],
@@ -4015,7 +3977,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -4023,7 +3985,7 @@
       "id": "g025_t0300",
       "kind": "ree",
       "gamma": 0.25,
-      "tau": 3.0,
+      "tau": 3,
       "G": 15,
       "K": 3,
       "depends_on": [],
@@ -4040,7 +4002,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -4048,7 +4010,7 @@
       "id": "g035_t0200",
       "kind": "ree",
       "gamma": 0.35000000000000003,
-      "tau": 2.0,
+      "tau": 2,
       "G": 15,
       "K": 3,
       "depends_on": [],
@@ -4065,7 +4027,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -4073,7 +4035,7 @@
       "id": "g050_t0400",
       "kind": "ree",
       "gamma": 0.5,
-      "tau": 4.0,
+      "tau": 4,
       "G": 15,
       "K": 3,
       "depends_on": [],
@@ -4090,7 +4052,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -4098,7 +4060,7 @@
       "id": "g050_t0500",
       "kind": "ree",
       "gamma": 0.5,
-      "tau": 5.0,
+      "tau": 5,
       "G": 15,
       "K": 3,
       "depends_on": [],
@@ -4115,7 +4077,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -4123,7 +4085,7 @@
       "id": "g050_t0700",
       "kind": "ree",
       "gamma": 0.5,
-      "tau": 7.0,
+      "tau": 7,
       "G": 15,
       "K": 3,
       "depends_on": [],
@@ -4140,7 +4102,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -4148,7 +4110,7 @@
       "id": "g050_t1000",
       "kind": "ree",
       "gamma": 0.5,
-      "tau": 10.0,
+      "tau": 10,
       "G": 15,
       "K": 3,
       "depends_on": [],
@@ -4165,7 +4127,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -4173,7 +4135,7 @@
       "id": "g050_t1200",
       "kind": "ree",
       "gamma": 0.5,
-      "tau": 12.0,
+      "tau": 12,
       "G": 15,
       "K": 3,
       "depends_on": [],
@@ -4190,7 +4152,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -4198,7 +4160,7 @@
       "id": "g050_t1500",
       "kind": "ree",
       "gamma": 0.5,
-      "tau": 15.0,
+      "tau": 15,
       "G": 15,
       "K": 3,
       "depends_on": [],
@@ -4215,7 +4177,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -4223,7 +4185,7 @@
       "id": "g050_t2000",
       "kind": "ree",
       "gamma": 0.5,
-      "tau": 20.0,
+      "tau": 20,
       "G": 15,
       "K": 3,
       "depends_on": [],
@@ -4240,14 +4202,14 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
     {
       "id": "g100_t0250",
       "kind": "ree",
-      "gamma": 1.0,
+      "gamma": 1,
       "tau": 2.5,
       "G": 15,
       "K": 3,
@@ -4265,15 +4227,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
     {
       "id": "g100_t0300",
       "kind": "ree",
-      "gamma": 1.0,
-      "tau": 3.0,
+      "gamma": 1,
+      "tau": 3,
       "G": 15,
       "K": 3,
       "depends_on": [],
@@ -4290,14 +4252,14 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
     {
       "id": "g100_t0450",
       "kind": "ree",
-      "gamma": 1.0,
+      "gamma": 1,
       "tau": 4.5,
       "G": 15,
       "K": 3,
@@ -4315,15 +4277,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
     {
       "id": "g100_t0500",
       "kind": "ree",
-      "gamma": 1.0,
-      "tau": 5.0,
+      "gamma": 1,
+      "tau": 5,
       "G": 15,
       "K": 3,
       "depends_on": [],
@@ -4340,15 +4302,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
     {
       "id": "g100_t0700",
       "kind": "ree",
-      "gamma": 1.0,
-      "tau": 7.0,
+      "gamma": 1,
+      "tau": 7,
       "G": 15,
       "K": 3,
       "depends_on": [],
@@ -4365,15 +4327,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
     {
       "id": "g100_t1500",
       "kind": "ree",
-      "gamma": 1.0,
-      "tau": 15.0,
+      "gamma": 1,
+      "tau": 15,
       "G": 15,
       "K": 3,
       "depends_on": [],
@@ -4390,15 +4352,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
     {
       "id": "g100_t2000",
       "kind": "ree",
-      "gamma": 1.0,
-      "tau": 20.0,
+      "gamma": 1,
+      "tau": 20,
       "G": 15,
       "K": 3,
       "depends_on": [],
@@ -4415,7 +4377,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -4440,7 +4402,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -4465,7 +4427,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -4490,7 +4452,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -4515,7 +4477,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -4540,7 +4502,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -4565,15 +4527,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
     {
       "id": "g200_t0300",
       "kind": "ree",
-      "gamma": 2.0,
-      "tau": 3.0,
+      "gamma": 2,
+      "tau": 3,
       "G": 15,
       "K": 3,
       "depends_on": [],
@@ -4590,15 +4552,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
     {
       "id": "g200_t0500",
       "kind": "ree",
-      "gamma": 2.0,
-      "tau": 5.0,
+      "gamma": 2,
+      "tau": 5,
       "G": 15,
       "K": 3,
       "depends_on": [],
@@ -4615,15 +4577,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
     {
       "id": "g400_t1000",
       "kind": "ree",
-      "gamma": 4.0,
-      "tau": 10.0,
+      "gamma": 4,
+      "tau": 10,
       "G": 15,
       "K": 3,
       "depends_on": [],
@@ -4640,15 +4602,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
     {
       "id": "g400_t1500",
       "kind": "ree",
-      "gamma": 4.0,
-      "tau": 15.0,
+      "gamma": 4,
+      "tau": 15,
       "G": 15,
       "K": 3,
       "depends_on": [],
@@ -4665,15 +4627,15 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
     {
       "id": "g400_t2000",
       "kind": "ree",
-      "gamma": 4.0,
-      "tau": 20.0,
+      "gamma": 4,
+      "tau": 20,
       "G": 15,
       "K": 3,
       "depends_on": [],
@@ -4690,7 +4652,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     },
@@ -4698,7 +4660,7 @@
       "id": "seed_g050_t0200_3d",
       "kind": "ree",
       "gamma": 0.5,
-      "tau": 2.0,
+      "tau": 2,
       "G": 15,
       "K": 3,
       "depends_on": [],
@@ -4715,7 +4677,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07,
+        "tol": 5e-7,
         "G_inner": 15
       }
     }
@@ -4734,163 +4696,163 @@
       0.3,
       0.5,
       0.8,
-      1.0,
+      1,
       1.5,
-      2.0
+      2
     ],
     "g075": [
       0.3,
       0.5,
       0.8,
-      1.0,
+      1,
       1.5,
-      2.0
+      2
     ],
     "g100": [
       0.3,
       0.5,
       0.8,
-      1.0,
+      1,
       1.5,
-      2.0,
+      2,
       2.1,
-      4.0,
+      4,
       5.9,
-      6.0,
-      8.0,
-      10.0
+      6,
+      8,
+      10
     ],
     "g125": [
       0.3,
       0.5,
       0.8,
-      1.0,
+      1,
       1.5,
-      2.0,
-      4.0,
+      2,
+      4,
       5.9,
-      6.0,
-      8.0,
-      10.0
+      6,
+      8,
+      10
     ],
     "g140": [
       0.3,
       0.5,
       0.8,
-      1.0,
+      1,
       1.5,
-      2.0,
-      4.0,
+      2,
+      4,
       5.7,
-      6.0,
-      8.0,
-      10.0,
-      12.0,
-      14.0,
-      16.0,
-      18.0,
-      20.0
+      6,
+      8,
+      10,
+      12,
+      14,
+      16,
+      18,
+      20
     ],
     "g160": [
       0.3,
       0.5,
       0.8,
-      1.0,
+      1,
       1.5,
-      2.0,
-      4.0,
-      6.0,
-      8.0,
-      10.0,
-      12.0,
-      14.0,
-      16.0,
-      18.0,
-      20.0
+      2,
+      4,
+      6,
+      8,
+      10,
+      12,
+      14,
+      16,
+      18,
+      20
     ],
     "g180": [
       0.3,
       0.5,
       0.8,
-      1.0,
+      1,
       1.5,
-      2.0,
-      4.0,
-      6.0,
-      8.0,
-      10.0,
-      12.0,
-      14.0,
-      16.0,
-      18.0,
-      20.0
+      2,
+      4,
+      6,
+      8,
+      10,
+      12,
+      14,
+      16,
+      18,
+      20
     ],
     "g200": [
       0.3,
       0.5,
       0.8,
-      1.0,
+      1,
       1.5,
-      2.0,
-      4.0,
-      6.0,
-      8.0,
-      10.0,
-      12.0,
-      14.0,
-      16.0,
-      18.0,
-      20.0
+      2,
+      4,
+      6,
+      8,
+      10,
+      12,
+      14,
+      16,
+      18,
+      20
     ],
     "g300": [
       0.3,
       0.5,
       0.8,
-      1.0,
+      1,
       1.5,
-      2.0,
-      4.0,
-      6.0,
-      8.0,
-      10.0,
-      12.0,
-      14.0,
-      16.0,
-      18.0,
-      20.0
+      2,
+      4,
+      6,
+      8,
+      10,
+      12,
+      14,
+      16,
+      18,
+      20
     ],
     "g500": [
       0.3,
       0.5,
       0.8,
-      1.0,
+      1,
       1.5,
-      2.0,
-      4.0,
-      6.0,
-      8.0,
-      10.0,
-      12.0,
-      14.0,
-      16.0,
-      18.0,
-      20.0
+      2,
+      4,
+      6,
+      8,
+      10,
+      12,
+      14,
+      16,
+      18,
+      20
     ],
     "g010": [
       0.5,
-      1.0,
-      2.0,
-      4.0,
-      6.0,
-      8.0,
-      10.0
+      1,
+      2,
+      4,
+      6,
+      8,
+      10
     ]
   },
   "deps_semantics": "Each task depends on its right-neighbour in the tau-chain (higher tau = easier = solved first). nc4-sweeps are independent parallel chains.",
   "notes": [
     "g100_t0150 and g100_t0200: re-queued after gha-25460609459 stalled at iter=4000. Both now done.",
     "nc4-sweeps added as parallel chains.",
-    "All 1-R\u00b2 values are weighted by ex-ante probability (see EQUATIONS.md \u00a77).",
+    "All 1-R² values are weighted by ex-ante probability (see EQUATIONS.md §7).",
     "Checkpoints listed for done tasks are the expected paths."
   ]
 }
