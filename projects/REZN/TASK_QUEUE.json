@@ -41,11 +41,11 @@
       "depends_on": [
         "g050_t0050"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "results/full_ree/task3_g050_t0030_mp50.json",
       "result": null,
-      "claimed_by": null,
-      "claimed_at": null,
+      "claimed_by": "gha-25620709089-g050_t0030",
+      "claimed_at": "2026-05-10T05:23:47Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -62,11 +62,11 @@
       "depends_on": [
         "g050_t0080"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "results/full_ree/task3_g050_t0050_mp50.json",
       "result": null,
-      "claimed_by": null,
-      "claimed_at": null,
+      "claimed_by": "gha-25620709089-g050_t0050",
+      "claimed_at": "2026-05-10T05:23:47Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -83,11 +83,11 @@
       "depends_on": [
         "g050_t0100"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "results/full_ree/task3_g050_t0080_mp50.json",
       "result": null,
-      "claimed_by": null,
-      "claimed_at": null,
+      "claimed_by": "gha-25620709089-g050_t0080",
+      "claimed_at": "2026-05-10T05:23:47Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -104,11 +104,11 @@
       "depends_on": [
         "g050_t0150"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "results/full_ree/task3_g050_t0100_mp50.json",
       "result": null,
-      "claimed_by": null,
-      "claimed_at": null,
+      "claimed_by": "gha-25620709089-g050_t0100",
+      "claimed_at": "2026-05-10T05:23:47Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -125,11 +125,11 @@
       "depends_on": [
         "g050_t0200"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "results/full_ree/task3_g050_t0150_mp50.json",
       "result": null,
-      "claimed_by": null,
-      "claimed_at": null,
+      "claimed_by": "gha-25620709089-g050_t0150",
+      "claimed_at": "2026-05-10T05:23:47Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -170,11 +170,11 @@
       "depends_on": [
         "g075_t0050"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "results/full_ree/task3_g075_t0030_mp50.json",
       "result": null,
-      "claimed_by": null,
-      "claimed_at": null,
+      "claimed_by": "gha-25620709089-g075_t0030",
+      "claimed_at": "2026-05-10T05:23:47Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -191,11 +191,11 @@
       "depends_on": [
         "g075_t0080"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "results/full_ree/task3_g075_t0050_mp50.json",
       "result": null,
-      "claimed_by": null,
-      "claimed_at": null,
+      "claimed_by": "gha-25620709089-g075_t0050",
+      "claimed_at": "2026-05-10T05:23:47Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -212,11 +212,11 @@
       "depends_on": [
         "g075_t0100"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "results/full_ree/task3_g075_t0080_mp50.json",
       "result": null,
-      "claimed_by": null,
-      "claimed_at": null,
+      "claimed_by": "gha-25620709089-g075_t0080",
+      "claimed_at": "2026-05-10T05:23:47Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -233,11 +233,11 @@
       "depends_on": [
         "g075_t0150"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "results/full_ree/task3_g075_t0100_mp50.json",
       "result": null,
-      "claimed_by": null,
-      "claimed_at": null,
+      "claimed_by": "gha-25620709089-g075_t0100",
+      "claimed_at": "2026-05-10T05:23:47Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -254,11 +254,11 @@
       "depends_on": [
         "g075_t0200"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "results/full_ree/task3_g075_t0150_mp50.json",
       "result": null,
-      "claimed_by": null,
-      "claimed_at": null,
+      "claimed_by": "gha-25620709089-g075_t0150",
+      "claimed_at": "2026-05-10T05:23:47Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -275,11 +275,11 @@
       "depends_on": [
         "g050_t0200"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "results/full_ree/task3_g075_t0200_mp50.json",
       "result": null,
-      "claimed_by": null,
-      "claimed_at": null,
+      "claimed_by": "gha-25620709089-g075_t0200",
+      "claimed_at": "2026-05-10T05:23:47Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -296,11 +296,11 @@
       "depends_on": [
         "g100_t0050"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "projects/REZN/checkpoints/g100_t0030.npz",
       "result": null,
-      "claimed_by": null,
-      "claimed_at": null,
+      "claimed_by": "gha-25620709089-g100_t0030",
+      "claimed_at": "2026-05-10T05:23:47Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -318,12 +318,12 @@
         "g100_t0080"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "note": "\u03c4-ladder between g100_t0080 (\u03c4=0.8) and g100_t0050 (\u03c4=0.5).",
-      "claimed_by": null,
-      "claimed_at": null,
+      "claimed_by": "gha-25620709089-g100_t0063",
+      "claimed_at": "2026-05-10T05:23:47Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -340,7 +340,7 @@
       "depends_on": [
         "g100_t0063"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -353,8 +353,8 @@
       "note": "Auto-requeued (attempt 1): via new ladder g100_t0063. \u03c4-ladder at \u03c4=0.63",
       "deps_satisfy": "any",
       "requeue_count": 1,
-      "claimed_by": null,
-      "claimed_at": null,
+      "claimed_by": "gha-25620709089-g100_t0050",
+      "claimed_at": "2026-05-10T05:23:47Z",
       "completed_at": null
     },
     {
@@ -364,11 +364,11 @@
       "depends_on": [
         "g100_t0100"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "projects/REZN/checkpoints/g100_t0080.npz",
       "result": null,
-      "claimed_by": null,
-      "claimed_at": null,
+      "claimed_by": "gha-25620709089-g100_t0080",
+      "claimed_at": "2026-05-10T05:23:47Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -385,11 +385,11 @@
       "depends_on": [
         "g100_t0150"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "results/full_ree/task3_g100_t0100_mp50.json",
       "result": null,
-      "claimed_by": null,
-      "claimed_at": null,
+      "claimed_by": "gha-25620709089-g100_t0100",
+      "claimed_at": "2026-05-10T05:23:47Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -406,11 +406,11 @@
       "depends_on": [
         "g100_t0200"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "results/full_ree/task3_g100_t0150_mp50.json",
       "result": null,
-      "claimed_by": null,
-      "claimed_at": null,
+      "claimed_by": "gha-25620709089-g100_t0150",
+      "claimed_at": "2026-05-10T05:23:47Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -427,11 +427,11 @@
       "depends_on": [
         "g075_t0200"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "results/full_ree/task3_g100_t0200_mp50.json",
       "result": null,
-      "claimed_by": null,
-      "claimed_at": null,
+      "claimed_by": "gha-25620709089-g100_t0200",
+      "claimed_at": "2026-05-10T05:23:47Z",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -448,7 +448,7 @@
       "depends_on": [
         "g100_t0200"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -459,8 +459,8 @@
         "tol": 5e-07
       },
       "note": "RESET bailed\u2192ready",
-      "claimed_by": null,
-      "claimed_at": null,
+      "claimed_by": "gha-25620709089-g100_t0210",
+      "claimed_at": "2026-05-10T05:23:47Z",
       "completed_at": null
     },
     {
@@ -470,7 +470,7 @@
       "depends_on": [
         "g100_t0590"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "solver_params": {
@@ -481,8 +481,8 @@
         "tol": 5e-07
       },
       "note": "RESET bailed\u2192ready",
-      "claimed_by": null,
-      "claimed_at": null,
+      "claimed_by": "gha-25620709089-g100_t0400",
+      "claimed_at": "2026-05-10T05:23:47Z",
       "completed_at": null
     },
     {
