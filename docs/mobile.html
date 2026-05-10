@@ -426,6 +426,17 @@
     }catch{}
   }
 
+  function taskById(id){return(taskData?.tasks||[]).find(t=>t.id===id)||null;}
+  function workerParams(tid){
+    const t=taskById(tid);
+    if(!t)return{g:"—",tau:"—",K:"—"};
+    return{
+      g:  t.gamma!=null?parseFloat(Number(t.gamma).toPrecision(3)):"—",
+      tau:t.tau  !=null?parseFloat(Number(t.tau  ).toPrecision(3)):"—",
+      K:  t.K??t.solver_params?.K??t.G??"—"
+    };
+  }
+
   function renderWorkersSection(){
     const el=document.getElementById("workers-section");
     if(!el)return;
@@ -441,10 +452,11 @@
       const ageS=age!=null?(stale?`<span class="err">${age.toFixed(0)}s</span>`:`${age.toFixed(0)}s`):"?";
       const pr=progressData[wn]||Object.values(progressData).find(p=>p.worker_id===wn);
       const tid=pr?pr.task_id:"—";
-      const ftol=pr?.ftol!=null?Number(pr.ftol).toExponential(1):"—";
-      const wshort=wn.replace(/^gha-\d+-/,'').slice(0,14);
+      const ftol=pr?.ftol!=null?Number(pr.ftol).toExponential(0):"—";
+      const {g,tau,K}=workerParams(tid);
       return`<tr>
-        <td>${esc(wshort)}</td><td>${esc(shortId(tid))}</td>
+        <td>${esc(shortId(tid))}</td>
+        <td>${g}</td><td>${tau}</td><td>${K}</td>
         <td>${ageS}</td><td class="live">${pr?phase(pr):"—"}</td>
         <td class="enorm">${ftol}</td>
         <td><button onclick="releaseWorker('${esc(tid)}')" class="btn b-rel" style="padding:0 3px">r</button></td>
@@ -458,10 +470,11 @@
         const age=p.last_update?(now-new Date(p.last_update).getTime())/1000:null;
         const stale=age!=null&&age>1800;
         const ageS=age!=null?(stale?`<span class="err">${age.toFixed(0)}s</span>`:`${age.toFixed(0)}s`):"?";
-        const ftol=p.ftol!=null?Number(p.ftol).toExponential(1):"—";
-        const wshort=(p.worker_id||"").replace(/^gha-\d+-/,'').slice(0,14);
+        const ftol=p.ftol!=null?Number(p.ftol).toExponential(0):"—";
+        const {g,tau,K}=workerParams(p.task_id);
         return`<tr>
-          <td>${esc(wshort)}</td><td>${esc(shortId(p.task_id))}</td>
+          <td>${esc(shortId(p.task_id))}</td>
+          <td>${g}</td><td>${tau}</td><td>${K}</td>
           <td>${ageS}</td><td class="live">${phase(p)}</td>
           <td class="enorm">${ftol}</td>
           <td><button onclick="releaseWorker('${esc(p.task_id)}')" class="btn b-rel" style="padding:0 3px">r</button></td>
@@ -472,11 +485,10 @@
     el.innerHTML=`<div class="muted" style="padding:2px 0">workers (${all.length})</div>
       <table>
         <colgroup>
-          <col style="width:30%"><col style="width:22%">
-          <col style="width:10%"><col style="width:23%">
-          <col style="width:11%"><col style="width:4%">
+          <col style="width:20%"><col style="width:7%"><col style="width:7%"><col style="width:6%">
+          <col style="width:9%"><col style="width:23%"><col style="width:12%"><col style="width:16%">
         </colgroup>
-        <thead><tr><th>worker</th><th>task</th><th>age</th><th>phase</th><th>‖F‖</th><th></th></tr></thead>
+        <thead><tr><th>task</th><th>γ</th><th>τ</th><th>K</th><th>age</th><th>phase</th><th>‖F‖</th><th></th></tr></thead>
         <tbody>${all.join("")}</tbody>
       </table>`;
   }
