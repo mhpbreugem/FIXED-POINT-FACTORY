@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""compute_ferr_mp.py — evaluate ||Phi(P)-P||_inf at mpmath precision (dps=50).
+"""compute_ferr_mp.py — evaluate ||Phi(P)-P||_inf at mpmath precision (dps=200).
 
 For each .npz K=3 halo checkpoint:
   1. Load P_full, convert to mp.mpf.
@@ -31,7 +31,7 @@ sys.path.insert(0, str(ROOT / "projects/REZN/solver_code"))
 
 from phi_mp import phi_K3_smooth_mp, f_inf_mp, np_to_mp  # type: ignore
 
-MP_DPS    = 50
+MP_DPS    = 200
 MP_TARGET = "1e-100"   # must match global precision policy in solve.py
 
 

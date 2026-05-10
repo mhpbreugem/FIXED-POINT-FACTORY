@@ -390,7 +390,7 @@ def main() -> None:
     #   All ree tasks use mpmath Newton at 50-digit working precision,
     #   targeting ||F|| < 1e-100.  presmooth (Picard warmup) is disabled.
     # -----------------------------------------------------------------------
-    MP_DPS   = 50
+    MP_DPS   = 200
     MP_TOL   = "1e-100"
     MP_ITERS = 20
 
