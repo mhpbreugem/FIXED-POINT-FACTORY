@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-10T05:02:15.529265+00:00",
+  "updated_at": "2026-05-10T05:38:42.531535+00:00",
   "params": {
     "G": 20,
     "UMAX": 5,
@@ -52,8 +52,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g050_t0050",
@@ -73,8 +75,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g050_t0080",
@@ -94,8 +98,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g050_t0100",
@@ -115,8 +121,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g050_t0150",
@@ -136,8 +144,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g050_t0200",
@@ -160,8 +170,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g075_t0030",
@@ -181,8 +193,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g075_t0050",
@@ -202,8 +216,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g075_t0080",
@@ -223,8 +239,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g075_t0100",
@@ -244,8 +262,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g075_t0150",
@@ -265,8 +285,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g075_t0200",
@@ -286,8 +308,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g100_t0030",
@@ -307,8 +331,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g100_t0063",
@@ -330,8 +356,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g100_t0050",
@@ -348,14 +376,16 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       },
       "note": "Auto-requeued (attempt 1): via new ladder g100_t0063. \u03c4-ladder at \u03c4=0.63",
       "deps_satisfy": "any",
       "requeue_count": 1,
       "claimed_by": "gha-25620709089-g100_t0050",
       "claimed_at": "2026-05-10T05:23:47Z",
-      "completed_at": null
+      "completed_at": null,
+      "G": 15
     },
     {
       "id": "g100_t0080",
@@ -375,8 +405,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g100_t0100",
@@ -396,8 +428,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g100_t0150",
@@ -417,8 +451,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g100_t0200",
@@ -438,8 +474,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g100_t0210",
@@ -456,12 +494,14 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       },
       "note": "RESET bailed\u2192ready",
       "claimed_by": "gha-25620709089-g100_t0210",
       "claimed_at": "2026-05-10T05:23:47Z",
-      "completed_at": null
+      "completed_at": null,
+      "G": 15
     },
     {
       "id": "g100_t0400",
@@ -478,12 +518,14 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       },
       "note": "RESET bailed\u2192ready",
       "claimed_by": "gha-25620709089-g100_t0400",
       "claimed_at": "2026-05-10T05:23:47Z",
-      "completed_at": null
+      "completed_at": null,
+      "G": 15
     },
     {
       "id": "g100_t0590",
@@ -500,12 +542,14 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       },
       "note": "RESET bailed\u2192ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": null
+      "completed_at": null,
+      "G": 15
     },
     {
       "id": "g100_t0600",
@@ -525,8 +569,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g100_t0800",
@@ -546,8 +592,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g100_t1000",
@@ -567,8 +615,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g125_t0030",
@@ -588,8 +638,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g125_t0050",
@@ -609,8 +661,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g125_t0080",
@@ -630,8 +684,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g125_t0100",
@@ -651,8 +707,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g125_t0150",
@@ -672,8 +730,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g125_t0200",
@@ -693,8 +753,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g125_t0400",
@@ -714,8 +776,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g125_t0590",
@@ -735,8 +799,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g125_t0600",
@@ -756,8 +822,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g125_t0800",
@@ -777,8 +845,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g125_t1000",
@@ -798,8 +868,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g140_t0030",
@@ -819,8 +891,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g140_t0050",
@@ -840,8 +914,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g140_t0080",
@@ -861,8 +937,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g140_t0100",
@@ -882,8 +960,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g140_t0150",
@@ -903,8 +983,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g140_t0200",
@@ -924,8 +1006,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g140_t0400",
@@ -945,8 +1029,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g140_t0570",
@@ -964,14 +1050,16 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       },
       "note": "Auto-requeued (attempt 1): warm-start from g140_t0510 (log-dist=0.11).",
       "deps_satisfy": "any",
       "requeue_count": 1,
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": null
+      "completed_at": null,
+      "G": 15
     },
     {
       "id": "g140_t0600",
@@ -991,8 +1079,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g140_t0800",
@@ -1012,8 +1102,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g140_t1000",
@@ -1033,8 +1125,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g140_t1200",
@@ -1054,8 +1148,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g140_t1400",
@@ -1075,8 +1171,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g140_t1600",
@@ -1096,8 +1194,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g140_t1800",
@@ -1117,8 +1217,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g140_t2000",
@@ -1138,8 +1240,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g013_t0050",
@@ -1159,8 +1263,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g013_t0100",
@@ -1180,8 +1286,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g013_t0200",
@@ -1201,8 +1309,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g013_t0400",
@@ -1222,8 +1332,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g013_t0600",
@@ -1243,8 +1355,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g013_t0800",
@@ -1264,8 +1378,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g013_t1000",
@@ -1282,8 +1398,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g010_t0050",
@@ -1303,8 +1421,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g010_t0100",
@@ -1324,8 +1444,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g010_t0200",
@@ -1345,8 +1467,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g010_t0400",
@@ -1366,8 +1490,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g010_t0600",
@@ -1387,8 +1513,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g010_t0800",
@@ -1408,8 +1536,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g010_t1000",
@@ -1426,8 +1556,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g160_t0030",
@@ -1447,8 +1579,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g160_t0050",
@@ -1468,8 +1602,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g160_t0080",
@@ -1489,8 +1625,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g160_t0100",
@@ -1510,8 +1648,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g160_t0150",
@@ -1531,8 +1671,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g160_t0200",
@@ -1552,8 +1694,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g160_t0400",
@@ -1573,8 +1717,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g160_t0600",
@@ -1594,8 +1740,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g160_t0800",
@@ -1615,8 +1763,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g160_t1000",
@@ -1636,8 +1786,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g160_t1200",
@@ -1657,8 +1809,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g160_t1400",
@@ -1678,8 +1832,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g160_t1600",
@@ -1699,8 +1855,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g160_t1800",
@@ -1720,8 +1878,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g160_t2000",
@@ -1741,8 +1901,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g180_t0030",
@@ -1762,8 +1924,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g180_t0050",
@@ -1783,8 +1947,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g180_t0080",
@@ -1804,8 +1970,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g180_t0100",
@@ -1825,8 +1993,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g180_t0150",
@@ -1846,8 +2016,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g180_t0200",
@@ -1867,8 +2039,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g180_t0400",
@@ -1888,8 +2062,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g180_t0600",
@@ -1909,8 +2085,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g180_t0800",
@@ -1930,8 +2108,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g180_t1000",
@@ -1951,8 +2131,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g180_t1200",
@@ -1972,8 +2154,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g180_t1400",
@@ -1993,8 +2177,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g180_t1600",
@@ -2014,8 +2200,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g180_t1800",
@@ -2035,8 +2223,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g180_t2000",
@@ -2056,8 +2246,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g200_t0030",
@@ -2077,8 +2269,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g200_t0050",
@@ -2098,8 +2292,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g200_t0080",
@@ -2119,8 +2315,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g200_t0100",
@@ -2140,8 +2338,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g200_t0150",
@@ -2161,8 +2361,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g200_t0200",
@@ -2182,8 +2384,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g200_t0400",
@@ -2203,8 +2407,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g200_t0600",
@@ -2224,8 +2430,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g200_t0800",
@@ -2245,8 +2453,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g200_t1000",
@@ -2266,8 +2476,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g200_t1200",
@@ -2287,8 +2499,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g200_t1400",
@@ -2308,8 +2522,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g200_t1600",
@@ -2329,8 +2545,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g200_t1800",
@@ -2350,8 +2568,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g200_t2000",
@@ -2371,8 +2591,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g500_t0030",
@@ -2392,8 +2614,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g500_t0050",
@@ -2413,8 +2637,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g500_t0080",
@@ -2434,8 +2660,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g500_t0100",
@@ -2455,8 +2683,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g500_t0150",
@@ -2476,8 +2706,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g500_t0200",
@@ -2497,8 +2729,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g500_t0400",
@@ -2518,8 +2752,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g500_t0600",
@@ -2539,8 +2775,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g500_t0800",
@@ -2560,8 +2798,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g500_t1000",
@@ -2581,8 +2821,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g500_t1200",
@@ -2602,8 +2844,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g500_t1400",
@@ -2623,8 +2867,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g500_t1600",
@@ -2644,8 +2890,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g500_t1800",
@@ -2665,8 +2913,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g500_t2000",
@@ -2686,8 +2936,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g300_t0030",
@@ -2707,8 +2959,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g300_t0050",
@@ -2728,8 +2982,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g300_t0080",
@@ -2749,8 +3005,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g300_t0100",
@@ -2770,8 +3028,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g300_t0150",
@@ -2791,8 +3051,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g300_t0200",
@@ -2812,8 +3074,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g300_t0400",
@@ -2833,8 +3097,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g300_t0600",
@@ -2854,8 +3120,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g300_t0800",
@@ -2875,8 +3143,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g300_t1000",
@@ -2896,8 +3166,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g300_t1200",
@@ -2917,8 +3189,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g300_t1400",
@@ -2938,8 +3212,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g300_t1600",
@@ -2959,8 +3235,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g300_t1800",
@@ -2980,8 +3258,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "g300_t2000",
@@ -3001,8 +3281,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "nc4-g010",
@@ -3023,8 +3305,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "nc4-g013",
@@ -3045,8 +3329,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "nc4-g050",
@@ -3067,8 +3353,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "nc4-g075",
@@ -3089,8 +3377,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "nc4-g100",
@@ -3111,8 +3401,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "nc4-g125",
@@ -3133,8 +3425,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "nc4-g140",
@@ -3155,8 +3449,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "nc4-g160",
@@ -3177,8 +3473,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "nc4-g180",
@@ -3199,8 +3497,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "nc4-g200",
@@ -3221,8 +3521,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "nc4-g300",
@@ -3243,8 +3545,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "nc4-g500",
@@ -3265,8 +3569,10 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
-      }
+        "tol": 5e-07,
+        "G_inner": 15
+      },
+      "G": 15
     },
     {
       "id": "symK3_g050_t0200_G15",
@@ -3418,7 +3724,7 @@
       "kind": "ree",
       "gamma": 0.1,
       "tau": 1.2,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3434,7 +3740,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -3442,7 +3749,7 @@
       "kind": "ree",
       "gamma": 0.1,
       "tau": 1.4,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3458,7 +3765,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -3466,7 +3774,7 @@
       "kind": "ree",
       "gamma": 0.1,
       "tau": 1.5,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3482,7 +3790,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -3490,7 +3799,7 @@
       "kind": "ree",
       "gamma": 0.1,
       "tau": 1.7,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3506,7 +3815,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -3514,7 +3824,7 @@
       "kind": "ree",
       "gamma": 0.1,
       "tau": 5.0,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3530,7 +3840,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -3538,7 +3849,7 @@
       "kind": "ree",
       "gamma": 0.16000000000000003,
       "tau": 0.5,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3554,7 +3865,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -3562,7 +3874,7 @@
       "kind": "ree",
       "gamma": 0.25,
       "tau": 0.3,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3578,7 +3890,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -3586,7 +3899,7 @@
       "kind": "ree",
       "gamma": 0.25,
       "tau": 0.5,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3602,7 +3915,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -3610,7 +3924,7 @@
       "kind": "ree",
       "gamma": 0.25,
       "tau": 0.8,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3626,7 +3940,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -3634,7 +3949,7 @@
       "kind": "ree",
       "gamma": 0.25,
       "tau": 1.0,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3650,7 +3965,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -3658,7 +3974,7 @@
       "kind": "ree",
       "gamma": 0.25,
       "tau": 1.5,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3674,7 +3990,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -3682,7 +3999,7 @@
       "kind": "ree",
       "gamma": 0.25,
       "tau": 2.0,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3698,7 +4015,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -3706,7 +4024,7 @@
       "kind": "ree",
       "gamma": 0.25,
       "tau": 3.0,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3722,7 +4040,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -3730,7 +4049,7 @@
       "kind": "ree",
       "gamma": 0.35000000000000003,
       "tau": 2.0,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3746,7 +4065,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -3754,7 +4074,7 @@
       "kind": "ree",
       "gamma": 0.5,
       "tau": 4.0,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3770,7 +4090,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -3778,7 +4099,7 @@
       "kind": "ree",
       "gamma": 0.5,
       "tau": 5.0,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3794,7 +4115,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -3802,7 +4124,7 @@
       "kind": "ree",
       "gamma": 0.5,
       "tau": 7.0,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3818,7 +4140,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -3826,7 +4149,7 @@
       "kind": "ree",
       "gamma": 0.5,
       "tau": 10.0,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3842,7 +4165,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -3850,7 +4174,7 @@
       "kind": "ree",
       "gamma": 0.5,
       "tau": 12.0,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3866,7 +4190,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -3874,7 +4199,7 @@
       "kind": "ree",
       "gamma": 0.5,
       "tau": 15.0,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3890,7 +4215,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -3898,7 +4224,7 @@
       "kind": "ree",
       "gamma": 0.5,
       "tau": 20.0,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3914,7 +4240,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -3922,7 +4249,7 @@
       "kind": "ree",
       "gamma": 1.0,
       "tau": 2.5,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3938,7 +4265,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -3946,7 +4274,7 @@
       "kind": "ree",
       "gamma": 1.0,
       "tau": 3.0,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3962,7 +4290,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -3970,7 +4299,7 @@
       "kind": "ree",
       "gamma": 1.0,
       "tau": 4.5,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3986,7 +4315,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -3994,7 +4324,7 @@
       "kind": "ree",
       "gamma": 1.0,
       "tau": 5.0,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4010,7 +4340,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -4018,7 +4349,7 @@
       "kind": "ree",
       "gamma": 1.0,
       "tau": 7.0,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4034,7 +4365,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -4042,7 +4374,7 @@
       "kind": "ree",
       "gamma": 1.0,
       "tau": 15.0,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4058,7 +4390,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -4066,7 +4399,7 @@
       "kind": "ree",
       "gamma": 1.0,
       "tau": 20.0,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4082,7 +4415,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -4090,7 +4424,7 @@
       "kind": "ree",
       "gamma": 1.4,
       "tau": 2.4,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4106,7 +4440,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -4114,7 +4449,7 @@
       "kind": "ree",
       "gamma": 1.4,
       "tau": 2.7,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4130,7 +4465,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -4138,7 +4474,7 @@
       "kind": "ree",
       "gamma": 1.4,
       "tau": 3.3,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4154,7 +4490,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -4162,7 +4499,7 @@
       "kind": "ree",
       "gamma": 1.4,
       "tau": 4.3,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4178,7 +4515,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -4186,7 +4524,7 @@
       "kind": "ree",
       "gamma": 1.4,
       "tau": 4.5,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4202,7 +4540,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -4210,7 +4549,7 @@
       "kind": "ree",
       "gamma": 1.4,
       "tau": 5.1,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4226,7 +4565,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -4234,7 +4574,7 @@
       "kind": "ree",
       "gamma": 2.0,
       "tau": 3.0,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4250,7 +4590,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -4258,7 +4599,7 @@
       "kind": "ree",
       "gamma": 2.0,
       "tau": 5.0,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4274,7 +4615,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -4282,7 +4624,7 @@
       "kind": "ree",
       "gamma": 4.0,
       "tau": 10.0,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4298,7 +4640,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -4306,7 +4649,7 @@
       "kind": "ree",
       "gamma": 4.0,
       "tau": 15.0,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4322,7 +4665,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -4330,7 +4674,7 @@
       "kind": "ree",
       "gamma": 4.0,
       "tau": 20.0,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4346,7 +4690,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     },
     {
@@ -4354,7 +4699,7 @@
       "kind": "ree",
       "gamma": 0.5,
       "tau": 2.0,
-      "G": 12,
+      "G": 15,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4370,7 +4715,8 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-07
+        "tol": 5e-07,
+        "G_inner": 15
       }
     }
   ],
