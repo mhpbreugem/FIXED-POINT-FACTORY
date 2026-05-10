@@ -30,7 +30,7 @@
         "smoke": true,
         "1-R2": 0.00015319,
         "F_max": 0.20528,
-        "note": "CI smoke test — one phi eval, no convergence required"
+        "note": "CI smoke test â one phi eval, no convergence required"
       },
       "completed_at": "2026-05-07T18:31:51.999548Z"
     },
@@ -298,7 +298,7 @@
       "depends_on": [
         "g100_t0050"
       ],
-      "status": "bailed",
+      "status": "ready",
       "checkpoint": null,
       "result": {
         "reason": "ValueError: operands could not be broadcast together with shapes (12,12,12) (15,15,15) () "
@@ -325,7 +325,7 @@
       "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "τ-ladder between g100_t0080 (τ=0.8) and g100_t0050 (τ=0.5).",
+      "note": "Ï-ladder between g100_t0080 (Ï=0.8) and g100_t0050 (Ï=0.5).",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -355,7 +355,7 @@
         "tol": 5e-7,
         "G_inner": 15
       },
-      "note": "Auto-requeued (attempt 1): via new ladder g100_t0063. τ-ladder at τ=0.63",
+      "note": "Auto-requeued (attempt 1): via new ladder g100_t0063. Ï-ladder at Ï=0.63",
       "deps_satisfy": "any",
       "requeue_count": 1,
       "completed_at": null,
@@ -463,7 +463,7 @@
         "tol": 5e-7,
         "G_inner": 15
       },
-      "note": "RESET bailed→ready",
+      "note": "RESET bailedâready",
       "completed_at": null,
       "G": 15
     },
@@ -485,7 +485,7 @@
         "tol": 5e-7,
         "G_inner": 15
       },
-      "note": "RESET bailed→ready",
+      "note": "RESET bailedâready",
       "completed_at": null,
       "G": 15
     },
@@ -507,7 +507,7 @@
         "tol": 5e-7,
         "G_inner": 15
       },
-      "note": "RESET bailed→ready",
+      "note": "RESET bailedâready",
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -4852,7 +4852,7 @@
   "notes": [
     "g100_t0150 and g100_t0200: re-queued after gha-25460609459 stalled at iter=4000. Both now done.",
     "nc4-sweeps added as parallel chains.",
-    "All 1-R² values are weighted by ex-ante probability (see EQUATIONS.md §7).",
+    "All 1-RÂ² values are weighted by ex-ante probability (see EQUATIONS.md Â§7).",
     "Checkpoints listed for done tasks are the expected paths."
   ]
 }
