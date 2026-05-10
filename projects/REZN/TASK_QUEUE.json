@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-10T01:27:59.143651Z",
+  "updated_at": "2026-05-10T01:28:27.117657Z",
   "params": {
     "G": 20,
     "UMAX": 5,
@@ -254,21 +254,32 @@
       }
     },
     {
+      "id": "g100_t0063",
+      "gamma": 1.0,
+      "tau": 0.63,
+      "depends_on": [
+        "g100_t0080"
+      ],
+      "deps_satisfy": "any",
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "note": "\u03c4-ladder between g100_t0080 (\u03c4=0.8) and g100_t0050 (\u03c4=0.5)."
+    },
+    {
       "id": "g100_t0050",
       "gamma": 1.0,
       "tau": 0.5,
       "depends_on": [
-        "g100_t0080"
+        "g100_t0063"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
-      "result": {
-        "reason": "||F||inf=7.260e-03 > bail threshold 1e-04"
-      },
+      "result": null,
       "solver_params": null,
-      "note": "RESET bailed\u2192ready",
-      "claimed_by": "gha-25616517268-g100_t0050",
-      "claimed_at": "2026-05-10T01:24:54Z"
+      "note": "Auto-requeued (attempt 1): via new ladder g100_t0063. \u03c4-ladder at \u03c4=0.63",
+      "deps_satisfy": "any",
+      "requeue_count": 1
     },
     {
       "id": "g100_t0080",
@@ -3606,10 +3617,10 @@
     }
   ],
   "summary": {
-    "total": 199,
+    "total": 200,
     "done": 186,
-    "ready": 1,
-    "claimed": 7,
+    "ready": 3,
+    "claimed": 6,
     "blocked": 5,
     "bailed": 0,
     "skip": 0
