@@ -570,38 +570,61 @@ def main() -> None:
             # then hand off to mp Newton for precision polish.
             from scipy.optimize import anderson as _anderson, NoConvergence  # noqa: PLC0415
 
+            anderson_timeout = float(sp.get("anderson_timeout_s", 120.0))  # 2 min default
+
             P_full_cur = replace_inner(halo, P_inner_seed, inner_lo, inner_hi)
             eval_count = [0]
+            t_anderson_start = time.perf_counter()
+            # Track best iterate seen — needed when we interrupt via timeout exception
+            _best = [P_full_cur.copy(), float("inf")]
+
+            class _AndersonTimeout(Exception):
+                pass
 
             def _residual_full(P_flat: np.ndarray) -> np.ndarray:
                 P_f = phi_full_fn(P_flat)
+                F_cur = float(np.max(np.abs(
+                    extract_inner(P_f, inner_lo, inner_hi)
+                    - extract_inner(P_flat, inner_lo, inner_hi))))
                 eval_count[0] += 1
-                reporter.update(iter=eval_count[0],
-                                ftol=float(np.max(np.abs(
-                                    extract_inner(P_f, inner_lo, inner_hi)
-                                    - extract_inner(P_flat, inner_lo, inner_hi)))),
+                if F_cur < _best[1]:
+                    _best[0] = P_flat.copy()
+                    _best[1] = F_cur
+                reporter.update(iter=eval_count[0], ftol=F_cur,
                                 extra={"phase": "anderson"})
+                if time.perf_counter() - t_anderson_start > anderson_timeout:
+                    raise _AndersonTimeout()
                 return P_f - P_flat
 
             print(f"[solve] anderson M={anderson_m} tol={anderson_tol:.0e} "
-                  f"max={anderson_max}", flush=True)
+                  f"max={anderson_max} timeout={anderson_timeout:.0f}s", flush=True)
+            timed_out = False
             try:
                 P_full_cur = _anderson(
                     _residual_full, P_full_cur,
                     f_tol=anderson_tol, maxiter=anderson_max,
                     M=anderson_m, verbose=False, line_search="armijo",
                 )
+            except _AndersonTimeout:
+                P_full_cur = _best[0]
+                timed_out = True
+                print(f"[solve] anderson timeout ({anderson_timeout:.0f}s) after "
+                      f"{eval_count[0]} evals — handing off to mp Newton "
+                      f"(best ||F||={_best[1]:.4e})", flush=True)
             except NoConvergence as _e:
                 P_full_cur = np.asarray(_e.x)
                 print(f"[solve] anderson NoConvergence after {eval_count[0]} evals — "
                       f"using best found", flush=True)
 
+            elapsed_anderson = time.perf_counter() - t_anderson_start
             F_inf_cur_inner = float(np.max(np.abs(
                 extract_inner(phi_full_fn(P_full_cur), inner_lo, inner_hi)
                 - extract_inner(P_full_cur, inner_lo, inner_hi)
             )))
-            print(f"[solve] anderson done  evals={eval_count[0]}  "
-                  f"||F||_inner={F_inf_cur_inner:.4e}", flush=True)
+            if not timed_out:
+                print(f"[solve] anderson done  evals={eval_count[0]}  "
+                      f"elapsed={elapsed_anderson:.0f}s  "
+                      f"||F||_inner={F_inf_cur_inner:.4e}", flush=True)
 
             P_inner_final = extract_inner(P_full_cur, inner_lo, inner_hi)
 
