@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-10T16:08:19.802574Z",
+  "updated_at": "2026-05-10T16:08:50.887811Z",
   "params": {
     "G": 20,
     "UMAX": 5,
@@ -390,9 +390,11 @@
       "depends_on": [
         "g100_t0100"
       ],
-      "status": "blocked",
-      "checkpoint": "projects/REZN/checkpoints/g100_t0080.npz",
-      "result": null,
+      "status": "bailed",
+      "checkpoint": null,
+      "result": {
+        "reason": "ValueError: could not broadcast input array from shape (12,12,12) into shape (15,15,15)"
+      },
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -4455,8 +4457,8 @@
     "done": 2,
     "ready": 44,
     "claimed": 10,
-    "blocked": 142,
-    "bailed": 2,
+    "blocked": 141,
+    "bailed": 3,
     "skip": 0
   },
   "fanout": {
