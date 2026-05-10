@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-10T16:08:50.887811Z",
+  "updated_at": "2026-05-10T16:12:35.672434Z",
   "params": {
     "G": 20,
     "UMAX": 5,
@@ -591,7 +591,7 @@
         "g075_t0200"
       ],
       "status": "blocked",
-      "checkpoint": "projects/REZN/checkpoints/g100_t1000.npz",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -948,7 +948,7 @@
         "g125_t0200"
       ],
       "status": "blocked",
-      "checkpoint": "projects/REZN/checkpoints/g140_t0200.npz",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1371,7 +1371,7 @@
         "g010_t0400"
       ],
       "status": "blocked",
-      "checkpoint": "projects/REZN/checkpoints/g010_t0200.npz",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2168,7 +2168,7 @@
         "g200_t0150"
       ],
       "status": "blocked",
-      "checkpoint": "projects/REZN/checkpoints/g200_t0100.npz",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2189,7 +2189,7 @@
         "g200_t0200"
       ],
       "status": "blocked",
-      "checkpoint": "projects/REZN/checkpoints/g200_t0150.npz",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2210,7 +2210,7 @@
         "g180_t0200"
       ],
       "status": "blocked",
-      "checkpoint": "projects/REZN/checkpoints/g200_t0200.npz",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -3464,7 +3464,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g010_t0120.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -3489,7 +3489,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g010_t0140.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -3514,7 +3514,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g010_t0150.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -3539,7 +3539,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g010_t0170.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -3564,7 +3564,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g010_t0500.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -3589,7 +3589,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g016_t0050.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -3614,7 +3614,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g025_t0030.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -3639,7 +3639,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g025_t0050.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -3664,7 +3664,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g025_t0080.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -3689,7 +3689,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g025_t0100.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -3714,7 +3714,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g025_t0150.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -3739,7 +3739,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g025_t0200.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -3764,7 +3764,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g025_t0300.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -3789,7 +3789,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g035_t0200.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -3814,7 +3814,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g050_t0400.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -3839,7 +3839,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g050_t0500.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -3864,7 +3864,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g050_t0700.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -3889,7 +3889,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g050_t1000.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -3914,7 +3914,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g050_t1200.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -3939,7 +3939,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g050_t1500.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -3964,7 +3964,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g050_t2000.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -3989,7 +3989,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g100_t0250.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -4014,7 +4014,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g100_t0300.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -4039,7 +4039,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g100_t0450.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -4064,7 +4064,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g100_t0500.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -4089,7 +4089,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g100_t0700.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -4114,7 +4114,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g100_t1500.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -4139,7 +4139,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g100_t2000.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -4164,7 +4164,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g140_t0240.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -4189,7 +4189,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g140_t0270.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -4214,7 +4214,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g140_t0330.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -4239,7 +4239,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g140_t0430.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -4264,7 +4264,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g140_t0450.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -4289,7 +4289,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g140_t0510.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -4314,7 +4314,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g200_t0300.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -4339,7 +4339,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g200_t0500.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
@@ -4364,7 +4364,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g400_t1000.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry). | RESET: ferr above tol, redo with pure Newton (presmooth=0)",
       "solver_params": {
@@ -4389,7 +4389,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g400_t1500.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry). | RESET: ferr above tol, redo with pure Newton (presmooth=0)",
       "solver_params": {
@@ -4414,7 +4414,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g400_t2000.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry). | RESET: ferr above tol, redo with pure Newton (presmooth=0)",
       "solver_params": {
@@ -4439,7 +4439,7 @@
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
-      "checkpoint": "results/full_ree/seed_g050_t0200_3d.npz",
+      "checkpoint": null,
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry). | RESET: ferr above tol, redo with pure Newton (presmooth=0)",
       "solver_params": {
