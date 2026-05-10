@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-10T05:41:12.382600+00:00",
+  "updated_at": "2026-05-10T05:42:15.803927Z",
   "params": {
     "G": 20,
     "UMAX": 5,
@@ -320,11 +320,11 @@
       "depends_on": [
         "g100_t0050"
       ],
-      "status": "claimed",
-      "checkpoint": "projects/REZN/checkpoints/g100_t0030.npz",
-      "result": null,
-      "claimed_by": "gha-25621012209-g100_t0030",
-      "claimed_at": "2026-05-10T05:41:44Z",
+      "status": "bailed",
+      "checkpoint": null,
+      "result": {
+        "reason": "ValueError: operands could not be broadcast together with shapes (12,12,12) (15,15,15) () "
+      },
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -4722,11 +4722,11 @@
   ],
   "summary": {
     "total": 200,
-    "done": 186,
-    "ready": 4,
-    "claimed": 5,
+    "done": 2,
+    "ready": 173,
+    "claimed": 19,
     "blocked": 5,
-    "bailed": 0,
+    "bailed": 1,
     "skip": 0
   },
   "fanout": {
