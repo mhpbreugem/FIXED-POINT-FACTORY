@@ -369,18 +369,22 @@
     } catch { workerData = []; }
   }
 
+  // SHA cache — only re-fetch progress files whose content has changed
+  const _progressShaCache = {};
+
   async function loadProgress() {
     try {
       const pDir = await fetchJson(apiUrl(`projects/${PROJECT}/progress`));
       if (!Array.isArray(pDir)) return;
-      progressData = {};
+      // Fetch only files whose SHA changed since last poll
       await Promise.all(pDir.filter(f => f.name.endsWith(".json")).map(async f => {
+        if (_progressShaCache[f.name] === f.sha) return; // unchanged
         try {
-          // Use authenticated API fetch so we bypass CDN caching (workers update every 30s)
           const d = getPat()
             ? await fetchApiContent(`projects/${PROJECT}/progress/${f.name}`)
             : await fetchJson(rawUrl(`projects/${PROJECT}/progress/${f.name}`));
           progressData[d.task_id] = d;
+          _progressShaCache[f.name] = f.sha;
         } catch {}
       }));
       renderTasks();
@@ -478,7 +482,7 @@
   }
 
   loadAll();
-  setInterval(loadAll, 30000);
+  setInterval(loadAll, 10000);
 
   // ═══════════════════════════════════════════════════════════════════════════
   // FIGURES TAB
