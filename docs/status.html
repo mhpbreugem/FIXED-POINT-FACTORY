@@ -67,11 +67,15 @@
   .btn-bailed  { background: var(--bailed); }
   .btn-claimed { background: var(--claimed); }
   .workers-inline { font-size: 0.82rem; color: var(--muted); }
-  .workers-box { background: #fffbe6; border: 1px solid #e6c800; border-radius: 0.4rem;
+  .workers-box { background: #f8f8f8; border: 1px solid #ddd; border-radius: 0.4rem;
                  padding: 0.5rem 0.8rem; margin-bottom: 0.8rem; }
   .workers-box table { background: transparent; font-size: 0.82rem; }
-  .workers-box th  { background: #f5e98a; }
+  .workers-box th  { background: #efefef; }
   tr.row-claimed td { background: #fffbe6 !important; }
+  .recent-box { background: #f0f8f0; border: 1px solid #b8ddb8; border-radius: 0.4rem;
+                padding: 0.5rem 0.8rem; margin-bottom: 0.8rem; font-size: 0.82rem; }
+  .recent-box table { background: transparent; font-size: 0.82rem; }
+  .recent-box th { background: #daeeda; }
   svg.chart { overflow: visible; }
   .chart-wrap { margin: 0.5rem 0 1.5rem 0; }
   /* mini chart axis */
@@ -122,6 +126,7 @@
 <div id="tab-tasks" class="tab-content active">
   <div class="summary" id="summary"></div>
   <div class="workers-box workers-inline" id="workers-inline"></div>
+  <div id="recently-completed"></div>
   <div class="controls">
     <input type="text" id="filter" placeholder="filter id, status, γ…" oninput="renderTasks()">
     <button onclick="loadAll()">refresh now</button>
@@ -249,18 +254,59 @@
     return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
   }
 
-  function fmtSolvedAt(t) {
+  function fmtSolvedAt(t, pr) {
     if (t.completed_at) {
       const d = new Date(t.completed_at);
       return d.toLocaleString('en-US', {month:'short', day:'numeric',
              hour:'2-digit', minute:'2-digit', hour12:false});
     }
-    if ((t.status === 'claimed' || t.status === 'in-progress') && t.claimed_at) {
-      const sec = (Date.now() - new Date(t.claimed_at).getTime()) / 1000;
+    // For active workers: elapsed since claimed_at (queue) or started_at (progress file)
+    const startIso = t.claimed_at || pr?.started_at;
+    if (startIso) {
+      const sec = (Date.now() - new Date(startIso).getTime()) / 1000;
       if (sec < 3600) return `⏱ ${Math.floor(sec/60)}m`;
       return `⏱ ${(sec/3600).toFixed(1)}h`;
     }
     return '';
+  }
+
+  function renderRecentlyCompleted(tasks) {
+    let el = document.getElementById("recently-completed");
+    if (!el) return;
+    const done = tasks
+      .filter(t => t.status === "done" && !t.test && t.completed_at)
+      .sort((a,b) => b.completed_at.localeCompare(a.completed_at))
+      .slice(0, 15);
+    if (!done.length) { el.innerHTML = ""; return; }
+    el.innerHTML = `<div class="recent-box">
+      <strong>Recently completed (${done.length})</strong>
+      <table style="margin-top:0.4rem;width:auto">
+        <thead><tr>
+          <th>id</th><th>γ</th><th>τ</th><th>G</th><th>K</th>
+          <th>‖F‖∞</th><th>1-R²</th><th>E[V info]</th><th>E[vol]</th><th>solved at</th>
+        </tr></thead>
+        <tbody>${done.map(t => {
+          const r = t.result || {};
+          const fmax = r.F_max != null ? Number(r.F_max).toExponential(1) : "—";
+          const r2   = r["1-R2"] != null ? r["1-R2"].toPrecision(3) : "—";
+          const evi  = r.EV_info != null ? Number(r.EV_info).toExponential(2) : "—";
+          const evv  = r.EV_vol  != null ? Number(r.EV_vol).toExponential(2) : "—";
+          const when = new Date(t.completed_at).toLocaleString('en-US',
+            {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit', hour12:false});
+          const ckpt = t.checkpoint
+            ? `<a href="https://github.com/${OWNER}/${REPO}/blob/${BRANCH}/${t.checkpoint}" target="_blank" style="font-size:0.75rem">${t.checkpoint.split("/").pop()}</a>`
+            : "";
+          return `<tr>
+            <td class="mono">${esc(t.id)}</td>
+            <td>${t.gamma ?? ""}</td><td>${t.tau ?? ""}</td>
+            <td>${t.G ?? ""}</td><td>${t.K ?? 3}</td>
+            <td class="enorm">${fmax}</td><td>${r2}</td>
+            <td>${evi}</td><td>${evv}</td>
+            <td class="small mono">${when}</td>
+          </tr>`;
+        }).join("")}</tbody>
+      </table>
+    </div>`;
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -283,15 +329,55 @@
       `queue updated_at: ${taskData.updated_at || "?"}  ·  project: ${PROJECT}`;
   }
 
+  // Resolve phase from progress data — handles old double-extra nesting bug
+  function resolvePhase(pr) {
+    const ex = pr.extra || {};
+    return ex.phase || ex.extra?.phase || null;
+  }
+
+  function phaseLabel(pr) {
+    const phase = resolvePhase(pr);
+    const ex = pr.extra || {};
+    const nf = ex.n_fun ?? ex.extra?.n_fun;
+    const nj = ex.n_jac ?? ex.extra?.n_jac;
+    if (phase === "mp_newton")
+      return `<span style="color:#7ecff7">mp·Newton</span> step=${pr.iter ?? "?"} fun=${nf ?? "?"} jac=${nj ?? "?"}`;
+    if (phase === "anderson")
+      return `<span style="color:#c87ef7">Anderson</span> iter=${pr.iter ?? "?"} fun=${nf ?? "?"}`;
+    if (phase === "picard")
+      return `<span style="color:#f7c87e">Picard</span> iter=${pr.iter ?? "?"} fun=${nf ?? "?"}`;
+    if (phase === "newton")
+      return `<span style="color:#8ef78e">Newton</span> s${ex.stage ?? "?"}·${ex.newton_iter ?? "?"}`;
+    if (phase === "presmooth")
+      return `smooth s${ex.stage ?? "?"}·${ex.newton_iter ?? "?"}`;
+    if (pr.iter != null)
+      return `iter ${pr.iter}`;
+    return "starting…";
+  }
+
   function renderTasks() {
     if (!taskData) return;
     const tasks = taskData.tasks || [];
     const filterVal = (document.getElementById("filter")?.value || "").toLowerCase();
 
-    // summary pills
+    const now = Date.now();
+
+    // Determine display status for each task (progress-inferred claimed trumps queue)
+    function getDisplayStatus(t) {
+      const pr = progressData[t.id];
+      const fresh = pr && pr.last_update &&
+        (now - new Date(pr.last_update).getTime()) < 5400000; // 90 min
+      if (fresh && (t.status === "ready" || t.status === "bailed")) return "claimed";
+      return t.status;
+    }
+
+    // summary pills — count by DISPLAY status
     const counts = {};
-    tasks.forEach(t => { counts[t.status] = (counts[t.status]||0)+1; });
-    const pillOrder = ["done","ready","claimed","blocked","bailed","skip"];
+    tasks.forEach(t => {
+      const ds = getDisplayStatus(t);
+      counts[ds] = (counts[ds]||0)+1;
+    });
+    const pillOrder = ["done","claimed","ready","blocked","bailed","skip"];
     const activeFilter = (document.getElementById("filter")?.value || "").toLowerCase();
     document.getElementById("summary").innerHTML =
       pillOrder.filter(s => counts[s]).map(s => {
@@ -303,10 +389,13 @@
     // filter + sort
     const filtered = tasks.filter(t => {
       if (!filterVal) return true;
+      const ds = getDisplayStatus(t);
       return t.id.toLowerCase().includes(filterVal) ||
-             t.status.toLowerCase().includes(filterVal) ||
+             ds.toLowerCase().includes(filterVal) ||
              String(t.gamma||"").includes(filterVal) ||
-             String(t.tau||"").includes(filterVal);
+             String(t.tau||"").includes(filterVal) ||
+             String(t.G||"").includes(filterVal) ||
+             String(t.K||"").includes(filterVal);
     });
     const sorted = [...filtered].sort((a,b) => {
       let av = a[sortCol] ?? a.result?.[sortCol] ?? "";
@@ -329,30 +418,14 @@
                     : fmaxBound != null ? `<span style="color:#aaa">&lt;${Number(fmaxBound).toExponential(0)}</span>`
                     : "";
       const pr = progressData[t.id];
-      const hasFreshProgress = pr && pr.last_update &&
-        (Date.now() - new Date(pr.last_update).getTime()) < 5400000; // 90 min (matches worker timeout)
-      const isClaimed = t.status === "claimed" || t.status === "in-progress" ||
-        (t.status === "ready" && hasFreshProgress);
+      const displayStatus = getDisplayStatus(t);
+      const isClaimed = displayStatus === "claimed";
       let liveStr = "", workerStr = "";
-      if (isClaimed && pr) {
+      if (pr && isClaimed) {
         const ftolStr = pr.ftol != null ? Number(pr.ftol).toExponential(1) : "—";
-        const ex = pr.extra || {};
-        let phaseLabel;
-        if (ex.phase === "mp_newton") {
-          phaseLabel = `<span style="color:#7ecff7">mp·Newton</span> s${pr.iter ?? "?"}  fun=${ex.n_fun ?? "?"} jac=${ex.n_jac ?? "?"}` ;
-        } else if (ex.phase === "newton") {
-          phaseLabel = `newton s${ex.stage ?? "??"}·${ex.newton_iter ?? "?"}`;
-        } else if (ex.phase === "presmooth") {
-          phaseLabel = `smooth s${ex.stage ?? "?"}·${ex.newton_iter ?? "?"}`;
-        } else if (ex.phase === "picard") {
-          phaseLabel = `<span style="color:#f7c87e">Picard</span> iter=${pr.iter ?? "?"} fun=${ex.n_fun ?? "?"}`;
-        } else if (ex.phase === "anderson") {
-          phaseLabel = `<span style="color:#c87ef7">Anderson</span> iter=${pr.iter ?? "?"} fun=${ex.n_fun ?? "?"}`;
-        } else {
-          phaseLabel = `iter ${pr.iter ?? "?"}`;
-        }
-        liveStr = `<span class="live">${phaseLabel} ‖F‖=${ftolStr}</span>`;
-        if (pr.worker_id) workerStr = `<span class="mono" style="font-size:0.78rem">${esc(pr.worker_id)}</span>`;
+        liveStr = `<span class="live">${phaseLabel(pr)} ‖F‖=${ftolStr}</span>`;
+        const wid = pr.worker_id || t.worker_id;
+        if (wid) workerStr = `<span class="mono" style="font-size:0.78rem">${esc(wid)}</span>`;
       } else if (isClaimed && t.worker_id) {
         workerStr = `<span class="mono" style="font-size:0.78rem">${esc(t.worker_id)}</span>`;
       }
@@ -363,11 +436,9 @@
       const evInfo = t.result?.EV_info != null ? Number(t.result.EV_info).toExponential(2) : "";
       const evVol  = t.result?.EV_vol  != null ? Number(t.result.EV_vol).toExponential(2)  : "";
       const rowCls = isClaimed ? " class=\"row-claimed\"" : "";
-      const displayStatus = isClaimed && t.status === "ready" ? "claimed" : t.status;
-      const statusCls    = isClaimed && t.status === "ready" ? "claimed" : t.status;
       return `<tr${rowCls}>
         <td class="mono">${esc(t.id)}</td>
-        <td class="status ${statusCls}">${displayStatus}</td>
+        <td class="status ${displayStatus}">${displayStatus}</td>
         <td>${t.gamma != null ? t.gamma : ""}</td>
         <td>${t.tau  != null ? t.tau  : ""}</td>
         <td>${t.G != null ? t.G : ""}</td>
@@ -379,9 +450,12 @@
         <td>${evInfo}</td>
         <td>${evVol}</td>
         <td>${ckptCell}</td>
-        <td class="small mono">${fmtSolvedAt(t)}</td>
+        <td class="small mono">${fmtSolvedAt(t, pr)}</td>
       </tr>`;
     }).join("");
+
+    renderRecentlyCompleted(tasks);
+
 
     renderWorkersInline();
   }
@@ -451,19 +525,6 @@
 
     // Heartbeat-based rows — only show workers with heartbeat < 30s old
     const hbWorkers = new Set((workerData || []).map(f => f.name.replace(".txt","")));
-    function methodLabel(pr) {
-      if (!pr) return "—";
-      const ex = pr.extra || {};
-      const nf = ex.n_fun != null ? ` fun=${ex.n_fun}` : "";
-      const nj = ex.n_jac != null ? ` jac=${ex.n_jac}` : "";
-      if (ex.phase === "mp_newton") return `<span style="color:#7ecff7">mp·Newton</span> s${pr.iter??"?"}${nf}${nj}`;
-      if (ex.phase === "newton")    return `<span style="color:#8ef78e">Newton s${ex.stage??""}</span>`;
-      if (ex.phase === "presmooth") return `<span style="color:#f7c87e">Picard s${ex.stage??""}</span>`;
-      if (ex.phase === "picard")    return `<span style="color:#f7a07e">Picard</span> iter=${pr.iter??"?"}${nf}`;
-      if (ex.phase === "anderson")  return `<span style="color:#c87ef7">Anderson</span> iter=${pr.iter??"?"}${nf}`;
-      if (pr.iter != null)          return `<span style="color:#aaa">iter ${pr.iter}</span>`;
-      return "—";
-    }
 
     const hbRows = (workerData || []).filter(f => {
       const age = f.last_modified ? (now - new Date(f.last_modified).getTime())/60000 : Infinity;
@@ -481,17 +542,18 @@
         <td class="mono">${esc(workerName)}</td>
         <td class="mono">${esc(taskId)}</td>
         <td>${ageStr}</td>
-        <td>${methodLabel(pr)}</td>
+        <td>${pr ? phaseLabel(pr) : "—"}</td>
         <td>${iter}</td>
         <td class="mono">${ftol}</td>
         <td><button onclick="releaseWorker('${esc(taskId)}')" style="font-size:0.7rem;padding:1px 6px;cursor:pointer;background:#555;border:none;color:#fff;border-radius:3px">release</button></td>
       </tr>`;
     });
 
-    // Progress-file workers not in heartbeats — only if updated < 30s ago
+    // Progress-file workers not in heartbeats — show up to 90 min stale
     const progRows = Object.values(progressData)
       .filter(p => p.worker_id && !hbWorkers.has(p.worker_id))
       .filter(p => { const age = p.last_update ? (now - new Date(p.last_update).getTime())/1000 : Infinity; return age < 5400; })
+      .sort((a,b) => (a.last_update||"") > (b.last_update||"") ? -1 : 1)
       .map(p => {
         const age = p.last_update ? (now - new Date(p.last_update).getTime())/1000 : null;
         const isStale = age != null && age > 30;
@@ -502,7 +564,7 @@
           <td class="mono">${esc(p.worker_id)}</td>
           <td class="mono">${esc(p.task_id)}</td>
           <td>${ageStr}</td>
-          <td>${methodLabel(p)}</td>
+          <td>${phaseLabel(p)}</td>
           <td>${iter}</td>
           <td class="mono">${ftol}</td>
           <td><button onclick="releaseWorker('${esc(p.task_id)}')" style="font-size:0.7rem;padding:1px 6px;cursor:pointer;background:#555;border:none;color:#fff;border-radius:3px">release</button></td>
