@@ -252,14 +252,20 @@
   // TASK LOADING
   // ═══════════════════════════════════════════════════════════════════════════
 
+  let _queueSha = null;
+
   async function loadTasks() {
-    const data = getPat()
-      ? await fetchApiContent(`projects/${PROJECT}/TASK_QUEUE.json`)
-      : await fetchJson(rawUrl(`projects/${PROJECT}/TASK_QUEUE.json`));
-    taskData = data;
+    if (getPat()) {
+      const meta = await fetchJson(apiUrl(`projects/${PROJECT}/TASK_QUEUE.json`));
+      if (meta.sha === _queueSha) return;
+      _queueSha = meta.sha;
+      taskData = JSON.parse(atob(meta.content.replace(/\n/g, "")));
+    } else {
+      taskData = await fetchJson(rawUrl(`projects/${PROJECT}/TASK_QUEUE.json`));
+    }
     renderTasks();
     document.getElementById("meta").textContent =
-      `queue updated_at: ${data.updated_at || "?"}  ·  project: ${PROJECT}`;
+      `queue updated_at: ${taskData.updated_at || "?"}  ·  project: ${PROJECT}`;
   }
 
   function renderTasks() {
@@ -583,7 +589,7 @@
   pollQueue();
   pollProgress();
   setInterval(pollProgress, 3000);
-  setInterval(pollQueue, 15000);
+  setInterval(pollQueue, 5000);
   setInterval(updateTicker, 1000);  // ticker counts up every second
 
   // ═══════════════════════════════════════════════════════════════════════════
