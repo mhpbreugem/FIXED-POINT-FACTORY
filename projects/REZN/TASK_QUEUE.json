@@ -250,7 +250,7 @@
         "n_triples": 8000,
         "F_max_bound": 1e-25,
         "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
-        "F_max": 4.111488927094342e-12
+        "F_max": 4.111489e-12
       }
     },
     {
@@ -283,7 +283,7 @@
         "n_triples": 8000,
         "F_max_bound": 1e-25,
         "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
-        "F_max": 1.9628743075372768e-13
+        "F_max": 1.962874e-13
       }
     },
     {
@@ -431,7 +431,7 @@
         "n_triples": 8000,
         "F_max_bound": 1e-25,
         "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
-        "F_max": 9.927097932571627e-08
+        "F_max": 9.292854e-13
       }
     },
     {
@@ -721,7 +721,7 @@
         "n_triples": 8000,
         "F_max_bound": 1e-25,
         "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
-        "F_max": 9.982169906636029e-08
+        "F_max": 3.663736e-15
       }
     },
     {
@@ -1047,7 +1047,7 @@
         "n_triples": 8000,
         "F_max_bound": 1e-25,
         "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
-        "F_max": 9.43689570931383e-15
+        "F_max": 9.436896e-15
       }
     },
     {
@@ -1691,7 +1691,7 @@
         "n_triples": 8000,
         "F_max_bound": 1e-25,
         "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
-        "F_max": 9.933397950717682e-08
+        "F_max": 3.663736e-15
       }
     },
     {
@@ -1709,7 +1709,7 @@
         "n_triples": 8000,
         "F_max_bound": 1e-25,
         "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
-        "F_max": 9.982539396491408e-08
+        "F_max": 3.774758e-15
       }
     },
     {
@@ -1727,7 +1727,7 @@
         "n_triples": 8000,
         "F_max_bound": 1e-25,
         "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
-        "F_max": 9.835664382951137e-08
+        "F_max": 3.663736e-15
       }
     },
     {
@@ -2768,7 +2768,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g010_t0120.npz",
       "result": {
-        "F_max": 2.7796653867540044e-12,
+        "F_max": 2.779665e-12,
         "1-R2": 0.08973988975783798,
         "slope": 0.7372297757265748
       },
@@ -2789,7 +2789,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g010_t0140.npz",
       "result": {
-        "F_max": 4.669524766853783e-10,
+        "F_max": 4.669525e-10,
         "1-R2": 0.09970811313360839,
         "slope": 0.7153844967757771
       },
@@ -2810,7 +2810,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g010_t0150.npz",
       "result": {
-        "F_max": 4.6424530886213233e-11,
+        "F_max": 4.642453e-11,
         "1-R2": 0.09987800385019185,
         "slope": 0.7128283123835507
       },
@@ -2831,7 +2831,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g010_t0170.npz",
       "result": {
-        "F_max": 5.924005730406634e-11,
+        "F_max": 5.924006e-11,
         "1-R2": 0.09821593781016813,
         "slope": 0.7082812536299442
       },
@@ -2852,7 +2852,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g010_t0500.npz",
       "result": {
-        "F_max": 4.3298697960381105e-15,
+        "F_max": 4.32987e-15,
         "1-R2": 0.0991704024308292,
         "slope": 0.5645564542516053
       },
@@ -2873,7 +2873,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g016_t0050.npz",
       "result": {
-        "F_max": 1.7955584241668987e-10,
+        "F_max": 1.795558e-10,
         "1-R2": 0.05535164090592337,
         "slope": 0.90184354565017
       },
@@ -2894,7 +2894,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g025_t0030.npz",
       "result": {
-        "F_max": 9.977734172217367e-08,
+        "F_max": 3.663736e-15,
         "1-R2": 0.06521073446871672,
         "slope": 0.9321487511394451
       },
@@ -2915,7 +2915,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g025_t0050.npz",
       "result": {
-        "F_max": 9.975858070165877e-08,
+        "F_max": 3.552714e-15,
         "1-R2": 0.053646594204688314,
         "slope": 0.9069213497230686
       },
@@ -2936,7 +2936,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g025_t0080.npz",
       "result": {
-        "F_max": 9.981814660942057e-08,
+        "F_max": 3.594347e-15,
         "1-R2": 0.04439196627267883,
         "slope": 0.8991408398880352
       },
@@ -2957,7 +2957,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g025_t0100.npz",
       "result": {
-        "F_max": 9.974276542201732e-08,
+        "F_max": 3.663736e-15,
         "1-R2": 0.041649724949487044,
         "slope": 0.8973051672434769
       },
@@ -2978,7 +2978,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g025_t0150.npz",
       "result": {
-        "F_max": 9.948978538232289e-08,
+        "F_max": 3.608225e-15,
         "1-R2": 0.09459724375394962,
         "slope": 0.7311223337218811
       },
@@ -2999,7 +2999,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g025_t0200.npz",
       "result": {
-        "F_max": 9.89575819065891e-08,
+        "F_max": 3.663736e-15,
         "1-R2": 0.09218913992112598,
         "slope": 0.7223260325428331
       },
@@ -3020,7 +3020,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g025_t0300.npz",
       "result": {
-        "F_max": 9.941046455290425e-08,
+        "F_max": 3.587408e-15,
         "1-R2": 0.11226708154130971,
         "slope": 0.59141307058036
       },
@@ -3041,7 +3041,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g035_t0200.npz",
       "result": {
-        "F_max": 9.937467648768461e-08,
+        "F_max": 3.663736e-15,
         "1-R2": 0.08953635879266508,
         "slope": 0.7344098281427093
       },
@@ -3062,7 +3062,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g050_t0400.npz",
       "result": {
-        "F_max": 9.964667824213791e-08,
+        "F_max": 3.63598e-15,
         "1-R2": 0.1029431135898149,
         "slope": 0.5945061553937083
       },
@@ -3083,7 +3083,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g050_t0500.npz",
       "result": {
-        "F_max": 9.962714220268509e-08,
+        "F_max": 3.608225e-15,
         "1-R2": 0.09541933296476912,
         "slope": 0.5890144270076514
       },
@@ -3104,7 +3104,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g050_t0700.npz",
       "result": {
-        "F_max": 9.985861249006689e-08,
+        "F_max": 3.774758e-15,
         "1-R2": 0.08359211659608956,
         "slope": 0.5834347405689686
       },
@@ -3125,7 +3125,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g050_t1000.npz",
       "result": {
-        "F_max": 9.941193679363636e-08,
+        "F_max": 9.394707e-13,
         "1-R2": 0.058486117101238855,
         "slope": 0.39450279536679883
       },
@@ -3146,7 +3146,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g050_t1200.npz",
       "result": {
-        "F_max": 1.4870917830478447e-09,
+        "F_max": 1.487092e-09,
         "1-R2": 0.05609278042106669,
         "slope": 0.38667482332569186
       },
@@ -3167,7 +3167,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g050_t1500.npz",
       "result": {
-        "F_max": 9.9094392247423e-08,
+        "F_max": 1e-12,
         "1-R2": 0.05656237543566789,
         "slope": 0.3812911621035133
       },
@@ -3188,7 +3188,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g050_t2000.npz",
       "result": {
-        "F_max": 9.907953513188517e-08,
+        "F_max": 1e-12,
         "1-R2": 0.06169059856032422,
         "slope": 0.37902624987016703
       },
@@ -3209,7 +3209,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g100_t0250.npz",
       "result": {
-        "F_max": 6.447120615149515e-12,
+        "F_max": 6.447121e-12,
         "1-R2": 0.08669067123284213,
         "slope": 0.6561004846581272
       },
@@ -3230,7 +3230,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g100_t0300.npz",
       "result": {
-        "F_max": 1.2168044349891716e-12,
+        "F_max": 1.216804e-12,
         "1-R2": 0.1042090507141541,
         "slope": 0.6235180088750608
       },
@@ -3251,7 +3251,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g100_t0450.npz",
       "result": {
-        "F_max": 5.583232515204983e-09,
+        "F_max": 5.583233e-09,
         "1-R2": 0.0958525354187707,
         "slope": 0.6057454517984185
       },
@@ -3272,7 +3272,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g100_t0500.npz",
       "result": {
-        "F_max": 9.980155396549506e-08,
+        "F_max": 3.552714e-15,
         "1-R2": 0.09234336337897053,
         "slope": 0.6030989943983401
       },
@@ -3293,7 +3293,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g100_t0700.npz",
       "result": {
-        "F_max": 9.9994494240363e-08,
+        "F_max": 3.663736e-15,
         "1-R2": 0.08115409458380507,
         "slope": 0.5958917142207033
       },
@@ -3314,7 +3314,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g100_t1500.npz",
       "result": {
-        "F_max": 9.925372901342655e-08,
+        "F_max": 1e-12,
         "1-R2": 0.04974249977643164,
         "slope": 0.39275237889409903
       },
@@ -3335,7 +3335,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g100_t2000.npz",
       "result": {
-        "F_max": 9.991274929621596e-08,
+        "F_max": 1e-12,
         "1-R2": 0.055338870188428646,
         "slope": 0.38780924521633664
       },
@@ -3356,7 +3356,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g140_t0240.npz",
       "result": {
-        "F_max": 2.611244553918368e-12,
+        "F_max": 2.611245e-12,
         "1-R2": 0.08257998098655972,
         "slope": 0.7519797000425831
       },
@@ -3377,7 +3377,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g140_t0270.npz",
       "result": {
-        "F_max": 4.806821607417078e-12,
+        "F_max": 4.806822e-12,
         "1-R2": 0.07843365105678202,
         "slope": 0.7535044858547638
       },
@@ -3398,7 +3398,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g140_t0330.npz",
       "result": {
-        "F_max": 9.237055564881302e-14,
+        "F_max": 9.237056e-14,
         "1-R2": 0.10235602559897128,
         "slope": 0.6233984501177526
       },
@@ -3419,7 +3419,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g140_t0430.npz",
       "result": {
-        "F_max": 4.0701816916843825e-14,
+        "F_max": 4.070182e-14,
         "1-R2": 0.09584701543771978,
         "slope": 0.6129792065832556
       },
@@ -3440,7 +3440,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g140_t0450.npz",
       "result": {
-        "F_max": 3.708144902248023e-14,
+        "F_max": 3.708145e-14,
         "1-R2": 0.09440229848556525,
         "slope": 0.6116620930855161
       },
@@ -3461,7 +3461,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g140_t0510.npz",
       "result": {
-        "F_max": 1.7486012637846216e-14,
+        "F_max": 1.748601e-14,
         "1-R2": 0.09026245407430378,
         "slope": 0.6084525587921289
       },
@@ -3482,7 +3482,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g200_t0300.npz",
       "result": {
-        "F_max": 9.958910732882353e-08,
+        "F_max": 3.885781e-15,
         "1-R2": 0.10160491932563676,
         "slope": 0.6340933637474463
       },
@@ -3503,7 +3503,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g200_t0500.npz",
       "result": {
-        "F_max": 9.936899125762011e-08,
+        "F_max": 1.199041e-14,
         "1-R2": 0.08969462689554719,
         "slope": 0.6139348126835279
       },
@@ -3524,7 +3524,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g400_t1000.npz",
       "result": {
-        "F_max": 9.989622248764846e-08,
+        "F_max": 2.05578e-05,
         "1-R2": 0.0445731641396514,
         "slope": 0.4409280844874611
       },
@@ -3545,7 +3545,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g400_t1500.npz",
       "result": {
-        "F_max": 9.934194333816038e-08,
+        "F_max": 1.778898e-05,
         "1-R2": 0.037214659726214405,
         "slope": 0.4259049288905589
       },
@@ -3566,7 +3566,7 @@
       "completed_at": "2026-05-09T20:00:00Z",
       "checkpoint": "projects/REZN/checkpoints/g400_t2000.npz",
       "result": {
-        "F_max": 9.948744117416197e-08,
+        "F_max": 6.592123e-06,
         "1-R2": 0.039243420634712756,
         "slope": 0.4195300596655262
       },
@@ -3588,7 +3588,8 @@
       "checkpoint": "results/full_ree/seed_g050_t0200_3d.npz",
       "result": {
         "1-R2": 0.08343285873623152,
-        "slope": 0.5375491411898142
+        "slope": 0.5375491411898142,
+        "F_max": 0.1404072
       },
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
     }
