@@ -282,11 +282,25 @@ def _run_sym_task(args, task: dict, gamma: float, tau: float) -> None:
             print("[solve] sym cold start (no-learning init)", flush=True)
             P_sorted = sym_init_no_learning(sg, u_grid, tau, gamma, W)
 
+        warmup_iters = int(sp.get("warmup_iters", 500))
+        warmup_alpha = float(sp.get("warmup_alpha", 0.3))
         print(f"[solve] sym K={K} G={G} γ={gamma} τ={tau} "
-              f"newton max_iter={max_iters} inner_m={inner_m} tol={tol:.0e}", flush=True)
+              f"warmup={warmup_iters} newton max_iter={max_iters} inner_m={inner_m} tol={tol:.0e}", flush=True)
+
+        # Picard warmup: bring residual down to ~1e-3 before Newton
+        F_inf = float("inf")
+        for _w in range(warmup_iters):
+            P_new = sym_phi(P_sorted, sg, u_grid, tau, gamma, W)
+            F_inf = float(np.max(np.abs(P_new - P_sorted)))
+            P_sorted = (1.0 - warmup_alpha) * P_sorted + warmup_alpha * P_new
+            reporter.update(iter=_w + 1, ftol=F_inf)
+            if _w % 100 == 0:
+                print(f"[solve] sym warmup iter {_w:5d}  ||F||={F_inf:.4e}", flush=True)
+            if F_inf < 1e-3:
+                print(f"[solve] sym warmup done at iter={_w+1}  ||F||={F_inf:.4e}", flush=True)
+                break
 
         eval_count = [0]
-        F_inf = float("inf")
 
         def _residual(P_flat: np.ndarray) -> np.ndarray:
             phi_P = sym_phi(P_flat, sg, u_grid, tau, gamma, W)
@@ -298,11 +312,15 @@ def _run_sym_task(args, task: dict, gamma: float, tau: float) -> None:
                 print(f"[solve] sym newton eval {eval_count[0]:5d}  ||F||={F_cur:.4e}", flush=True)
             return F
 
-        from scipy.optimize import newton_krylov  # noqa: PLC0415
-        P_sorted = newton_krylov(
-            _residual, P_sorted, f_tol=tol, maxiter=max_iters,
-            method="lgmres", inner_m=inner_m, verbose=False,
-        )
+        from scipy.optimize import newton_krylov, NoConvergence  # noqa: PLC0415
+        try:
+            P_sorted = newton_krylov(
+                _residual, P_sorted, f_tol=tol, maxiter=max_iters,
+                method="lgmres", inner_m=inner_m, verbose=False,
+            )
+        except NoConvergence as _e:
+            P_sorted = np.asarray(_e.x)
+            print(f"[solve] sym newton NoConvergence after {eval_count[0]} evals — using best found", flush=True)
         F_inf = float(np.max(np.abs(sym_phi(P_sorted, sg, u_grid, tau, gamma, W) - P_sorted)))
         print(f"[solve] sym newton done  evals={eval_count[0]}  ||F||={F_inf:.4e}", flush=True)
 
