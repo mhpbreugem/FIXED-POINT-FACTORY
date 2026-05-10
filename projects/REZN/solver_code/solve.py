@@ -531,9 +531,9 @@ def main() -> None:
             return out
 
         anderson_m       = int(sp.get("anderson_m",       20))
-        anderson_tol     = float(sp.get("anderson_tol",   1e-3))   # hand off to mp Newton at 1e-3
+        anderson_tol     = float(sp.get("anderson_tol",   1e-4))   # hand off to mp Newton at 1e-4
         anderson_max     = int(sp.get("anderson_max",     5000))
-        anderson_timeout = float(sp.get("anderson_timeout_s", 120.0))  # 2-min wall limit
+        anderson_timeout = float(sp.get("anderson_timeout_s", 300.0))  # 5-min wall limit
 
         print(f"[solve] anderson warm-start: M={anderson_m} tol={anderson_tol:.0e} "
               f"max={anderson_max} timeout={anderson_timeout:.0f}s", flush=True)
