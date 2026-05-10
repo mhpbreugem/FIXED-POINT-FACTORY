@@ -2,8 +2,8 @@
   "task_id": "g100_t0590",
   "worker_id": "gha-25616517268-g100_t0590",
   "started_at": "2026-05-10T01:25:27Z",
-  "last_update": "2026-05-10T01:25:27Z",
-  "iter": null,
-  "ftol": null,
+  "last_update": "2026-05-10T01:25:58Z",
+  "iter": 1283,
+  "ftol": "3.484792e-01",
   "extra": {}
 }
