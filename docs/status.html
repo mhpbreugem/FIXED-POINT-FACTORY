@@ -309,14 +309,16 @@
         const ftolStr = pr.ftol != null ? Number(pr.ftol).toExponential(1) : "—";
         const ex = pr.extra || {};
         let phaseLabel;
-        if (ex.phase === "newton") {
+        if (ex.phase === "mp_newton") {
+          phaseLabel = `mp·newton`;
+        } else if (ex.phase === "newton") {
           phaseLabel = `newton s${ex.stage ?? "?"}·${ex.newton_iter ?? "?"}`;
         } else if (ex.phase === "presmooth") {
           phaseLabel = `smooth s${ex.stage ?? "?"}·${ex.newton_iter ?? "?"}`;
         } else if (ex.phase === "picard") {
           phaseLabel = `picard·${ex.newton_iter ?? pr.iter ?? "?"}`;
         } else {
-          phaseLabel = `φ${pr.iter ?? "?"}`;
+          phaseLabel = `anderson`;
         }
         liveStr = `<span class="live">${phaseLabel} ‖F‖=${ftolStr}</span>`;
         if (pr.worker_id) workerStr = `<span class="mono" style="font-size:0.78rem">${esc(pr.worker_id)}</span>`;
@@ -400,8 +402,7 @@
       if (ex.phase === "presmooth")  return `<span style="color:#f7c87e">Picard s${ex.stage??""}</span>`;
       if (ex.phase === "picard")     return `<span style="color:#f7a07e">Picard</span>`;
       if (ex.phase === "anderson")   return `<span style="color:#c87ef7">Anderson</span>`;
-      if (pr.iter != null)           return `<span style="color:#aaa">iter ${pr.iter}</span>`;
-      return "—";
+      return `<span style="color:#c87ef7">Anderson</span>`;
     }
 
     const hbRows = (workerData || []).filter(f => {
