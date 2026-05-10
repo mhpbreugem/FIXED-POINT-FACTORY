@@ -260,6 +260,7 @@ def phi_newton_mp(
     lgmres_outer: int = 10,
     reporter: Any = None,
     P_inner_mp_str: "np.ndarray | None" = None,  # saved mp strings from prior run
+    max_wall_s: float = 17000.0,  # ~4h45m — bail before GHA 350-min kill
 ) -> tuple[np.ndarray, float, int, np.ndarray]:
     """Inexact Newton-GMRES for high-precision fixed-point polishing.
 
@@ -342,6 +343,11 @@ def phi_newton_mp(
 
         if F_inf < tol:
             print(f"[phi_mp/newton] converged at step={n_steps}  F={F_float:.4e}", flush=True)
+            break
+
+        if time.perf_counter() - t0 > max_wall_s:
+            print(f"[phi_mp/newton] wall timeout ({max_wall_s:.0f}s) after step={n_steps} "
+                  f"F={F_float:.4e} — saving checkpoint and exiting", flush=True)
             break
 
         # ------------------------------------------------------------------

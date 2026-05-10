@@ -406,7 +406,7 @@ def main() -> None:
     # -----------------------------------------------------------------------
     MP_DPS   = 200
     MP_TOL   = "1e-100"
-    MP_ITERS = 20
+    MP_ITERS = 50
 
     # Per-task solver parameter overrides (task["solver_params"] wins over CLI defaults)
     sp = task.get("solver_params") or {}
@@ -613,6 +613,7 @@ def main() -> None:
                 lgmres_outer=lgmres_outer,
                 reporter=reporter,
                 P_inner_mp_str=P_inner_mp_str_warm,
+                max_wall_s=float(sp.get("mp_max_wall_s", 17000)),  # ~4h45m
             )
             P_inner_final = P_inner_mp
             F_inf_final   = F_inf_mp_val
