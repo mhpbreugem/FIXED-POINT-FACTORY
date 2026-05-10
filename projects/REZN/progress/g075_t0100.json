@@ -2,8 +2,8 @@
   "task_id": "g075_t0100",
   "worker_id": "gha-25620709089-g075_t0100",
   "started_at": "2026-05-10T05:24:15Z",
-  "last_update": "2026-05-10T05:27:25Z",
-  "iter": 8631,
+  "last_update": "2026-05-10T05:34:47Z",
+  "iter": 1,
   "ftol": "7.069482e-02",
   "extra": {}
 }
