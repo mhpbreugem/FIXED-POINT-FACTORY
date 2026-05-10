@@ -272,33 +272,92 @@
     return '';
   }
 
-  function downloadAllDone(tasks, fmt) {
+  async function _fetchCheckpointData(ckpt) {
+    if (!ckpt) return null;
+    const url = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${ckpt}`;
+    try {
+      const r = await fetch(url, {cache:"no-store", headers: authHeaders()});
+      if (!r.ok) return null;
+      if (ckpt.endsWith(".json")) {
+        return { type: "json", data: await r.json() };
+      } else {
+        // Binary (NPZ): base64-encode for JSON embedding
+        const buf = await r.arrayBuffer();
+        const bytes = new Uint8Array(buf);
+        let binary = "";
+        for (let i = 0; i < bytes.byteLength; i += 8192)
+          binary += String.fromCharCode(...bytes.subarray(i, i + 8192));
+        return { type: "npz_b64", data: btoa(binary), size: bytes.byteLength };
+      }
+    } catch { return null; }
+  }
+
+  async function downloadAllDone(tasks, fmt) {
     const done = tasks.filter(t => t.status === "done" && !t.test && t.completed_at);
     if (!done.length) { alert("No completed tasks to download."); return; }
+    const st = document.getElementById("reset-status");
+
     let blob, filename;
     if (fmt === "csv") {
-      const cols = ["id","gamma","tau","G","K","F_max","1-R2","EV_info","EV_vol","slope","n_triples","completed_at","checkpoint"];
+      // CSV: summary stats + direct URL to checkpoint file
+      const cols = ["id","gamma","tau","G","K","F_max","1-R2","EV_info","EV_vol",
+                    "slope","n_triples","completed_at","solution_url"];
       const rows = [cols.join(",")];
       for (const t of done) {
         const r = t.result || {};
+        const ckptUrl = t.checkpoint
+          ? `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${t.checkpoint}` : "";
         rows.push([
           t.id, t.gamma ?? "", t.tau ?? "", t.G ?? "", t.K ?? 3,
           r.F_max ?? "", r["1-R2"] ?? "", r.EV_info ?? "", r.EV_vol ?? "",
           r.slope ?? "", r.n_triples ?? "",
-          t.completed_at ?? "", t.checkpoint ?? ""
+          t.completed_at ?? "", ckptUrl
         ].map(v => `"${String(v).replace(/"/g,'""')}"`).join(","));
       }
       blob = new Blob([rows.join("\n")], {type:"text/csv"});
       filename = `rezn_solutions_${new Date().toISOString().slice(0,10)}.csv`;
+      st.textContent = "";
+
     } else {
-      const out = done.map(t => ({
-        id: t.id, gamma: t.gamma, tau: t.tau, G: t.G, K: t.K ?? 3,
-        completed_at: t.completed_at, checkpoint: t.checkpoint,
-        result: t.result || {}, solver_params: t.solver_params || {}
-      }));
+      // JSON: embed full checkpoint (NPZ as base64, JSON as parsed object)
+      const withCkpt = done.filter(t => t.checkpoint).length;
+      let fetched = 0;
+      st.textContent = `Fetching ${withCkpt} checkpoint files…`;
+
+      const BATCH = 10;
+      const out = [];
+      for (let i = 0; i < done.length; i += BATCH) {
+        const batch = done.slice(i, i + BATCH);
+        const ckResults = await Promise.all(batch.map(t => _fetchCheckpointData(t.checkpoint)));
+        batch.forEach((t, j) => {
+          const ck = ckResults[j];
+          const entry = {
+            id: t.id, gamma: t.gamma, tau: t.tau, G: t.G, K: t.K ?? 3,
+            completed_at: t.completed_at, checkpoint: t.checkpoint,
+            result: t.result || {}, solver_params: t.solver_params || {}
+          };
+          if (ck) {
+            if (ck.type === "json") {
+              entry.solution = ck.data;
+            } else if (ck.type === "npz_b64") {
+              entry.solution_npz_b64 = ck.data;
+              entry.solution_format = "npz";
+              entry.solution_size_bytes = ck.size;
+              entry.solution_decode =
+                "np.load(io.BytesIO(base64.b64decode(entry['solution_npz_b64'])))";
+            }
+          }
+          if (t.checkpoint) fetched++;
+          out.push(entry);
+        });
+        st.textContent = `Fetching checkpoints… ${fetched}/${withCkpt}`;
+      }
+
       blob = new Blob([JSON.stringify(out, null, 2)], {type:"application/json"});
-      filename = `rezn_solutions_${new Date().toISOString().slice(0,10)}.json`;
+      filename = `rezn_solutions_full_${new Date().toISOString().slice(0,10)}.json`;
+      st.textContent = "";
     }
+
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = filename;
@@ -318,11 +377,13 @@
       <div style="display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap;margin-bottom:0.4rem">
         <strong>Completed tasks (${done.length})</strong>
         <button onclick="downloadAllDone(taskData?.tasks||[], 'csv')"
-          style="font-size:0.75rem;padding:2px 8px;cursor:pointer;background:#1a5e2a;border:none;color:#fff;border-radius:3px;font-weight:600">
+          style="font-size:0.75rem;padding:2px 8px;cursor:pointer;background:#1a5e2a;border:none;color:#fff;border-radius:3px;font-weight:600"
+          title="Summary stats + URL to raw checkpoint file">
           ⬇ CSV</button>
         <button onclick="downloadAllDone(taskData?.tasks||[], 'json')"
-          style="font-size:0.75rem;padding:2px 8px;cursor:pointer;background:#1f3a6e;border:none;color:#fff;border-radius:3px;font-weight:600">
-          ⬇ JSON</button>
+          style="font-size:0.75rem;padding:2px 8px;cursor:pointer;background:#1f3a6e;border:none;color:#fff;border-radius:3px;font-weight:600"
+          title="Full fixed-point solution embedded (NPZ as base64)">
+          ⬇ JSON (full solution)</button>
       </div>
       <table style="margin-top:0rem;width:auto">
         <thead><tr>
