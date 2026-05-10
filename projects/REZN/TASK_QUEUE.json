@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-10T16:12:35.672434Z",
+  "updated_at": "2026-05-10T16:24:05.134660Z",
   "params": {
     "G": 20,
     "UMAX": 5,
@@ -87,9 +87,11 @@
       "depends_on": [
         "g050_t0100"
       ],
-      "status": "ready",
-      "checkpoint": "results/full_ree/task3_g050_t0080_mp50.json",
-      "result": null,
+      "status": "bailed",
+      "checkpoint": null,
+      "result": {
+        "reason": "||F||inf=1.193e+00 > bail threshold 1e-04"
+      },
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -99,9 +101,7 @@
         "tol": 5e-07,
         "G_inner": 15
       },
-      "G": 15,
-      "claimed_by": null,
-      "claimed_at": null
+      "G": 15
     },
     {
       "id": "g050_t0100",
@@ -4455,10 +4455,10 @@
   "summary": {
     "total": 200,
     "done": 2,
-    "ready": 44,
+    "ready": 43,
     "claimed": 10,
     "blocked": 141,
-    "bailed": 3,
+    "bailed": 4,
     "skip": 0
   },
   "fanout": {
