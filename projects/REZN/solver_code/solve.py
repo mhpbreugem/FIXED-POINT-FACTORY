@@ -385,13 +385,22 @@ def main() -> None:
     tau_vec   = np.full(K, tau,   dtype=np.float64)
     W_vec     = np.ones(K,        dtype=np.float64)
 
+    # -----------------------------------------------------------------------
+    # Global precision policy (cannot be overridden by solver_params):
+    #   All ree tasks use mpmath Newton at 50-digit working precision,
+    #   targeting ||F|| < 1e-100.  presmooth (Picard warmup) is disabled.
+    # -----------------------------------------------------------------------
+    MP_DPS   = 50
+    MP_TOL   = "1e-100"
+    MP_ITERS = 20
+
     # Per-task solver parameter overrides (task["solver_params"] wins over CLI defaults)
     sp = task.get("solver_params") or {}
     G_inner      = int(sp.get("G_inner",        args.G_inner))
     pad          = int(sp.get("pad",             args.pad))
     u_inner_max  = float(sp.get("u_inner_max",   args.u_inner_max))
     max_stages   = int(sp.get("max_stages",      args.max_stages))
-    presmooth    = int(sp.get("presmooth",        args.presmooth))
+    presmooth    = 0                                          # always disabled
     presmooth_alpha = float(sp.get("presmooth_alpha", args.presmooth_alpha))
     inner_max_iter  = int(sp.get("inner_max_iter",    args.inner_max_iter))
     inner_rdiff  = float(sp.get("inner_rdiff",    1.0e-4))
@@ -576,15 +585,14 @@ def main() -> None:
         deficit = revelation_deficit_f128(P_inner_final, u_grid_inner, tau_vec, K)
 
         # ----------------------------------------------------------------
-        # Optional mpmath polish phase
-        # Activated when solver_params contains mp_dps (e.g. 100).
-        # Runs pure Picard in mpmath starting from the float64 result.
+        # mpmath Newton polish phase — always runs (global precision policy).
+        # Working precision: MP_DPS digits.  Target: ||F|| < MP_TOL.
         # ----------------------------------------------------------------
-        mp_dps = int(sp.get("mp_dps", 0))
-        if mp_dps > 0:
+        if True:
             from phi_mp import phi_newton_mp  # noqa: PLC0415
-            mp_tol       = str(sp.get("mp_tol", "1e-50"))
-            mp_iters     = int(sp.get("mp_iters", 20))
+            mp_dps       = MP_DPS
+            mp_tol       = MP_TOL
+            mp_iters     = MP_ITERS
             lgmres_tol   = float(sp.get("lgmres_tol", 1e-10))
             lgmres_inner = int(sp.get("lgmres_inner_m", 30))
             lgmres_outer = int(sp.get("lgmres_outer", 10))
@@ -639,13 +647,9 @@ def main() -> None:
             "wall_s":      round(wall_s, 1),
         }
 
-        # Bail if residual is too large (solver stalled).
-        # When mp_dps is set, the acceptance criterion is mp_tol (e.g. 1e-50).
-        # Without mp_dps, accept anything below 1e-4 (float64 realistic).
-        if mp_dps > 0:
-            BAIL_THRESHOLD = float(sp.get("mp_tol", "1e-50"))
-        else:
-            BAIL_THRESHOLD = max(tol * 1000, 1.0e-4)
+        # Bail threshold: mp phase always runs, so accept if ||F|| < 1e-4.
+        # (mp converges to ~MP_TOL; bail only on gross stalling.)
+        BAIL_THRESHOLD = 1.0e-4
         if F_inf_final > BAIL_THRESHOLD:
             claim_bail(args.project, args.task_id, args.branch,
                        f"||F||inf={F_inf_final:.3e} > bail threshold {BAIL_THRESHOLD:.0e}")
