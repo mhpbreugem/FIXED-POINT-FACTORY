@@ -236,8 +236,8 @@ def _run_sym_task(args, task: dict, gamma: float, tau: float) -> None:
     sp = task.get("solver_params") or {}
     G = int(sp.get("G", 15))
     u_max = float(sp.get("u_max", 3.0))
-    max_iters = int(sp.get("max_iters", 100))
-    inner_m = int(sp.get("inner_m", 50))
+    max_iters = int(sp.get("max_iters", 2000))
+    anderson_m = int(sp.get("anderson_m", 20))
     tol = float(sp.get("tol", 5e-7))
     W = float(sp.get("W", 1.0))
 
@@ -282,25 +282,11 @@ def _run_sym_task(args, task: dict, gamma: float, tau: float) -> None:
             print("[solve] sym cold start (no-learning init)", flush=True)
             P_sorted = sym_init_no_learning(sg, u_grid, tau, gamma, W)
 
-        warmup_iters = int(sp.get("warmup_iters", 500))
-        warmup_alpha = float(sp.get("warmup_alpha", 0.3))
         print(f"[solve] sym K={K} G={G} γ={gamma} τ={tau} "
-              f"warmup={warmup_iters} newton max_iter={max_iters} inner_m={inner_m} tol={tol:.0e}", flush=True)
-
-        # Picard warmup: bring residual down to ~1e-3 before Newton
-        F_inf = float("inf")
-        for _w in range(warmup_iters):
-            P_new = sym_phi(P_sorted, sg, u_grid, tau, gamma, W)
-            F_inf = float(np.max(np.abs(P_new - P_sorted)))
-            P_sorted = (1.0 - warmup_alpha) * P_sorted + warmup_alpha * P_new
-            reporter.update(iter=_w + 1, ftol=F_inf)
-            if _w % 100 == 0:
-                print(f"[solve] sym warmup iter {_w:5d}  ||F||={F_inf:.4e}", flush=True)
-            if F_inf < 1e-3:
-                print(f"[solve] sym warmup done at iter={_w+1}  ||F||={F_inf:.4e}", flush=True)
-                break
+              f"anderson M={anderson_m} max_iters={max_iters} tol={tol:.0e}", flush=True)
 
         eval_count = [0]
+        F_inf = float("inf")
 
         def _residual(P_flat: np.ndarray) -> np.ndarray:
             phi_P = sym_phi(P_flat, sg, u_grid, tau, gamma, W)
@@ -308,21 +294,23 @@ def _run_sym_task(args, task: dict, gamma: float, tau: float) -> None:
             F_cur = float(np.max(np.abs(F)))
             eval_count[0] += 1
             reporter.update(iter=eval_count[0], ftol=F_cur)
-            if eval_count[0] % 10 == 1:
-                print(f"[solve] sym newton eval {eval_count[0]:5d}  ||F||={F_cur:.4e}", flush=True)
+            if eval_count[0] % 20 == 1:
+                print(f"[solve] sym eval {eval_count[0]:5d}  ||F||={F_cur:.4e}", flush=True)
             return F
 
-        from scipy.optimize import newton_krylov, NoConvergence  # noqa: PLC0415
+        # Anderson acceleration: quasi-Newton fixed-point solver, robust from cold start.
+        # Uses history of M residuals to build a secant approximation of the inverse Jacobian.
+        from scipy.optimize import anderson, NoConvergence  # noqa: PLC0415
         try:
-            P_sorted = newton_krylov(
+            P_sorted = anderson(
                 _residual, P_sorted, f_tol=tol, maxiter=max_iters,
-                method="lgmres", inner_m=inner_m, verbose=False,
+                M=anderson_m, verbose=False, line_search="armijo",
             )
         except NoConvergence as _e:
             P_sorted = np.asarray(_e.x)
-            print(f"[solve] sym newton NoConvergence after {eval_count[0]} evals — using best found", flush=True)
+            print(f"[solve] sym anderson NoConvergence after {eval_count[0]} evals — using best found", flush=True)
         F_inf = float(np.max(np.abs(sym_phi(P_sorted, sg, u_grid, tau, gamma, W) - P_sorted)))
-        print(f"[solve] sym newton done  evals={eval_count[0]}  ||F||={F_inf:.4e}", flush=True)
+        print(f"[solve] sym anderson done  evals={eval_count[0]}  ||F||={F_inf:.4e}", flush=True)
 
         metrics = sym_weighted_R2(P_sorted, sg, u_grid, tau)
         wall_s = time.perf_counter() - t_start
