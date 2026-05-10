@@ -214,15 +214,17 @@
 <div id="tab-done" class="tab-content">
   <table id="done-table">
     <colgroup>
-      <col style="width:28%">
-      <col style="width:9%">
-      <col style="width:9%">
-      <col style="width:18%">
-      <col style="width:18%">
-      <col style="width:18%">
+      <col style="width:20%"><!-- id -->
+      <col style="width:7%"> <!-- γ -->
+      <col style="width:7%"> <!-- τ -->
+      <col style="width:11%"><!-- ‖F‖ -->
+      <col style="width:9%"> <!-- 1-R² -->
+      <col style="width:12%"><!-- Vi -->
+      <col style="width:12%"><!-- TV -->
+      <col style="width:22%"><!-- when -->
     </colgroup>
     <thead><tr>
-      <th>id</th><th>γ</th><th>τ</th><th>‖F‖</th><th>1-R²</th><th>when</th>
+      <th>id</th><th>γ</th><th>τ</th><th>‖F‖</th><th>1-R²</th><th>Vi</th><th>TV</th><th>when</th>
     </tr></thead>
     <tbody id="done-body"></tbody>
   </table>
@@ -353,9 +355,9 @@
       const isCl=ds==="claimed";
       const r=t.result||{};
       // ‖F‖: use live ftol for claimed, result F_max for done
-      const fmaxDone=r.F_max!=null?Number(r.F_max).toExponential(1)
+      const fmaxDone=r.F_max!=null?Number(r.F_max).toExponential(0)
                     :r.F_max_bound!=null?`<${Number(r.F_max_bound).toExponential(0)}`:"";
-      const fmaxLive=pr?.ftol!=null?Number(pr.ftol).toExponential(1):"";
+      const fmaxLive=pr?.ftol!=null?Number(pr.ftol).toExponential(0):"";
       const fStr=isCl?fmaxLive:fmaxDone;
       const phStr=isCl?phase(pr):"";
       const rc=isCl?' class="row-claimed"':'';
@@ -373,20 +375,26 @@
 
   function sortBy(col){if(sortCol===col)sortAsc=!sortAsc;else{sortCol=col;sortAsc=true;}renderTasks();}
 
+  function fmtF(v){if(v==null)return"—";return Number(v).toExponential(0);}
+  function fmtR2(v){if(v==null)return"—";return Number(v).toFixed(3).replace(/^0/,"");}
+  function fmtSig3(v){if(v==null)return"—";return parseFloat(Number(v).toPrecision(3)).toString();}
+
   function renderDone(){
     const tasks=taskData?.tasks||[];
     const done=tasks.filter(t=>t.status==="done"&&!t.test&&t.completed_at)
                     .sort((a,b)=>b.completed_at.localeCompare(a.completed_at));
     document.getElementById("done-body").innerHTML=done.map(t=>{
       const r=t.result||{};
-      const fmax=r.F_max!=null?Number(r.F_max).toExponential(1):"—";
-      const r2=r["1-R2"]!=null?r["1-R2"].toExponential(2):"—";
       const d=new Date(t.completed_at);
       const when=`${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
       return`<tr>
         <td>${esc(shortId(t.id))}</td>
-        <td>${t.gamma!=null?parseFloat(Number(t.gamma).toPrecision(3)):""}</td><td>${t.tau!=null?parseFloat(Number(t.tau).toPrecision(3)):""}</td>
-        <td class="enorm">${fmax}</td><td>${r2}</td>
+        <td>${t.gamma!=null?parseFloat(Number(t.gamma).toPrecision(3)):""}</td>
+        <td>${t.tau!=null?parseFloat(Number(t.tau).toPrecision(3)):""}</td>
+        <td class="enorm">${fmtF(r.F_max)}</td>
+        <td>${fmtR2(r["1-R2"])}</td>
+        <td class="muted">${fmtSig3(r.Vi)}</td>
+        <td class="muted">${fmtSig3(r.TV)}</td>
         <td class="muted">${when}</td>
       </tr>`;
     }).join("");
