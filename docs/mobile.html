@@ -102,24 +102,26 @@
 
   /* ── tab panes ── */
   .tab-content { display:none; }
-  .tab-content.active { display:block; }
+  .tab-content.active { display:block; overflow-x:hidden; width:100%; }
 
   /* ── THE TABLE — fixed layout, no horizontal scroll ── */
   table {
     border-collapse: collapse;
     table-layout: fixed;
     width: 100%;
+    max-width: 100%;
     font-size: 6px;
   }
   colgroup col { overflow:hidden; }
   th, td {
-    padding: 0 3px;
+    padding: 0 2px;
     border-bottom: 1px solid var(--border);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.25;
     height: 9px;
+    min-width: 0;
   }
   th {
     background: var(--hdr);
@@ -150,7 +152,7 @@
   .err   { color:var(--bailed); }
 
   /* workers tab */
-  #workers-section { padding:2px 3px; font-size:8px; }
+  #workers-section { padding:2px 3px; font-size:6px; overflow-x:hidden; width:100%; }
 </style>
 </head>
 <body>
