@@ -156,7 +156,7 @@
 <body>
 
 <div id="topbar">
-  <input type="password" id="pat-input" placeholder="GitHub PAT" oninput="savePat();loadAll();">
+  <input type="password" id="pat-input" placeholder="GitHub PAT" oninput="savePat();debouncedLoad();">
   <button class="btn b-bail"  onclick="resetByStatus('bailed')">b→r</button>
   <button class="btn b-rel"   onclick="resetByStatus('claimed')">c→r</button>
   <input  type="number" id="worker-count" value="20" min="1" max="50">
@@ -234,20 +234,28 @@
   const OWNER="mhpbreugem", REPO="fixed-point-factory", BRANCH="main", PROJECT="REZN";
   let taskData=null, workerData=null, progressData={};
   let sortCol="id", sortAsc=true;
+  let taskMap=new Map(); // rebuilt on each taskData load → O(1) lookups
 
   // PAT
   function savePat(){const v=document.getElementById('pat-input').value.trim();v?localStorage.setItem('fpf_pat',v):localStorage.removeItem('fpf_pat');}
   function getPat(){return localStorage.getItem('fpf_pat')||'';}
   window.addEventListener('DOMContentLoaded',()=>{const p=getPat();if(p)document.getElementById('pat-input').value=p;});
 
+  // Debounce: fire loadAll once 600ms after the last PAT keystroke
+  let _patTimer=null;
+  function debouncedLoad(){clearTimeout(_patTimer);_patTimer=setTimeout(loadAll,600);}
+
   function setMsg(t,ms=0){const e=document.getElementById('status-msg');e.textContent=t;if(ms)setTimeout(()=>e.textContent='',ms);}
 
-  // URL helpers
+  // URL / fetch helpers
   function rawUrl(p){return`https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${p}`;}
   function apiUrl(p){return`https://api.github.com/repos/${OWNER}/${REPO}/contents/${p}?ref=${BRANCH}`;}
   function authH(){const p=getPat();return p?{Authorization:`token ${p}`}:{};}
   async function fj(url){const r=await fetch(url,{cache:"no-store",headers:authH()});if(!r.ok)throw new Error(r.status);return r.json();}
   async function apiContent(path){const m=await fj(apiUrl(path));if(m.content)return JSON.parse(atob(m.content.replace(/\n/g,"")));return fj(rawUrl(path));}
+
+  // UTF-8–safe btoa
+  function toB64(str){const b=new TextEncoder().encode(str);return btoa(Array.from(b,x=>String.fromCharCode(x)).join(''));}
 
   // Tabs
   function switchTab(btn,name){
@@ -260,10 +268,18 @@
 
   function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 
-  // Shorten task id: g050_t0200 → g50t200
+  // Formatting helpers — defined once, reused everywhere
+  const _sidCache=new Map();
   function shortId(id){
-    return id.replace(/^g0*(\d+)_t0*(\d+)$/,(_,g,t)=>`g${g}t${t}`).slice(0,12);
+    if(_sidCache.has(id))return _sidCache.get(id);
+    const s=id.replace(/^g0*(\d+)_t0*(\d+)$/,(_,g,t)=>`g${g}t${t}`).slice(0,12);
+    _sidCache.set(id,s);return s;
   }
+  function sig3(v){return v!=null?parseFloat(Number(v).toPrecision(3)):null;}
+  function fmtF(v){if(v==null)return"—";return Number(v).toExponential(0);}
+  function fmtR2(v){if(v==null)return"—";return Number(v).toFixed(3).replace(/^0/,"");}
+  function fmtSig3(v){const n=sig3(v);return n!=null?String(n):"—";}
+  function fmtDate(iso){const d=new Date(iso);return`${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;}
 
   // Phase label — ultra compact
   function phase(pr){
@@ -280,12 +296,9 @@
     return'…';
   }
 
-  // Time: elapsed for claimed, short date for done
+  // Elapsed time for claimed, short date for done
   function fmtT(t,pr){
-    if(t.completed_at){
-      const d=new Date(t.completed_at);
-      return`${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-    }
+    if(t.completed_at)return fmtDate(t.completed_at);
     const iso=t.claimed_at||pr?.started_at;
     if(iso){const s=(Date.now()-new Date(iso).getTime())/1000;return s<3600?`${Math.floor(s/60)}m`:`${(s/3600).toFixed(1)}h`;}
     return'';
@@ -302,6 +315,7 @@
     }else{
       taskData=await fj(rawUrl(`projects/${PROJECT}/TASK_QUEUE.json`));
     }
+    taskMap=new Map((taskData.tasks||[]).map(t=>[t.id,t]));
     renderTasks();
     renderDone();
     const u=(taskData.updated_at||'?').replace('T',' ').slice(0,16);
@@ -315,30 +329,28 @@
     return t.status;
   }
 
-  // Status 2-char codes
   const ST2={done:"ok",ready:"rd",claimed:"cl",blocked:"bl",bailed:"ba",skip:"sk"};
 
   function renderTasks(){
     if(!taskData)return;
     const tasks=taskData.tasks||[];
     const fv=(document.getElementById("filter")?.value||"").toLowerCase();
-    const now=Date.now();
 
-    // pills
+    // Precompute display-status once per task (used for pills, filter, and row colour)
+    const dsMap=new Map(tasks.map(t=>[t.id,getDS(t)]));
+
     const counts={};
-    tasks.forEach(t=>{const ds=getDS(t);counts[ds]=(counts[ds]||0)+1;});
+    tasks.forEach(t=>{const ds=dsMap.get(t.id);counts[ds]=(counts[ds]||0)+1;});
     const order=["done","claimed","ready","blocked","bailed","skip"];
-    const af=(document.getElementById("filter")?.value||"").toLowerCase();
     document.getElementById("summary").innerHTML=
       order.filter(s=>counts[s]).map(s=>{
-        const sel=af===s?' style="outline:2px solid #fff"':'';
+        const sel=fv===s?' style="outline:2px solid #fff"':'';
         return`<span class="pill ${s}" onclick="(function(){var f=document.getElementById('filter');f.value=f.value.toLowerCase()==='${s}'?'':'${s}';renderTasks();})()"${sel}>${s[0]}:${counts[s]}</span>`;
       }).join("")+`<span class="pill total">#${tasks.length}</span>`;
 
-    // filter+sort
     const filtered=tasks.filter(t=>{
       if(!fv)return true;
-      const ds=getDS(t);
+      const ds=dsMap.get(t.id);
       return t.id.toLowerCase().includes(fv)||ds.toLowerCase().includes(fv)||
              String(t.gamma||"").includes(fv)||String(t.tau||"").includes(fv);
     });
@@ -351,23 +363,19 @@
 
     document.getElementById("task-body").innerHTML=sorted.map(t=>{
       const pr=progressData[t.id];
-      const ds=getDS(t);
+      const ds=dsMap.get(t.id);
       const isCl=ds==="claimed";
       const r=t.result||{};
-      // ‖F‖: use live ftol for claimed, result F_max for done
-      const fmaxDone=r.F_max!=null?Number(r.F_max).toExponential(0)
-                    :r.F_max_bound!=null?`<${Number(r.F_max_bound).toExponential(0)}`:"";
-      const fmaxLive=pr?.ftol!=null?Number(pr.ftol).toExponential(0):"";
-      const fStr=isCl?fmaxLive:fmaxDone;
-      const phStr=isCl?phase(pr):"";
+      const fmaxDone=r.F_max!=null?fmtF(r.F_max):r.F_max_bound!=null?`<${fmtF(r.F_max_bound)}`:"";
+      const fStr=isCl?(pr?.ftol!=null?fmtF(pr.ftol):""):fmaxDone;
       const rc=isCl?' class="row-claimed"':'';
       return`<tr${rc}>
         <td>${esc(shortId(t.id))}</td>
         <td class="st-${ds}">${ST2[ds]||ds.slice(0,2)}</td>
-        <td>${t.gamma!=null?parseFloat(Number(t.gamma).toPrecision(3)):""}</td>
-        <td>${t.tau!=null?parseFloat(Number(t.tau).toPrecision(3)):""}</td>
+        <td>${sig3(t.gamma)??""}</td>
+        <td>${sig3(t.tau)??""}</td>
         <td class="enorm">${fStr}</td>
-        <td class="live">${phStr}</td>
+        <td class="live">${isCl?phase(pr):""}</td>
         <td class="muted">${fmtT(t,pr)}</td>
       </tr>`;
     }).join("");
@@ -375,27 +383,21 @@
 
   function sortBy(col){if(sortCol===col)sortAsc=!sortAsc;else{sortCol=col;sortAsc=true;}renderTasks();}
 
-  function fmtF(v){if(v==null)return"—";return Number(v).toExponential(0);}
-  function fmtR2(v){if(v==null)return"—";return Number(v).toFixed(3).replace(/^0/,"");}
-  function fmtSig3(v){if(v==null)return"—";return parseFloat(Number(v).toPrecision(3)).toString();}
-
   function renderDone(){
     const tasks=taskData?.tasks||[];
     const done=tasks.filter(t=>t.status==="done"&&!t.test&&t.completed_at)
                     .sort((a,b)=>b.completed_at.localeCompare(a.completed_at));
     document.getElementById("done-body").innerHTML=done.map(t=>{
       const r=t.result||{};
-      const d=new Date(t.completed_at);
-      const when=`${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
       return`<tr>
         <td>${esc(shortId(t.id))}</td>
-        <td>${t.gamma!=null?parseFloat(Number(t.gamma).toPrecision(3)):""}</td>
-        <td>${t.tau!=null?parseFloat(Number(t.tau).toPrecision(3)):""}</td>
+        <td>${sig3(t.gamma)??""}</td>
+        <td>${sig3(t.tau)??""}</td>
         <td class="enorm">${fmtF(r.F_max)}</td>
         <td>${fmtR2(r["1-R2"])}</td>
         <td class="muted">${fmtSig3(r.Vi)}</td>
         <td class="muted">${fmtSig3(r.TV)}</td>
-        <td class="muted">${when}</td>
+        <td class="muted">${fmtDate(t.completed_at)}</td>
       </tr>`;
     }).join("");
   }
@@ -409,9 +411,11 @@
     try{
       const pDir=await fj(apiUrl(`projects/${PROJECT}/progress`));
       if(!Array.isArray(pDir))return;
-      const active=new Set(pDir.filter(f=>f.name.endsWith(".json")).map(f=>f.name));
+      const activeNames=new Set(pDir.filter(f=>f.name.endsWith(".json")).map(f=>f.name));
       let changed=false;
-      for(const fn of Object.keys(_psha)){if(!active.has(fn)){delete _psha[fn];delete progressData[fn.replace(".json","")];_qSha=null;changed=true;}}
+      for(const fn of Object.keys(_psha)){
+        if(!activeNames.has(fn)){delete _psha[fn];delete progressData[fn.replace(".json","")];_qSha=null;changed=true;}
+      }
       await Promise.all(pDir.filter(f=>f.name.endsWith(".json")).map(async f=>{
         if(_psha[f.name]===f.sha)return;
         const isNew=!(f.name in _psha);
@@ -422,64 +426,62 @@
         }catch{}
       }));
       if(changed)loadTasks().catch(()=>{});
-      renderTasks();
+      else renderTasks(); // refresh elapsed times / live ftol without reloading queue
     }catch{}
   }
 
-  function taskById(id){return(taskData?.tasks||[]).find(t=>t.id===id)||null;}
+  function taskById(id){return taskMap.get(id)||null;}
   function workerParams(tid){
     const t=taskById(tid);
     if(!t)return{g:"—",tau:"—",K:"—"};
-    return{
-      g:  t.gamma!=null?parseFloat(Number(t.gamma).toPrecision(3)):"—",
-      tau:t.tau  !=null?parseFloat(Number(t.tau  ).toPrecision(3)):"—",
-      K:  t.K??t.solver_params?.K??t.G??"—"
-    };
+    return{g:String(sig3(t.gamma)??"—"),tau:String(sig3(t.tau)??"—"),K:String(t.K??t.solver_params?.K??t.G??"—")};
   }
 
   function renderWorkersSection(){
     const el=document.getElementById("workers-section");
     if(!el)return;
     const now=Date.now();
+
+    // Build worker_id → progress index once (O(1) lookup vs O(n) scan per worker)
+    const workerIdMap=new Map(
+      Object.values(progressData).filter(p=>p.worker_id).map(p=>[p.worker_id,p])
+    );
     const hbSet=new Set((workerData||[]).map(f=>f.name.replace(".txt","")));
-    const hbRows=(workerData||[]).filter(f=>{
-      const age=f.last_modified?(now-new Date(f.last_modified).getTime())/1000:Infinity;
-      return age<5400;
-    }).map(f=>{
-      const wn=f.name.replace(".txt","");
-      const age=f.last_modified?(now-new Date(f.last_modified).getTime())/1000:null;
-      const stale=age!=null&&age>1800;
-      const ageS=age!=null?(stale?`<span class="err">${age.toFixed(0)}s</span>`:`${age.toFixed(0)}s`):"?";
-      const pr=progressData[wn]||Object.values(progressData).find(p=>p.worker_id===wn);
-      const tid=pr?pr.task_id:"—";
-      const ftol=pr?.ftol!=null?Number(pr.ftol).toExponential(0):"—";
+
+    function ageStr(ms){
+      if(ms==null)return"?";
+      const s=(ms/1000).toFixed(0);
+      return ms>1800000?`<span class="err">${s}s</span>`:`${s}s`;
+    }
+    function wRow(tid,ageMs,pr){
       const {g,tau,K}=workerParams(tid);
       return`<tr>
         <td>${esc(shortId(tid))}</td>
         <td>${g}</td><td>${tau}</td><td>${K}</td>
-        <td>${ageS}</td><td class="live">${pr?phase(pr):"—"}</td>
-        <td class="enorm">${ftol}</td>
+        <td>${ageStr(ageMs)}</td>
+        <td class="live">${pr?phase(pr):"—"}</td>
+        <td class="enorm">${pr?.ftol!=null?fmtF(pr.ftol):"—"}</td>
         <td><button onclick="releaseWorker('${esc(tid)}')" class="btn b-rel" style="padding:0 3px">r</button></td>
       </tr>`;
+    }
+
+    const hbRows=(workerData||[]).flatMap(f=>{
+      const ageMs=f.last_modified?now-new Date(f.last_modified).getTime():null;
+      if(ageMs!=null&&ageMs>5400000)return[];
+      const wn=f.name.replace(".txt","");
+      const pr=progressData[wn]||workerIdMap.get(wn);
+      return[wRow(pr?pr.task_id:"—",ageMs,pr)];
     });
+
     const progRows=Object.values(progressData)
       .filter(p=>p.worker_id&&!hbSet.has(p.worker_id))
-      .filter(p=>{const age=p.last_update?(now-new Date(p.last_update).getTime())/1000:Infinity;return age<5400;})
-      .sort((a,b)=>(a.last_update||"")>(b.last_update||"")?-1:1)
-      .map(p=>{
-        const age=p.last_update?(now-new Date(p.last_update).getTime())/1000:null;
-        const stale=age!=null&&age>1800;
-        const ageS=age!=null?(stale?`<span class="err">${age.toFixed(0)}s</span>`:`${age.toFixed(0)}s`):"?";
-        const ftol=p.ftol!=null?Number(p.ftol).toExponential(0):"—";
-        const {g,tau,K}=workerParams(p.task_id);
-        return`<tr>
-          <td>${esc(shortId(p.task_id))}</td>
-          <td>${g}</td><td>${tau}</td><td>${K}</td>
-          <td>${ageS}</td><td class="live">${phase(p)}</td>
-          <td class="enorm">${ftol}</td>
-          <td><button onclick="releaseWorker('${esc(p.task_id)}')" class="btn b-rel" style="padding:0 3px">r</button></td>
-        </tr>`;
+      .sort((a,b)=>(b.last_update||"").localeCompare(a.last_update||""))
+      .flatMap(p=>{
+        const ageMs=p.last_update?now-new Date(p.last_update).getTime():null;
+        if(ageMs!=null&&ageMs>5400000)return[];
+        return[wRow(p.task_id,ageMs,p)];
       });
+
     const all=[...hbRows,...progRows];
     if(!all.length){el.innerHTML=`<span class="muted">no active workers</span>`;return;}
     el.innerHTML=`<div class="muted" style="padding:2px 0">workers (${all.length})</div>
@@ -507,10 +509,9 @@
         if(t.status===fromStatus){t.status='ready';['worker','claimed_by','claimed_at','worker_id'].forEach(k=>delete t[k]);n++;}
       }
       if(!n){setMsg(`0 ${fromStatus}`,3000);return;}
-      const nc=btoa(unescape(encodeURIComponent(JSON.stringify(content,null,2))));
       const res=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${qpath}`,{
         method:'PUT',headers:{Authorization:`token ${pat}`,'Content-Type':'application/json'},
-        body:JSON.stringify({message:`Reset ${n} ${fromStatus}→ready`,content:nc,sha:meta.sha,branch:BRANCH})
+        body:JSON.stringify({message:`Reset ${n} ${fromStatus}→ready`,content:toB64(JSON.stringify(content,null,2)),sha:meta.sha,branch:BRANCH})
       });
       if(!res.ok)throw new Error(res.status);
       setMsg(`✓ ${n} reset`,3000);setTimeout(()=>loadAll(),1500);
@@ -525,7 +526,7 @@
       const res=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/workflows/solve.yml/dispatches`,
         {method:'POST',headers:{Authorization:`token ${pat}`,'Content-Type':'application/json'},
          body:JSON.stringify({ref:BRANCH,inputs:{workers:String(n)}})});
-      if(!res.ok){const t=await res.text();throw new Error(`${res.status}`);}
+      if(!res.ok)throw new Error(res.status);
       setMsg(`✓ ${n}w`,3000);setTimeout(()=>pollQueue(),3000);
     }catch(e){setMsg(`✗ ${e.message}`,4000);}
   }
@@ -553,17 +554,16 @@
       const task=content.tasks.find(t=>t.id===taskId);
       if(!task)throw new Error('not found');
       task.status='ready';task.claimed_by=null;task.claimed_at=null;
-      const nc=btoa(unescape(encodeURIComponent(JSON.stringify(content,null,2))));
       const res=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${qpath}`,{
         method:'PUT',headers:{Authorization:`token ${pat}`,'Content-Type':'application/json'},
-        body:JSON.stringify({message:`Release ${taskId}`,content:nc,sha:meta.sha,branch:BRANCH})
+        body:JSON.stringify({message:`Release ${taskId}`,content:toB64(JSON.stringify(content,null,2)),sha:meta.sha,branch:BRANCH})
       });
       if(!res.ok)throw new Error(res.status);
       setMsg(`✓ rel`,2000);setTimeout(()=>{pollQueue();renderWorkersSection();},1200);
     }catch(e){setMsg(`✗ ${e.message}`,4000);}
   }
 
-  // Poll loops
+  // Poll loops — pause when page is hidden (saves battery / data on mobile)
   let _lp=null,_lq=null;
   async function pollProgress(){
     try{await Promise.all([loadWorkers(),loadProgress()]);_lp=Date.now();}catch{}
@@ -577,14 +577,15 @@
   function tick(){
     const el=document.getElementById("ticker");if(!el)return;
     const now=Date.now();
-    const p=_lp?`w:${((now-_lp)/1000).toFixed(0)}s`:"w:—";
-    const q=_lq?`q:${((now-_lq)/1000).toFixed(0)}s`:"q:—";
-    el.textContent=`${p} ${q}`;
+    el.textContent=`${_lp?`w:${((now-_lp)/1000).toFixed(0)}s`:"w:—"} ${_lq?`q:${((now-_lq)/1000).toFixed(0)}s`:"q:—"}`;
   }
   async function loadAll(){await Promise.all([pollProgress(),pollQueue()]);}
 
   pollQueue();pollProgress();
-  setInterval(pollProgress,3000);setInterval(pollQueue,5000);setInterval(tick,1000);
+  setInterval(()=>{if(!document.hidden)pollProgress();},3000);
+  setInterval(()=>{if(!document.hidden)pollQueue();},15000); // loadProgress triggers loadTasks on change; 15s is a backstop
+  setInterval(tick,1000);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)loadAll();});
 </script>
 </body>
 </html>
