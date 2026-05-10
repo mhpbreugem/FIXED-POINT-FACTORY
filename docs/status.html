@@ -538,15 +538,15 @@
       const pr = progressData[workerName] || Object.values(progressData).find(p => p.worker_id === workerName);
       const taskId = pr ? pr.task_id : "—";
       const iter   = pr?.iter != null ? pr.iter : "—";
-      const ftol   = pr?.ftol != null ? Number(pr.ftol).toExponential(1) : "—";
+      const ftol   = pr?.ftol != null ? Number(pr.ftol).toExponential(3) : "—";
       const ageStr = hbAge != null ? (isStale ? `<span class="stale">${hbAge.toFixed(0)}s ago</span>` : `${hbAge.toFixed(0)}s ago`) : "?";
       return `<tr>
         <td class="mono">${esc(workerName)}</td>
         <td class="mono">${esc(taskId)}</td>
         <td>${ageStr}</td>
         <td>${pr ? phaseLabel(pr) : "—"}</td>
-        <td>${iter}</td>
-        <td class="mono">${ftol}</td>
+        <td style="text-align:right">${iter}</td>
+        <td class="mono" style="text-align:right">${ftol}</td>
         <td><button onclick="releaseWorker('${esc(taskId)}')" style="font-size:0.7rem;padding:1px 6px;cursor:pointer;background:#555;border:none;color:#fff;border-radius:3px">release</button></td>
       </tr>`;
     });
@@ -561,14 +561,14 @@
         const isStale = age != null && age > 1800;
         const ageStr = age != null ? (isStale ? `<span class="stale">${age.toFixed(0)}s ago</span>` : `${age.toFixed(0)}s ago`) : "?";
         const iter = p.iter != null ? p.iter : "—";
-        const ftol = p.ftol != null ? Number(p.ftol).toExponential(1) : "—";
+        const ftol = p.ftol != null ? Number(p.ftol).toExponential(3) : "—";
         return `<tr>
           <td class="mono">${esc(p.worker_id)}</td>
           <td class="mono">${esc(p.task_id)}</td>
           <td>${ageStr}</td>
           <td>${phaseLabel(p)}</td>
-          <td>${iter}</td>
-          <td class="mono">${ftol}</td>
+          <td style="text-align:right">${iter}</td>
+          <td class="mono" style="text-align:right">${ftol}</td>
           <td><button onclick="releaseWorker('${esc(p.task_id)}')" style="font-size:0.7rem;padding:1px 6px;cursor:pointer;background:#555;border:none;color:#fff;border-radius:3px">release</button></td>
         </tr>`;
       });
@@ -580,7 +580,7 @@
     }
     el.innerHTML = `<strong>Active workers (${allRows.length})</strong>
       <table style="margin-top:0.4rem;width:auto">
-        <thead><tr><th>worker</th><th>task</th><th>last seen</th><th>method</th><th>iter</th><th>ftol</th><th></th></tr></thead>
+        <thead><tr><th>worker</th><th>task</th><th>last seen</th><th>method</th><th>step</th><th>‖F‖ (last iter)</th><th></th></tr></thead>
         <tbody>${allRows.join("")}</tbody>
       </table>`;
   }
