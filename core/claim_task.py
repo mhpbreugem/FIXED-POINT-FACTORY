@@ -221,34 +221,41 @@ def mark_done(project: str, task_id: str, checkpoint: str | None,
 
     metric_str = _result_summary(result)
     unblock_str = f" unblocked:{','.join(newly_ready)}" if newly_ready else ""
+    branch = branch or _current_branch()
     _git("commit", "-m", f"{task_id}: {metric_str} done{unblock_str}")
 
-    # Retry loop: up to 40 attempts, exponential backoff with jitter.
-    # 10+ workers push progress every ~10s, so we need enough attempts to find
-    # a quiet window.  Each failed push is followed by a pull-rebase + re-apply.
-    backoff = 3.0
+    # Spread initial push across a 6s window so workers that converge together
+    # don't all hit origin at the same instant.
+    time.sleep(random.uniform(0, 6.0))
+
+    # Retry loop: up to 40 attempts.
+    # Two-level jitter:
+    #   1. Full-range backoff sleep  (uniform over [0, 2*backoff], grows to 60s cap)
+    #      — spreads retries across a wide window so competing workers desynchronise
+    #   2. Pre-push spread           (uniform 0–10s after each recommit)
+    #      — without this, workers that finish their backoff sleep together all
+    #        rebase, recommit, and push simultaneously, defeating the backoff.
+    backoff = 4.0
     for attempt in range(40):
         if _push(branch):
             return True
-        # Jitter to desynchronise competing workers
-        time.sleep(backoff + random.uniform(0, backoff))
-        backoff = min(backoff * 1.5, 30.0)
+
+        time.sleep(random.uniform(0, backoff * 2))
+        backoff = min(backoff * 2.0, 60.0)
 
         _pull_rebase(branch)   # tolerant: resets to origin on conflict
 
-        # Check if another worker already pushed a done commit for this task.
-        # We check whether we have commits that are ahead of origin (not yet pushed).
+        # Accept if another worker already landed the done commit on origin.
         ahead = _git("rev-list", f"origin/{branch}..HEAD",
                      check=False).stdout.strip()
         queue = load_queue(project)
         task = _find_by_id(queue, task_id)
         if task is None:
-            break  # task disappeared — abort
+            break
         if task.get("status") == "done" and not ahead:
-            # Origin already has done — another worker won, accept it.
             return True
 
-        # Re-apply our done status on top of the freshly-rebased queue.
+        # Re-apply done status on top of freshly-rebased queue.
         task["status"] = "done"
         task["checkpoint"] = checkpoint
         task["result"] = result
@@ -267,8 +274,11 @@ def mark_done(project: str, task_id: str, checkpoint: str | None,
                              f"{task_id}: {metric_str} done{unblock_str}",
                              check=False)
         if commit_result.returncode != 0:
-            # Nothing changed (e.g. rebase replayed our commit) — already staged
-            pass
+            pass  # rebase may have replayed our commit already
+
+        # Pre-push spread: stagger workers before the next push attempt.
+        time.sleep(random.uniform(0, 10.0))
+
     return False
 
 
@@ -644,3 +654,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
