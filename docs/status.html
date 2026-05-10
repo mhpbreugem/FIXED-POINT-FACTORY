@@ -67,17 +67,17 @@
   .btn-bailed  { background: var(--bailed); }
   .btn-claimed { background: var(--claimed); }
   .workers-inline { font-size: 0.82rem; color: var(--muted); }
-  .workers-box { background: #f8f8f8; border: 1px solid #ddd; border-radius: 0.4rem;
+  .workers-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 0.4rem;
                  padding: 0.5rem 0.8rem; margin-bottom: 0.8rem;
-                 width: fit-content; max-width: 100%; }
-  .workers-box table { background: transparent; font-size: 0.82rem; }
-  .workers-box th  { background: #efefef; }
+                 display: inline-block; max-width: 100%; }
+  .workers-box table { background: transparent; font-size: 0.82rem; width: auto; }
+  .workers-box th  { background: #f5f5f5; }
   tr.row-claimed td { background: #fffbe6 !important; }
-  .recent-box { background: #f0f8f0; border: 1px solid #b8ddb8; border-radius: 0.4rem;
+  .recent-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 0.4rem;
                 padding: 0.5rem 0.8rem; margin-bottom: 0.8rem; font-size: 0.82rem;
-                width: fit-content; max-width: 100%; }
-  .recent-box table { background: transparent; font-size: 0.82rem; }
-  .recent-box th { background: #daeeda; }
+                display: inline-block; max-width: 100%; }
+  .recent-box table { background: transparent; font-size: 0.82rem; width: auto; }
+  .recent-box th { background: #f5f5f5; }
   svg.chart { overflow: visible; }
   .chart-wrap { margin: 0.5rem 0 1.5rem 0; }
   /* mini chart axis */
@@ -534,7 +534,7 @@
     }).map(f => {
       const workerName = f.name.replace(".txt","");
       const hbAge = f.last_modified ? (now - new Date(f.last_modified).getTime())/1000 : null;
-      const isStale = hbAge != null && hbAge > 15;
+      const isStale = hbAge != null && hbAge > 1800;
       const pr = progressData[workerName] || Object.values(progressData).find(p => p.worker_id === workerName);
       const taskId = pr ? pr.task_id : "—";
       const iter   = pr?.iter != null ? pr.iter : "—";
@@ -558,7 +558,7 @@
       .sort((a,b) => (a.last_update||"") > (b.last_update||"") ? -1 : 1)
       .map(p => {
         const age = p.last_update ? (now - new Date(p.last_update).getTime())/1000 : null;
-        const isStale = age != null && age > 30;
+        const isStale = age != null && age > 1800;
         const ageStr = age != null ? (isStale ? `<span class="stale">${age.toFixed(0)}s ago</span>` : `${age.toFixed(0)}s ago`) : "?";
         const iter = p.iter != null ? p.iter : "—";
         const ftol = p.ftol != null ? Number(p.ftol).toExponential(1) : "—";
