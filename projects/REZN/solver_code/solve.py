@@ -382,7 +382,7 @@ def main() -> None:
     ap.add_argument("--pad",           type=int,   default=4)
     ap.add_argument("--u-inner-max",   type=float, default=3.0)
     ap.add_argument("--max-stages",    type=int,   default=6)
-    ap.add_argument("--presmooth",     type=int,   default=15)
+    ap.add_argument("--presmooth",     type=int,   default=3)
     ap.add_argument("--presmooth-alpha", type=float, default=0.05)
     ap.add_argument("--inner-max-iter", type=int,  default=30)
     args = ap.parse_args()
@@ -401,8 +401,8 @@ def main() -> None:
 
     # -----------------------------------------------------------------------
     # Global precision policy (cannot be overridden by solver_params):
-    #   All ree tasks use mpmath Newton at 50-digit working precision,
-    #   targeting ||F|| < 1e-100.  presmooth (Picard warmup) is disabled.
+    #   All ree tasks use mpmath Newton at 200-digit working precision,
+    #   targeting ||F|| < 1e-100.
     # -----------------------------------------------------------------------
     MP_DPS   = 200
     MP_TOL   = "1e-100"
@@ -414,7 +414,7 @@ def main() -> None:
     pad          = int(sp.get("pad",             args.pad))
     u_inner_max  = float(sp.get("u_inner_max",   args.u_inner_max))
     max_stages   = int(sp.get("max_stages",      args.max_stages))
-    presmooth    = 0                                          # always disabled
+    presmooth    = int(sp.get("presmooth",        args.presmooth))
     presmooth_alpha = float(sp.get("presmooth_alpha", args.presmooth_alpha))
     inner_max_iter  = int(sp.get("inner_max_iter",    args.inner_max_iter))
     inner_rdiff  = float(sp.get("inner_rdiff",    1.0e-4))

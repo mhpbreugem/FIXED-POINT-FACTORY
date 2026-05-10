@@ -96,7 +96,7 @@
     <strong>Global precision policy (hardcoded):</strong>
     mpmath Newton &nbsp;·&nbsp; working precision <strong>dps = 200</strong>
     &nbsp;·&nbsp; target &nbsp;<code style="background:#2a2a4a;padding:0.1rem 0.3rem;border-radius:3px">‖F‖ &lt; 10⁻¹⁰⁰</code>
-    &nbsp;·&nbsp; presmooth = 0 (pure Newton)
+    &nbsp;·&nbsp; presmooth = 3 (light Picard warmup per stage)
     &nbsp;·&nbsp; <em>all ree tasks, every run</em>
   </span>
 </div>
@@ -127,10 +127,14 @@
       <th onclick="sortBy('status')">status</th>
       <th onclick="sortBy('gamma')">&#947;</th>
       <th onclick="sortBy('tau')">&#964;</th>
+      <th onclick="sortBy('G')">G</th>
+      <th onclick="sortBy('K')">K</th>
       <th>worker</th>
       <th>live iter · ftol</th>
       <th onclick="sortBy('F_max')">&#8214;F&#8214;&#8734;</th>
       <th onclick="sortBy('1-R2')">1&#8209;R²</th>
+      <th onclick="sortBy('EV_info')">E[V info]</th>
+      <th onclick="sortBy('EV_vol')">E[vol]</th>
       <th>checkpoint</th>
     </tr></thead>
     <tbody id="task-body"></tbody>
@@ -305,16 +309,22 @@
       const ckptCell = ckpt
         ? `<a href="https://github.com/${OWNER}/${REPO}/blob/${BRANCH}/${ckpt}" target="_blank" class="mono" style="font-size:0.78rem">${ckpt.split("/").pop()}</a>`
         : "";
+      const evInfo = t.result?.EV_info != null ? Number(t.result.EV_info).toExponential(2) : "";
+      const evVol  = t.result?.EV_vol  != null ? Number(t.result.EV_vol).toExponential(2)  : "";
       const rowCls = isClaimed ? " class=\"row-claimed\"" : "";
       return `<tr${rowCls}>
         <td class="mono">${esc(t.id)}</td>
         <td class="status ${t.status}">${t.status}</td>
         <td>${t.gamma != null ? t.gamma : ""}</td>
         <td>${t.tau  != null ? t.tau  : ""}</td>
+        <td>${t.G    != null ? t.G    : ""}</td>
+        <td>${t.K    != null ? t.K    : ""}</td>
         <td>${workerStr}</td>
         <td>${liveStr}</td>
         <td class="enorm">${fmaxStr}</td>
         <td>${r2str}</td>
+        <td>${evInfo}</td>
+        <td>${evVol}</td>
         <td>${ckptCell}</td>
       </tr>`;
     }).join("");
