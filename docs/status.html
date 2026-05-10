@@ -55,11 +55,12 @@
   .enorm { font-size: 0.8rem; color: var(--done);    font-family: ui-monospace, monospace; }
   .controls { margin: 0.5rem 0 0.8rem 0; display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
   .controls input { padding: 0.3rem 0.5rem; border: 1px solid #ccc; border-radius: 0.3rem; width: 220px; }
-  .topbar { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;
+  .topbar { display: flex; flex-direction: column; gap: 0.4rem;
             margin-bottom: 0.8rem; padding: 0.5rem 0.7rem; background: #f0f0f0;
             border-radius: 0.4rem; font-size: 0.85rem; }
-  .topbar input { padding: 0.25rem 0.5rem; border: 1px solid #ccc; border-radius: 0.3rem;
-                  width: 260px; font-family: ui-monospace, monospace; font-size: 0.8rem; }
+  .topbar-row { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+  .topbar input[type="password"] { padding: 0.25rem 0.5rem; border: 1px solid #ccc; border-radius: 0.3rem;
+                  width: 280px; font-family: ui-monospace, monospace; font-size: 0.8rem; }
   .btn-action { padding: 0.3rem 0.8rem; border: none; border-radius: 0.3rem; cursor: pointer;
                 color: white; font-weight: 600; font-size: 0.85rem; }
   .btn-action:hover { opacity: 0.85; }
@@ -67,11 +68,18 @@
   .btn-bailed  { background: var(--bailed); }
   .btn-claimed { background: var(--claimed); }
   .workers-inline { font-size: 0.82rem; color: var(--muted); }
-  .workers-box { background: #fffbe6; border: 1px solid #e6c800; border-radius: 0.4rem;
-                 padding: 0.5rem 0.8rem; margin-bottom: 0.8rem; }
-  .workers-box table { background: transparent; font-size: 0.82rem; }
-  .workers-box th  { background: #f5e98a; }
+  .workers-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 0.4rem;
+                 padding: 0.5rem 0.8rem; margin-bottom: 0.8rem;
+                 display: block; overflow-x: auto; }
+  .workers-box table { background: transparent; font-size: 0.82rem; width: auto; min-width: max-content; }
+  .workers-box th  { background: #f5f5f5; }
   tr.row-claimed td { background: #fffbe6 !important; }
+  tr.row-done td { background: #edfaed !important; }
+  .recent-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 0.4rem;
+                padding: 0.5rem 0.8rem; margin-bottom: 0.8rem; font-size: 0.82rem;
+                display: block; overflow-x: auto; }
+  .recent-box table { background: transparent; font-size: 0.82rem; width: auto; min-width: max-content; }
+  .recent-box th { background: #f5f5f5; }
   svg.chart { overflow: visible; }
   .chart-wrap { margin: 0.5rem 0 1.5rem 0; }
   /* mini chart axis */
@@ -84,45 +92,82 @@
               vertical-align: middle; margin-left: 0.4rem; }
   table.nl-table { font-size: 0.82rem; border-collapse: collapse; width: auto; min-width: 420px; }
   .heatcell { font-family: ui-monospace, monospace; }
+  .table-scroll { display: block; overflow-x: auto; width: 100%; }
+  #task-table { width: auto; min-width: max-content; }
+  td.done-row { background: #f0fff0 !important; }
 </style>
 </head>
 <body>
 <h1>fixed-point-factory — <span id="project-label">REZN</span></h1>
+<div style="background:#1a1a2e;color:#e0e0ff;padding:0.55rem 1rem;border-radius:0.5rem;
+            margin-bottom:0.8rem;font-size:0.88rem;display:flex;align-items:center;gap:1rem;
+            border-left:4px solid #4f8ef7;">
+  <span style="font-size:1.1rem">🔬</span>
+  <span>
+    <strong>Global precision policy (hardcoded):</strong>
+    Anderson accel (‖F‖ &lt; 10⁻⁴, 5-min cap) → mpmath Newton (dps = 200)
+    &nbsp;·&nbsp; target &nbsp;<code style="background:#2a2a4a;padding:0.1rem 0.3rem;border-radius:3px">‖F‖ &lt; 10⁻¹⁰⁰</code>
+    &nbsp;·&nbsp; <em>all ree tasks, every run</em>
+  </span>
+</div>
 <p class="meta" id="meta">loading…</p>
+<p class="meta" id="ticker" style="font-size:0.75rem;color:#666;margin-top:0"></p>
 
 <div class="topbar">
-  <input type="password" id="pat-input" placeholder="GitHub PAT (stored locally)" oninput="savePat()">
-  <button class="btn-action btn-bailed" id="btn-reset-bailed" onclick="resetByStatus('bailed')">Reset bailed → ready</button>
-  <button class="btn-action btn-claimed" id="btn-reset-claimed" onclick="resetByStatus('claimed')">Release claimed → ready</button>
-  <span id="reset-status" style="font-size:0.8rem;color:#555"></span>
+  <div class="topbar-row">
+    <input type="password" id="pat-input" placeholder="GitHub PAT — required for live worker data" oninput="savePat(); loadAll();">
+    <span id="reset-status" style="font-size:0.8rem;color:#555"></span>
+  </div>
+  <div class="topbar-row">
+    <button class="btn-action btn-bailed" id="btn-reset-bailed" onclick="resetByStatus('bailed')">Reset bailed → ready</button>
+    <button class="btn-action btn-claimed" id="btn-reset-claimed" onclick="resetByStatus('claimed')">Release claimed → ready</button>
+    <span style="display:inline-flex;align-items:center;gap:4px">
+      <input type="number" id="worker-count" value="20" min="1" max="50" style="width:52px;padding:0.3rem;background:#1e1e2e;color:#e0e0ff;border:1px solid #444;border-radius:4px;font-size:0.85rem">
+      <button class="btn-action" style="background:#1a5e2a" onclick="launchWorkers()">▶ Launch workers</button>
+      <button class="btn-action" style="background:#7a1a1a" onclick="cancelAllRuns()">✕ Cancel all runs</button>
+    </span>
+  </div>
 </div>
 
 <div class="tabs">
   <button class="tab active" onclick="switchTab(this,'tasks')">Tasks</button>
+  <button class="tab" onclick="switchTab(this,'completed')">Completed</button>
   <button class="tab" onclick="switchTab(this,'figures')">Figures</button>
 </div>
 
 <div id="tab-tasks" class="tab-content active">
   <div class="summary" id="summary"></div>
   <div class="workers-box workers-inline" id="workers-inline"></div>
+  <div id="recently-completed"></div>
   <div class="controls">
     <input type="text" id="filter" placeholder="filter id, status, γ…" oninput="renderTasks()">
     <button onclick="loadAll()">refresh now</button>
   </div>
+  <div class="table-scroll">
   <table id="task-table">
     <thead><tr>
       <th onclick="sortBy('id')">id</th>
       <th onclick="sortBy('status')">status</th>
       <th onclick="sortBy('gamma')">&#947;</th>
       <th onclick="sortBy('tau')">&#964;</th>
+      <th onclick="sortBy('G')">G</th>
+      <th onclick="sortBy('K')">K</th>
       <th>worker</th>
       <th>live iter · ftol</th>
       <th onclick="sortBy('F_max')">&#8214;F&#8214;&#8734;</th>
       <th onclick="sortBy('1-R2')">1&#8209;R²</th>
+      <th onclick="sortBy('EV_info')">E[V info]</th>
+      <th onclick="sortBy('EV_vol')">E[vol]</th>
       <th>checkpoint</th>
+      <th onclick="sortBy('completed_at')">solved at</th>
     </tr></thead>
     <tbody id="task-body"></tbody>
   </table>
+  </div>
+</div>
+
+<div id="tab-completed" class="tab-content">
+  <div id="completed-area"></div>
 </div>
 
 <div id="tab-figures" class="tab-content">
@@ -188,15 +233,31 @@
     return `https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}?ref=${BRANCH}`;
   }
 
+  function authHeaders() {
+    const pat = getPat();
+    return pat ? { Authorization: `token ${pat}` } : {};
+  }
+
   async function fetchJson(url) {
-    const r = await fetch(url, {cache:"no-store"});
+    const r = await fetch(url, {cache:"no-store", headers: authHeaders()});
     if (!r.ok) throw new Error(`${r.status} ${r.statusText} — ${url}`);
     return r.json();
   }
   async function fetchText(url) {
-    const r = await fetch(url, {cache:"no-store"});
+    const r = await fetch(url, {cache:"no-store", headers: authHeaders()});
     if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
     return r.text();
+  }
+
+  // Fetch a file via the GitHub API (authenticated, no CDN caching).
+  // Returns parsed JSON content. Falls back to rawUrl on failure.
+  async function fetchApiContent(path) {
+    const meta = await fetchJson(apiUrl(path));
+    if (meta.content) {
+      const text = atob(meta.content.replace(/\n/g, ""));
+      return JSON.parse(text);
+    }
+    return fetchJson(rawUrl(path));
   }
 
   function switchTab(btn, name) {
@@ -211,16 +272,254 @@
     return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
   }
 
+  function fmtSolvedAt(t, pr) {
+    if (t.completed_at) {
+      const d = new Date(t.completed_at);
+      return d.toLocaleString('en-US', {month:'short', day:'numeric',
+             hour:'2-digit', minute:'2-digit', hour12:false});
+    }
+    // For active workers: elapsed since claimed_at (queue) or started_at (progress file)
+    const startIso = t.claimed_at || pr?.started_at;
+    if (startIso) {
+      const sec = (Date.now() - new Date(startIso).getTime()) / 1000;
+      if (sec < 3600) return `⏱ ${Math.floor(sec/60)}m`;
+      return `⏱ ${(sec/3600).toFixed(1)}h`;
+    }
+    return '';
+  }
+
+  async function _fetchCheckpointData(ckpt) {
+    if (!ckpt) return null;
+    const url = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${ckpt}`;
+    try {
+      const r = await fetch(url, {cache:"no-store", headers: authHeaders()});
+      if (!r.ok) return null;
+      if (ckpt.endsWith(".json")) {
+        return { type: "json", data: await r.json() };
+      } else {
+        // Binary (NPZ): base64-encode for JSON embedding
+        const buf = await r.arrayBuffer();
+        const bytes = new Uint8Array(buf);
+        let binary = "";
+        for (let i = 0; i < bytes.byteLength; i += 8192)
+          binary += String.fromCharCode(...bytes.subarray(i, i + 8192));
+        return { type: "npz_b64", data: btoa(binary), size: bytes.byteLength };
+      }
+    } catch { return null; }
+  }
+
+  async function downloadAllDone(tasks, fmt) {
+    const done = tasks.filter(t => t.status === "done" && !t.test);
+    if (!done.length) { alert("No completed tasks to download."); return; }
+    const st = document.getElementById("reset-status");
+
+    let blob, filename;
+    if (fmt === "csv") {
+      // CSV: summary stats + direct URL to checkpoint file
+      const cols = ["id","gamma","tau","G","K","F_max","1-R2","EV_info","EV_vol",
+                    "slope","n_triples","completed_at","solution_url"];
+      const rows = [cols.join(",")];
+      for (const t of done) {
+        const r = t.result || {};
+        const ckptUrl = t.checkpoint
+          ? `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${t.checkpoint}` : "";
+        rows.push([
+          t.id, t.gamma ?? "", t.tau ?? "", t.G ?? "", t.K ?? 3,
+          r.F_max ?? "", r["1-R2"] ?? "", r.EV_info ?? "", r.EV_vol ?? "",
+          r.slope ?? "", r.n_triples ?? "",
+          t.completed_at ?? "", ckptUrl
+        ].map(v => `"${String(v).replace(/"/g,'""')}"`).join(","));
+      }
+      blob = new Blob([rows.join("\n")], {type:"text/csv"});
+      filename = `rezn_solutions_${new Date().toISOString().slice(0,10)}.csv`;
+      st.textContent = "";
+
+    } else {
+      // JSON: embed full checkpoint (NPZ as base64, JSON as parsed object)
+      const withCkpt = done.filter(t => t.checkpoint).length;
+      let fetched = 0;
+      st.textContent = `Fetching ${withCkpt} checkpoint files…`;
+
+      const BATCH = 10;
+      const out = [];
+      for (let i = 0; i < done.length; i += BATCH) {
+        const batch = done.slice(i, i + BATCH);
+        const ckResults = await Promise.all(batch.map(t => _fetchCheckpointData(t.checkpoint)));
+        batch.forEach((t, j) => {
+          const ck = ckResults[j];
+          const entry = {
+            id: t.id, gamma: t.gamma, tau: t.tau, G: t.G, K: t.K ?? 3,
+            completed_at: t.completed_at, checkpoint: t.checkpoint,
+            result: t.result || {}, solver_params: t.solver_params || {}
+          };
+          if (ck) {
+            if (ck.type === "json") {
+              entry.solution = ck.data;
+            } else if (ck.type === "npz_b64") {
+              entry.solution_npz_b64 = ck.data;
+              entry.solution_format = "npz";
+              entry.solution_size_bytes = ck.size;
+              entry.solution_decode =
+                "np.load(io.BytesIO(base64.b64decode(entry['solution_npz_b64'])))";
+            }
+          }
+          if (t.checkpoint) fetched++;
+          out.push(entry);
+        });
+        st.textContent = `Fetching checkpoints… ${fetched}/${withCkpt}`;
+      }
+
+      blob = new Blob([JSON.stringify(out, null, 2)], {type:"application/json"});
+      filename = `rezn_solutions_full_${new Date().toISOString().slice(0,10)}.json`;
+      st.textContent = "";
+    }
+
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  function _completedTableHTML(done) {
+    return `
+      <div style="display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap;margin-bottom:0.6rem">
+        <strong>Completed tasks (${done.length})</strong>
+        <button onclick="downloadAllDone(taskData?.tasks||[], 'csv')"
+          style="font-size:0.75rem;padding:2px 8px;cursor:pointer;background:#1a5e2a;border:none;color:#fff;border-radius:3px;font-weight:600"
+          title="Summary stats + URL to raw checkpoint file">⬇ CSV</button>
+        <button onclick="downloadAllDone(taskData?.tasks||[], 'json')"
+          style="font-size:0.75rem;padding:2px 8px;cursor:pointer;background:#1f3a6e;border:none;color:#fff;border-radius:3px;font-weight:600"
+          title="Full fixed-point solution embedded (NPZ as base64)">⬇ JSON (full solution)</button>
+      </div>
+      <table style="width:auto">
+        <thead><tr>
+          <th>id</th><th>γ</th><th>τ</th><th>G</th><th>K</th>
+          <th>‖F‖∞</th><th>1-R²</th><th>E[V info]</th><th>E[vol]</th><th>solved at</th><th>solution</th>
+        </tr></thead>
+        <tbody>${done.map(t => {
+          const r = t.result || {};
+          const fmax = r.F_max != null ? Number(r.F_max).toExponential(1) : "—";
+          const r2   = r["1-R2"] != null ? r["1-R2"].toPrecision(3) : "—";
+          const evi  = r.EV_info != null ? Number(r.EV_info).toExponential(2) : "—";
+          const evv  = r.EV_vol  != null ? Number(r.EV_vol).toExponential(2) : "—";
+          const when = new Date(t.completed_at).toLocaleString('en-US',
+            {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit', hour12:false});
+          const ckpt = t.checkpoint;
+          const solutionCell = ckpt
+            ? `<a href="https://github.com/${OWNER}/${REPO}/blob/${BRANCH}/${ckpt}" target="_blank"
+                style="font-size:0.75rem;white-space:nowrap">${ckpt.split("/").pop()}</a>
+               &nbsp;<a href="https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${ckpt}"
+                style="font-size:0.72rem;color:#888" target="_blank">[raw]</a>`
+            : `<span style="color:#ccc">—</span>`;
+          return `<tr>
+            <td class="mono">${esc(t.id)}</td>
+            <td>${t.gamma ?? ""}</td><td>${t.tau ?? ""}</td>
+            <td>${t.G ?? ""}</td><td>${t.K ?? 3}</td>
+            <td class="enorm">${fmax}</td><td>${r2}</td>
+            <td>${evi}</td><td>${evv}</td>
+            <td class="small mono">${when}</td>
+            <td>${solutionCell}</td>
+          </tr>`;
+        }).join("")}</tbody>
+      </table>`;
+  }
+
+  function renderCompleted(tasks) {
+    const done = (tasks || [])
+      .filter(t => t.status === "done" && !t.test)
+      .sort((a,b) => (b.completed_at||"").localeCompare(a.completed_at||""));
+
+    // Completed tab — always render all done tasks
+    const tabEl = document.getElementById("completed-area");
+    if (tabEl) {
+      if (!done.length) {
+        tabEl.innerHTML = `<p style="color:#888;margin-top:1rem">No completed tasks yet.</p>`;
+      } else {
+        tabEl.innerHTML = `<div class="recent-box" style="margin-top:0.5rem">${_completedTableHTML(done)}</div>`;
+      }
+    }
+
+    // Tasks tab — show compact recently-completed box (up to 5, no download buttons)
+    const boxEl = document.getElementById("recently-completed");
+    if (boxEl) {
+      if (!done.length) { boxEl.innerHTML = ""; return; }
+      const recent = done.slice(0, 5);
+      boxEl.innerHTML = `<div class="recent-box" style="margin-bottom:0.6rem">
+        <div style="display:flex;align-items:center;gap:0.8rem;margin-bottom:0.4rem">
+          <strong>Recently completed (${done.length})</strong>
+          <a href="#" onclick="(function(){var t=document.querySelector('[onclick*=\'completed\']');if(t)t.click();}());return false"
+            style="font-size:0.78rem;color:#1f6feb">view all →</a>
+        </div>
+        <table style="width:auto">
+          <thead><tr>
+            <th>id</th><th>γ</th><th>τ</th><th>G</th><th>K</th>
+            <th>‖F‖∞</th><th>1-R²</th><th>solved at</th>
+          </tr></thead>
+          <tbody>${recent.map(t => {
+            const r = t.result || {};
+            const fmax = r.F_max != null ? Number(r.F_max).toExponential(1) : "—";
+            const r2   = r["1-R2"] != null ? r["1-R2"].toPrecision(3) : "—";
+            const when = new Date(t.completed_at).toLocaleString('en-US',
+              {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit', hour12:false});
+            return `<tr>
+              <td class="mono">${esc(t.id)}</td>
+              <td>${t.gamma ?? ""}</td><td>${t.tau ?? ""}</td>
+              <td>${t.G ?? ""}</td><td>${t.K ?? 3}</td>
+              <td class="enorm">${fmax}</td><td>${r2}</td>
+              <td class="small mono">${when}</td>
+            </tr>`;
+          }).join("")}</tbody>
+        </table>
+        ${done.length > 5 ? `<div style="color:#888;font-size:0.78rem;margin-top:0.3rem">+${done.length-5} more in Completed tab</div>` : ""}
+      </div>`;
+    }
+  }
+
   // ═══════════════════════════════════════════════════════════════════════════
   // TASK LOADING
   // ═══════════════════════════════════════════════════════════════════════════
 
+  let _queueSha = null;
+
   async function loadTasks() {
-    const data = await fetchJson(rawUrl(`projects/${PROJECT}/TASK_QUEUE.json`));
-    taskData = data;
+    if (getPat()) {
+      const meta = await fetchJson(apiUrl(`projects/${PROJECT}/TASK_QUEUE.json`));
+      if (meta.sha === _queueSha) return;
+      _queueSha = meta.sha;
+      taskData = JSON.parse(atob(meta.content.replace(/\n/g, "")));
+    } else {
+      taskData = await fetchJson(rawUrl(`projects/${PROJECT}/TASK_QUEUE.json`));
+    }
     renderTasks();
     document.getElementById("meta").textContent =
-      `last refresh: ${new Date().toLocaleTimeString()}  ·  updated_at: ${data.updated_at || "?"}  ·  project: ${PROJECT}`;
+      `queue updated_at: ${taskData.updated_at || "?"}  ·  project: ${PROJECT}`;
+  }
+
+  // Resolve phase from progress data — handles old double-extra nesting bug
+  function resolvePhase(pr) {
+    const ex = pr.extra || {};
+    return ex.phase || ex.extra?.phase || null;
+  }
+
+  function phaseLabel(pr) {
+    const phase = resolvePhase(pr);
+    const ex = pr.extra || {};
+    const nf = ex.n_fun ?? ex.extra?.n_fun;
+    const nj = ex.n_jac ?? ex.extra?.n_jac;
+    if (phase === "mp_newton")
+      return `<span style="color:#7ecff7">mp·Newton</span> step=${pr.iter ?? "?"} fun=${nf ?? "?"} jac=${nj ?? "?"}`;
+    if (phase === "anderson")
+      return `<span style="color:#c87ef7">Anderson</span> iter=${pr.iter ?? "?"} fun=${nf ?? "?"}`;
+    if (phase === "picard")
+      return `<span style="color:#f7c87e">Picard</span> iter=${pr.iter ?? "?"} fun=${nf ?? "?"}`;
+    if (phase === "newton")
+      return `<span style="color:#8ef78e">Newton</span> s${ex.stage ?? "?"}·${ex.newton_iter ?? "?"}`;
+    if (phase === "presmooth")
+      return `smooth s${ex.stage ?? "?"}·${ex.newton_iter ?? "?"}`;
+    if (pr.iter != null)
+      return `iter ${pr.iter}`;
+    return "starting…";
   }
 
   function renderTasks() {
@@ -228,22 +527,42 @@
     const tasks = taskData.tasks || [];
     const filterVal = (document.getElementById("filter")?.value || "").toLowerCase();
 
-    // summary pills
+    const now = Date.now();
+
+    // Determine display status for each task (progress-inferred claimed trumps queue)
+    function getDisplayStatus(t) {
+      const pr = progressData[t.id];
+      const fresh = pr && pr.last_update &&
+        (now - new Date(pr.last_update).getTime()) < 5400000; // 90 min
+      if (fresh && (t.status === "ready" || t.status === "bailed")) return "claimed";
+      return t.status;
+    }
+
+    // summary pills — count by DISPLAY status
     const counts = {};
-    tasks.forEach(t => { counts[t.status] = (counts[t.status]||0)+1; });
-    const pillOrder = ["done","ready","claimed","blocked","bailed","skip"];
+    tasks.forEach(t => {
+      const ds = getDisplayStatus(t);
+      counts[ds] = (counts[ds]||0)+1;
+    });
+    const pillOrder = ["done","claimed","ready","blocked","bailed","skip"];
+    const activeFilter = (document.getElementById("filter")?.value || "").toLowerCase();
     document.getElementById("summary").innerHTML =
-      pillOrder.filter(s => counts[s]).map(s =>
-        `<span class="pill ${s}">${s}: ${counts[s]}</span>`).join("") +
+      pillOrder.filter(s => counts[s]).map(s => {
+        const sel = activeFilter === s ? ' style="outline:2px solid #fff;opacity:1"' : '';
+        return `<span class="pill ${s}" onclick="(function(){var f=document.getElementById('filter');f.value=f.value.toLowerCase()==='${s}'?'':'${s}';renderTasks();})()" style="cursor:pointer"${sel}>${s}: ${counts[s]}</span>`;
+      }).join("") +
       `<span class="pill" style="background:#555">total: ${tasks.length}</span>`;
 
     // filter + sort
     const filtered = tasks.filter(t => {
       if (!filterVal) return true;
+      const ds = getDisplayStatus(t);
       return t.id.toLowerCase().includes(filterVal) ||
-             t.status.toLowerCase().includes(filterVal) ||
+             ds.toLowerCase().includes(filterVal) ||
              String(t.gamma||"").includes(filterVal) ||
-             String(t.tau||"").includes(filterVal);
+             String(t.tau||"").includes(filterVal) ||
+             String(t.G||"").includes(filterVal) ||
+             String(t.K||"").includes(filterVal);
     });
     const sorted = [...filtered].sort((a,b) => {
       let av = a[sortCol] ?? a.result?.[sortCol] ?? "";
@@ -258,26 +577,22 @@
     document.getElementById("task-body").innerHTML = sorted.map(t => {
       const r2 = t.result?.["1-R2"];
       const r2str = r2 != null ? r2.toPrecision(3) : "";
-      const fmax = t.result?.F_max ?? t.result?.F_max_bound;
-      const fmaxStr = fmax != null ? Number(fmax).toExponential(1) : "";
+      const fmaxNote = t.note && (t.note.match(/\|\|F\|\|(?:inf|=)\s*[=]?\s*([\d.]+e[+-]?\d+)/i) ||
+                                  t.note.match(/F_max\s*=\s*([\d.]+e[+-]?\d+)/i));
+      const fmaxExact = t.result?.F_max ?? (fmaxNote ? parseFloat(fmaxNote[1]) : null);
+      const fmaxBound = t.result?.F_max_bound;
+      const fmaxStr = fmaxExact != null ? Number(fmaxExact).toExponential(1)
+                    : fmaxBound != null ? `<span style="color:#aaa">&lt;${Number(fmaxBound).toExponential(0)}</span>`
+                    : "";
       const pr = progressData[t.id];
-      const isClaimed = t.status === "claimed" || t.status === "in-progress";
+      const displayStatus = getDisplayStatus(t);
+      const isClaimed = displayStatus === "claimed";
       let liveStr = "", workerStr = "";
-      if (isClaimed && pr) {
+      if (pr && isClaimed) {
         const ftolStr = pr.ftol != null ? Number(pr.ftol).toExponential(1) : "—";
-        const ex = pr.extra || {};
-        let phaseLabel;
-        if (ex.phase === "newton") {
-          phaseLabel = `newton s${ex.stage ?? "?"}·${ex.newton_iter ?? "?"}`;
-        } else if (ex.phase === "presmooth") {
-          phaseLabel = `smooth s${ex.stage ?? "?"}·${ex.newton_iter ?? "?"}`;
-        } else if (ex.phase === "picard") {
-          phaseLabel = `picard·${ex.newton_iter ?? pr.iter ?? "?"}`;
-        } else {
-          phaseLabel = `φ${pr.iter ?? "?"}`;
-        }
-        liveStr = `<span class="live">${phaseLabel} ‖F‖=${ftolStr}</span>`;
-        if (pr.worker_id) workerStr = `<span class="mono" style="font-size:0.78rem">${esc(pr.worker_id)}</span>`;
+        liveStr = `<span class="live">${phaseLabel(pr)} ‖F‖=${ftolStr}</span>`;
+        const wid = pr.worker_id || t.worker_id;
+        if (wid) workerStr = `<span class="mono" style="font-size:0.78rem">${esc(wid)}</span>`;
       } else if (isClaimed && t.worker_id) {
         workerStr = `<span class="mono" style="font-size:0.78rem">${esc(t.worker_id)}</span>`;
       }
@@ -285,19 +600,29 @@
       const ckptCell = ckpt
         ? `<a href="https://github.com/${OWNER}/${REPO}/blob/${BRANCH}/${ckpt}" target="_blank" class="mono" style="font-size:0.78rem">${ckpt.split("/").pop()}</a>`
         : "";
-      const rowCls = isClaimed ? " class=\"row-claimed\"" : "";
+      const evInfo = t.result?.EV_info != null ? Number(t.result.EV_info).toExponential(2) : "";
+      const evVol  = t.result?.EV_vol  != null ? Number(t.result.EV_vol).toExponential(2)  : "";
+      const rowCls = isClaimed ? " class=\"row-claimed\"" : (t.status === "done" ? " class=\"row-done\"" : "");
       return `<tr${rowCls}>
         <td class="mono">${esc(t.id)}</td>
-        <td class="status ${t.status}">${t.status}</td>
+        <td class="status ${displayStatus}">${displayStatus}</td>
         <td>${t.gamma != null ? t.gamma : ""}</td>
         <td>${t.tau  != null ? t.tau  : ""}</td>
+        <td>${t.G != null ? t.G : ""}</td>
+        <td>${t.K ?? 3}</td>
         <td>${workerStr}</td>
         <td>${liveStr}</td>
         <td class="enorm">${fmaxStr}</td>
         <td>${r2str}</td>
+        <td>${evInfo}</td>
+        <td>${evVol}</td>
         <td>${ckptCell}</td>
+        <td class="small mono">${fmtSolvedAt(t, pr)}</td>
       </tr>`;
     }).join("");
+
+    renderCompleted(tasks);
+
 
     renderWorkersInline();
   }
@@ -319,17 +644,43 @@
     } catch { workerData = []; }
   }
 
+  // SHA cache — only re-fetch progress files whose content has changed
+  const _progressShaCache = {};
+
   async function loadProgress() {
     try {
       const pDir = await fetchJson(apiUrl(`projects/${PROJECT}/progress`));
       if (!Array.isArray(pDir)) return;
-      progressData = {};
+      const activeNames = new Set(pDir.filter(f => f.name.endsWith(".json")).map(f => f.name));
+
+      // Detect deleted progress files → task finished → evict stale data + force queue refresh
+      let changed = false;
+      for (const fname of Object.keys(_progressShaCache)) {
+        if (!activeNames.has(fname)) {
+          delete _progressShaCache[fname];
+          const taskId = fname.replace(".json", "");
+          delete progressData[taskId];
+          _queueSha = null;   // force queue re-fetch so done status shows immediately
+          changed = true;
+        }
+      }
+
+      // Fetch new or changed files
       await Promise.all(pDir.filter(f => f.name.endsWith(".json")).map(async f => {
+        if (_progressShaCache[f.name] === f.sha) return;
+        const isNew = !(f.name in _progressShaCache);
         try {
-          const d = await fetchJson(rawUrl(`projects/${PROJECT}/progress/${f.name}`));
+          const d = getPat()
+            ? await fetchApiContent(`projects/${PROJECT}/progress/${f.name}`)
+            : await fetchJson(rawUrl(`projects/${PROJECT}/progress/${f.name}`));
           progressData[d.task_id] = d;
+          _progressShaCache[f.name] = f.sha;
+          if (isNew) { _queueSha = null; changed = true; } // new worker → force queue refresh
         } catch {}
       }));
+
+      // If any transition detected, immediately re-fetch queue without waiting for slow timer
+      if (changed) loadTasks().catch(() => {});
       renderTasks();
     } catch {}
   }
@@ -339,41 +690,51 @@
     if (!el) return;
     const now = Date.now();
 
-    // Heartbeat-based rows
+    // Heartbeat-based rows — only show workers with heartbeat < 30s old
     const hbWorkers = new Set((workerData || []).map(f => f.name.replace(".txt","")));
-    const hbRows = (workerData || []).map(f => {
+
+    const hbRows = (workerData || []).filter(f => {
+      const age = f.last_modified ? (now - new Date(f.last_modified).getTime())/60000 : Infinity;
+      return age < 0.5;
+    }).map(f => {
       const workerName = f.name.replace(".txt","");
-      const hbAge = f.last_modified ? Math.round((now - new Date(f.last_modified).getTime())/60000) : null;
-      const isStale = hbAge != null && hbAge > 10;
+      const hbAge = f.last_modified ? (now - new Date(f.last_modified).getTime())/1000 : null;
+      const isStale = hbAge != null && hbAge > 1800;
       const pr = progressData[workerName] || Object.values(progressData).find(p => p.worker_id === workerName);
       const taskId = pr ? pr.task_id : "—";
       const iter   = pr?.iter != null ? pr.iter : "—";
-      const ftol   = pr?.ftol != null ? Number(pr.ftol).toExponential(1) : "—";
-      const ageStr = hbAge != null ? (isStale ? `<span class="stale">${hbAge}m ago</span>` : `${hbAge}m ago`) : "?";
+      const ftol   = pr?.ftol != null ? Number(pr.ftol).toExponential(3) : "—";
+      const ageStr = hbAge != null ? (isStale ? `<span class="stale">${hbAge.toFixed(0)}s ago</span>` : `${hbAge.toFixed(0)}s ago`) : "?";
       return `<tr>
         <td class="mono">${esc(workerName)}</td>
         <td class="mono">${esc(taskId)}</td>
         <td>${ageStr}</td>
-        <td>${iter}</td>
-        <td class="mono">${ftol}</td>
+        <td>${pr ? phaseLabel(pr) : "—"}</td>
+        <td style="text-align:right">${iter}</td>
+        <td class="mono" style="text-align:right">${ftol}</td>
+        <td><button onclick="releaseWorker('${esc(taskId)}')" style="font-size:0.7rem;padding:1px 6px;cursor:pointer;background:#555;border:none;color:#fff;border-radius:3px">release</button></td>
       </tr>`;
     });
 
-    // Progress-file workers not in heartbeats (e.g. local claude-cpu workers)
+    // Progress-file workers not in heartbeats — show up to 90 min stale
     const progRows = Object.values(progressData)
       .filter(p => p.worker_id && !hbWorkers.has(p.worker_id))
+      .filter(p => { const age = p.last_update ? (now - new Date(p.last_update).getTime())/1000 : Infinity; return age < 5400; })
+      .sort((a,b) => (a.last_update||"") > (b.last_update||"") ? -1 : 1)
       .map(p => {
-        const age = p.last_update ? Math.round((now - new Date(p.last_update).getTime())/60000) : null;
-        const isStale = age != null && age > 10;
-        const ageStr = age != null ? (isStale ? `<span class="stale">${age}m ago</span>` : `${age}m ago`) : "?";
+        const age = p.last_update ? (now - new Date(p.last_update).getTime())/1000 : null;
+        const isStale = age != null && age > 1800;
+        const ageStr = age != null ? (isStale ? `<span class="stale">${age.toFixed(0)}s ago</span>` : `${age.toFixed(0)}s ago`) : "?";
         const iter = p.iter != null ? p.iter : "—";
-        const ftol = p.ftol != null ? Number(p.ftol).toExponential(1) : "—";
+        const ftol = p.ftol != null ? Number(p.ftol).toExponential(3) : "—";
         return `<tr>
           <td class="mono">${esc(p.worker_id)}</td>
           <td class="mono">${esc(p.task_id)}</td>
-          <td>${ageStr} <span style="color:#bbb;font-size:0.75rem">(progress)</span></td>
-          <td>${iter}</td>
-          <td class="mono">${ftol}</td>
+          <td>${ageStr}</td>
+          <td>${phaseLabel(p)}</td>
+          <td style="text-align:right">${iter}</td>
+          <td class="mono" style="text-align:right">${ftol}</td>
+          <td><button onclick="releaseWorker('${esc(p.task_id)}')" style="font-size:0.7rem;padding:1px 6px;cursor:pointer;background:#555;border:none;color:#fff;border-radius:3px">release</button></td>
         </tr>`;
       });
 
@@ -384,7 +745,7 @@
     }
     el.innerHTML = `<strong>Active workers (${allRows.length})</strong>
       <table style="margin-top:0.4rem;width:auto">
-        <thead><tr><th>worker</th><th>task</th><th>last seen</th><th>iter</th><th>ftol</th></tr></thead>
+        <thead><tr><th>worker</th><th>task</th><th>last seen</th><th>method</th><th>step</th><th>‖F‖ (last iter)</th><th></th></tr></thead>
         <tbody>${allRows.join("")}</tbody>
       </table>`;
   }
@@ -395,20 +756,110 @@
   // LOAD ALL
   // ═══════════════════════════════════════════════════════════════════════════
 
-  async function loadAll() {
-    document.getElementById("meta").textContent = "loading…";
+  let _lastProgressUpdate = null;
+  let _lastQueueUpdate = null;
+
+  // Fast loop: progress + workers every 3s
+  async function pollProgress() {
     try {
-      await loadTasks();
-      await Promise.all([loadWorkers(), loadProgress(), loadFiguresData()]);
+      await Promise.all([loadWorkers(), loadProgress()]);
+      _lastProgressUpdate = Date.now();
+    } catch {}
+    updateTicker();
+  }
+
+  // Slow loop: task queue every 15s
+  async function pollQueue() {
+    try {
+      await Promise.all([loadTasks(), loadFiguresData()]);
+      _lastQueueUpdate = Date.now();
       if (document.getElementById("tab-figures").classList.contains("active"))
         renderFigures();
     } catch (e) {
       document.getElementById("meta").innerHTML = `<span class="err">error: ${esc(e.message)}</span>`;
     }
+    updateTicker();
   }
 
-  loadAll();
-  setInterval(loadAll, 30000);
+  function updateTicker() {
+    const el = document.getElementById("ticker");
+    if (!el) return;
+    const now = Date.now();
+    const ps = _lastProgressUpdate ? `workers: ${((now-_lastProgressUpdate)/1000).toFixed(0)}s ago` : "workers: —";
+    const qs = _lastQueueUpdate    ? `queue: ${((now-_lastQueueUpdate)/1000).toFixed(0)}s ago`       : "queue: —";
+    el.textContent = `⟳ ${ps}  ·  ${qs}`;
+  }
+
+  async function loadAll() {
+    await Promise.all([pollProgress(), pollQueue()]);
+  }
+
+  // ── Launch / Cancel workflow controls ──────────────────────────────────────
+  async function launchWorkers() {
+    const pat = getPat();
+    if (!pat) { alert('Paste a GitHub PAT first.'); return; }
+    const n = document.getElementById('worker-count').value || '20';
+    const st = document.getElementById('reset-status');
+    st.textContent = 'Launching…';
+    try {
+      const res = await fetch(
+        `https://api.github.com/repos/${OWNER}/${REPO}/actions/workflows/solve.yml/dispatches`,
+        { method: 'POST', headers: { Authorization: `token ${pat}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ref: BRANCH, inputs: { workers: String(n) } }) });
+      if (!res.ok) { const t = await res.text(); throw new Error(`${res.status} ${t}`); }
+      st.textContent = `✓ Launched ${n} workers`;
+      setTimeout(() => { st.textContent = ''; pollQueue(); }, 3000);
+    } catch(e) { st.textContent = `Error: ${e.message}`; }
+  }
+
+  async function cancelAllRuns() {
+    const pat = getPat();
+    if (!pat) { alert('Paste a GitHub PAT first.'); return; }
+    const st = document.getElementById('reset-status');
+    st.textContent = 'Cancelling…';
+    try {
+      const runs = await fetchJson(
+        `https://api.github.com/repos/${OWNER}/${REPO}/actions/runs?status=in_progress&per_page=50`);
+      const active = (runs.workflow_runs || []);
+      if (!active.length) { st.textContent = 'No active runs.'; return; }
+      await Promise.all(active.map(r =>
+        fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs/${r.id}/cancel`,
+          { method: 'POST', headers: { Authorization: `token ${pat}` } })));
+      st.textContent = `✓ Cancelled ${active.length} run(s)`;
+      setTimeout(() => { st.textContent = ''; }, 4000);
+    } catch(e) { st.textContent = `Error: ${e.message}`; }
+  }
+
+  async function releaseWorker(taskId) {
+    const pat = getPat();
+    if (!pat) { alert('Paste a GitHub PAT first.'); return; }
+    const st = document.getElementById('reset-status');
+    st.textContent = `Releasing ${taskId}…`;
+    const qpath = `projects/${PROJECT}/TASK_QUEUE.json`;
+    try {
+      const meta = await fetchJson(apiUrl(qpath));
+      const content = JSON.parse(atob(meta.content.replace(/\n/g, '')));
+      const task = content.tasks.find(t => t.id === taskId);
+      if (!task) throw new Error('task not found');
+      task.status = 'ready'; task.claimed_by = null; task.claimed_at = null;
+      const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2))));
+      const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${qpath}`, {
+        method: 'PUT',
+        headers: { Authorization: `token ${pat}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: `Release ${taskId} → ready`, content: newContent, sha: meta.sha, branch: BRANCH })
+      });
+      if (!res.ok) throw new Error(`${res.status}`);
+      st.textContent = `✓ Released ${taskId}`;
+      setTimeout(() => { st.textContent = ''; pollQueue(); }, 1500);
+    } catch(e) { st.textContent = `Error: ${e.message}`; }
+  }
+
+  // Start loops
+  pollQueue();
+  pollProgress();
+  setInterval(pollProgress, 3000);
+  setInterval(pollQueue, 5000);
+  setInterval(updateTicker, 1000);  // ticker counts up every second
 
   // ═══════════════════════════════════════════════════════════════════════════
   // FIGURES TAB
@@ -486,8 +937,8 @@
     if (series && series.length > 1) {
       let lx = padL + W - 10, ly = padT + 10;
       [...series].reverse().forEach(s => {
-        svg += `<rect x="${lx-36}" y="${ly-8}" width="14" height="3" fill="${s.color}"/>`;
-        svg += `<text x="${lx-18}" y="${ly+3}" class="axis-label" font-size="10" fill="${s.color}">${s.label||""}</text>`;
+      svg += `<rect x="${lx-36}" y="${ly-8}" width="14" height="3" fill="${s.color}"/>`;
+      svg += `<text x="${lx-18}" y="${ly+3}" class="axis-label" font-size="10" fill="${s.color}">${s.label||""}</text>`;
         ly += 14;
       });
     }
@@ -541,11 +992,11 @@
     const done = allTasks.filter(t => t.status==="done" && t.result);
     if (!done.length) { el.innerHTML="<p>No done tasks yet.</p>"; return; }
     el.innerHTML = `<table style="font-size:0.82rem">
-      <thead><tr><th>Task</th><th>γ</th><th>τ</th><th>1‑R²</th><th>F_max</th><th>n_triples</th></tr></thead>
+      <thead><tr><th>Task</th><th>γ</th><th>τ</th><th>1‑R²</th><th>‖F‖∞ (measured)</th><th>n_triples</th></tr></thead>
       <tbody>${done.map(t=>`<tr>
         <td class="mono">${esc(t.id)}</td><td>${t.gamma}</td><td>${t.tau}</td>
         <td>${t.result["1-R2"]?.toFixed(4)||""}</td>
-        <td class="mono">${t.result.F_max!=null ? Number(t.result.F_max).toExponential(1) : ""}</td>
+        <td class="mono">${t.result.F_max!=null ? Number(t.result.F_max).toExponential(1) : t.result.F_max_bound!=null ? `&lt;${Number(t.result.F_max_bound).toExponential(0)} (bound)` : ""}</td>
         <td>${t.result.n_triples||""}</td>
       </tr>`).join("")}</tbody>
     </table>`;
@@ -1051,12 +1502,12 @@
     }
     if (tbl) {
       tbl.innerHTML = `<table style="font-size:0.82rem;margin-top:0.5rem">
-        <thead><tr><th>K</th><th>Status</th><th>1-R²</th><th>F_max</th><th>cells</th><th>wall_s</th></tr></thead>
+        <thead><tr><th>K</th><th>Status</th><th>1-R²</th><th>‖F‖∞ (measured)</th><th>cells</th><th>wall_s</th></tr></thead>
         <tbody>${symTasks.map(t=>`<tr>
           <td>${t.K}</td>
           <td class="status ${t.status}">${t.status}</td>
           <td>${t.result?.["1-R2"] != null ? t.result["1-R2"].toFixed(6) : '<span style="color:#aaa">—</span>'}</td>
-          <td class="mono">${t.result?.F_max != null ? Number(t.result.F_max).toExponential(1) : ''}</td>
+          <td class="mono">${t.result?.F_max != null ? Number(t.result.F_max).toExponential(1) : t.result?.F_max_bound != null ? `&lt;${Number(t.result.F_max_bound).toExponential(0)} (bound)` : ''}</td>
           <td class="mono">${t.result?.n_cells ?? ''}</td>
           <td>${t.result?.wall_s != null ? t.result.wall_s+'s' : ''}</td>
         </tr>`).join('')}</tbody>
@@ -1082,5 +1533,3 @@
   }
 
 </script>
-</body>
-</html>
