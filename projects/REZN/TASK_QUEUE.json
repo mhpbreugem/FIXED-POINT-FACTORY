@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-10T02:29:26.270777Z",
+  "updated_at": "2026-05-10T02:29:54.371716+00:00",
   "params": {
     "G": 20,
     "UMAX": 5,
@@ -3539,17 +3539,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g400_t1000.npz",
-      "result": {
-        "F_max": 2.05578e-05,
-        "1-R2": 0.0445731641396514,
-        "slope": 0.4409280844874611
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry). | RESET: ferr above tol, redo with pure Newton (presmooth=0)",
+      "solver_params": {
+        "max_stages": 12,
+        "inner_max_iter": 80,
+        "inner_rdiff": 1e-07,
+        "tol": 1e-09,
+        "presmooth": 0
+      }
     },
     {
       "id": "g400_t1500",
@@ -3560,17 +3563,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g400_t1500.npz",
-      "result": {
-        "F_max": 1.778898e-05,
-        "1-R2": 0.037214659726214405,
-        "slope": 0.4259049288905589
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry). | RESET: ferr above tol, redo with pure Newton (presmooth=0)",
+      "solver_params": {
+        "max_stages": 12,
+        "inner_max_iter": 80,
+        "inner_rdiff": 1e-07,
+        "tol": 1e-09,
+        "presmooth": 0
+      }
     },
     {
       "id": "g400_t2000",
@@ -3581,17 +3587,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g400_t2000.npz",
-      "result": {
-        "F_max": 6.592123e-06,
-        "1-R2": 0.039243420634712756,
-        "slope": 0.4195300596655262
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry). | RESET: ferr above tol, redo with pure Newton (presmooth=0)",
+      "solver_params": {
+        "max_stages": 12,
+        "inner_max_iter": 80,
+        "inner_rdiff": 1e-07,
+        "tol": 1e-09,
+        "presmooth": 0
+      }
     },
     {
       "id": "seed_g050_t0200_3d",
@@ -3602,17 +3611,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "results/full_ree/seed_g050_t0200_3d.npz",
-      "result": {
-        "1-R2": 0.08343285873623152,
-        "slope": 0.5375491411898142,
-        "F_max": 0.1404072
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry). | RESET: ferr above tol, redo with pure Newton (presmooth=0)",
+      "solver_params": {
+        "max_stages": 12,
+        "inner_max_iter": 80,
+        "inner_rdiff": 1e-07,
+        "tol": 1e-09,
+        "presmooth": 0
+      }
     }
   ],
   "summary": {
