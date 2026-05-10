@@ -442,10 +442,10 @@
     // Progress-file workers not in heartbeats — only if updated < 30s ago
     const progRows = Object.values(progressData)
       .filter(p => p.worker_id && !hbWorkers.has(p.worker_id))
-      .filter(p => { const age = p.last_update ? (now - new Date(p.last_update).getTime())/1000 : Infinity; return age < 180; })
+      .filter(p => { const age = p.last_update ? (now - new Date(p.last_update).getTime())/1000 : Infinity; return age < 600; })
       .map(p => {
         const age = p.last_update ? (now - new Date(p.last_update).getTime())/1000 : null;
-        const isStale = age != null && age > 90;
+        const isStale = age != null && age > 30;
         const ageStr = age != null ? (isStale ? `<span class="stale">${age.toFixed(0)}s ago</span>` : `${age.toFixed(0)}s ago`) : "?";
         const iter = p.iter != null ? p.iter : "—";
         const ftol = p.ftol != null ? Number(p.ftol).toExponential(1) : "—";
