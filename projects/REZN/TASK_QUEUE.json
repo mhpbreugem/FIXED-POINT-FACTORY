@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-10T02:29:54.371716+00:00",
+  "updated_at": "2026-05-10T03:00:11.610369+00:00",
   "params": {
     "G": 20,
     "UMAX": 5,
@@ -41,14 +41,18 @@
       "depends_on": [
         "g050_t0050"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g050_t0030_mp50.json",
-      "result": {
-        "1-R2": 0.037,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -58,14 +62,18 @@
       "depends_on": [
         "g050_t0080"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g050_t0050_mp50.json",
-      "result": {
-        "1-R2": 0.038,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -75,14 +83,18 @@
       "depends_on": [
         "g050_t0100"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g050_t0080_mp50.json",
-      "result": {
-        "1-R2": 0.047,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -92,14 +104,18 @@
       "depends_on": [
         "g050_t0150"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g050_t0100_mp50.json",
-      "result": {
-        "1-R2": 0.057,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -109,28 +125,36 @@
       "depends_on": [
         "g050_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g050_t0150_mp50.json",
-      "result": {
-        "1-R2": 0.094,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
       "id": "g050_t0200",
       "gamma": 0.5,
       "tau": 2.0,
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/posterior_v3_G20_umax5_notrim_mp300.json",
-      "result": {
-        "1-R2": 0.0,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max": "7.4e-119",
-        "F_source": "seed checkpoint (mp300 solver)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -140,14 +164,18 @@
       "depends_on": [
         "g075_t0050"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g075_t0030_mp50.json",
-      "result": {
-        "1-R2": 0.032,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -157,14 +185,18 @@
       "depends_on": [
         "g075_t0080"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g075_t0050_mp50.json",
-      "result": {
-        "1-R2": 0.034,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -174,14 +206,18 @@
       "depends_on": [
         "g075_t0100"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g075_t0080_mp50.json",
-      "result": {
-        "1-R2": 0.042,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -191,14 +227,18 @@
       "depends_on": [
         "g075_t0150"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g075_t0100_mp50.json",
-      "result": {
-        "1-R2": 0.05,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -208,14 +248,18 @@
       "depends_on": [
         "g075_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g075_t0150_mp50.json",
-      "result": {
-        "1-R2": 0.079,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -225,14 +269,18 @@
       "depends_on": [
         "g050_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g075_t0200_mp50.json",
-      "result": {
-        "1-R2": 0.104,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -242,15 +290,18 @@
       "depends_on": [
         "g100_t0050"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "projects/REZN/checkpoints/g100_t0030.npz",
-      "result": {
-        "1-R2": 0.027,
-        "slope": 0.9358401723740598,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
-        "F_max": 4.111489e-12
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -264,7 +315,17 @@
       "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "\u03c4-ladder between g100_t0080 (\u03c4=0.8) and g100_t0050 (\u03c4=0.5)."
+      "note": "\u03c4-ladder between g100_t0080 (\u03c4=0.8) and g100_t0050 (\u03c4=0.5).",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g100_t0050",
@@ -276,10 +337,19 @@
       "status": "ready",
       "checkpoint": null,
       "result": null,
-      "solver_params": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      },
       "note": "Auto-requeued (attempt 1): via new ladder g100_t0063. \u03c4-ladder at \u03c4=0.63",
       "deps_satisfy": "any",
-      "requeue_count": 1
+      "requeue_count": 1,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null
     },
     {
       "id": "g100_t0080",
@@ -288,15 +358,18 @@
       "depends_on": [
         "g100_t0100"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "projects/REZN/checkpoints/g100_t0080.npz",
-      "result": {
-        "1-R2": 0.039,
-        "slope": 0.8844043531577075,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
-        "F_max": 1.962874e-13
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -306,14 +379,18 @@
       "depends_on": [
         "g100_t0150"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g100_t0100_mp50.json",
-      "result": {
-        "1-R2": 0.047,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -323,14 +400,18 @@
       "depends_on": [
         "g100_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g100_t0150_mp50.json",
-      "result": {
-        "1-R2": 0.067,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -340,14 +421,18 @@
       "depends_on": [
         "g075_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g100_t0200_mp50.json",
-      "result": {
-        "1-R2": 0.097,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -357,15 +442,20 @@
       "depends_on": [
         "g100_t0200"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
-      "result": {
-        "reason": "||F||inf=6.174e-02 > bail threshold 1e-04"
+      "result": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       },
-      "solver_params": null,
       "note": "RESET bailed\u2192ready",
-      "claimed_by": "gha-25616517268-g100_t0210",
-      "claimed_at": "2026-05-10T01:24:54Z"
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null
     },
     {
       "id": "g100_t0400",
@@ -374,15 +464,20 @@
       "depends_on": [
         "g100_t0590"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
-      "result": {
-        "reason": "||F||inf=8.904e-02 > bail threshold 1e-04"
+      "result": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       },
-      "solver_params": null,
       "note": "RESET bailed\u2192ready",
-      "claimed_by": "gha-25616517268-g100_t0400",
-      "claimed_at": "2026-05-10T01:24:54Z"
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null
     },
     {
       "id": "g100_t0590",
@@ -391,15 +486,20 @@
       "depends_on": [
         "g100_t0600"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
-      "result": {
-        "reason": "||F||inf=1.503e-01 > bail threshold 1e-04"
+      "result": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       },
-      "solver_params": null,
       "note": "RESET bailed\u2192ready",
-      "claimed_by": "gha-25616517268-g100_t0590",
-      "claimed_at": "2026-05-10T01:24:54Z"
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null
     },
     {
       "id": "g100_t0600",
@@ -408,14 +508,18 @@
       "depends_on": [
         "g100_t0800"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g100_t0600_mp50.json",
-      "result": {
-        "1-R2": 0.227,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -425,14 +529,18 @@
       "depends_on": [
         "g100_t1000"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g100_t0800_mp50.json",
-      "result": {
-        "1-R2": 0.335,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -442,15 +550,18 @@
       "depends_on": [
         "g075_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "projects/REZN/checkpoints/g100_t1000.npz",
-      "result": {
-        "1-R2": 0.427,
-        "slope": 0.40869272588927497,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
-        "F_max": 9.292854e-13
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -460,14 +571,18 @@
       "depends_on": [
         "g125_t0050"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g125_t0030_mp50.json",
-      "result": {
-        "1-R2": 0.023,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -477,14 +592,18 @@
       "depends_on": [
         "g125_t0080"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g125_t0050_mp50.json",
-      "result": {
-        "1-R2": 0.025,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -494,14 +613,18 @@
       "depends_on": [
         "g125_t0100"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g125_t0080_mp50.json",
-      "result": {
-        "1-R2": 0.03,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -511,14 +634,18 @@
       "depends_on": [
         "g125_t0150"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g125_t0100_mp50.json",
-      "result": {
-        "1-R2": 0.036,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -528,14 +655,18 @@
       "depends_on": [
         "g125_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g125_t0150_mp50.json",
-      "result": {
-        "1-R2": 0.056,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -545,14 +676,18 @@
       "depends_on": [
         "g100_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g125_t0200_mp50.json",
-      "result": {
-        "1-R2": 0.078,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -562,14 +697,18 @@
       "depends_on": [
         "g125_t0590"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g125_t0400_mp50.json",
-      "result": {
-        "1-R2": 0.175,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -579,14 +718,18 @@
       "depends_on": [
         "g125_t0600"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g125_t0590_mp50.json",
-      "result": {
-        "1-R2": 0.214,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -596,14 +739,18 @@
       "depends_on": [
         "g125_t0800"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g125_t0600_mp50.json",
-      "result": {
-        "1-R2": 0.216,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -613,14 +760,18 @@
       "depends_on": [
         "g125_t1000"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g125_t0800_mp50.json",
-      "result": {
-        "1-R2": 0.296,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -630,14 +781,18 @@
       "depends_on": [
         "g100_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g125_t1000_mp50.json",
-      "result": {
-        "1-R2": 0.365,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -647,14 +802,18 @@
       "depends_on": [
         "g140_t0050"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t0030_mp50.json",
-      "result": {
-        "1-R2": 0.02,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -664,14 +823,18 @@
       "depends_on": [
         "g140_t0080"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t0050_mp50.json",
-      "result": {
-        "1-R2": 0.022,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -681,14 +844,18 @@
       "depends_on": [
         "g140_t0100"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t0080_mp50.json",
-      "result": {
-        "1-R2": 0.026,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -698,14 +865,18 @@
       "depends_on": [
         "g140_t0150"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t0100_mp50.json",
-      "result": {
-        "1-R2": 0.031,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -715,14 +886,18 @@
       "depends_on": [
         "g140_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t0150_mp50.json",
-      "result": {
-        "1-R2": 0.046,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -732,15 +907,18 @@
       "depends_on": [
         "g125_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "projects/REZN/checkpoints/g140_t0200.npz",
-      "result": {
-        "1-R2": 0.061,
-        "slope": 0.7489937074827431,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
-        "F_max": 3.663736e-15
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -750,14 +928,18 @@
       "depends_on": [
         "g140_t0570"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t0400_mp50.json",
-      "result": {
-        "1-R2": 0.13,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -771,10 +953,19 @@
       "status": "ready",
       "checkpoint": null,
       "result": null,
-      "solver_params": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      },
       "note": "Auto-requeued (attempt 1): warm-start from g140_t0510 (log-dist=0.11).",
       "deps_satisfy": "any",
-      "requeue_count": 1
+      "requeue_count": 1,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null
     },
     {
       "id": "g140_t0600",
@@ -783,14 +974,18 @@
       "depends_on": [
         "g140_t0800"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t0600_mp50.json",
-      "result": {
-        "1-R2": 0.168,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -800,14 +995,18 @@
       "depends_on": [
         "g140_t1000"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t0800_mp50.json",
-      "result": {
-        "1-R2": 0.228,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -817,14 +1016,18 @@
       "depends_on": [
         "g125_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t1000_mp50.json",
-      "result": {
-        "1-R2": 0.287,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -834,14 +1037,18 @@
       "depends_on": [
         "g140_t1000"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t1200_mp50.json",
-      "result": {
-        "1-R2": 0.332,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -851,14 +1058,18 @@
       "depends_on": [
         "g140_t1200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t1400_mp50.json",
-      "result": {
-        "1-R2": 0.372,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -868,14 +1079,18 @@
       "depends_on": [
         "g140_t1400"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t1600_mp50.json",
-      "result": {
-        "1-R2": 0.407,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -885,14 +1100,18 @@
       "depends_on": [
         "g140_t1600"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t1800_mp50.json",
-      "result": {
-        "1-R2": 0.439,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -902,14 +1121,18 @@
       "depends_on": [
         "g140_t1800"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t2000_mp50.json",
-      "result": {
-        "1-R2": 0.466,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -919,10 +1142,19 @@
       "depends_on": [
         "g013_t0100"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": "",
-      "claimed_by": "gha-25614669365-g013_t0050",
-      "claimed_at": "2026-05-09T23:38:47Z"
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "result": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g013_t0100",
@@ -931,14 +1163,18 @@
       "depends_on": [
         "g013_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g013_t0100_mp50.json",
-      "result": {
-        "1-R2": 0.11,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -948,14 +1184,18 @@
       "depends_on": [
         "g013_t0400"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g013_t0200_mp50.json",
-      "result": {
-        "1-R2": 0.127,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -965,14 +1205,18 @@
       "depends_on": [
         "g013_t0600"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g013_t0400_mp50.json",
-      "result": {
-        "1-R2": 0.17,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -982,14 +1226,18 @@
       "depends_on": [
         "g013_t0800"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g013_t0600_mp50.json",
-      "result": {
-        "1-R2": 0.212,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -999,28 +1247,36 @@
       "depends_on": [
         "g013_t1000"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g013_t0800_mp50.json",
-      "result": {
-        "1-R2": 0.257,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
       "id": "g013_t1000",
       "gamma": 0.13,
       "tau": 10.0,
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g013_t1000_mp50.json",
-      "result": {
-        "1-R2": 0.302,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1030,10 +1286,19 @@
       "depends_on": [
         "g010_t0100"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": "",
-      "claimed_by": "gha-25614669365-g010_t0050",
-      "claimed_at": "2026-05-09T23:38:47Z"
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "result": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g010_t0100",
@@ -1042,14 +1307,18 @@
       "depends_on": [
         "g010_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g010_t0100_mp50.json",
-      "result": {
-        "1-R2": 0.118,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1059,15 +1328,18 @@
       "depends_on": [
         "g010_t0400"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "projects/REZN/checkpoints/g010_t0200.npz",
-      "result": {
-        "1-R2": 0.135,
-        "slope": 0.7087214073290626,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
-        "F_max": 9.436896e-15
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1077,14 +1349,18 @@
       "depends_on": [
         "g010_t0600"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g010_t0400_mp50.json",
-      "result": {
-        "1-R2": 0.179,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1094,14 +1370,18 @@
       "depends_on": [
         "g010_t0800"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g010_t0600_mp50.json",
-      "result": {
-        "1-R2": 0.22,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1111,28 +1391,36 @@
       "depends_on": [
         "g010_t1000"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g010_t0800_mp50.json",
-      "result": {
-        "1-R2": 0.266,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
       "id": "g010_t1000",
       "gamma": 0.1,
       "tau": 10.0,
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g010_t1000_mp50.json",
-      "result": {
-        "1-R2": 0.311,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1142,14 +1430,18 @@
       "depends_on": [
         "g160_t0050"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t0030_mp50.json",
-      "result": {
-        "1-R2": 0.018,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1159,14 +1451,18 @@
       "depends_on": [
         "g160_t0080"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t0050_mp50.json",
-      "result": {
-        "1-R2": 0.02,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1176,14 +1472,18 @@
       "depends_on": [
         "g160_t0100"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t0080_mp50.json",
-      "result": {
-        "1-R2": 0.023,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1193,14 +1493,18 @@
       "depends_on": [
         "g160_t0150"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t0100_mp50.json",
-      "result": {
-        "1-R2": 0.028,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1210,14 +1514,18 @@
       "depends_on": [
         "g160_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t0150_mp50.json",
-      "result": {
-        "1-R2": 0.04,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1227,14 +1535,18 @@
       "depends_on": [
         "g140_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t0200_mp50.json",
-      "result": {
-        "1-R2": 0.051,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1244,14 +1556,18 @@
       "depends_on": [
         "g160_t0600"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t0400_mp50.json",
-      "result": {
-        "1-R2": 0.104,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1261,14 +1577,18 @@
       "depends_on": [
         "g160_t0800"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t0600_mp50.json",
-      "result": {
-        "1-R2": 0.141,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1278,14 +1598,18 @@
       "depends_on": [
         "g160_t1000"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t0800_mp50.json",
-      "result": {
-        "1-R2": 0.188,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1295,14 +1619,18 @@
       "depends_on": [
         "g140_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t1000_mp50.json",
-      "result": {
-        "1-R2": 0.233,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1312,14 +1640,18 @@
       "depends_on": [
         "g160_t1000"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t1200_mp50.json",
-      "result": {
-        "1-R2": 0.272,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1329,14 +1661,18 @@
       "depends_on": [
         "g160_t1200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t1400_mp50.json",
-      "result": {
-        "1-R2": 0.307,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1346,14 +1682,18 @@
       "depends_on": [
         "g160_t1400"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t1600_mp50.json",
-      "result": {
-        "1-R2": 0.337,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1363,14 +1703,18 @@
       "depends_on": [
         "g160_t1600"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t1800_mp50.json",
-      "result": {
-        "1-R2": 0.365,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1380,14 +1724,18 @@
       "depends_on": [
         "g160_t1800"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t2000_mp50.json",
-      "result": {
-        "1-R2": 0.389,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1397,14 +1745,18 @@
       "depends_on": [
         "g180_t0050"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t0030_mp50.json",
-      "result": {
-        "1-R2": 0.015,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1414,14 +1766,18 @@
       "depends_on": [
         "g180_t0080"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t0050_mp50.json",
-      "result": {
-        "1-R2": 0.017,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1431,14 +1787,18 @@
       "depends_on": [
         "g180_t0100"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t0080_mp50.json",
-      "result": {
-        "1-R2": 0.019,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1448,14 +1808,18 @@
       "depends_on": [
         "g180_t0150"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t0100_mp50.json",
-      "result": {
-        "1-R2": 0.023,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1465,14 +1829,18 @@
       "depends_on": [
         "g180_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t0150_mp50.json",
-      "result": {
-        "1-R2": 0.033,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1482,14 +1850,18 @@
       "depends_on": [
         "g160_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t0200_mp50.json",
-      "result": {
-        "1-R2": 0.042,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1499,14 +1871,18 @@
       "depends_on": [
         "g180_t0600"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t0400_mp50.json",
-      "result": {
-        "1-R2": 0.083,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1516,14 +1892,18 @@
       "depends_on": [
         "g180_t0800"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t0600_mp50.json",
-      "result": {
-        "1-R2": 0.113,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1533,14 +1913,18 @@
       "depends_on": [
         "g180_t1000"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t0800_mp50.json",
-      "result": {
-        "1-R2": 0.148,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1550,14 +1934,18 @@
       "depends_on": [
         "g160_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t1000_mp50.json",
-      "result": {
-        "1-R2": 0.181,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1567,14 +1955,18 @@
       "depends_on": [
         "g180_t1000"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t1200_mp50.json",
-      "result": {
-        "1-R2": 0.211,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1584,14 +1976,18 @@
       "depends_on": [
         "g180_t1200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t1400_mp50.json",
-      "result": {
-        "1-R2": 0.238,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1601,14 +1997,18 @@
       "depends_on": [
         "g180_t1400"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t1600_mp50.json",
-      "result": {
-        "1-R2": 0.261,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1618,14 +2018,18 @@
       "depends_on": [
         "g180_t1600"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t1800_mp50.json",
-      "result": {
-        "1-R2": 0.283,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1635,14 +2039,18 @@
       "depends_on": [
         "g180_t1800"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t2000_mp50.json",
-      "result": {
-        "1-R2": 0.302,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1652,14 +2060,18 @@
       "depends_on": [
         "g200_t0050"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g200_t0030_mp50.json",
-      "result": {
-        "1-R2": 0.013,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1669,14 +2081,18 @@
       "depends_on": [
         "g200_t0080"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g200_t0050_mp50.json",
-      "result": {
-        "1-R2": 0.014,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1686,14 +2102,18 @@
       "depends_on": [
         "g200_t0100"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g200_t0080_mp50.json",
-      "result": {
-        "1-R2": 0.016,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1703,15 +2123,18 @@
       "depends_on": [
         "g200_t0150"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "projects/REZN/checkpoints/g200_t0100.npz",
-      "result": {
-        "1-R2": 0.019,
-        "slope": 0.8858063500340271,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
-        "F_max": 3.663736e-15
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1721,15 +2144,18 @@
       "depends_on": [
         "g200_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "projects/REZN/checkpoints/g200_t0150.npz",
-      "result": {
-        "1-R2": 0.027,
-        "slope": 0.766043155242148,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
-        "F_max": 3.774758e-15
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1739,15 +2165,18 @@
       "depends_on": [
         "g180_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "projects/REZN/checkpoints/g200_t0200.npz",
-      "result": {
-        "1-R2": 0.034,
-        "slope": 0.7584522200688487,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
-        "F_max": 3.663736e-15
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1757,14 +2186,18 @@
       "depends_on": [
         "g200_t0600"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g200_t0400_mp50.json",
-      "result": {
-        "1-R2": 0.065,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1774,14 +2207,18 @@
       "depends_on": [
         "g200_t0800"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g200_t0600_mp50.json",
-      "result": {
-        "1-R2": 0.087,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1791,14 +2228,18 @@
       "depends_on": [
         "g200_t1000"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g200_t0800_mp50.json",
-      "result": {
-        "1-R2": 0.113,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1808,14 +2249,18 @@
       "depends_on": [
         "g180_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g200_t1000_mp50.json",
-      "result": {
-        "1-R2": 0.137,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1825,14 +2270,18 @@
       "depends_on": [
         "g200_t1000"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g200_t1200_mp50.json",
-      "result": {
-        "1-R2": 0.159,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1842,14 +2291,18 @@
       "depends_on": [
         "g200_t1200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g200_t1400_mp50.json",
-      "result": {
-        "1-R2": 0.18,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1859,14 +2312,18 @@
       "depends_on": [
         "g200_t1400"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g200_t1600_mp50.json",
-      "result": {
-        "1-R2": 0.198,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1876,14 +2333,18 @@
       "depends_on": [
         "g200_t1600"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g200_t1800_mp50.json",
-      "result": {
-        "1-R2": 0.215,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1893,14 +2354,18 @@
       "depends_on": [
         "g200_t1800"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g200_t2000_mp50.json",
-      "result": {
-        "1-R2": 0.23,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1910,14 +2375,18 @@
       "depends_on": [
         "g500_t0050"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t0030_mp50.json",
-      "result": {
-        "1-R2": 0.004,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1927,14 +2396,18 @@
       "depends_on": [
         "g500_t0080"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t0050_mp50.json",
-      "result": {
-        "1-R2": 0.004,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1944,14 +2417,18 @@
       "depends_on": [
         "g500_t0100"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t0080_mp50.json",
-      "result": {
-        "1-R2": 0.005,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1961,14 +2438,18 @@
       "depends_on": [
         "g500_t0150"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t0100_mp50.json",
-      "result": {
-        "1-R2": 0.006,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1978,14 +2459,18 @@
       "depends_on": [
         "g500_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t0150_mp50.json",
-      "result": {
-        "1-R2": 0.008,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -1995,14 +2480,18 @@
       "depends_on": [
         "g200_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t0200_mp50.json",
-      "result": {
-        "1-R2": 0.01,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2012,14 +2501,18 @@
       "depends_on": [
         "g500_t0600"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t0400_mp50.json",
-      "result": {
-        "1-R2": 0.019,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2029,14 +2522,18 @@
       "depends_on": [
         "g500_t0800"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t0600_mp50.json",
-      "result": {
-        "1-R2": 0.026,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2046,14 +2543,18 @@
       "depends_on": [
         "g500_t1000"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t0800_mp50.json",
-      "result": {
-        "1-R2": 0.033,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2063,14 +2564,18 @@
       "depends_on": [
         "g200_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t1000_mp50.json",
-      "result": {
-        "1-R2": 0.04,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2080,14 +2585,18 @@
       "depends_on": [
         "g500_t1000"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t1200_mp50.json",
-      "result": {
-        "1-R2": 0.046,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2097,14 +2606,18 @@
       "depends_on": [
         "g500_t1200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t1400_mp50.json",
-      "result": {
-        "1-R2": 0.052,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2114,14 +2627,18 @@
       "depends_on": [
         "g500_t1400"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t1600_mp50.json",
-      "result": {
-        "1-R2": 0.057,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2131,14 +2648,18 @@
       "depends_on": [
         "g500_t1600"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t1800_mp50.json",
-      "result": {
-        "1-R2": 0.062,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2148,14 +2669,18 @@
       "depends_on": [
         "g500_t1800"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t2000_mp50.json",
-      "result": {
-        "1-R2": 0.067,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2165,14 +2690,18 @@
       "depends_on": [
         "g300_t0050"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t0030_mp50.json",
-      "result": {
-        "1-R2": 0.009,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2182,14 +2711,18 @@
       "depends_on": [
         "g300_t0080"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t0050_mp50.json",
-      "result": {
-        "1-R2": 0.009,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2199,14 +2732,18 @@
       "depends_on": [
         "g300_t0100"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t0080_mp50.json",
-      "result": {
-        "1-R2": 0.011,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2216,14 +2753,18 @@
       "depends_on": [
         "g300_t0150"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t0100_mp50.json",
-      "result": {
-        "1-R2": 0.013,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2233,14 +2774,18 @@
       "depends_on": [
         "g300_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t0150_mp50.json",
-      "result": {
-        "1-R2": 0.018,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2250,14 +2795,18 @@
       "depends_on": [
         "g200_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t0200_mp50.json",
-      "result": {
-        "1-R2": 0.022,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2267,14 +2816,18 @@
       "depends_on": [
         "g300_t0600"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t0400_mp50.json",
-      "result": {
-        "1-R2": 0.041,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2284,14 +2837,18 @@
       "depends_on": [
         "g300_t0800"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t0600_mp50.json",
-      "result": {
-        "1-R2": 0.055,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2301,14 +2858,18 @@
       "depends_on": [
         "g300_t1000"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t0800_mp50.json",
-      "result": {
-        "1-R2": 0.069,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2318,14 +2879,18 @@
       "depends_on": [
         "g200_t0200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t1000_mp50.json",
-      "result": {
-        "1-R2": 0.083,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2335,14 +2900,18 @@
       "depends_on": [
         "g300_t1000"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t1200_mp50.json",
-      "result": {
-        "1-R2": 0.095,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2352,14 +2921,18 @@
       "depends_on": [
         "g300_t1200"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t1400_mp50.json",
-      "result": {
-        "1-R2": 0.107,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2369,14 +2942,18 @@
       "depends_on": [
         "g300_t1400"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t1600_mp50.json",
-      "result": {
-        "1-R2": 0.117,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2386,14 +2963,18 @@
       "depends_on": [
         "g300_t1600"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t1800_mp50.json",
-      "result": {
-        "1-R2": 0.127,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2403,14 +2984,18 @@
       "depends_on": [
         "g300_t1800"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t2000_mp50.json",
-      "result": {
-        "1-R2": 0.135,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2421,14 +3006,18 @@
       "depends_on": [
         "g010_t0050"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_nc4_g010_mp50.json",
-      "result": {
-        "1-R2": 0.012,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2439,14 +3028,18 @@
       "depends_on": [
         "g013_t0050"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_nc4_g013_mp50.json",
-      "result": {
-        "1-R2": 0.012,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2457,14 +3050,18 @@
       "depends_on": [
         "g050_t0030"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_nc4_g050_mp50.json",
-      "result": {
-        "1-R2": 0.009,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2475,14 +3072,18 @@
       "depends_on": [
         "g075_t0030"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_nc4_g075_mp50.json",
-      "result": {
-        "1-R2": 0.008,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2493,14 +3094,18 @@
       "depends_on": [
         "g100_t0030"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_nc4_g100_mp50.json",
-      "result": {
-        "1-R2": 0.007,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2511,14 +3116,18 @@
       "depends_on": [
         "g125_t0030"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_nc4_g125_mp50.json",
-      "result": {
-        "1-R2": 0.006,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2529,14 +3138,18 @@
       "depends_on": [
         "g140_t0030"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_nc4_g140_mp50.json",
-      "result": {
-        "1-R2": 0.006,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2547,14 +3160,18 @@
       "depends_on": [
         "g160_t0030"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_nc4_g160_mp50.json",
-      "result": {
-        "1-R2": 0.005,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2565,14 +3182,18 @@
       "depends_on": [
         "g180_t0030"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_nc4_g180_mp50.json",
-      "result": {
-        "1-R2": 0.004,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2583,14 +3204,18 @@
       "depends_on": [
         "g200_t0030"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_nc4_g200_mp50.json",
-      "result": {
-        "1-R2": 0.004,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2601,14 +3226,18 @@
       "depends_on": [
         "g300_t0030"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_nc4_g300_mp50.json",
-      "result": {
-        "1-R2": 0.002,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2619,14 +3248,18 @@
       "depends_on": [
         "g500_t0030"
       ],
-      "status": "done",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_nc4_g500_mp50.json",
-      "result": {
-        "1-R2": 0.001,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      "result": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -2783,17 +3416,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g010_t0120.npz",
-      "result": {
-        "F_max": 2.779665e-12,
-        "1-R2": 0.08973988975783798,
-        "slope": 0.7372297757265748
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g010_t0140",
@@ -2804,17 +3440,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g010_t0140.npz",
-      "result": {
-        "F_max": 4.669525e-10,
-        "1-R2": 0.09970811313360839,
-        "slope": 0.7153844967757771
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g010_t0150",
@@ -2825,17 +3464,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g010_t0150.npz",
-      "result": {
-        "F_max": 4.642453e-11,
-        "1-R2": 0.09987800385019185,
-        "slope": 0.7128283123835507
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g010_t0170",
@@ -2846,17 +3488,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g010_t0170.npz",
-      "result": {
-        "F_max": 5.924006e-11,
-        "1-R2": 0.09821593781016813,
-        "slope": 0.7082812536299442
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g010_t0500",
@@ -2867,17 +3512,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g010_t0500.npz",
-      "result": {
-        "F_max": 4.32987e-15,
-        "1-R2": 0.0991704024308292,
-        "slope": 0.5645564542516053
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g016_t0050",
@@ -2888,17 +3536,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g016_t0050.npz",
-      "result": {
-        "F_max": 1.795558e-10,
-        "1-R2": 0.05535164090592337,
-        "slope": 0.90184354565017
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g025_t0030",
@@ -2909,17 +3560,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g025_t0030.npz",
-      "result": {
-        "F_max": 3.663736e-15,
-        "1-R2": 0.06521073446871672,
-        "slope": 0.9321487511394451
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g025_t0050",
@@ -2930,17 +3584,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g025_t0050.npz",
-      "result": {
-        "F_max": 3.552714e-15,
-        "1-R2": 0.053646594204688314,
-        "slope": 0.9069213497230686
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g025_t0080",
@@ -2951,17 +3608,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g025_t0080.npz",
-      "result": {
-        "F_max": 3.594347e-15,
-        "1-R2": 0.04439196627267883,
-        "slope": 0.8991408398880352
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g025_t0100",
@@ -2972,17 +3632,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g025_t0100.npz",
-      "result": {
-        "F_max": 3.663736e-15,
-        "1-R2": 0.041649724949487044,
-        "slope": 0.8973051672434769
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g025_t0150",
@@ -2993,17 +3656,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g025_t0150.npz",
-      "result": {
-        "F_max": 3.608225e-15,
-        "1-R2": 0.09459724375394962,
-        "slope": 0.7311223337218811
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g025_t0200",
@@ -3014,17 +3680,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g025_t0200.npz",
-      "result": {
-        "F_max": 3.663736e-15,
-        "1-R2": 0.09218913992112598,
-        "slope": 0.7223260325428331
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g025_t0300",
@@ -3035,17 +3704,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g025_t0300.npz",
-      "result": {
-        "F_max": 3.587408e-15,
-        "1-R2": 0.11226708154130971,
-        "slope": 0.59141307058036
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g035_t0200",
@@ -3056,17 +3728,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g035_t0200.npz",
-      "result": {
-        "F_max": 3.663736e-15,
-        "1-R2": 0.08953635879266508,
-        "slope": 0.7344098281427093
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g050_t0400",
@@ -3077,17 +3752,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g050_t0400.npz",
-      "result": {
-        "F_max": 3.63598e-15,
-        "1-R2": 0.1029431135898149,
-        "slope": 0.5945061553937083
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g050_t0500",
@@ -3098,17 +3776,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g050_t0500.npz",
-      "result": {
-        "F_max": 3.608225e-15,
-        "1-R2": 0.09541933296476912,
-        "slope": 0.5890144270076514
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g050_t0700",
@@ -3119,17 +3800,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g050_t0700.npz",
-      "result": {
-        "F_max": 3.774758e-15,
-        "1-R2": 0.08359211659608956,
-        "slope": 0.5834347405689686
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g050_t1000",
@@ -3140,17 +3824,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g050_t1000.npz",
-      "result": {
-        "F_max": 9.394707e-13,
-        "1-R2": 0.058486117101238855,
-        "slope": 0.39450279536679883
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g050_t1200",
@@ -3161,17 +3848,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g050_t1200.npz",
-      "result": {
-        "F_max": 1.487092e-09,
-        "1-R2": 0.05609278042106669,
-        "slope": 0.38667482332569186
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g050_t1500",
@@ -3182,17 +3872,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g050_t1500.npz",
-      "result": {
-        "F_max": 1e-12,
-        "1-R2": 0.05656237543566789,
-        "slope": 0.3812911621035133
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g050_t2000",
@@ -3203,17 +3896,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g050_t2000.npz",
-      "result": {
-        "F_max": 1e-12,
-        "1-R2": 0.06169059856032422,
-        "slope": 0.37902624987016703
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g100_t0250",
@@ -3224,17 +3920,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g100_t0250.npz",
-      "result": {
-        "F_max": 6.447121e-12,
-        "1-R2": 0.08669067123284213,
-        "slope": 0.6561004846581272
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g100_t0300",
@@ -3245,17 +3944,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g100_t0300.npz",
-      "result": {
-        "F_max": 1.216804e-12,
-        "1-R2": 0.1042090507141541,
-        "slope": 0.6235180088750608
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g100_t0450",
@@ -3266,17 +3968,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g100_t0450.npz",
-      "result": {
-        "F_max": 5.583233e-09,
-        "1-R2": 0.0958525354187707,
-        "slope": 0.6057454517984185
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g100_t0500",
@@ -3287,17 +3992,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g100_t0500.npz",
-      "result": {
-        "F_max": 3.552714e-15,
-        "1-R2": 0.09234336337897053,
-        "slope": 0.6030989943983401
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g100_t0700",
@@ -3308,17 +4016,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g100_t0700.npz",
-      "result": {
-        "F_max": 3.663736e-15,
-        "1-R2": 0.08115409458380507,
-        "slope": 0.5958917142207033
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g100_t1500",
@@ -3329,17 +4040,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g100_t1500.npz",
-      "result": {
-        "F_max": 1e-12,
-        "1-R2": 0.04974249977643164,
-        "slope": 0.39275237889409903
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g100_t2000",
@@ -3350,17 +4064,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g100_t2000.npz",
-      "result": {
-        "F_max": 1e-12,
-        "1-R2": 0.055338870188428646,
-        "slope": 0.38780924521633664
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g140_t0240",
@@ -3371,17 +4088,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g140_t0240.npz",
-      "result": {
-        "F_max": 2.611245e-12,
-        "1-R2": 0.08257998098655972,
-        "slope": 0.7519797000425831
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g140_t0270",
@@ -3392,17 +4112,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g140_t0270.npz",
-      "result": {
-        "F_max": 4.806822e-12,
-        "1-R2": 0.07843365105678202,
-        "slope": 0.7535044858547638
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g140_t0330",
@@ -3413,17 +4136,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g140_t0330.npz",
-      "result": {
-        "F_max": 9.237056e-14,
-        "1-R2": 0.10235602559897128,
-        "slope": 0.6233984501177526
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g140_t0430",
@@ -3434,17 +4160,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g140_t0430.npz",
-      "result": {
-        "F_max": 4.070182e-14,
-        "1-R2": 0.09584701543771978,
-        "slope": 0.6129792065832556
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g140_t0450",
@@ -3455,17 +4184,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g140_t0450.npz",
-      "result": {
-        "F_max": 3.708145e-14,
-        "1-R2": 0.09440229848556525,
-        "slope": 0.6116620930855161
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g140_t0510",
@@ -3476,17 +4208,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g140_t0510.npz",
-      "result": {
-        "F_max": 1.748601e-14,
-        "1-R2": 0.09026245407430378,
-        "slope": 0.6084525587921289
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g200_t0300",
@@ -3497,17 +4232,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g200_t0300.npz",
-      "result": {
-        "F_max": 3.885781e-15,
-        "1-R2": 0.10160491932563676,
-        "slope": 0.6340933637474463
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g200_t0500",
@@ -3518,17 +4256,20 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "done",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-09T20:00:00Z",
+      "completed_at": null,
       "checkpoint": "projects/REZN/checkpoints/g200_t0500.npz",
-      "result": {
-        "F_max": 1.199041e-14,
-        "1-R2": 0.08969462689554719,
-        "slope": 0.6139348126835279
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
+      }
     },
     {
       "id": "g400_t1000",
@@ -3547,11 +4288,11 @@
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry). | RESET: ferr above tol, redo with pure Newton (presmooth=0)",
       "solver_params": {
-        "max_stages": 12,
-        "inner_max_iter": 80,
-        "inner_rdiff": 1e-07,
-        "tol": 1e-09,
-        "presmooth": 0
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -3571,11 +4312,11 @@
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry). | RESET: ferr above tol, redo with pure Newton (presmooth=0)",
       "solver_params": {
-        "max_stages": 12,
-        "inner_max_iter": 80,
-        "inner_rdiff": 1e-07,
-        "tol": 1e-09,
-        "presmooth": 0
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -3595,11 +4336,11 @@
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry). | RESET: ferr above tol, redo with pure Newton (presmooth=0)",
       "solver_params": {
-        "max_stages": 12,
-        "inner_max_iter": 80,
-        "inner_rdiff": 1e-07,
-        "tol": 1e-09,
-        "presmooth": 0
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     },
     {
@@ -3619,11 +4360,11 @@
       "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry). | RESET: ferr above tol, redo with pure Newton (presmooth=0)",
       "solver_params": {
-        "max_stages": 12,
-        "inner_max_iter": 80,
-        "inner_rdiff": 1e-07,
-        "tol": 1e-09,
-        "presmooth": 0
+        "mp_dps": 50,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07
       }
     }
   ],
