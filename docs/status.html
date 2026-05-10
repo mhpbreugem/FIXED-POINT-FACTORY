@@ -371,6 +371,18 @@
 
     // Heartbeat-based rows — only show workers with heartbeat < 30 min old
     const hbWorkers = new Set((workerData || []).map(f => f.name.replace(".txt","")));
+    function methodLabel(pr) {
+      if (!pr) return "—";
+      const ex = pr.extra || {};
+      if (ex.phase === "mp_newton")  return `<span style="color:#7ecff7">mp·Newton</span>`;
+      if (ex.phase === "newton")     return `<span style="color:#8ef78e">Newton s${ex.stage??""}</span>`;
+      if (ex.phase === "presmooth")  return `<span style="color:#f7c87e">Picard s${ex.stage??""}</span>`;
+      if (ex.phase === "picard")     return `<span style="color:#f7a07e">Picard</span>`;
+      if (ex.phase === "anderson")   return `<span style="color:#c87ef7">Anderson</span>`;
+      if (pr.iter != null)           return `<span style="color:#aaa">iter ${pr.iter}</span>`;
+      return "—";
+    }
+
     const hbRows = (workerData || []).filter(f => {
       const age = f.last_modified ? (now - new Date(f.last_modified).getTime())/60000 : Infinity;
       return age < 30;
@@ -387,6 +399,7 @@
         <td class="mono">${esc(workerName)}</td>
         <td class="mono">${esc(taskId)}</td>
         <td>${ageStr}</td>
+        <td>${methodLabel(pr)}</td>
         <td>${iter}</td>
         <td class="mono">${ftol}</td>
       </tr>`;
@@ -406,6 +419,7 @@
           <td class="mono">${esc(p.worker_id)}</td>
           <td class="mono">${esc(p.task_id)}</td>
           <td>${ageStr} <span style="color:#bbb;font-size:0.75rem">(progress)</span></td>
+          <td>${methodLabel(p)}</td>
           <td>${iter}</td>
           <td class="mono">${ftol}</td>
         </tr>`;
@@ -418,7 +432,7 @@
     }
     el.innerHTML = `<strong>Active workers (${allRows.length})</strong>
       <table style="margin-top:0.4rem;width:auto">
-        <thead><tr><th>worker</th><th>task</th><th>last seen</th><th>iter</th><th>ftol</th></tr></thead>
+        <thead><tr><th>worker</th><th>task</th><th>last seen</th><th>method</th><th>iter</th><th>ftol</th></tr></thead>
         <tbody>${allRows.join("")}</tbody>
       </table>`;
   }
