@@ -102,7 +102,7 @@
 <p class="meta" id="meta">loading…</p>
 
 <div class="topbar">
-  <input type="password" id="pat-input" placeholder="GitHub PAT (stored locally)" oninput="savePat()">
+  <input type="password" id="pat-input" placeholder="GitHub PAT — required for live worker data" oninput="savePat(); loadAll();">
   <button class="btn-action btn-bailed" id="btn-reset-bailed" onclick="resetByStatus('bailed')">Reset bailed → ready</button>
   <button class="btn-action btn-claimed" id="btn-reset-claimed" onclick="resetByStatus('claimed')">Release claimed → ready</button>
   <span id="reset-status" style="font-size:0.8rem;color:#555"></span>
@@ -203,15 +203,31 @@
     return `https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}?ref=${BRANCH}`;
   }
 
+  function authHeaders() {
+    const pat = getPat();
+    return pat ? { Authorization: `token ${pat}` } : {};
+  }
+
   async function fetchJson(url) {
-    const r = await fetch(url, {cache:"no-store"});
+    const r = await fetch(url, {cache:"no-store", headers: authHeaders()});
     if (!r.ok) throw new Error(`${r.status} ${r.statusText} — ${url}`);
     return r.json();
   }
   async function fetchText(url) {
-    const r = await fetch(url, {cache:"no-store"});
+    const r = await fetch(url, {cache:"no-store", headers: authHeaders()});
     if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
     return r.text();
+  }
+
+  // Fetch a file via the GitHub API (authenticated, no CDN caching).
+  // Returns parsed JSON content. Falls back to rawUrl on failure.
+  async function fetchApiContent(path) {
+    const meta = await fetchJson(apiUrl(path));
+    if (meta.content) {
+      const text = atob(meta.content.replace(/\n/g, ""));
+      return JSON.parse(text);
+    }
+    return fetchJson(rawUrl(path));
   }
 
   function switchTab(btn, name) {
@@ -231,7 +247,10 @@
   // ═══════════════════════════════════════════════════════════════════════════
 
   async function loadTasks() {
-    const data = await fetchJson(rawUrl(`projects/${PROJECT}/TASK_QUEUE.json`));
+    // Use authenticated API fetch to avoid raw.githubusercontent.com CDN caching
+    const data = getPat()
+      ? await fetchApiContent(`projects/${PROJECT}/TASK_QUEUE.json`)
+      : await fetchJson(rawUrl(`projects/${PROJECT}/TASK_QUEUE.json`));
     taskData = data;
     renderTasks();
     document.getElementById("meta").textContent =
@@ -355,7 +374,10 @@
       progressData = {};
       await Promise.all(pDir.filter(f => f.name.endsWith(".json")).map(async f => {
         try {
-          const d = await fetchJson(rawUrl(`projects/${PROJECT}/progress/${f.name}`));
+          // Use authenticated API fetch so we bypass CDN caching (workers update every 30s)
+          const d = getPat()
+            ? await fetchApiContent(`projects/${PROJECT}/progress/${f.name}`)
+            : await fetchJson(rawUrl(`projects/${PROJECT}/progress/${f.name}`));
           progressData[d.task_id] = d;
         } catch {}
       }));
