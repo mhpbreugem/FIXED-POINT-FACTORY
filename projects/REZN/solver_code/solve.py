@@ -185,7 +185,7 @@ def save_checkpoint(project: str, task_id: str,
 
 def claim_done(project: str, task_id: str, branch: str,
                checkpoint: str, result: dict) -> None:
-    subprocess.run(
+    proc = subprocess.run(
         [sys.executable, "core/claim_task.py", "done",
          "--project", project,
          "--task-id", task_id,
@@ -194,6 +194,9 @@ def claim_done(project: str, task_id: str, branch: str,
          "--result", json.dumps(result)],
         check=False, cwd=str(ROOT),
     )
+    if proc.returncode != 0:
+        print(f"[WARN] claim_done for {task_id} exited {proc.returncode} "
+              f"— done commit may not have landed on origin", flush=True)
 
 
 def claim_bail(project: str, task_id: str, branch: str, reason: str) -> None:
