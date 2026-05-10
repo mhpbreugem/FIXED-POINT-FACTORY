@@ -2,9 +2,9 @@
   "task_id": "g050_t0150",
   "worker_id": "gha-25621107703-g050_t0150",
   "started_at": "2026-05-10T06:02:07Z",
-  "last_update": "2026-05-10T06:38:44Z",
-  "iter": 2,
-  "ftol": "7.089571e-07",
+  "last_update": "2026-05-10T06:56:24Z",
+  "iter": 3,
+  "ftol": "4.030881e-11",
   "extra": {
     "extra": {
       "phase": "anderson"
