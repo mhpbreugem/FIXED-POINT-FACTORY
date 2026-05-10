@@ -3,10 +3,10 @@
   "worker_id": "gha-25630699540-g050_t0030",
   "started_at": "2026-05-10T21:50:54Z",
   "last_update": "2026-05-10T21:55:56Z",
-  "iter": 4670,
-  "ftol": "1.032209e-02",
+  "iter": 4675,
+  "ftol": "1.932216e-03",
   "extra": {
     "phase": "anderson",
-    "n_fun": 4670
+    "n_fun": 4673
   }
 }
