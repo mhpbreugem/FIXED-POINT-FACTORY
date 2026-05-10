@@ -122,6 +122,7 @@
 
 <div class="tabs">
   <button class="tab active" onclick="switchTab(this,'tasks')">Tasks</button>
+  <button class="tab" onclick="switchTab(this,'completed')">Completed</button>
   <button class="tab" onclick="switchTab(this,'figures')">Figures</button>
 </div>
 
@@ -152,6 +153,10 @@
     </tr></thead>
     <tbody id="task-body"></tbody>
   </table>
+</div>
+
+<div id="tab-completed" class="tab-content">
+  <div id="completed-area"></div>
 </div>
 
 <div id="tab-figures" class="tab-content">
@@ -365,32 +370,23 @@
     URL.revokeObjectURL(a.href);
   }
 
-  function renderRecentlyCompleted(tasks) {
-    let el = document.getElementById("recently-completed");
-    if (!el) return;
-    const done = tasks
-      .filter(t => t.status === "done" && !t.test && t.completed_at)
-      .sort((a,b) => b.completed_at.localeCompare(a.completed_at));
-    const shown = done.slice(0, 15);
-    if (!done.length) { el.innerHTML = ""; return; }
-    el.innerHTML = `<div class="recent-box">
-      <div style="display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap;margin-bottom:0.4rem">
+  function _completedTableHTML(done) {
+    return `
+      <div style="display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap;margin-bottom:0.6rem">
         <strong>Completed tasks (${done.length})</strong>
         <button onclick="downloadAllDone(taskData?.tasks||[], 'csv')"
           style="font-size:0.75rem;padding:2px 8px;cursor:pointer;background:#1a5e2a;border:none;color:#fff;border-radius:3px;font-weight:600"
-          title="Summary stats + URL to raw checkpoint file">
-          ⬇ CSV</button>
+          title="Summary stats + URL to raw checkpoint file">⬇ CSV</button>
         <button onclick="downloadAllDone(taskData?.tasks||[], 'json')"
           style="font-size:0.75rem;padding:2px 8px;cursor:pointer;background:#1f3a6e;border:none;color:#fff;border-radius:3px;font-weight:600"
-          title="Full fixed-point solution embedded (NPZ as base64)">
-          ⬇ JSON (full solution)</button>
+          title="Full fixed-point solution embedded (NPZ as base64)">⬇ JSON (full solution)</button>
       </div>
-      <table style="margin-top:0rem;width:auto">
+      <table style="width:auto">
         <thead><tr>
           <th>id</th><th>γ</th><th>τ</th><th>G</th><th>K</th>
           <th>‖F‖∞</th><th>1-R²</th><th>E[V info]</th><th>E[vol]</th><th>solved at</th><th>solution</th>
         </tr></thead>
-        <tbody>${shown.map(t => {
+        <tbody>${done.map(t => {
           const r = t.result || {};
           const fmax = r.F_max != null ? Number(r.F_max).toExponential(1) : "—";
           const r2   = r["1-R2"] != null ? r["1-R2"].toPrecision(3) : "—";
@@ -415,9 +411,58 @@
             <td>${solutionCell}</td>
           </tr>`;
         }).join("")}</tbody>
-      </table>
-      ${done.length > 15 ? `<div style="color:#888;font-size:0.78rem;margin-top:0.3rem">showing 15 of ${done.length} — download CSV/JSON for full list</div>` : ""}
-    </div>`;
+      </table>`;
+  }
+
+  function renderCompleted(tasks) {
+    const done = (tasks || [])
+      .filter(t => t.status === "done" && !t.test && t.completed_at)
+      .sort((a,b) => b.completed_at.localeCompare(a.completed_at));
+
+    // Completed tab — always render all done tasks
+    const tabEl = document.getElementById("completed-area");
+    if (tabEl) {
+      if (!done.length) {
+        tabEl.innerHTML = `<p style="color:#888;margin-top:1rem">No completed tasks yet.</p>`;
+      } else {
+        tabEl.innerHTML = `<div class="recent-box" style="margin-top:0.5rem">${_completedTableHTML(done)}</div>`;
+      }
+    }
+
+    // Tasks tab — show compact recently-completed box (up to 5, no download buttons)
+    const boxEl = document.getElementById("recently-completed");
+    if (boxEl) {
+      if (!done.length) { boxEl.innerHTML = ""; return; }
+      const recent = done.slice(0, 5);
+      boxEl.innerHTML = `<div class="recent-box" style="margin-bottom:0.6rem">
+        <div style="display:flex;align-items:center;gap:0.8rem;margin-bottom:0.4rem">
+          <strong>Recently completed (${done.length})</strong>
+          <a href="#" onclick="(function(){var t=document.querySelector('[onclick*=\'completed\']');if(t)t.click();}());return false"
+            style="font-size:0.78rem;color:#1f6feb">view all →</a>
+        </div>
+        <table style="width:auto">
+          <thead><tr>
+            <th>id</th><th>γ</th><th>τ</th><th>G</th><th>K</th>
+            <th>‖F‖∞</th><th>1-R²</th><th>solved at</th>
+          </tr></thead>
+          <tbody>${recent.map(t => {
+            const r = t.result || {};
+            const fmax = r.F_max != null ? Number(r.F_max).toExponential(1) : "—";
+            const r2   = r["1-R2"] != null ? r["1-R2"].toPrecision(3) : "—";
+            const when = new Date(t.completed_at).toLocaleString('en-US',
+              {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit', hour12:false});
+            return `<tr>
+              <td class="mono">${esc(t.id)}</td>
+              <td>${t.gamma ?? ""}</td><td>${t.tau ?? ""}</td>
+              <td>${t.G ?? ""}</td><td>${t.K ?? 3}</td>
+              <td class="enorm">${fmax}</td><td>${r2}</td>
+              <td class="small mono">${when}</td>
+            </tr>`;
+          }).join("")}</tbody>
+        </table>
+        ${done.length > 5 ? `<div style="color:#888;font-size:0.78rem;margin-top:0.3rem">+${done.length-5} more in Completed tab</div>` : ""}
+      </div>`;
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -565,7 +610,7 @@
       </tr>`;
     }).join("");
 
-    renderRecentlyCompleted(tasks);
+    renderCompleted(tasks);
 
 
     renderWorkersInline();
