@@ -22,6 +22,7 @@ import hashlib
 import json
 import math
 import os
+import random
 import socket
 import subprocess
 import sys
@@ -116,9 +117,16 @@ def _git(*args, check=True) -> subprocess.CompletedProcess:
                           cwd=repo_root())
 
 
-def _pull_rebase(branch: str | None = None) -> None:
+def _pull_rebase(branch: str | None = None) -> bool:
+    """Rebase onto origin. Returns True on success, False on conflict/error."""
     branch = branch or _current_branch()
-    _git("pull", "--rebase", "origin", branch)
+    result = _git("pull", "--rebase", "origin", branch, check=False)
+    if result.returncode == 0:
+        return True
+    # Conflict or other error — abort rebase and hard-reset to origin
+    _git("rebase", "--abort", check=False)
+    _git("reset", "--hard", f"origin/{branch}", check=False)
+    return False
 
 
 def _push(branch: str | None = None, retries: int = 4) -> bool:
@@ -128,13 +136,16 @@ def _push(branch: str | None = None, retries: int = 4) -> bool:
         result = _git("push", "origin", branch, check=False)
         if result.returncode == 0:
             return True
-        # non-fast-forward → another worker pushed → caller handles
-        if "rejected" in result.stderr or "non-fast-forward" in result.stderr:
-            return False
-        # network error → retry
-        if attempt < retries:
+        # network error → retry with backoff
+        stderr = result.stderr or ""
+        is_network = not ("rejected" in stderr or "non-fast-forward" in stderr
+                          or "fetch first" in stderr)
+        if is_network and attempt < retries:
             time.sleep(backoff)
             backoff *= 2
+            continue
+        # non-fast-forward or other push rejection → caller should rebase
+        return False
     return False
 
 
@@ -212,32 +223,52 @@ def mark_done(project: str, task_id: str, checkpoint: str | None,
     unblock_str = f" unblocked:{','.join(newly_ready)}" if newly_ready else ""
     _git("commit", "-m", f"{task_id}: {metric_str} done{unblock_str}")
 
-    import random
-    for attempt in range(30):
+    # Retry loop: up to 40 attempts, exponential backoff with jitter.
+    # 10+ workers push progress every ~10s, so we need enough attempts to find
+    # a quiet window.  Each failed push is followed by a pull-rebase + re-apply.
+    backoff = 3.0
+    for attempt in range(40):
         if _push(branch):
             return True
-        # Random jitter (0-3s) so concurrent done-pushes don't collide repeatedly
-        time.sleep(random.uniform(0, 3))
-        _pull_rebase(branch)
-        # Re-apply our done status after rebase (preserve all other done entries)
+        # Jitter to desynchronise competing workers
+        time.sleep(backoff + random.uniform(0, backoff))
+        backoff = min(backoff * 1.5, 30.0)
+
+        _pull_rebase(branch)   # tolerant: resets to origin on conflict
+
+        # Check if another worker already pushed a done commit for this task.
+        # We check whether we have commits that are ahead of origin (not yet pushed).
+        ahead = _git("rev-list", f"origin/{branch}..HEAD",
+                     check=False).stdout.strip()
         queue = load_queue(project)
         task = _find_by_id(queue, task_id)
-        if task:
-            task["status"] = "done"
-            task["checkpoint"] = checkpoint
-            task["result"] = result
-            task["completed_at"] = _now()
-            task.pop("claimed_by", None)
-            task.pop("claimed_at", None)
-            newly_ready = _unblock_downstream(queue)
-            _update_summary(queue)
-            save_queue(project, queue)
-            _stage_queue(project)
-            if checkpoint:
-                cp_abs = os.path.join(repo_root(), checkpoint)
-                if os.path.exists(cp_abs):
-                    _git("add", checkpoint)
-            _git("commit", "-m", f"{task_id}: {metric_str} done{unblock_str}")
+        if task is None:
+            break  # task disappeared — abort
+        if task.get("status") == "done" and not ahead:
+            # Origin already has done — another worker won, accept it.
+            return True
+
+        # Re-apply our done status on top of the freshly-rebased queue.
+        task["status"] = "done"
+        task["checkpoint"] = checkpoint
+        task["result"] = result
+        task["completed_at"] = _now()
+        task.pop("claimed_by", None)
+        task.pop("claimed_at", None)
+        newly_ready = _unblock_downstream(queue)
+        _update_summary(queue)
+        save_queue(project, queue)
+        _stage_queue(project)
+        if checkpoint:
+            cp_abs = os.path.join(repo_root(), checkpoint)
+            if os.path.exists(cp_abs):
+                _git("add", checkpoint)
+        commit_result = _git("commit", "-m",
+                             f"{task_id}: {metric_str} done{unblock_str}",
+                             check=False)
+        if commit_result.returncode != 0:
+            # Nothing changed (e.g. rebase replayed our commit) — already staged
+            pass
     return False
 
 
