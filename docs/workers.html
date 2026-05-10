@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>REZN workers</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: ui-monospace, monospace; font-size: 12px;
+         background: #0d0d14; color: #d0d0e0; padding: 4px; }
+  .topbar { display: flex; gap: 4px; align-items: center; flex-wrap: wrap;
+            padding: 3px 4px; margin-bottom: 3px;
+            background: #13131f; border-radius: 4px; }
+  .topbar input { font-family: inherit; font-size: 11px;
+                  background: #1a1a2e; color: #c0c0ff;
+                  border: 1px solid #333; border-radius: 3px;
+                  padding: 2px 5px; width: 180px; }
+  .pills { display: flex; gap: 3px; flex-wrap: wrap; }
+  .pill { font-size: 10px; padding: 1px 5px; border-radius: 3px;
+          font-weight: 700; white-space: nowrap; }
+  .pill.done    { background: #1a4a1e; color: #7ecf82; }
+  .pill.claimed { background: #3a2a00; color: #f0c040; }
+  .pill.ready   { background: #0f2a4a; color: #70a8f0; }
+  .pill.bailed  { background: #3a1010; color: #f08070; }
+  .ticker { font-size: 10px; color: #555; margin-left: auto; white-space: nowrap; }
+  table { border-collapse: collapse; width: 100%; }
+  th { font-size: 10px; font-weight: 700; color: #666;
+       text-align: left; padding: 1px 4px; border-bottom: 1px solid #222;
+       background: #13131f; position: sticky; top: 0; }
+  td { padding: 1px 4px; border-bottom: 1px solid #1a1a22; white-space: nowrap; }
+  tr:hover td { background: #16161f; }
+  .stale { color: #b04030; }
+  .ok    { color: #555; }
+  .phase-newton  { color: #7ecff7; }
+  .phase-accel   { color: #c87ef7; }
+  .phase-picard  { color: #f7c87e; }
+  .ftol-hot  { color: #ff9040; font-weight: 700; }   /* < 1e-80 */
+  .ftol-warm { color: #f0c040; }                      /* < 1e-40 */
+  .ftol-cool { color: #70a8f0; }                      /* < 1e-10 */
+  .ftol-cold { color: #556; }                         /* >= 1e-4 */
+  .no-workers { color: #444; padding: 8px 4px; font-size: 11px; }
+  .section-hdr { font-size: 10px; color: #445; padding: 2px 4px;
+                 background: #0f0f18; letter-spacing: 0.05em; }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <input type="password" id="pat" placeholder="GitHub PAT" oninput="savePat();refresh();">
+  <div class="pills" id="pills"></div>
+  <span class="ticker" id="ticker">—</span>
+</div>
+<table>
+  <thead>
+    <tr>
+      <th>task</th>
+      <th>method</th>
+      <th style="text-align:right">step</th>
+      <th style="text-align:right">‖F‖</th>
+      <th style="text-align:right">seen</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="body"></tbody>
+</table>
+
+<script>
+const OWNER = "mhpbreugem", REPO = "fixed-point-factory", BRANCH = "main";
+const PROJECT = "REZN";
+
+let taskData = null, workerData = null, progressData = {};
+const _progressShaCache = {};
+let _queueSha = null;
+let _lastPoll = null;
+
+function savePat() {
+  const v = document.getElementById('pat').value.trim();
+  if (v) localStorage.setItem('fpf_pat', v); else localStorage.removeItem('fpf_pat');
+}
+function getPat() { return localStorage.getItem('fpf_pat') || ''; }
+window.addEventListener('DOMContentLoaded', () => {
+  const p = getPat(); if (p) document.getElementById('pat').value = p;
+});
+
+function authHdr() {
+  const p = getPat(); return p ? { Authorization: `token ${p}` } : {};
+}
+function rawUrl(path) {
+  return `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${path}`;
+}
+function apiUrl(path) {
+  return `https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}?ref=${BRANCH}`;
+}
+async function fetchJ(url) {
+  const r = await fetch(url, { cache: "no-store", headers: authHdr() });
+  if (!r.ok) throw new Error(`${r.status}`);
+  return r.json();
+}
+
+function resolvePhase(pr) {
+  const ex = pr.extra || {};
+  return ex.phase || ex.extra?.phase || null;
+}
+
+function phaseShort(pr) {
+  const ph = resolvePhase(pr);
+  const ex = pr.extra || {};
+  if (ph === "mp_newton") return { label: "mp·N", cls: "phase-newton" };
+  if (ph === "anderson")  return { label: "Accel", cls: "phase-accel" };
+  if (ph === "picard")    return { label: "Picard", cls: "phase-picard" };
+  if (ph === "newton")    return { label: `N·s${ex.stage??'?'}`, cls: "phase-newton" };
+  if (ph === "presmooth") return { label: "smooth", cls: "" };
+  if (pr.iter != null)    return { label: "run", cls: "" };
+  return { label: "start", cls: "" };
+}
+
+function ftolClass(v) {
+  if (v == null) return "";
+  if (v < 1e-80) return "ftol-hot";
+  if (v < 1e-40) return "ftol-warm";
+  if (v < 1e-10) return "ftol-cool";
+  return "ftol-cold";
+}
+
+function fmtFtol(v) {
+  if (v == null) return "—";
+  const e = Number(v).toExponential(1);
+  // compact: drop leading zeros in exponent
+  return e.replace(/e([+-])0*(\d+)/, (_, s, n) => `e${s}${n}`);
+}
+
+function fmtAge(secs) {
+  if (secs == null) return "?";
+  if (secs < 60)   return `${Math.round(secs)}s`;
+  if (secs < 3600) return `${Math.floor(secs/60)}m${Math.floor(secs%60).toString().padStart(2,'0')}s`;
+  return `${(secs/3600).toFixed(1)}h`;
+}
+
+function esc(s) { return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+async function loadQueue() {
+  try {
+    if (getPat()) {
+      const meta = await fetchJ(apiUrl(`projects/${PROJECT}/TASK_QUEUE.json`));
+      if (meta.sha === _queueSha) return;
+      _queueSha = meta.sha;
+      taskData = JSON.parse(atob(meta.content.replace(/\n/g, "")));
+    } else {
+      taskData = await fetchJ(rawUrl(`projects/${PROJECT}/TASK_QUEUE.json`));
+    }
+  } catch {}
+}
+
+async function loadWorkers() {
+  try {
+    const d = await fetchJ(apiUrl(`projects/${PROJECT}/heartbeats`));
+    workerData = Array.isArray(d) ? d : [];
+  } catch { workerData = []; }
+}
+
+async function loadProgress() {
+  try {
+    const pDir = await fetchJ(apiUrl(`projects/${PROJECT}/progress`));
+    if (!Array.isArray(pDir)) return;
+    const activeNames = new Set(pDir.filter(f => f.name.endsWith(".json")).map(f => f.name));
+
+    let changed = false;
+    for (const fname of Object.keys(_progressShaCache)) {
+      if (!activeNames.has(fname)) {
+        delete _progressShaCache[fname];
+        delete progressData[fname.replace(".json", "")];
+        _queueSha = null; changed = true;
+      }
+    }
+
+    await Promise.all(pDir.filter(f => f.name.endsWith(".json")).map(async f => {
+      if (_progressShaCache[f.name] === f.sha) return;
+      const isNew = !(f.name in _progressShaCache);
+      try {
+        const d = getPat()
+          ? await (async () => {
+              const m = await fetchJ(apiUrl(`projects/${PROJECT}/progress/${f.name}`));
+              return m.content ? JSON.parse(atob(m.content.replace(/\n/g, ""))) : fetchJ(rawUrl(`projects/${PROJECT}/progress/${f.name}`));
+            })()
+          : await fetchJ(rawUrl(`projects/${PROJECT}/progress/${f.name}`));
+        progressData[d.task_id] = d;
+        _progressShaCache[f.name] = f.sha;
+        if (isNew) { _queueSha = null; changed = true; }
+      } catch {}
+    }));
+
+    if (changed) loadQueue().catch(() => {});
+  } catch {}
+}
+
+function render() {
+  const now = Date.now();
+  const tbody = document.getElementById("body");
+
+  // Build worker rows from progress files (active within 90 min)
+  const rows = Object.values(progressData)
+    .filter(p => {
+      const age = p.last_update ? (now - new Date(p.last_update).getTime()) / 1000 : Infinity;
+      return age < 5400;
+    })
+    .sort((a, b) => {
+      // Sort: hottest (lowest ftol) first
+      const fa = a.ftol != null ? parseFloat(a.ftol) : Infinity;
+      const fb = b.ftol != null ? parseFloat(b.ftol) : Infinity;
+      return fa - fb;
+    });
+
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="6" class="no-workers">no active workers</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = rows.map(p => {
+    const age = p.last_update ? (now - new Date(p.last_update).getTime()) / 1000 : null;
+    const isStale = age != null && age > 1800;
+    const ageStr = fmtAge(age);
+    const ph = phaseShort(p);
+    const ftolVal = p.ftol != null ? parseFloat(p.ftol) : null;
+    const iter = p.iter != null ? p.iter : "—";
+    const taskId = esc(p.task_id || "—");
+    const ageClass = isStale ? "stale" : "ok";
+    const ftolCls = ftolClass(ftolVal);
+
+    return `<tr>
+      <td>${taskId}</td>
+      <td class="${ph.cls}">${ph.label}</td>
+      <td style="text-align:right;color:#888">${iter}</td>
+      <td style="text-align:right" class="${ftolCls}">${fmtFtol(ftolVal)}</td>
+      <td style="text-align:right" class="${ageClass}">${esc(ageStr)}</td>
+      <td style="color:#444;font-size:10px">${esc((p.worker_id||"").slice(-8))}</td>
+    </tr>`;
+  }).join("");
+
+  // Summary pills
+  if (taskData) {
+    const tasks = taskData.tasks || [];
+    const counts = {};
+    const now2 = Date.now();
+    tasks.forEach(t => {
+      const pr = progressData[t.id];
+      const fresh = pr && pr.last_update && (now2 - new Date(pr.last_update).getTime()) < 5400000;
+      const ds = (fresh && (t.status === "ready" || t.status === "bailed")) ? "claimed" : t.status;
+      counts[ds] = (counts[ds] || 0) + 1;
+    });
+    const pOrder = ["done","claimed","ready","bailed","blocked"];
+    document.getElementById("pills").innerHTML = pOrder
+      .filter(s => counts[s])
+      .map(s => `<span class="pill ${s}">${s[0].toUpperCase()}:${counts[s]}</span>`)
+      .join("");
+  }
+}
+
+function updateTicker() {
+  const el = document.getElementById("ticker");
+  if (!el || !_lastPoll) return;
+  el.textContent = `${((Date.now() - _lastPoll) / 1000).toFixed(0)}s ago`;
+}
+
+async function refresh() {
+  await Promise.all([loadWorkers(), loadProgress(), loadQueue()]);
+  _lastPoll = Date.now();
+  render();
+}
+
+refresh();
+setInterval(async () => { await Promise.all([loadWorkers(), loadProgress()]); _lastPoll = Date.now(); render(); }, 3000);
+setInterval(loadQueue, 10000);
+setInterval(updateTicker, 1000);
+</script>
+</body>
+</html>
