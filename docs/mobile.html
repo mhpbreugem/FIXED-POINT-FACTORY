@@ -582,8 +582,8 @@
   async function loadAll(){await Promise.all([pollProgress(),pollQueue()]);}
 
   pollQueue();pollProgress();
-  setInterval(()=>{if(!document.hidden)pollProgress();},3000);
-  setInterval(()=>{if(!document.hidden)pollQueue();},15000); // loadProgress triggers loadTasks on change; 15s is a backstop
+  setInterval(()=>{if(!document.hidden)pollProgress();},60000);
+  setInterval(()=>{if(!document.hidden)pollQueue();},60000);
   setInterval(tick,1000);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)loadAll();});
 </script>
