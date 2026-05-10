@@ -1,0 +1,665 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>fpf — mobile</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<style>
+  :root {
+    --bg:#111; --fg:#ddd; --muted:#777;
+    --done:#2a9a30; --ready:#3a8ef7; --claimed:#c99000;
+    --bailed:#d03010; --blocked:#666; --skip:#444;
+    --row:#181818; --rowalt:#1e1e1e; --hdr:#242424;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: ui-monospace, monospace;
+    font-size: 10px;
+    line-height: 1.35;
+    background: var(--bg);
+    color: var(--fg);
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+  /* ── top bar ── */
+  #topbar {
+    position: sticky; top: 0; z-index: 10;
+    background: #1a1a1a;
+    border-bottom: 1px solid #333;
+    padding: 3px 4px;
+    display: flex; flex-wrap: wrap; gap: 3px; align-items: center;
+  }
+  #topbar input[type=password] {
+    font-family: inherit; font-size: 9px;
+    background: #222; color: #bbb; border: 1px solid #444;
+    border-radius: 3px; padding: 2px 4px;
+    width: 160px;
+  }
+  #topbar input[type=number] {
+    font-family: inherit; font-size: 9px;
+    background: #222; color: #bbb; border: 1px solid #444;
+    border-radius: 3px; padding: 2px 3px; width: 36px;
+  }
+  .btn {
+    font-family: inherit; font-size: 9px; font-weight: 600;
+    border: none; border-radius: 3px; padding: 3px 6px;
+    cursor: pointer; color: #fff; white-space: nowrap;
+  }
+  .btn-bail    { background: #902010; }
+  .btn-claim   { background: #806000; }
+  .btn-launch  { background: #1a5e2a; }
+  .btn-cancel  { background: #5e1a1a; }
+  .btn-refresh { background: #333; }
+  .btn:active  { opacity: 0.7; }
+
+  /* ── meta line ── */
+  #metabar {
+    font-size: 9px; color: var(--muted);
+    padding: 2px 4px; border-bottom: 1px solid #222;
+    display: flex; gap: 6px; flex-wrap: wrap;
+  }
+  #status-msg { color: var(--claimed); }
+
+  /* ── tabs ── */
+  #tabs {
+    display: flex; border-bottom: 1px solid #333;
+    background: #1a1a1a;
+  }
+  .tab {
+    font-family: inherit; font-size: 9px; font-weight: 600;
+    background: none; border: none; color: #777;
+    padding: 4px 8px; cursor: pointer; border-bottom: 2px solid transparent;
+  }
+  .tab.active { color: #eee; border-bottom-color: #3a8ef7; }
+
+  /* ── summary pills ── */
+  #summary {
+    display: flex; flex-wrap: wrap; gap: 3px;
+    padding: 3px 4px; border-bottom: 1px solid #222;
+  }
+  .pill {
+    font-size: 9px; font-weight: 700; padding: 1px 5px;
+    border-radius: 3px; cursor: pointer; color: #fff;
+  }
+  .pill.done    { background: var(--done); }
+  .pill.ready   { background: var(--ready); }
+  .pill.claimed { background: var(--claimed); }
+  .pill.blocked { background: var(--blocked); }
+  .pill.bailed  { background: var(--bailed); }
+  .pill.skip    { background: var(--skip); }
+  .pill.total   { background: #333; }
+
+  /* ── filter ── */
+  #filterbar {
+    padding: 2px 4px; border-bottom: 1px solid #222;
+    display: flex; gap: 3px; align-items: center;
+  }
+  #filterbar input {
+    font-family: inherit; font-size: 9px;
+    background: #222; color: #ccc; border: 1px solid #444;
+    border-radius: 3px; padding: 2px 4px; flex: 1;
+  }
+
+  /* ── tab content ── */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── main task table ── */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 10px;
+  }
+  th, td {
+    padding: 2px 4px;
+    text-align: left;
+    border-bottom: 1px solid #252525;
+    white-space: nowrap;
+  }
+  th {
+    background: var(--hdr);
+    font-weight: 700;
+    position: sticky; top: 0;
+    cursor: pointer;
+    font-size: 9px;
+    color: #aaa;
+  }
+  th:hover { background: #2e2e2e; }
+  tr:nth-child(even) td { background: var(--rowalt); }
+  tr.row-claimed td { background: #1e1800 !important; }
+
+  /* ── status colours ── */
+  .st-done    { color: var(--done);    font-weight: 700; }
+  .st-ready   { color: var(--ready);   font-weight: 700; }
+  .st-claimed { color: var(--claimed); font-weight: 700; }
+  .st-blocked { color: var(--blocked); }
+  .st-bailed  { color: var(--bailed);  font-weight: 700; }
+  .st-skip    { color: var(--skip); }
+
+  .live  { color: var(--claimed); }
+  .enorm { color: var(--done); }
+  .err   { color: var(--bailed); }
+  .muted { color: var(--muted); }
+
+  /* ── workers section ── */
+  #workers-section {
+    padding: 4px;
+    font-size: 10px;
+  }
+  #workers-section table { width: auto; min-width: 100%; }
+
+  /* ── recently completed ── */
+  #recently-completed { padding: 0; }
+
+  /* ── completed tab ── */
+  #completed-area { overflow-x: auto; }
+
+  /* scrollable table wrapper */
+  .tbl-wrap { overflow-x: auto; }
+</style>
+</head>
+<body>
+
+<!-- ── top control bar ── -->
+<div id="topbar">
+  <input type="password" id="pat-input" placeholder="GitHub PAT" oninput="savePat();loadAll();">
+  <button class="btn btn-bail"    onclick="resetByStatus('bailed')">bail→rdy</button>
+  <button class="btn btn-claim"   onclick="resetByStatus('claimed')">rel→rdy</button>
+  <input  type="number" id="worker-count" value="20" min="1" max="50">
+  <button class="btn btn-launch"  onclick="launchWorkers()">▶ launch</button>
+  <button class="btn btn-cancel"  onclick="cancelAllRuns()">✕ cancel</button>
+  <button class="btn btn-refresh" onclick="loadAll()">⟳</button>
+</div>
+
+<!-- ── meta / ticker ── -->
+<div id="metabar">
+  <span id="meta">loading…</span>
+  <span id="ticker"></span>
+  <span id="status-msg"></span>
+</div>
+
+<!-- ── tabs ── -->
+<div id="tabs">
+  <button class="tab active" onclick="switchTab(this,'tasks')">Tasks</button>
+  <button class="tab"        onclick="switchTab(this,'workers')">Workers</button>
+  <button class="tab"        onclick="switchTab(this,'completed')">Done</button>
+</div>
+
+<!-- ══ TASKS tab ══ -->
+<div id="tab-tasks" class="tab-content active">
+  <div id="summary"></div>
+  <div id="filterbar">
+    <input type="text" id="filter" placeholder="filter id/status/γ/τ…" oninput="renderTasks()">
+  </div>
+  <div id="recently-completed"></div>
+  <div class="tbl-wrap">
+    <table id="task-table">
+      <thead><tr>
+        <th onclick="sortBy('id')">id</th>
+        <th onclick="sortBy('status')">st</th>
+        <th onclick="sortBy('gamma')">γ</th>
+        <th onclick="sortBy('tau')">τ</th>
+        <th onclick="sortBy('F_max')">‖F‖</th>
+        <th>live</th>
+        <th onclick="sortBy('completed_at')">t</th>
+      </tr></thead>
+      <tbody id="task-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ WORKERS tab ══ -->
+<div id="tab-workers" class="tab-content">
+  <div id="workers-section">loading…</div>
+</div>
+
+<!-- ══ COMPLETED tab ══ -->
+<div id="tab-completed" class="tab-content">
+  <div id="completed-area"></div>
+</div>
+
+<script>
+  const OWNER = "mhpbreugem", REPO = "fixed-point-factory", BRANCH = "main";
+  const PROJECT = "REZN";
+  let taskData = null, workerData = null, progressData = {};
+  let sortCol = "id", sortAsc = true;
+  let FIGDATA = null;
+
+  // ── PAT ──────────────────────────────────────────────────────────────────
+  function savePat() {
+    const v = document.getElementById('pat-input').value.trim();
+    if (v) localStorage.setItem('fpf_pat', v); else localStorage.removeItem('fpf_pat');
+  }
+  function getPat() { return localStorage.getItem('fpf_pat') || ''; }
+  window.addEventListener('DOMContentLoaded', () => {
+    const p = getPat(); if (p) document.getElementById('pat-input').value = p;
+  });
+
+  // ── Status message ────────────────────────────────────────────────────────
+  function setMsg(txt, ms=0) {
+    const el = document.getElementById('status-msg');
+    el.textContent = txt;
+    if (ms) setTimeout(() => { el.textContent = ''; }, ms);
+  }
+
+  // ── Reset tasks ───────────────────────────────────────────────────────────
+  async function resetByStatus(fromStatus) {
+    const pat = getPat();
+    if (!pat) { alert('Paste a GitHub PAT first.'); return; }
+    setMsg('Fetching…');
+    const qpath = `projects/${PROJECT}/TASK_QUEUE.json`;
+    try {
+      const meta = await fetch(
+        `https://api.github.com/repos/${OWNER}/${REPO}/contents/${qpath}?ref=${BRANCH}`,
+        { headers: { Authorization: `token ${pat}` } }).then(r => r.json());
+      const content = JSON.parse(atob(meta.content.replace(/\n/g, '')));
+      let n = 0;
+      for (const t of content.tasks) {
+        if (t.status === fromStatus) {
+          t.status = 'ready';
+          ['worker','claimed_by','claimed_at','worker_id'].forEach(k => delete t[k]);
+          n++;
+        }
+      }
+      if (!n) { setMsg(`No ${fromStatus} tasks.`, 3000); return; }
+      const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2))));
+      const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${qpath}`, {
+        method: 'PUT',
+        headers: { Authorization: `token ${pat}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: `Reset ${n} ${fromStatus}→ready`, content: newContent, sha: meta.sha, branch: BRANCH })
+      });
+      if (!res.ok) throw new Error(`GitHub API ${res.status}`);
+      setMsg(`✓ Reset ${n} ${fromStatus}→ready`, 4000);
+      setTimeout(() => loadAll(), 2000);
+    } catch(e) { setMsg(`Error: ${e.message}`, 5000); }
+  }
+
+  // ── URL helpers ───────────────────────────────────────────────────────────
+  function rawUrl(path) { return `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${path}`; }
+  function apiUrl(path) { return `https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}?ref=${BRANCH}`; }
+  function authHeaders() { const p = getPat(); return p ? { Authorization: `token ${p}` } : {}; }
+  async function fetchJson(url) {
+    const r = await fetch(url, {cache:"no-store", headers: authHeaders()});
+    if (!r.ok) throw new Error(`${r.status} — ${url}`);
+    return r.json();
+  }
+  async function fetchApiContent(path) {
+    const meta = await fetchJson(apiUrl(path));
+    if (meta.content) return JSON.parse(atob(meta.content.replace(/\n/g, "")));
+    return fetchJson(rawUrl(path));
+  }
+
+  // ── Tabs ──────────────────────────────────────────────────────────────────
+  function switchTab(btn, name) {
+    document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".tab-content").forEach(d => d.classList.remove("active"));
+    document.getElementById(`tab-${name}`).classList.add("active");
+    btn.classList.add("active");
+    if (name === "workers") renderWorkersSection();
+  }
+
+  function esc(s) { return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+  // ── Phase label (compact) ─────────────────────────────────────────────────
+  function resolvePhase(pr) { const ex = pr.extra || {}; return ex.phase || ex.extra?.phase || null; }
+  function phaseLabelShort(pr) {
+    const phase = resolvePhase(pr);
+    const ex = pr.extra || {};
+    const nf = ex.n_fun ?? ex.extra?.n_fun;
+    if (phase === "mp_newton")  return `<span class="live">mp·N s=${pr.iter ?? "?"} f=${nf ?? "?"}</span>`;
+    if (phase === "anderson")   return `<span class="live">And i=${pr.iter ?? "?"} f=${nf ?? "?"}</span>`;
+    if (phase === "picard")     return `<span class="live">Pic i=${pr.iter ?? "?"}</span>`;
+    if (phase === "newton")     return `<span class="live">N s${ex.stage ?? "?"}·${ex.newton_iter ?? "?"}</span>`;
+    if (pr.iter != null)        return `<span class="live">i=${pr.iter}</span>`;
+    return `<span class="muted">…</span>`;
+  }
+
+  // ── Time formatter ────────────────────────────────────────────────────────
+  function fmtTime(t, pr) {
+    if (t.completed_at) {
+      const d = new Date(t.completed_at);
+      return d.toLocaleString('en-US', {month:'numeric', day:'numeric',
+             hour:'2-digit', minute:'2-digit', hour12:false}).replace(',','');
+    }
+    const startIso = t.claimed_at || pr?.started_at;
+    if (startIso) {
+      const sec = (Date.now() - new Date(startIso).getTime()) / 1000;
+      if (sec < 3600) return `⏱${Math.floor(sec/60)}m`;
+      return `⏱${(sec/3600).toFixed(1)}h`;
+    }
+    return '';
+  }
+
+  // ── Task loading ──────────────────────────────────────────────────────────
+  let _queueSha = null;
+  async function loadTasks() {
+    if (getPat()) {
+      const meta = await fetchJson(apiUrl(`projects/${PROJECT}/TASK_QUEUE.json`));
+      if (meta.sha === _queueSha) return;
+      _queueSha = meta.sha;
+      taskData = JSON.parse(atob(meta.content.replace(/\n/g, "")));
+    } else {
+      taskData = await fetchJson(rawUrl(`projects/${PROJECT}/TASK_QUEUE.json`));
+    }
+    renderTasks();
+    document.getElementById("meta").textContent =
+      `upd: ${(taskData.updated_at || "?").replace("T"," ").slice(0,16)} · ${PROJECT}`;
+  }
+
+  // ── Render tasks (mobile-optimised 7 columns) ─────────────────────────────
+  function renderTasks() {
+    if (!taskData) return;
+    const tasks = taskData.tasks || [];
+    const filterVal = (document.getElementById("filter")?.value || "").toLowerCase();
+    const now = Date.now();
+
+    function getDS(t) {
+      const pr = progressData[t.id];
+      const fresh = pr && pr.last_update &&
+        (now - new Date(pr.last_update).getTime()) < 5400000;
+      if (fresh && (t.status === "ready" || t.status === "bailed")) return "claimed";
+      return t.status;
+    }
+
+    // Summary pills
+    const counts = {};
+    tasks.forEach(t => { const ds = getDS(t); counts[ds] = (counts[ds]||0)+1; });
+    const pillOrder = ["done","claimed","ready","blocked","bailed","skip"];
+    const activeFilter = (document.getElementById("filter")?.value || "").toLowerCase();
+    document.getElementById("summary").innerHTML =
+      pillOrder.filter(s => counts[s]).map(s => {
+        const sel = activeFilter === s ? ' style="outline:2px solid #fff"' : '';
+        return `<span class="pill ${s}" onclick="(function(){var f=document.getElementById('filter');f.value=f.value.toLowerCase()==='${s}'?'':'${s}';renderTasks();})()"${sel}>${s[0]}:${counts[s]}</span>`;
+      }).join("") +
+      `<span class="pill total">#${tasks.length}</span>`;
+
+    // Filter + sort
+    const filtered = tasks.filter(t => {
+      if (!filterVal) return true;
+      const ds = getDS(t);
+      return t.id.toLowerCase().includes(filterVal) ||
+             ds.toLowerCase().includes(filterVal) ||
+             String(t.gamma||"").includes(filterVal) ||
+             String(t.tau||"").includes(filterVal);
+    });
+    const sorted = [...filtered].sort((a,b) => {
+      let av = a[sortCol] ?? a.result?.[sortCol] ?? "";
+      let bv = b[sortCol] ?? b.result?.[sortCol] ?? "";
+      if (typeof av === "number" && typeof bv === "number") return sortAsc ? av-bv : bv-av;
+      return sortAsc ? String(av).localeCompare(String(bv)) : String(bv).localeCompare(String(av));
+    });
+
+    // Render rows — 7 compact columns
+    document.getElementById("task-body").innerHTML = sorted.map(t => {
+      const pr = progressData[t.id];
+      const ds = getDS(t);
+      const isClaimed = ds === "claimed";
+      const r = t.result || {};
+      const fmax = r.F_max != null ? Number(r.F_max).toExponential(1)
+                 : r.F_max_bound != null ? `<${Number(r.F_max_bound).toExponential(0)}`
+                 : "";
+      let liveStr = "";
+      if (pr && isClaimed) {
+        const ftolStr = pr.ftol != null ? Number(pr.ftol).toExponential(1) : "—";
+        liveStr = phaseLabelShort(pr) + ` <span class="enorm">${ftolStr}</span>`;
+      }
+      const rowCls = isClaimed ? ' class="row-claimed"' : '';
+      const idShort = t.id.replace(/^g(\d+)_t(\d+)$/, (_, g, tt) => `g${g}t${tt}`);
+      return `<tr${rowCls}>
+        <td>${esc(idShort)}</td>
+        <td class="st-${ds}">${ds.slice(0,4)}</td>
+        <td>${t.gamma ?? ""}</td>
+        <td>${t.tau ?? ""}</td>
+        <td class="enorm">${fmax}</td>
+        <td>${liveStr}</td>
+        <td class="muted">${fmtTime(t, pr)}</td>
+      </tr>`;
+    }).join("");
+
+    renderCompletedMini(tasks);
+  }
+
+  function sortBy(col) {
+    if (sortCol === col) sortAsc = !sortAsc; else { sortCol = col; sortAsc = true; }
+    renderTasks();
+  }
+
+  // ── Completed mini-box (top of tasks tab) ─────────────────────────────────
+  function renderCompletedMini(tasks) {
+    const done = (tasks || [])
+      .filter(t => t.status === "done" && !t.test && t.completed_at)
+      .sort((a,b) => b.completed_at.localeCompare(a.completed_at));
+    const el = document.getElementById("recently-completed");
+    if (!el || !done.length) { if (el) el.innerHTML = ""; return; }
+    const recent = done.slice(0, 5);
+    el.innerHTML = `<div style="padding:2px 4px;border-bottom:1px solid #333;font-size:9px;color:#777">
+      ✓ recently done (${done.length})</div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>id</th><th>γ</th><th>τ</th><th>‖F‖</th><th>1-R²</th><th>when</th></tr></thead>
+        <tbody>${recent.map(t => {
+          const r = t.result || {};
+          const fmax = r.F_max != null ? Number(r.F_max).toExponential(1) : "—";
+          const r2   = r["1-R2"] != null ? r["1-R2"].toExponential(2) : "—";
+          const when = new Date(t.completed_at).toLocaleString('en-US',
+            {month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit', hour12:false}).replace(',','');
+          return `<tr>
+            <td>${esc(t.id)}</td>
+            <td>${t.gamma??""}</td><td>${t.tau??""}</td>
+            <td class="enorm">${fmax}</td><td>${r2}</td>
+            <td class="muted">${when}</td>
+          </tr>`;
+        }).join("")}</tbody>
+      </table></div>`;
+  }
+
+  // ── Completed tab (full list) ─────────────────────────────────────────────
+  function renderCompletedFull(tasks) {
+    const done = (tasks || [])
+      .filter(t => t.status === "done" && !t.test && t.completed_at)
+      .sort((a,b) => b.completed_at.localeCompare(a.completed_at));
+    const el = document.getElementById("completed-area");
+    if (!el) return;
+    if (!done.length) { el.innerHTML = `<p class="muted" style="padding:8px">No completed tasks yet.</p>`; return; }
+    el.innerHTML = `<div class="tbl-wrap"><table>
+      <thead><tr><th>id</th><th>γ</th><th>τ</th><th>‖F‖∞</th><th>1-R²</th><th>solved at</th></tr></thead>
+      <tbody>${done.map(t => {
+        const r = t.result || {};
+        const fmax = r.F_max != null ? Number(r.F_max).toExponential(1) : "—";
+        const r2   = r["1-R2"] != null ? r["1-R2"].toExponential(2) : "—";
+        const when = new Date(t.completed_at).toLocaleString('en-US',
+          {month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit', hour12:false}).replace(',','');
+        return `<tr>
+          <td>${esc(t.id)}</td>
+          <td>${t.gamma??""}</td><td>${t.tau??""}</td>
+          <td class="enorm">${fmax}</td><td>${r2}</td>
+          <td class="muted">${when}</td>
+        </tr>`;
+      }).join("")}</tbody>
+    </table></div>`;
+  }
+
+  // ── Workers / progress ────────────────────────────────────────────────────
+  async function loadWorkers() {
+    try {
+      const hbDir = await fetchJson(apiUrl(`projects/${PROJECT}/heartbeats`));
+      workerData = Array.isArray(hbDir) ? hbDir : [];
+    } catch { workerData = []; }
+  }
+
+  const _progressShaCache = {};
+  async function loadProgress() {
+    try {
+      const pDir = await fetchJson(apiUrl(`projects/${PROJECT}/progress`));
+      if (!Array.isArray(pDir)) return;
+      const activeNames = new Set(pDir.filter(f => f.name.endsWith(".json")).map(f => f.name));
+      let changed = false;
+      for (const fname of Object.keys(_progressShaCache)) {
+        if (!activeNames.has(fname)) {
+          delete _progressShaCache[fname];
+          const taskId = fname.replace(".json", "");
+          delete progressData[taskId];
+          _queueSha = null; changed = true;
+        }
+      }
+      await Promise.all(pDir.filter(f => f.name.endsWith(".json")).map(async f => {
+        if (_progressShaCache[f.name] === f.sha) return;
+        const isNew = !(f.name in _progressShaCache);
+        try {
+          const d = getPat()
+            ? await fetchApiContent(`projects/${PROJECT}/progress/${f.name}`)
+            : await fetchJson(rawUrl(`projects/${PROJECT}/progress/${f.name}`));
+          progressData[d.task_id] = d;
+          _progressShaCache[f.name] = f.sha;
+          if (isNew) { _queueSha = null; changed = true; }
+        } catch {}
+      }));
+      if (changed) loadTasks().catch(() => {});
+      renderTasks();
+    } catch {}
+  }
+
+  // ── Workers section (Workers tab) ─────────────────────────────────────────
+  function renderWorkersSection() {
+    const el = document.getElementById("workers-section");
+    if (!el) return;
+    const now = Date.now();
+    const hbWorkers = new Set((workerData || []).map(f => f.name.replace(".txt","")));
+
+    const hbRows = (workerData || []).filter(f => {
+      const age = f.last_modified ? (now - new Date(f.last_modified).getTime())/1000 : Infinity;
+      return age < 5400;
+    }).map(f => {
+      const wn = f.name.replace(".txt","");
+      const age = f.last_modified ? (now - new Date(f.last_modified).getTime())/1000 : null;
+      const stale = age != null && age > 1800;
+      const ageStr = age != null ? (stale ? `<span class="err">${age.toFixed(0)}s</span>` : `${age.toFixed(0)}s`) : "?";
+      const pr = progressData[wn] || Object.values(progressData).find(p => p.worker_id === wn);
+      const tid = pr ? pr.task_id : "—";
+      const ftol = pr?.ftol != null ? Number(pr.ftol).toExponential(2) : "—";
+      return `<tr>
+        <td>${esc(wn.replace(/^gha-\d+-/,''))}</td>
+        <td>${esc(tid)}</td>
+        <td>${ageStr}</td>
+        <td>${pr ? phaseLabelShort(pr) : "—"}</td>
+        <td class="enorm">${ftol}</td>
+        <td><button onclick="releaseWorker('${esc(tid)}')" class="btn btn-claim" style="padding:1px 4px;font-size:8px">rel</button></td>
+      </tr>`;
+    });
+
+    const progRows = Object.values(progressData)
+      .filter(p => p.worker_id && !hbWorkers.has(p.worker_id))
+      .filter(p => { const age = p.last_update ? (now - new Date(p.last_update).getTime())/1000 : Infinity; return age < 5400; })
+      .sort((a,b) => (a.last_update||"") > (b.last_update||"") ? -1 : 1)
+      .map(p => {
+        const age = p.last_update ? (now - new Date(p.last_update).getTime())/1000 : null;
+        const stale = age != null && age > 1800;
+        const ageStr = age != null ? (stale ? `<span class="err">${age.toFixed(0)}s</span>` : `${age.toFixed(0)}s`) : "?";
+        const ftol = p.ftol != null ? Number(p.ftol).toExponential(2) : "—";
+        return `<tr>
+          <td>${esc((p.worker_id||"").replace(/^gha-\d+-/,''))}</td>
+          <td>${esc(p.task_id)}</td>
+          <td>${ageStr}</td>
+          <td>${phaseLabelShort(p)}</td>
+          <td class="enorm">${ftol}</td>
+          <td><button onclick="releaseWorker('${esc(p.task_id)}')" class="btn btn-claim" style="padding:1px 4px;font-size:8px">rel</button></td>
+        </tr>`;
+      });
+
+    const allRows = [...hbRows, ...progRows];
+    if (!allRows.length) { el.innerHTML = `<span class="muted">no active workers</span>`; return; }
+    el.innerHTML = `<div style="font-size:9px;color:#777;margin-bottom:3px">Active workers (${allRows.length})</div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>worker</th><th>task</th><th>age</th><th>phase</th><th>‖F‖</th><th></th></tr></thead>
+        <tbody>${allRows.join("")}</tbody>
+      </table></div>`;
+  }
+
+  // ── Launch / Cancel ───────────────────────────────────────────────────────
+  async function launchWorkers() {
+    const pat = getPat();
+    if (!pat) { alert('Paste a GitHub PAT first.'); return; }
+    const n = document.getElementById('worker-count').value || '20';
+    setMsg('Launching…');
+    try {
+      const res = await fetch(
+        `https://api.github.com/repos/${OWNER}/${REPO}/actions/workflows/solve.yml/dispatches`,
+        { method:'POST', headers:{Authorization:`token ${pat}`,'Content-Type':'application/json'},
+          body: JSON.stringify({ref:BRANCH, inputs:{workers:String(n)}}) });
+      if (!res.ok) { const t=await res.text(); throw new Error(`${res.status} ${t}`); }
+      setMsg(`✓ Launched ${n} workers`, 4000);
+      setTimeout(() => pollQueue(), 3000);
+    } catch(e) { setMsg(`Error: ${e.message}`, 5000); }
+  }
+
+  async function cancelAllRuns() {
+    const pat = getPat();
+    if (!pat) { alert('Paste a GitHub PAT first.'); return; }
+    setMsg('Cancelling…');
+    try {
+      const runs = await fetchJson(
+        `https://api.github.com/repos/${OWNER}/${REPO}/actions/runs?status=in_progress&per_page=50`);
+      const active = runs.workflow_runs || [];
+      if (!active.length) { setMsg('No active runs.', 3000); return; }
+      await Promise.all(active.map(r =>
+        fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs/${r.id}/cancel`,
+          {method:'POST', headers:{Authorization:`token ${pat}`}})));
+      setMsg(`✓ Cancelled ${active.length} run(s)`, 4000);
+    } catch(e) { setMsg(`Error: ${e.message}`, 5000); }
+  }
+
+  async function releaseWorker(taskId) {
+    const pat = getPat();
+    if (!pat) { alert('Paste a GitHub PAT first.'); return; }
+    setMsg(`Releasing ${taskId}…`);
+    const qpath = `projects/${PROJECT}/TASK_QUEUE.json`;
+    try {
+      const meta = await fetchJson(apiUrl(qpath));
+      const content = JSON.parse(atob(meta.content.replace(/\n/g,'')));
+      const task = content.tasks.find(t => t.id === taskId);
+      if (!task) throw new Error('task not found');
+      task.status='ready'; task.claimed_by=null; task.claimed_at=null;
+      const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(content,null,2))));
+      const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${qpath}`, {
+        method:'PUT',
+        headers:{Authorization:`token ${pat}`,'Content-Type':'application/json'},
+        body:JSON.stringify({message:`Release ${taskId}→ready`, content:newContent, sha:meta.sha, branch:BRANCH})
+      });
+      if (!res.ok) throw new Error(`${res.status}`);
+      setMsg(`✓ Released ${taskId}`, 3000);
+      setTimeout(() => { pollQueue(); renderWorkersSection(); }, 1500);
+    } catch(e) { setMsg(`Error: ${e.message}`, 5000); }
+  }
+
+  // ── Poll loops ────────────────────────────────────────────────────────────
+  let _lastProgressUpdate = null, _lastQueueUpdate = null;
+
+  async function pollProgress() {
+    try { await Promise.all([loadWorkers(), loadProgress()]); _lastProgressUpdate = Date.now(); } catch {}
+    updateTicker();
+  }
+  async function pollQueue() {
+    try { await loadTasks(); _lastQueueUpdate = Date.now();
+      if (taskData) renderCompletedFull(taskData.tasks || []);
+    } catch(e) { document.getElementById("meta").innerHTML = `<span class="err">error: ${esc(e.message)}</span>`; }
+    updateTicker();
+  }
+  function updateTicker() {
+    const el = document.getElementById("ticker");
+    if (!el) return;
+    const now = Date.now();
+    const ps = _lastProgressUpdate ? `w:${((now-_lastProgressUpdate)/1000).toFixed(0)}s` : "w:—";
+    const qs = _lastQueueUpdate    ? `q:${((now-_lastQueueUpdate)/1000).toFixed(0)}s`    : "q:—";
+    el.textContent = `${ps} ${qs}`;
+  }
+  async function loadAll() { await Promise.all([pollProgress(), pollQueue()]); }
+
+  // ── Start ─────────────────────────────────────────────────────────────────
+  pollQueue();
+  pollProgress();
+  setInterval(pollProgress, 3000);
+  setInterval(pollQueue,    5000);
+  setInterval(updateTicker, 1000);
+</script>
+</body>
+</html>
