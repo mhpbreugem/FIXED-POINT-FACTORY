@@ -69,14 +69,14 @@
   .workers-inline { font-size: 0.82rem; color: var(--muted); }
   .workers-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 0.4rem;
                  padding: 0.5rem 0.8rem; margin-bottom: 0.8rem;
-                 display: inline-block; max-width: 100%; }
-  .workers-box table { background: transparent; font-size: 0.82rem; width: auto; }
+                 display: block; overflow-x: auto; }
+  .workers-box table { background: transparent; font-size: 0.82rem; width: auto; min-width: max-content; }
   .workers-box th  { background: #f5f5f5; }
   tr.row-claimed td { background: #fffbe6 !important; }
   .recent-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 0.4rem;
                 padding: 0.5rem 0.8rem; margin-bottom: 0.8rem; font-size: 0.82rem;
-                display: inline-block; max-width: 100%; }
-  .recent-box table { background: transparent; font-size: 0.82rem; width: auto; }
+                display: block; overflow-x: auto; }
+  .recent-box table { background: transparent; font-size: 0.82rem; width: auto; min-width: max-content; }
   .recent-box th { background: #f5f5f5; }
   svg.chart { overflow: visible; }
   .chart-wrap { margin: 0.5rem 0 1.5rem 0; }
@@ -100,7 +100,7 @@
   <span style="font-size:1.1rem">🔬</span>
   <span>
     <strong>Global precision policy (hardcoded):</strong>
-    Anderson accel (‖F‖ &lt; 10⁻³, 2-min cap) → mpmath Newton (dps = 200)
+    Anderson accel (‖F‖ &lt; 10⁻⁴, 5-min cap) → mpmath Newton (dps = 200)
     &nbsp;·&nbsp; target &nbsp;<code style="background:#2a2a4a;padding:0.1rem 0.3rem;border-radius:3px">‖F‖ &lt; 10⁻¹⁰⁰</code>
     &nbsp;·&nbsp; <em>all ree tasks, every run</em>
   </span>
@@ -272,22 +272,64 @@
     return '';
   }
 
+  function downloadAllDone(tasks, fmt) {
+    const done = tasks.filter(t => t.status === "done" && !t.test && t.completed_at);
+    if (!done.length) { alert("No completed tasks to download."); return; }
+    let blob, filename;
+    if (fmt === "csv") {
+      const cols = ["id","gamma","tau","G","K","F_max","1-R2","EV_info","EV_vol","slope","n_triples","completed_at","checkpoint"];
+      const rows = [cols.join(",")];
+      for (const t of done) {
+        const r = t.result || {};
+        rows.push([
+          t.id, t.gamma ?? "", t.tau ?? "", t.G ?? "", t.K ?? 3,
+          r.F_max ?? "", r["1-R2"] ?? "", r.EV_info ?? "", r.EV_vol ?? "",
+          r.slope ?? "", r.n_triples ?? "",
+          t.completed_at ?? "", t.checkpoint ?? ""
+        ].map(v => `"${String(v).replace(/"/g,'""')}"`).join(","));
+      }
+      blob = new Blob([rows.join("\n")], {type:"text/csv"});
+      filename = `rezn_solutions_${new Date().toISOString().slice(0,10)}.csv`;
+    } else {
+      const out = done.map(t => ({
+        id: t.id, gamma: t.gamma, tau: t.tau, G: t.G, K: t.K ?? 3,
+        completed_at: t.completed_at, checkpoint: t.checkpoint,
+        result: t.result || {}, solver_params: t.solver_params || {}
+      }));
+      blob = new Blob([JSON.stringify(out, null, 2)], {type:"application/json"});
+      filename = `rezn_solutions_${new Date().toISOString().slice(0,10)}.json`;
+    }
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
   function renderRecentlyCompleted(tasks) {
     let el = document.getElementById("recently-completed");
     if (!el) return;
     const done = tasks
       .filter(t => t.status === "done" && !t.test && t.completed_at)
-      .sort((a,b) => b.completed_at.localeCompare(a.completed_at))
-      .slice(0, 15);
+      .sort((a,b) => b.completed_at.localeCompare(a.completed_at));
+    const shown = done.slice(0, 15);
     if (!done.length) { el.innerHTML = ""; return; }
     el.innerHTML = `<div class="recent-box">
-      <strong>Recently completed (${done.length})</strong>
-      <table style="margin-top:0.4rem;width:auto">
+      <div style="display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap;margin-bottom:0.4rem">
+        <strong>Completed tasks (${done.length})</strong>
+        <button onclick="downloadAllDone(taskData?.tasks||[], 'csv')"
+          style="font-size:0.75rem;padding:2px 8px;cursor:pointer;background:#1a5e2a;border:none;color:#fff;border-radius:3px;font-weight:600">
+          ⬇ CSV</button>
+        <button onclick="downloadAllDone(taskData?.tasks||[], 'json')"
+          style="font-size:0.75rem;padding:2px 8px;cursor:pointer;background:#1f3a6e;border:none;color:#fff;border-radius:3px;font-weight:600">
+          ⬇ JSON</button>
+      </div>
+      <table style="margin-top:0rem;width:auto">
         <thead><tr>
           <th>id</th><th>γ</th><th>τ</th><th>G</th><th>K</th>
-          <th>‖F‖∞</th><th>1-R²</th><th>E[V info]</th><th>E[vol]</th><th>solved at</th>
+          <th>‖F‖∞</th><th>1-R²</th><th>E[V info]</th><th>E[vol]</th><th>solved at</th><th>solution</th>
         </tr></thead>
-        <tbody>${done.map(t => {
+        <tbody>${shown.map(t => {
           const r = t.result || {};
           const fmax = r.F_max != null ? Number(r.F_max).toExponential(1) : "—";
           const r2   = r["1-R2"] != null ? r["1-R2"].toPrecision(3) : "—";
@@ -295,9 +337,13 @@
           const evv  = r.EV_vol  != null ? Number(r.EV_vol).toExponential(2) : "—";
           const when = new Date(t.completed_at).toLocaleString('en-US',
             {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit', hour12:false});
-          const ckpt = t.checkpoint
-            ? `<a href="https://github.com/${OWNER}/${REPO}/blob/${BRANCH}/${t.checkpoint}" target="_blank" style="font-size:0.75rem">${t.checkpoint.split("/").pop()}</a>`
-            : "";
+          const ckpt = t.checkpoint;
+          const solutionCell = ckpt
+            ? `<a href="https://github.com/${OWNER}/${REPO}/blob/${BRANCH}/${ckpt}" target="_blank"
+                style="font-size:0.75rem;white-space:nowrap">${ckpt.split("/").pop()}</a>
+               &nbsp;<a href="https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${ckpt}"
+                style="font-size:0.72rem;color:#888" target="_blank">[raw]</a>`
+            : `<span style="color:#ccc">—</span>`;
           return `<tr>
             <td class="mono">${esc(t.id)}</td>
             <td>${t.gamma ?? ""}</td><td>${t.tau ?? ""}</td>
@@ -305,9 +351,11 @@
             <td class="enorm">${fmax}</td><td>${r2}</td>
             <td>${evi}</td><td>${evv}</td>
             <td class="small mono">${when}</td>
+            <td>${solutionCell}</td>
           </tr>`;
         }).join("")}</tbody>
       </table>
+      ${done.length > 15 ? `<div style="color:#888;font-size:0.78rem;margin-top:0.3rem">showing 15 of ${done.length} — download CSV/JSON for full list</div>` : ""}
     </div>`;
   }
 
