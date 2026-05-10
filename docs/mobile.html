@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>fpf</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<style>
+  :root {
+    --bg:#111; --fg:#ccc; --muted:#666;
+    --done:#2a9a30; --ready:#3a8ef7; --claimed:#c99000;
+    --bailed:#d03010; --blocked:#555; --skip:#444;
+    --hdr:#202020; --rowalt:#161616; --border:#252525;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin:0; padding:0; overflow-x:hidden; max-width:100vw; }
+  body {
+    font-family: ui-monospace, 'Menlo', monospace;
+    font-size: 8px;
+    line-height: 1.25;
+    background: var(--bg);
+    color: var(--fg);
+  }
+
+  /* ── sticky top controls ── */
+  #topbar {
+    position: sticky; top:0; z-index:20;
+    background: #1a1a1a;
+    border-bottom: 1px solid #333;
+    padding: 2px 3px;
+    display: flex; flex-wrap: wrap; gap: 2px; align-items: center;
+  }
+  #pat-input {
+    font-family: inherit; font-size: 8px;
+    background: #222; color: #bbb; border: 1px solid #444;
+    border-radius: 2px; padding: 2px 3px;
+    width: 130px; min-width: 0;
+  }
+  .btn {
+    font-family: inherit; font-size: 8px; font-weight: 700;
+    border: none; border-radius: 2px; padding: 2px 5px;
+    cursor: pointer; color: #fff; white-space: nowrap; flex-shrink:0;
+  }
+  .b-bail   { background:#7a1808; }
+  .b-rel    { background:#5a4200; }
+  .b-go     { background:#1a5e2a; }
+  .b-stop   { background:#5e1a1a; }
+  .b-ref    { background:#333; }
+  #worker-count {
+    font-family: inherit; font-size: 8px;
+    background:#222; color:#bbb; border:1px solid #444;
+    border-radius:2px; padding:2px; width:28px; text-align:center;
+  }
+
+  /* ── meta / ticker ── */
+  #metabar {
+    font-size: 7px; color: var(--muted);
+    padding: 1px 3px; border-bottom: 1px solid #1e1e1e;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  #status-msg { color: var(--claimed); }
+
+  /* ── tabs ── */
+  #tabs {
+    display: flex; border-bottom: 1px solid #2a2a2a;
+    background: #181818; position:sticky; top:28px; z-index:19;
+  }
+  .tab {
+    font-family:inherit; font-size:8px; font-weight:700;
+    background:none; border:none; color:#666;
+    padding: 3px 8px; cursor:pointer;
+    border-bottom: 2px solid transparent;
+  }
+  .tab.active { color:#ddd; border-bottom-color:#3a8ef7; }
+
+  /* ── summary pills ── */
+  #summary {
+    display:flex; flex-wrap:wrap; gap:2px;
+    padding: 2px 3px; border-bottom:1px solid #1e1e1e;
+  }
+  .pill {
+    font-size:7px; font-weight:700; padding:1px 4px;
+    border-radius:2px; cursor:pointer; color:#fff;
+  }
+  .pill.done    { background:var(--done); }
+  .pill.ready   { background:var(--ready); }
+  .pill.claimed { background:var(--claimed); }
+  .pill.blocked { background:var(--blocked); }
+  .pill.bailed  { background:var(--bailed); }
+  .pill.skip    { background:var(--skip); }
+  .pill.total   { background:#333; }
+
+  /* ── filter ── */
+  #filterbar {
+    padding: 2px 3px; border-bottom:1px solid #1e1e1e;
+    display:flex; gap:2px; align-items:center;
+  }
+  #filter {
+    font-family:inherit; font-size:8px;
+    background:#1e1e1e; color:#ccc; border:1px solid #333;
+    border-radius:2px; padding:1px 3px; flex:1; min-width:0;
+  }
+
+  /* ── tab panes ── */
+  .tab-content { display:none; }
+  .tab-content.active { display:block; }
+
+  /* ── THE TABLE — fixed layout, no horizontal scroll ── */
+  table {
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%;
+    font-size: 8px;
+  }
+  colgroup col { overflow:hidden; }
+  th, td {
+    padding: 0 3px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.25;
+    height: 10px;
+  }
+  th {
+    background: var(--hdr);
+    font-weight: 700;
+    font-size: 7px;
+    color: #888;
+    cursor: pointer;
+    position: sticky;
+    top: 47px; /* topbar + tabs height */
+    z-index: 10;
+    text-align: left;
+  }
+  th:hover { background:#2a2a2a; }
+  tr:nth-child(even) td { background: var(--rowalt); }
+  tr.row-claimed td { background:#1c1500 !important; }
+
+  /* status colours */
+  .st-done    { color:var(--done);    font-weight:700; }
+  .st-ready   { color:var(--ready);   font-weight:700; }
+  .st-claimed { color:var(--claimed); font-weight:700; }
+  .st-blocked { color:var(--blocked); }
+  .st-bailed  { color:var(--bailed);  font-weight:700; }
+  .st-skip    { color:var(--skip); }
+
+  .enorm { color:var(--done); }
+  .live  { color:var(--claimed); }
+  .muted { color:var(--muted); }
+  .err   { color:var(--bailed); }
+
+  /* workers tab */
+  #workers-section { padding:2px 3px; font-size:8px; }
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <input type="password" id="pat-input" placeholder="GitHub PAT" oninput="savePat();loadAll();">
+  <button class="btn b-bail"  onclick="resetByStatus('bailed')">b→r</button>
+  <button class="btn b-rel"   onclick="resetByStatus('claimed')">c→r</button>
+  <input  type="number" id="worker-count" value="20" min="1" max="50">
+  <button class="btn b-go"    onclick="launchWorkers()">▶</button>
+  <button class="btn b-stop"  onclick="cancelAllRuns()">✕</button>
+  <button class="btn b-ref"   onclick="loadAll()">⟳</button>
+  <span id="status-msg" style="font-size:7px"></span>
+</div>
+
+<div id="metabar">
+  <span id="meta">loading…</span>&nbsp;·&nbsp;<span id="ticker"></span>
+</div>
+
+<div id="tabs">
+  <button class="tab active" onclick="switchTab(this,'tasks')">Tasks</button>
+  <button class="tab"        onclick="switchTab(this,'workers')">Workers</button>
+  <button class="tab"        onclick="switchTab(this,'done')">Done</button>
+</div>
+
+<!-- TASKS -->
+<div id="tab-tasks" class="tab-content active">
+  <div id="summary"></div>
+  <div id="filterbar">
+    <input type="text" id="filter" placeholder="filter…" oninput="renderTasks()">
+  </div>
+  <table>
+    <colgroup>
+      <col style="width:26%"><!-- id -->
+      <col style="width:7%"> <!-- st -->
+      <col style="width:9%"> <!-- γ -->
+      <col style="width:9%"> <!-- τ -->
+      <col style="width:17%"><!-- ‖F‖ -->
+      <col style="width:22%"><!-- phase/live -->
+      <col style="width:10%"><!-- t -->
+    </colgroup>
+    <thead><tr>
+      <th onclick="sortBy('id')">id</th>
+      <th onclick="sortBy('status')">st</th>
+      <th onclick="sortBy('gamma')">γ</th>
+      <th onclick="sortBy('tau')">τ</th>
+      <th onclick="sortBy('F_max')">‖F‖</th>
+      <th>phase</th>
+      <th onclick="sortBy('completed_at')">t</th>
+    </tr></thead>
+    <tbody id="task-body"></tbody>
+  </table>
+</div>
+
+<!-- WORKERS -->
+<div id="tab-workers" class="tab-content">
+  <div id="workers-section">loading…</div>
+</div>
+
+<!-- DONE -->
+<div id="tab-done" class="tab-content">
+  <table id="done-table">
+    <colgroup>
+      <col style="width:28%">
+      <col style="width:9%">
+      <col style="width:9%">
+      <col style="width:18%">
+      <col style="width:18%">
+      <col style="width:18%">
+    </colgroup>
+    <thead><tr>
+      <th>id</th><th>γ</th><th>τ</th><th>‖F‖</th><th>1-R²</th><th>when</th>
+    </tr></thead>
+    <tbody id="done-body"></tbody>
+  </table>
+</div>
+
+<script>
+  const OWNER="mhpbreugem", REPO="fixed-point-factory", BRANCH="main", PROJECT="REZN";
+  let taskData=null, workerData=null, progressData={};
+  let sortCol="id", sortAsc=true;
+
+  // PAT
+  function savePat(){const v=document.getElementById('pat-input').value.trim();v?localStorage.setItem('fpf_pat',v):localStorage.removeItem('fpf_pat');}
+  function getPat(){return localStorage.getItem('fpf_pat')||'';}
+  window.addEventListener('DOMContentLoaded',()=>{const p=getPat();if(p)document.getElementById('pat-input').value=p;});
+
+  function setMsg(t,ms=0){const e=document.getElementById('status-msg');e.textContent=t;if(ms)setTimeout(()=>e.textContent='',ms);}
+
+  // URL helpers
+  function rawUrl(p){return`https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${p}`;}
+  function apiUrl(p){return`https://api.github.com/repos/${OWNER}/${REPO}/contents/${p}?ref=${BRANCH}`;}
+  function authH(){const p=getPat();return p?{Authorization:`token ${p}`}:{};}
+  async function fj(url){const r=await fetch(url,{cache:"no-store",headers:authH()});if(!r.ok)throw new Error(r.status);return r.json();}
+  async function apiContent(path){const m=await fj(apiUrl(path));if(m.content)return JSON.parse(atob(m.content.replace(/\n/g,"")));return fj(rawUrl(path));}
+
+  // Tabs
+  function switchTab(btn,name){
+    document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
+    document.querySelectorAll(".tab-content").forEach(d=>d.classList.remove("active"));
+    document.getElementById(`tab-${name}`).classList.add("active");
+    btn.classList.add("active");
+    if(name==="workers")renderWorkersSection();
+  }
+
+  function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+  // Shorten task id: g050_t0200 → g50t200
+  function shortId(id){
+    return id.replace(/^g0*(\d+)_t0*(\d+)$/,(_,g,t)=>`g${g}t${t}`).slice(0,12);
+  }
+
+  // Phase label — ultra compact
+  function phase(pr){
+    if(!pr)return'';
+    const ex=pr.extra||{};
+    const p=ex.phase||ex.extra?.phase||null;
+    const it=pr.iter??'';
+    const nf=ex.n_fun??ex.extra?.n_fun??'';
+    if(p==="mp_newton") return`mp${it} f${nf}`;
+    if(p==="anderson")  return`A${it} f${nf}`;
+    if(p==="picard")    return`Pi${it}`;
+    if(p==="newton")    return`N${ex.stage??''}·${ex.newton_iter??''}`;
+    if(it!=='')         return`i${it}`;
+    return'…';
+  }
+
+  // Time: elapsed for claimed, short date for done
+  function fmtT(t,pr){
+    if(t.completed_at){
+      const d=new Date(t.completed_at);
+      return`${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    }
+    const iso=t.claimed_at||pr?.started_at;
+    if(iso){const s=(Date.now()-new Date(iso).getTime())/1000;return s<3600?`${Math.floor(s/60)}m`:`${(s/3600).toFixed(1)}h`;}
+    return'';
+  }
+
+  // Task loading
+  let _qSha=null;
+  async function loadTasks(){
+    if(getPat()){
+      const m=await fj(apiUrl(`projects/${PROJECT}/TASK_QUEUE.json`));
+      if(m.sha===_qSha)return;
+      _qSha=m.sha;
+      taskData=JSON.parse(atob(m.content.replace(/\n/g,"")));
+    }else{
+      taskData=await fj(rawUrl(`projects/${PROJECT}/TASK_QUEUE.json`));
+    }
+    renderTasks();
+    renderDone();
+    const u=(taskData.updated_at||'?').replace('T',' ').slice(0,16);
+    document.getElementById("meta").textContent=`upd:${u}`;
+  }
+
+  function getDS(t){
+    const pr=progressData[t.id];
+    const fresh=pr&&pr.last_update&&(Date.now()-new Date(pr.last_update).getTime())<5400000;
+    if(fresh&&(t.status==="ready"||t.status==="bailed"))return"claimed";
+    return t.status;
+  }
+
+  // Status 2-char codes
+  const ST2={done:"ok",ready:"rd",claimed:"cl",blocked:"bl",bailed:"ba",skip:"sk"};
+
+  function renderTasks(){
+    if(!taskData)return;
+    const tasks=taskData.tasks||[];
+    const fv=(document.getElementById("filter")?.value||"").toLowerCase();
+    const now=Date.now();
+
+    // pills
+    const counts={};
+    tasks.forEach(t=>{const ds=getDS(t);counts[ds]=(counts[ds]||0)+1;});
+    const order=["done","claimed","ready","blocked","bailed","skip"];
+    const af=(document.getElementById("filter")?.value||"").toLowerCase();
+    document.getElementById("summary").innerHTML=
+      order.filter(s=>counts[s]).map(s=>{
+        const sel=af===s?' style="outline:2px solid #fff"':'';
+        return`<span class="pill ${s}" onclick="(function(){var f=document.getElementById('filter');f.value=f.value.toLowerCase()==='${s}'?'':'${s}';renderTasks();})()"${sel}>${s[0]}:${counts[s]}</span>`;
+      }).join("")+`<span class="pill total">#${tasks.length}</span>`;
+
+    // filter+sort
+    const filtered=tasks.filter(t=>{
+      if(!fv)return true;
+      const ds=getDS(t);
+      return t.id.toLowerCase().includes(fv)||ds.toLowerCase().includes(fv)||
+             String(t.gamma||"").includes(fv)||String(t.tau||"").includes(fv);
+    });
+    const sorted=[...filtered].sort((a,b)=>{
+      let av=a[sortCol]??a.result?.[sortCol]??"";
+      let bv=b[sortCol]??b.result?.[sortCol]??"";
+      if(typeof av==="number"&&typeof bv==="number")return sortAsc?av-bv:bv-av;
+      return sortAsc?String(av).localeCompare(String(bv)):String(bv).localeCompare(String(av));
+    });
+
+    document.getElementById("task-body").innerHTML=sorted.map(t=>{
+      const pr=progressData[t.id];
+      const ds=getDS(t);
+      const isCl=ds==="claimed";
+      const r=t.result||{};
+      // ‖F‖: use live ftol for claimed, result F_max for done
+      const fmaxDone=r.F_max!=null?Number(r.F_max).toExponential(1)
+                    :r.F_max_bound!=null?`<${Number(r.F_max_bound).toExponential(0)}`:"";
+      const fmaxLive=pr?.ftol!=null?Number(pr.ftol).toExponential(1):"";
+      const fStr=isCl?fmaxLive:fmaxDone;
+      const phStr=isCl?phase(pr):"";
+      const rc=isCl?' class="row-claimed"':'';
+      return`<tr${rc}>
+        <td>${esc(shortId(t.id))}</td>
+        <td class="st-${ds}">${ST2[ds]||ds.slice(0,2)}</td>
+        <td>${t.gamma!=null?parseFloat(Number(t.gamma).toPrecision(3)):""}</td>
+        <td>${t.tau!=null?parseFloat(Number(t.tau).toPrecision(3)):""}</td>
+        <td class="enorm">${fStr}</td>
+        <td class="live">${phStr}</td>
+        <td class="muted">${fmtT(t,pr)}</td>
+      </tr>`;
+    }).join("");
+  }
+
+  function sortBy(col){if(sortCol===col)sortAsc=!sortAsc;else{sortCol=col;sortAsc=true;}renderTasks();}
+
+  function renderDone(){
+    const tasks=taskData?.tasks||[];
+    const done=tasks.filter(t=>t.status==="done"&&!t.test&&t.completed_at)
+                    .sort((a,b)=>b.completed_at.localeCompare(a.completed_at));
+    document.getElementById("done-body").innerHTML=done.map(t=>{
+      const r=t.result||{};
+      const fmax=r.F_max!=null?Number(r.F_max).toExponential(1):"—";
+      const r2=r["1-R2"]!=null?r["1-R2"].toExponential(2):"—";
+      const d=new Date(t.completed_at);
+      const when=`${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+      return`<tr>
+        <td>${esc(shortId(t.id))}</td>
+        <td>${t.gamma!=null?parseFloat(Number(t.gamma).toPrecision(3)):""}</td><td>${t.tau!=null?parseFloat(Number(t.tau).toPrecision(3)):""}</td>
+        <td class="enorm">${fmax}</td><td>${r2}</td>
+        <td class="muted">${when}</td>
+      </tr>`;
+    }).join("");
+  }
+
+  // Workers / progress
+  async function loadWorkers(){
+    try{const d=await fj(apiUrl(`projects/${PROJECT}/heartbeats`));workerData=Array.isArray(d)?d:[];}catch{workerData=[];}
+  }
+  const _psha={};
+  async function loadProgress(){
+    try{
+      const pDir=await fj(apiUrl(`projects/${PROJECT}/progress`));
+      if(!Array.isArray(pDir))return;
+      const active=new Set(pDir.filter(f=>f.name.endsWith(".json")).map(f=>f.name));
+      let changed=false;
+      for(const fn of Object.keys(_psha)){if(!active.has(fn)){delete _psha[fn];delete progressData[fn.replace(".json","")];_qSha=null;changed=true;}}
+      await Promise.all(pDir.filter(f=>f.name.endsWith(".json")).map(async f=>{
+        if(_psha[f.name]===f.sha)return;
+        const isNew=!(f.name in _psha);
+        try{
+          const d=getPat()?await apiContent(`projects/${PROJECT}/progress/${f.name}`):await fj(rawUrl(`projects/${PROJECT}/progress/${f.name}`));
+          progressData[d.task_id]=d;_psha[f.name]=f.sha;
+          if(isNew){_qSha=null;changed=true;}
+        }catch{}
+      }));
+      if(changed)loadTasks().catch(()=>{});
+      renderTasks();
+    }catch{}
+  }
+
+  function renderWorkersSection(){
+    const el=document.getElementById("workers-section");
+    if(!el)return;
+    const now=Date.now();
+    const hbSet=new Set((workerData||[]).map(f=>f.name.replace(".txt","")));
+    const hbRows=(workerData||[]).filter(f=>{
+      const age=f.last_modified?(now-new Date(f.last_modified).getTime())/1000:Infinity;
+      return age<5400;
+    }).map(f=>{
+      const wn=f.name.replace(".txt","");
+      const age=f.last_modified?(now-new Date(f.last_modified).getTime())/1000:null;
+      const stale=age!=null&&age>1800;
+      const ageS=age!=null?(stale?`<span class="err">${age.toFixed(0)}s</span>`:`${age.toFixed(0)}s`):"?";
+      const pr=progressData[wn]||Object.values(progressData).find(p=>p.worker_id===wn);
+      const tid=pr?pr.task_id:"—";
+      const ftol=pr?.ftol!=null?Number(pr.ftol).toExponential(1):"—";
+      const wshort=wn.replace(/^gha-\d+-/,'').slice(0,14);
+      return`<tr>
+        <td>${esc(wshort)}</td><td>${esc(shortId(tid))}</td>
+        <td>${ageS}</td><td class="live">${pr?phase(pr):"—"}</td>
+        <td class="enorm">${ftol}</td>
+        <td><button onclick="releaseWorker('${esc(tid)}')" class="btn b-rel" style="padding:0 3px">r</button></td>
+      </tr>`;
+    });
+    const progRows=Object.values(progressData)
+      .filter(p=>p.worker_id&&!hbSet.has(p.worker_id))
+      .filter(p=>{const age=p.last_update?(now-new Date(p.last_update).getTime())/1000:Infinity;return age<5400;})
+      .sort((a,b)=>(a.last_update||"")>(b.last_update||"")?-1:1)
+      .map(p=>{
+        const age=p.last_update?(now-new Date(p.last_update).getTime())/1000:null;
+        const stale=age!=null&&age>1800;
+        const ageS=age!=null?(stale?`<span class="err">${age.toFixed(0)}s</span>`:`${age.toFixed(0)}s`):"?";
+        const ftol=p.ftol!=null?Number(p.ftol).toExponential(1):"—";
+        const wshort=(p.worker_id||"").replace(/^gha-\d+-/,'').slice(0,14);
+        return`<tr>
+          <td>${esc(wshort)}</td><td>${esc(shortId(p.task_id))}</td>
+          <td>${ageS}</td><td class="live">${phase(p)}</td>
+          <td class="enorm">${ftol}</td>
+          <td><button onclick="releaseWorker('${esc(p.task_id)}')" class="btn b-rel" style="padding:0 3px">r</button></td>
+        </tr>`;
+      });
+    const all=[...hbRows,...progRows];
+    if(!all.length){el.innerHTML=`<span class="muted">no active workers</span>`;return;}
+    el.innerHTML=`<div class="muted" style="padding:2px 0">workers (${all.length})</div>
+      <table>
+        <colgroup>
+          <col style="width:30%"><col style="width:22%">
+          <col style="width:10%"><col style="width:23%">
+          <col style="width:11%"><col style="width:4%">
+        </colgroup>
+        <thead><tr><th>worker</th><th>task</th><th>age</th><th>phase</th><th>‖F‖</th><th></th></tr></thead>
+        <tbody>${all.join("")}</tbody>
+      </table>`;
+  }
+
+  // Actions
+  async function resetByStatus(fromStatus){
+    const pat=getPat();if(!pat){alert('Paste a PAT first.');return;}
+    setMsg('…');
+    const qpath=`projects/${PROJECT}/TASK_QUEUE.json`;
+    try{
+      const meta=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${qpath}?ref=${BRANCH}`,
+        {headers:{Authorization:`token ${pat}`}}).then(r=>r.json());
+      const content=JSON.parse(atob(meta.content.replace(/\n/g,'')));
+      let n=0;
+      for(const t of content.tasks){
+        if(t.status===fromStatus){t.status='ready';['worker','claimed_by','claimed_at','worker_id'].forEach(k=>delete t[k]);n++;}
+      }
+      if(!n){setMsg(`0 ${fromStatus}`,3000);return;}
+      const nc=btoa(unescape(encodeURIComponent(JSON.stringify(content,null,2))));
+      const res=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${qpath}`,{
+        method:'PUT',headers:{Authorization:`token ${pat}`,'Content-Type':'application/json'},
+        body:JSON.stringify({message:`Reset ${n} ${fromStatus}→ready`,content:nc,sha:meta.sha,branch:BRANCH})
+      });
+      if(!res.ok)throw new Error(res.status);
+      setMsg(`✓ ${n} reset`,3000);setTimeout(()=>loadAll(),1500);
+    }catch(e){setMsg(`✗ ${e.message}`,4000);}
+  }
+
+  async function launchWorkers(){
+    const pat=getPat();if(!pat){alert('PAT required');return;}
+    const n=document.getElementById('worker-count').value||'20';
+    setMsg('…');
+    try{
+      const res=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/workflows/solve.yml/dispatches`,
+        {method:'POST',headers:{Authorization:`token ${pat}`,'Content-Type':'application/json'},
+         body:JSON.stringify({ref:BRANCH,inputs:{workers:String(n)}})});
+      if(!res.ok){const t=await res.text();throw new Error(`${res.status}`);}
+      setMsg(`✓ ${n}w`,3000);setTimeout(()=>pollQueue(),3000);
+    }catch(e){setMsg(`✗ ${e.message}`,4000);}
+  }
+
+  async function cancelAllRuns(){
+    const pat=getPat();if(!pat){alert('PAT required');return;}
+    setMsg('…');
+    try{
+      const runs=await fj(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs?status=in_progress&per_page=50`);
+      const active=runs.workflow_runs||[];
+      if(!active.length){setMsg('0 runs',3000);return;}
+      await Promise.all(active.map(r=>fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs/${r.id}/cancel`,
+        {method:'POST',headers:{Authorization:`token ${pat}`}})));
+      setMsg(`✓ cancelled ${active.length}`,3000);
+    }catch(e){setMsg(`✗ ${e.message}`,4000);}
+  }
+
+  async function releaseWorker(taskId){
+    const pat=getPat();if(!pat){alert('PAT required');return;}
+    setMsg(`rel ${taskId}…`);
+    const qpath=`projects/${PROJECT}/TASK_QUEUE.json`;
+    try{
+      const meta=await fj(apiUrl(qpath));
+      const content=JSON.parse(atob(meta.content.replace(/\n/g,'')));
+      const task=content.tasks.find(t=>t.id===taskId);
+      if(!task)throw new Error('not found');
+      task.status='ready';task.claimed_by=null;task.claimed_at=null;
+      const nc=btoa(unescape(encodeURIComponent(JSON.stringify(content,null,2))));
+      const res=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${qpath}`,{
+        method:'PUT',headers:{Authorization:`token ${pat}`,'Content-Type':'application/json'},
+        body:JSON.stringify({message:`Release ${taskId}`,content:nc,sha:meta.sha,branch:BRANCH})
+      });
+      if(!res.ok)throw new Error(res.status);
+      setMsg(`✓ rel`,2000);setTimeout(()=>{pollQueue();renderWorkersSection();},1200);
+    }catch(e){setMsg(`✗ ${e.message}`,4000);}
+  }
+
+  // Poll loops
+  let _lp=null,_lq=null;
+  async function pollProgress(){
+    try{await Promise.all([loadWorkers(),loadProgress()]);_lp=Date.now();}catch{}
+    tick();
+  }
+  async function pollQueue(){
+    try{await loadTasks();_lq=Date.now();}
+    catch(e){document.getElementById("meta").textContent=`err:${e.message}`;}
+    tick();
+  }
+  function tick(){
+    const el=document.getElementById("ticker");if(!el)return;
+    const now=Date.now();
+    const p=_lp?`w:${((now-_lp)/1000).toFixed(0)}s`:"w:—";
+    const q=_lq?`q:${((now-_lq)/1000).toFixed(0)}s`:"q:—";
+    el.textContent=`${p} ${q}`;
+  }
+  async function loadAll(){await Promise.all([pollProgress(),pollQueue()]);}
+
+  pollQueue();pollProgress();
+  setInterval(pollProgress,3000);setInterval(pollQueue,5000);setInterval(tick,1000);
+</script>
+</body>
+</html>
