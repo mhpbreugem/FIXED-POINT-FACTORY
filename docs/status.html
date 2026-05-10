@@ -94,7 +94,7 @@
   <span style="font-size:1.1rem">🔬</span>
   <span>
     <strong>Global precision policy (hardcoded):</strong>
-    Picard 500 iter (float64 warm-start) → mpmath Newton (dps = 200)
+    Anderson accel (‖F‖ &lt; 10⁻³, 2-min cap) → mpmath Newton (dps = 200)
     &nbsp;·&nbsp; target &nbsp;<code style="background:#2a2a4a;padding:0.1rem 0.3rem;border-radius:3px">‖F‖ &lt; 10⁻¹⁰⁰</code>
     &nbsp;·&nbsp; <em>all ree tasks, every run</em>
   </span>
@@ -322,6 +322,8 @@
           phaseLabel = `smooth s${ex.stage ?? "?"}·${ex.newton_iter ?? "?"}`;
         } else if (ex.phase === "picard") {
           phaseLabel = `<span style="color:#f7c87e">Picard</span> iter=${pr.iter ?? "?"} fun=${ex.n_fun ?? "?"}`;
+        } else if (ex.phase === "anderson") {
+          phaseLabel = `<span style="color:#c87ef7">Anderson</span> iter=${pr.iter ?? "?"} fun=${ex.n_fun ?? "?"}`;
         } else {
           phaseLabel = `iter ${pr.iter ?? "?"}`;
         }
@@ -412,6 +414,7 @@
       if (ex.phase === "newton")    return `<span style="color:#8ef78e">Newton s${ex.stage??""}</span>`;
       if (ex.phase === "presmooth") return `<span style="color:#f7c87e">Picard s${ex.stage??""}</span>`;
       if (ex.phase === "picard")    return `<span style="color:#f7a07e">Picard</span> iter=${pr.iter??"?"}${nf}`;
+      if (ex.phase === "anderson")  return `<span style="color:#c87ef7">Anderson</span> iter=${pr.iter??"?"}${nf}`;
       if (pr.iter != null)          return `<span style="color:#aaa">iter ${pr.iter}</span>`;
       return "—";
     }
