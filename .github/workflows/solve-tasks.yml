@@ -14,9 +14,9 @@ on:
   workflow_dispatch:
     inputs:
       max_workers:
-        description: 'Max parallel solver jobs (default 7, hard cap 20)'
+        description: 'Max parallel solver jobs'
         required: false
-        default: '7'
+        default: '20'
 
 permissions:
   contents: write     # workflow can push commits back to the repo
@@ -51,7 +51,7 @@ jobs:
       - name: Pick and claim ready tasks
         id: pick
         env:
-          MAX_WORKERS: ${{ github.event.inputs.max_workers || '7' }}
+          MAX_WORKERS: ${{ github.event.inputs.max_workers || '20' }}
           RUN_ID: ${{ github.run_id }}
         run: |
           set -euo pipefail
@@ -119,7 +119,7 @@ jobs:
             echo "## Schedule"
             echo ""
             echo "- run_id: \`${{ github.run_id }}\`"
-            echo "- max_workers: \`${{ github.event.inputs.max_workers || '4' }}\`"
+            echo "- max_workers: \`${{ github.event.inputs.max_workers || '20' }}\`"
             echo "- claimed: \`${{ steps.pick.outputs.count }}\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
@@ -133,7 +133,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      max-parallel: 9
+      max-parallel: 20
       matrix:
         task: ${{ fromJSON(needs.schedule.outputs.tasks) }}
     timeout-minutes: 350     # under GitHub's 360 min hard cap
