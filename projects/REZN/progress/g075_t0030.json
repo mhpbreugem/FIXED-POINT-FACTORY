@@ -2,12 +2,12 @@
   "task_id": "g075_t0030",
   "worker_id": "gha-25621109011-g075_t0030",
   "started_at": "2026-05-10T11:35:13Z",
-  "last_update": "2026-05-10T14:13:37Z",
-  "iter": 13,
-  "ftol": "4.003336e-01",
+  "last_update": "2026-05-10T14:25:40Z",
+  "iter": 14,
+  "ftol": "3.489170e-01",
   "extra": {
     "phase": "mp_newton",
-    "n_fun": 13,
-    "n_jac": 12
+    "n_fun": 14,
+    "n_jac": 13
   }
 }
