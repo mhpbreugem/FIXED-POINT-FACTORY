@@ -17,15 +17,20 @@ Python API:
 """
 
 import argparse
+import base64 as _b64
 import datetime
 import hashlib
 import json
 import math
 import os
+import random
+import re as _re
 import socket
 import subprocess
 import sys
 import time
+import urllib.error as _urllib_err
+import urllib.request as _urllib_req
 
 
 # ---------------------------------------------------------------------------
@@ -116,9 +121,16 @@ def _git(*args, check=True) -> subprocess.CompletedProcess:
                           cwd=repo_root())
 
 
-def _pull_rebase(branch: str | None = None) -> None:
+def _pull_rebase(branch: str | None = None) -> bool:
+    """Rebase onto origin. Returns True on success, False on conflict/error."""
     branch = branch or _current_branch()
-    _git("pull", "--rebase", "origin", branch)
+    result = _git("pull", "--rebase", "origin", branch, check=False)
+    if result.returncode == 0:
+        return True
+    # Conflict or other error — abort rebase and hard-reset to origin
+    _git("rebase", "--abort", check=False)
+    _git("reset", "--hard", f"origin/{branch}", check=False)
+    return False
 
 
 def _push(branch: str | None = None, retries: int = 4) -> bool:
@@ -128,13 +140,16 @@ def _push(branch: str | None = None, retries: int = 4) -> bool:
         result = _git("push", "origin", branch, check=False)
         if result.returncode == 0:
             return True
-        # non-fast-forward → another worker pushed → caller handles
-        if "rejected" in result.stderr or "non-fast-forward" in result.stderr:
-            return False
-        # network error → retry
-        if attempt < retries:
+        # network error → retry with backoff
+        stderr = result.stderr or ""
+        is_network = not ("rejected" in stderr or "non-fast-forward" in stderr
+                          or "fetch first" in stderr)
+        if is_network and attempt < retries:
             time.sleep(backoff)
             backoff *= 2
+            continue
+        # non-fast-forward or other push rejection → caller should rebase
+        return False
     return False
 
 
@@ -183,58 +198,132 @@ def try_claim(project: str, task_id: str, worker_id: str | None = None,
     return False
 
 
+# ---------------------------------------------------------------------------
+# REST API helpers — used by mark_done to avoid git-push race conditions.
+# Progress commits only touch progress/taskid.json, NOT TASK_QUEUE.json, so
+# its SHA is stable between done/claim events.  Optimistic locking via SHA
+# means 409 conflicts are rare and resolve immediately on retry.
+# ---------------------------------------------------------------------------
+
+def _gh_token() -> str:
+    t = os.environ.get("GITHUB_TOKEN", "")
+    if t:
+        return t
+    result = _git("remote", "get-url", "origin", check=False)
+    m = _re.search(r"https://([A-Za-z0-9_]+)@github\.com", result.stdout.strip())
+    return m.group(1) if m else ""
+
+
+def _gh_repo() -> tuple[str, str]:
+    result = _git("remote", "get-url", "origin", check=False)
+    m = _re.search(r"github\.com[:/]([^/]+)/([^/.]+?)(?:\.git)?$", result.stdout.strip())
+    return (m.group(1), m.group(2)) if m else ("", "")
+
+
+def _api_get(token: str, owner: str, repo: str, path: str, branch: str) -> dict:
+    url = f"https://api.github.com/repos/{owner}/{repo}/contents/{path}?ref={branch}"
+    req = _urllib_req.Request(url, headers={"Authorization": f"token {token}"})
+    with _urllib_req.urlopen(req, timeout=20) as r:
+        return json.loads(r.read().decode())
+
+
+def _api_put(token: str, owner: str, repo: str, path: str,
+             message: str, content_bytes: bytes, sha: str | None, branch: str) -> int:
+    url = f"https://api.github.com/repos/{owner}/{repo}/contents/{path}"
+    payload: dict = {"message": message,
+                     "content": _b64.b64encode(content_bytes).decode(),
+                     "branch": branch}
+    if sha:
+        payload["sha"] = sha
+    req = _urllib_req.Request(url, data=json.dumps(payload).encode(), method="PUT",
+                              headers={"Authorization": f"token {token}",
+                                       "Content-Type": "application/json"})
+    try:
+        with _urllib_req.urlopen(req, timeout=25) as r:
+            return r.status
+    except _urllib_err.HTTPError as e:
+        return e.code
+
+
 def mark_done(project: str, task_id: str, checkpoint: str | None,
               result: dict, branch: str | None = None) -> bool:
-    """Flip task to done, stage checkpoint, commit, push. Returns True on success."""
-    queue = load_queue(project)
-    task = _find_by_id(queue, task_id)
-    if task is None:
-        raise ValueError(f"Task {task_id} not found")
+    """
+    Flip task to done and upload checkpoint via GitHub REST API.
 
-    task["status"] = "done"
-    task["checkpoint"] = checkpoint
-    task["result"] = result
-    task["completed_at"] = _now()
-    task.pop("claimed_by", None)
-    task.pop("claimed_at", None)
-
-    newly_ready = _unblock_downstream(queue)
-    _update_summary(queue)
-    save_queue(project, queue)
-    _stage_queue(project)
-
-    if checkpoint:
-        cp_abs = os.path.join(repo_root(), checkpoint)
-        if os.path.exists(cp_abs):
-            _git("add", checkpoint)
-
+    Uses SHA-based optimistic locking on TASK_QUEUE.json.  Progress commits
+    never touch TASK_QUEUE.json so its SHA is stable; 409 conflicts only occur
+    when two tasks finish simultaneously, and resolve in 1–2 retries.
+    """
+    branch = branch or _current_branch()
+    token = _gh_token()
+    owner, repo_name = _gh_repo()
     metric_str = _result_summary(result)
-    unblock_str = f" unblocked:{','.join(newly_ready)}" if newly_ready else ""
-    _git("commit", "-m", f"{task_id}: {metric_str} done{unblock_str}")
+    queue_api_path = f"projects/{project}/TASK_QUEUE.json"
 
-    for attempt in range(5):
-        if _push(branch):
-            return True
-        _pull_rebase(branch)
-        # Re-apply our done status after rebase (preserve all other done entries)
-        queue = load_queue(project)
+    for attempt in range(20):
+        # Fetch live queue + its SHA (the optimistic-lock key).
+        # Progress commits never touch TASK_QUEUE.json, so SHA only changes on
+        # done/claim events — conflicts are rare and resolve in 1-2 retries.
+        try:
+            meta = _api_get(token, owner, repo_name, queue_api_path, branch)
+        except Exception as exc:
+            print(f"[mark_done] GET attempt {attempt}: {exc}", flush=True)
+            time.sleep(min(2 ** attempt, 30))
+            continue
+
+        file_sha = meta["sha"]
+        queue = json.loads(_b64.b64decode(meta["content"].replace("\n", "")))
         task = _find_by_id(queue, task_id)
-        if task:
-            task["status"] = "done"
-            task["checkpoint"] = checkpoint
-            task["result"] = result
-            task["completed_at"] = _now()
-            task.pop("claimed_by", None)
-            task.pop("claimed_at", None)
-            newly_ready = _unblock_downstream(queue)
-            _update_summary(queue)
-            save_queue(project, queue)
-            _stage_queue(project)
+        if task is None:
+            return False
+        if task.get("status") == "done":
+            return True  # another worker already landed it
+
+        task["status"] = "done"
+        task["checkpoint"] = checkpoint
+        task["result"] = result
+        task["completed_at"] = _now()
+        task.pop("claimed_by", None)
+        task.pop("claimed_at", None)
+
+        newly_ready = _unblock_downstream(queue)
+        _update_summary(queue)
+        unblock_str = f" unblocked:{','.join(newly_ready)}" if newly_ready else ""
+
+        status = _api_put(
+            token, owner, repo_name, queue_api_path,
+            f"{task_id}: {metric_str} done{unblock_str}",
+            json.dumps(queue, indent=2).encode(), file_sha, branch,
+        )
+
+        if status in (200, 201):
+            # Upload checkpoint via REST API (best-effort; non-critical)
             if checkpoint:
                 cp_abs = os.path.join(repo_root(), checkpoint)
                 if os.path.exists(cp_abs):
-                    _git("add", checkpoint)
-            _git("commit", "-m", f"{task_id}: {metric_str} done{unblock_str}")
+                    with open(cp_abs, "rb") as fh:
+                        cp_bytes = fh.read()
+                    try:
+                        cp_meta = _api_get(token, owner, repo_name, checkpoint, branch)
+                        cp_sha: str | None = cp_meta["sha"]
+                    except Exception:
+                        cp_sha = None
+                    rc = _api_put(token, owner, repo_name, checkpoint,
+                                  f"{task_id}: checkpoint", cp_bytes, cp_sha, branch)
+                    if rc not in (200, 201):
+                        print(f"[mark_done] checkpoint upload returned {rc} (non-fatal)",
+                              flush=True)
+            return True
+
+        if status == 409:
+            # SHA changed: another done/claim commit landed between GET and PUT
+            print(f"[mark_done] 409 conflict attempt {attempt}, retrying", flush=True)
+            time.sleep(random.uniform(0, min(2 ** attempt, 8)))
+            continue
+
+        print(f"[mark_done] PUT returned {status} attempt {attempt}", flush=True)
+        time.sleep(min(2 ** attempt, 15))
+
     return False
 
 
@@ -610,3 +699,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
