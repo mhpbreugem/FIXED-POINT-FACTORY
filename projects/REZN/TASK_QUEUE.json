@@ -243,13 +243,14 @@
         "g100_t0050"
       ],
       "status": "done",
-      "checkpoint": "results/full_ree/task3_g100_t0030_mp50.json",
+      "checkpoint": "projects/REZN/checkpoints/g100_t0030.npz",
       "result": {
         "1-R2": 0.027,
-        "slope": null,
+        "slope": 0.9358401723740598,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
+        "F_max": 4.111488927094342e-12
       }
     },
     {
@@ -275,13 +276,14 @@
         "g100_t0100"
       ],
       "status": "done",
-      "checkpoint": "results/full_ree/task3_g100_t0080_mp50.json",
+      "checkpoint": "projects/REZN/checkpoints/g100_t0080.npz",
       "result": {
         "1-R2": 0.039,
-        "slope": null,
+        "slope": 0.8844043531577075,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
+        "F_max": 1.9628743075372768e-13
       }
     },
     {
@@ -422,13 +424,14 @@
         "g075_t0200"
       ],
       "status": "done",
-      "checkpoint": "results/full_ree/task3_g100_t1000_mp50.json",
+      "checkpoint": "projects/REZN/checkpoints/g100_t1000.npz",
       "result": {
         "1-R2": 0.427,
-        "slope": null,
+        "slope": 0.40869272588927497,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
+        "F_max": 9.927097932571627e-08
       }
     },
     {
@@ -711,13 +714,14 @@
         "g125_t0200"
       ],
       "status": "done",
-      "checkpoint": "results/full_ree/task3_g140_t0200_mp50.json",
+      "checkpoint": "projects/REZN/checkpoints/g140_t0200.npz",
       "result": {
         "1-R2": 0.061,
-        "slope": null,
+        "slope": 0.7489937074827431,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
+        "F_max": 9.982169906636029e-08
       }
     },
     {
@@ -1036,13 +1040,14 @@
         "g010_t0400"
       ],
       "status": "done",
-      "checkpoint": "results/full_ree/task3_g010_t0200_mp50.json",
+      "checkpoint": "projects/REZN/checkpoints/g010_t0200.npz",
       "result": {
         "1-R2": 0.135,
-        "slope": null,
+        "slope": 0.7087214073290626,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
+        "F_max": 9.43689570931383e-15
       }
     },
     {
@@ -1679,13 +1684,14 @@
         "g200_t0150"
       ],
       "status": "done",
-      "checkpoint": "results/full_ree/task3_g200_t0100_mp50.json",
+      "checkpoint": "projects/REZN/checkpoints/g200_t0100.npz",
       "result": {
         "1-R2": 0.019,
-        "slope": null,
+        "slope": 0.8858063500340271,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
+        "F_max": 9.933397950717682e-08
       }
     },
     {
@@ -1696,13 +1702,14 @@
         "g200_t0200"
       ],
       "status": "done",
-      "checkpoint": "results/full_ree/task3_g200_t0150_mp50.json",
+      "checkpoint": "projects/REZN/checkpoints/g200_t0150.npz",
       "result": {
         "1-R2": 0.027,
-        "slope": null,
+        "slope": 0.766043155242148,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
+        "F_max": 9.982539396491408e-08
       }
     },
     {
@@ -1713,13 +1720,14 @@
         "g180_t0200"
       ],
       "status": "done",
-      "checkpoint": "results/full_ree/task3_g200_t0200_mp50.json",
+      "checkpoint": "projects/REZN/checkpoints/g200_t0200.npz",
       "result": {
         "1-R2": 0.034,
-        "slope": null,
+        "slope": 0.7584522200688487,
         "n_triples": 8000,
         "F_max_bound": 1e-25,
-        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
+        "F_max": 9.835664382951137e-08
       }
     },
     {
@@ -2744,6 +2752,845 @@
         "max_iters": 2000,
         "anderson_m": 20
       }
+    },
+    {
+      "id": "g010_t0120",
+      "kind": "ree",
+      "gamma": 0.1,
+      "tau": 1.2,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g010_t0120.npz",
+      "result": {
+        "F_max": 2.7796653867540044e-12,
+        "1-R2": 0.08973988975783798,
+        "slope": 0.7372297757265748
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g010_t0140",
+      "kind": "ree",
+      "gamma": 0.1,
+      "tau": 1.4,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g010_t0140.npz",
+      "result": {
+        "F_max": 4.669524766853783e-10,
+        "1-R2": 0.09970811313360839,
+        "slope": 0.7153844967757771
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g010_t0150",
+      "kind": "ree",
+      "gamma": 0.1,
+      "tau": 1.5,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g010_t0150.npz",
+      "result": {
+        "F_max": 4.6424530886213233e-11,
+        "1-R2": 0.09987800385019185,
+        "slope": 0.7128283123835507
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g010_t0170",
+      "kind": "ree",
+      "gamma": 0.1,
+      "tau": 1.7,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g010_t0170.npz",
+      "result": {
+        "F_max": 5.924005730406634e-11,
+        "1-R2": 0.09821593781016813,
+        "slope": 0.7082812536299442
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g010_t0500",
+      "kind": "ree",
+      "gamma": 0.1,
+      "tau": 5.0,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g010_t0500.npz",
+      "result": {
+        "F_max": 4.3298697960381105e-15,
+        "1-R2": 0.0991704024308292,
+        "slope": 0.5645564542516053
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g016_t0050",
+      "kind": "ree",
+      "gamma": 0.16000000000000003,
+      "tau": 0.5,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g016_t0050.npz",
+      "result": {
+        "F_max": 1.7955584241668987e-10,
+        "1-R2": 0.05535164090592337,
+        "slope": 0.90184354565017
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g025_t0030",
+      "kind": "ree",
+      "gamma": 0.25,
+      "tau": 0.3,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g025_t0030.npz",
+      "result": {
+        "F_max": 9.977734172217367e-08,
+        "1-R2": 0.06521073446871672,
+        "slope": 0.9321487511394451
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g025_t0050",
+      "kind": "ree",
+      "gamma": 0.25,
+      "tau": 0.5,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g025_t0050.npz",
+      "result": {
+        "F_max": 9.975858070165877e-08,
+        "1-R2": 0.053646594204688314,
+        "slope": 0.9069213497230686
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g025_t0080",
+      "kind": "ree",
+      "gamma": 0.25,
+      "tau": 0.8,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g025_t0080.npz",
+      "result": {
+        "F_max": 9.981814660942057e-08,
+        "1-R2": 0.04439196627267883,
+        "slope": 0.8991408398880352
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g025_t0100",
+      "kind": "ree",
+      "gamma": 0.25,
+      "tau": 1.0,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g025_t0100.npz",
+      "result": {
+        "F_max": 9.974276542201732e-08,
+        "1-R2": 0.041649724949487044,
+        "slope": 0.8973051672434769
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g025_t0150",
+      "kind": "ree",
+      "gamma": 0.25,
+      "tau": 1.5,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g025_t0150.npz",
+      "result": {
+        "F_max": 9.948978538232289e-08,
+        "1-R2": 0.09459724375394962,
+        "slope": 0.7311223337218811
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g025_t0200",
+      "kind": "ree",
+      "gamma": 0.25,
+      "tau": 2.0,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g025_t0200.npz",
+      "result": {
+        "F_max": 9.89575819065891e-08,
+        "1-R2": 0.09218913992112598,
+        "slope": 0.7223260325428331
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g025_t0300",
+      "kind": "ree",
+      "gamma": 0.25,
+      "tau": 3.0,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g025_t0300.npz",
+      "result": {
+        "F_max": 9.941046455290425e-08,
+        "1-R2": 0.11226708154130971,
+        "slope": 0.59141307058036
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g035_t0200",
+      "kind": "ree",
+      "gamma": 0.35000000000000003,
+      "tau": 2.0,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g035_t0200.npz",
+      "result": {
+        "F_max": 9.937467648768461e-08,
+        "1-R2": 0.08953635879266508,
+        "slope": 0.7344098281427093
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g050_t0400",
+      "kind": "ree",
+      "gamma": 0.5,
+      "tau": 4.0,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g050_t0400.npz",
+      "result": {
+        "F_max": 9.964667824213791e-08,
+        "1-R2": 0.1029431135898149,
+        "slope": 0.5945061553937083
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g050_t0500",
+      "kind": "ree",
+      "gamma": 0.5,
+      "tau": 5.0,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g050_t0500.npz",
+      "result": {
+        "F_max": 9.962714220268509e-08,
+        "1-R2": 0.09541933296476912,
+        "slope": 0.5890144270076514
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g050_t0700",
+      "kind": "ree",
+      "gamma": 0.5,
+      "tau": 7.0,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g050_t0700.npz",
+      "result": {
+        "F_max": 9.985861249006689e-08,
+        "1-R2": 0.08359211659608956,
+        "slope": 0.5834347405689686
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g050_t1000",
+      "kind": "ree",
+      "gamma": 0.5,
+      "tau": 10.0,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g050_t1000.npz",
+      "result": {
+        "F_max": 9.941193679363636e-08,
+        "1-R2": 0.058486117101238855,
+        "slope": 0.39450279536679883
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g050_t1200",
+      "kind": "ree",
+      "gamma": 0.5,
+      "tau": 12.0,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g050_t1200.npz",
+      "result": {
+        "F_max": 1.4870917830478447e-09,
+        "1-R2": 0.05609278042106669,
+        "slope": 0.38667482332569186
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g050_t1500",
+      "kind": "ree",
+      "gamma": 0.5,
+      "tau": 15.0,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g050_t1500.npz",
+      "result": {
+        "F_max": 9.9094392247423e-08,
+        "1-R2": 0.05656237543566789,
+        "slope": 0.3812911621035133
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g050_t2000",
+      "kind": "ree",
+      "gamma": 0.5,
+      "tau": 20.0,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g050_t2000.npz",
+      "result": {
+        "F_max": 9.907953513188517e-08,
+        "1-R2": 0.06169059856032422,
+        "slope": 0.37902624987016703
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g100_t0250",
+      "kind": "ree",
+      "gamma": 1.0,
+      "tau": 2.5,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g100_t0250.npz",
+      "result": {
+        "F_max": 6.447120615149515e-12,
+        "1-R2": 0.08669067123284213,
+        "slope": 0.6561004846581272
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g100_t0300",
+      "kind": "ree",
+      "gamma": 1.0,
+      "tau": 3.0,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g100_t0300.npz",
+      "result": {
+        "F_max": 1.2168044349891716e-12,
+        "1-R2": 0.1042090507141541,
+        "slope": 0.6235180088750608
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g100_t0450",
+      "kind": "ree",
+      "gamma": 1.0,
+      "tau": 4.5,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g100_t0450.npz",
+      "result": {
+        "F_max": 5.583232515204983e-09,
+        "1-R2": 0.0958525354187707,
+        "slope": 0.6057454517984185
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g100_t0500",
+      "kind": "ree",
+      "gamma": 1.0,
+      "tau": 5.0,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g100_t0500.npz",
+      "result": {
+        "F_max": 9.980155396549506e-08,
+        "1-R2": 0.09234336337897053,
+        "slope": 0.6030989943983401
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g100_t0700",
+      "kind": "ree",
+      "gamma": 1.0,
+      "tau": 7.0,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g100_t0700.npz",
+      "result": {
+        "F_max": 9.9994494240363e-08,
+        "1-R2": 0.08115409458380507,
+        "slope": 0.5958917142207033
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g100_t1500",
+      "kind": "ree",
+      "gamma": 1.0,
+      "tau": 15.0,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g100_t1500.npz",
+      "result": {
+        "F_max": 9.925372901342655e-08,
+        "1-R2": 0.04974249977643164,
+        "slope": 0.39275237889409903
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g100_t2000",
+      "kind": "ree",
+      "gamma": 1.0,
+      "tau": 20.0,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g100_t2000.npz",
+      "result": {
+        "F_max": 9.991274929621596e-08,
+        "1-R2": 0.055338870188428646,
+        "slope": 0.38780924521633664
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g140_t0240",
+      "kind": "ree",
+      "gamma": 1.4,
+      "tau": 2.4,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g140_t0240.npz",
+      "result": {
+        "F_max": 2.611244553918368e-12,
+        "1-R2": 0.08257998098655972,
+        "slope": 0.7519797000425831
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g140_t0270",
+      "kind": "ree",
+      "gamma": 1.4,
+      "tau": 2.7,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g140_t0270.npz",
+      "result": {
+        "F_max": 4.806821607417078e-12,
+        "1-R2": 0.07843365105678202,
+        "slope": 0.7535044858547638
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g140_t0330",
+      "kind": "ree",
+      "gamma": 1.4,
+      "tau": 3.3,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g140_t0330.npz",
+      "result": {
+        "F_max": 9.237055564881302e-14,
+        "1-R2": 0.10235602559897128,
+        "slope": 0.6233984501177526
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g140_t0430",
+      "kind": "ree",
+      "gamma": 1.4,
+      "tau": 4.3,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g140_t0430.npz",
+      "result": {
+        "F_max": 4.0701816916843825e-14,
+        "1-R2": 0.09584701543771978,
+        "slope": 0.6129792065832556
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g140_t0450",
+      "kind": "ree",
+      "gamma": 1.4,
+      "tau": 4.5,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g140_t0450.npz",
+      "result": {
+        "F_max": 3.708144902248023e-14,
+        "1-R2": 0.09440229848556525,
+        "slope": 0.6116620930855161
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g140_t0510",
+      "kind": "ree",
+      "gamma": 1.4,
+      "tau": 5.1,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g140_t0510.npz",
+      "result": {
+        "F_max": 1.7486012637846216e-14,
+        "1-R2": 0.09026245407430378,
+        "slope": 0.6084525587921289
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g200_t0300",
+      "kind": "ree",
+      "gamma": 2.0,
+      "tau": 3.0,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g200_t0300.npz",
+      "result": {
+        "F_max": 9.958910732882353e-08,
+        "1-R2": 0.10160491932563676,
+        "slope": 0.6340933637474463
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g200_t0500",
+      "kind": "ree",
+      "gamma": 2.0,
+      "tau": 5.0,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g200_t0500.npz",
+      "result": {
+        "F_max": 9.936899125762011e-08,
+        "1-R2": 0.08969462689554719,
+        "slope": 0.6139348126835279
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g400_t1000",
+      "kind": "ree",
+      "gamma": 4.0,
+      "tau": 10.0,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g400_t1000.npz",
+      "result": {
+        "F_max": 9.989622248764846e-08,
+        "1-R2": 0.0445731641396514,
+        "slope": 0.4409280844874611
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g400_t1500",
+      "kind": "ree",
+      "gamma": 4.0,
+      "tau": 15.0,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g400_t1500.npz",
+      "result": {
+        "F_max": 9.934194333816038e-08,
+        "1-R2": 0.037214659726214405,
+        "slope": 0.4259049288905589
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "g400_t2000",
+      "kind": "ree",
+      "gamma": 4.0,
+      "tau": 20.0,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "projects/REZN/checkpoints/g400_t2000.npz",
+      "result": {
+        "F_max": 9.948744117416197e-08,
+        "1-R2": 0.039243420634712756,
+        "slope": 0.4195300596655262
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
+    },
+    {
+      "id": "seed_g050_t0200_3d",
+      "kind": "ree",
+      "gamma": 0.5,
+      "tau": 2.0,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "done",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": "2026-05-09T20:00:00Z",
+      "checkpoint": "results/full_ree/seed_g050_t0200_3d.npz",
+      "result": {
+        "1-R2": 0.08343285873623152,
+        "slope": 0.5375491411898142
+      },
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry)."
     }
   ],
   "summary": {
