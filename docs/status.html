@@ -445,7 +445,7 @@
     // Progress-file workers not in heartbeats — only if updated < 30s ago
     const progRows = Object.values(progressData)
       .filter(p => p.worker_id && !hbWorkers.has(p.worker_id))
-      .filter(p => { const age = p.last_update ? (now - new Date(p.last_update).getTime())/1000 : Infinity; return age < 600; })
+      .filter(p => { const age = p.last_update ? (now - new Date(p.last_update).getTime())/1000 : Infinity; return age < 5400; })
       .map(p => {
         const age = p.last_update ? (now - new Date(p.last_update).getTime())/1000 : null;
         const isStale = age != null && age > 30;
