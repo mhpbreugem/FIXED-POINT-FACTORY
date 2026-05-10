@@ -263,9 +263,11 @@
       const r2str = r2 != null ? r2.toPrecision(3) : "";
       const fmaxNote = t.note && (t.note.match(/\|\|F\|\|(?:inf|=)\s*[=]?\s*([\d.]+e[+-]?\d+)/i) ||
                                   t.note.match(/F_max\s*=\s*([\d.]+e[+-]?\d+)/i));
-      const fmax = t.result?.F_max ?? t.result?.F_max_bound ??
-                   (fmaxNote ? parseFloat(fmaxNote[1]) : null);
-      const fmaxStr = fmax != null ? Number(fmax).toExponential(1) : "";
+      const fmaxExact = t.result?.F_max ?? (fmaxNote ? parseFloat(fmaxNote[1]) : null);
+      const fmaxBound = t.result?.F_max_bound;
+      const fmaxStr = fmaxExact != null ? Number(fmaxExact).toExponential(1)
+                    : fmaxBound != null ? `<span style="color:#aaa">&lt;${Number(fmaxBound).toExponential(0)}</span>`
+                    : "";
       const pr = progressData[t.id];
       const isClaimed = t.status === "claimed" || t.status === "in-progress";
       let liveStr = "", workerStr = "";
@@ -496,8 +498,8 @@
     if (series && series.length > 1) {
       let lx = padL + W - 10, ly = padT + 10;
       [...series].reverse().forEach(s => {
-        svg += `<rect x="${lx-36}" y="${ly-8}" width="14" height="3" fill="${s.color}"/>`;
-        svg += `<text x="${lx-18}" y="${ly+3}" class="axis-label" font-size="10" fill="${s.color}">${s.label||""}</text>`;
+      svg += `<rect x="${lx-36}" y="${ly-8}" width="14" height="3" fill="${s.color}"/>`;
+      svg += `<text x="${lx-18}" y="${ly+3}" class="axis-label" font-size="10" fill="${s.color}">${s.label||""}</text>`;
         ly += 14;
       });
     }
@@ -551,11 +553,11 @@
     const done = allTasks.filter(t => t.status==="done" && t.result);
     if (!done.length) { el.innerHTML="<p>No done tasks yet.</p>"; return; }
     el.innerHTML = `<table style="font-size:0.82rem">
-      <thead><tr><th>Task</th><th>γ</th><th>τ</th><th>1‑R²</th><th>F_max</th><th>n_triples</th></tr></thead>
+      <thead><tr><th>Task</th><th>γ</th><th>τ</th><th>1‑R²</th><th>‖F‖∞ (measured)</th><th>n_triples</th></tr></thead>
       <tbody>${done.map(t=>`<tr>
         <td class="mono">${esc(t.id)}</td><td>${t.gamma}</td><td>${t.tau}</td>
         <td>${t.result["1-R2"]?.toFixed(4)||""}</td>
-        <td class="mono">${t.result.F_max!=null ? Number(t.result.F_max).toExponential(1) : ""}</td>
+        <td class="mono">${t.result.F_max!=null ? Number(t.result.F_max).toExponential(1) : t.result.F_max_bound!=null ? `&lt;${Number(t.result.F_max_bound).toExponential(0)} (bound)` : ""}</td>
         <td>${t.result.n_triples||""}</td>
       </tr>`).join("")}</tbody>
     </table>`;
@@ -1061,12 +1063,12 @@
     }
     if (tbl) {
       tbl.innerHTML = `<table style="font-size:0.82rem;margin-top:0.5rem">
-        <thead><tr><th>K</th><th>Status</th><th>1-R²</th><th>F_max</th><th>cells</th><th>wall_s</th></tr></thead>
+        <thead><tr><th>K</th><th>Status</th><th>1-R²</th><th>‖F‖∞ (measured)</th><th>cells</th><th>wall_s</th></tr></thead>
         <tbody>${symTasks.map(t=>`<tr>
           <td>${t.K}</td>
           <td class="status ${t.status}">${t.status}</td>
           <td>${t.result?.["1-R2"] != null ? t.result["1-R2"].toFixed(6) : '<span style="color:#aaa">—</span>'}</td>
-          <td class="mono">${t.result?.F_max != null ? Number(t.result.F_max).toExponential(1) : ''}</td>
+          <td class="mono">${t.result?.F_max != null ? Number(t.result.F_max).toExponential(1) : t.result?.F_max_bound != null ? `&lt;${Number(t.result.F_max_bound).toExponential(0)} (bound)` : ''}</td>
           <td class="mono">${t.result?.n_cells ?? ''}</td>
           <td>${t.result?.wall_s != null ? t.result.wall_s+'s' : ''}</td>
         </tr>`).join('')}</tbody>
