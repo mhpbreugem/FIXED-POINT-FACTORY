@@ -396,7 +396,7 @@
     if (!el) return;
     const now = Date.now();
 
-    // Heartbeat-based rows — only show workers with heartbeat < 30 min old
+    // Heartbeat-based rows — only show workers with heartbeat < 3 min old
     const hbWorkers = new Set((workerData || []).map(f => f.name.replace(".txt","")));
     function methodLabel(pr) {
       if (!pr) return "—";
@@ -411,11 +411,11 @@
 
     const hbRows = (workerData || []).filter(f => {
       const age = f.last_modified ? (now - new Date(f.last_modified).getTime())/60000 : Infinity;
-      return age < 30;
+      return age < 3;
     }).map(f => {
       const workerName = f.name.replace(".txt","");
       const hbAge = f.last_modified ? Math.round((now - new Date(f.last_modified).getTime())/60000) : null;
-      const isStale = hbAge != null && hbAge > 10;
+      const isStale = hbAge != null && hbAge > 1;
       const pr = progressData[workerName] || Object.values(progressData).find(p => p.worker_id === workerName);
       const taskId = pr ? pr.task_id : "—";
       const iter   = pr?.iter != null ? pr.iter : "—";
@@ -434,10 +434,10 @@
     // Progress-file workers not in heartbeats — only if updated < 30 min ago
     const progRows = Object.values(progressData)
       .filter(p => p.worker_id && !hbWorkers.has(p.worker_id))
-      .filter(p => { const age = p.last_update ? (now - new Date(p.last_update).getTime())/60000 : Infinity; return age < 30; })
+      .filter(p => { const age = p.last_update ? (now - new Date(p.last_update).getTime())/60000 : Infinity; return age < 3; })
       .map(p => {
         const age = p.last_update ? Math.round((now - new Date(p.last_update).getTime())/60000) : null;
-        const isStale = age != null && age > 10;
+        const isStale = age != null && age > 1;
         const ageStr = age != null ? (isStale ? `<span class="stale">${age}m ago</span>` : `${age}m ago`) : "?";
         const iter = p.iter != null ? p.iter : "—";
         const ftol = p.ftol != null ? Number(p.ftol).toExponential(1) : "—";
