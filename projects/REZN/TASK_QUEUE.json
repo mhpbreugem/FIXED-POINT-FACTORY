@@ -260,13 +260,15 @@
       "depends_on": [
         "g100_t0080"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": {
         "reason": "||F||inf=7.260e-03 > bail threshold 1e-04"
       },
       "solver_params": null,
-      "note": "RESET bailed\u2192ready"
+      "note": "RESET bailed\u2192ready",
+      "claimed_by": "gha-25616517268-g100_t0050",
+      "claimed_at": "2026-05-10T01:24:54Z"
     },
     {
       "id": "g100_t0080",
@@ -344,13 +346,15 @@
       "depends_on": [
         "g100_t0200"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": {
         "reason": "||F||inf=6.174e-02 > bail threshold 1e-04"
       },
       "solver_params": null,
-      "note": "RESET bailed\u2192ready"
+      "note": "RESET bailed\u2192ready",
+      "claimed_by": "gha-25616517268-g100_t0210",
+      "claimed_at": "2026-05-10T01:24:54Z"
     },
     {
       "id": "g100_t0400",
@@ -359,13 +363,15 @@
       "depends_on": [
         "g100_t0590"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": {
         "reason": "||F||inf=8.904e-02 > bail threshold 1e-04"
       },
       "solver_params": null,
-      "note": "RESET bailed\u2192ready"
+      "note": "RESET bailed\u2192ready",
+      "claimed_by": "gha-25616517268-g100_t0400",
+      "claimed_at": "2026-05-10T01:24:54Z"
     },
     {
       "id": "g100_t0590",
@@ -374,13 +380,15 @@
       "depends_on": [
         "g100_t0600"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": {
         "reason": "||F||inf=1.503e-01 > bail threshold 1e-04"
       },
       "solver_params": null,
-      "note": "RESET bailed\u2192ready"
+      "note": "RESET bailed\u2192ready",
+      "claimed_by": "gha-25616517268-g100_t0590",
+      "claimed_at": "2026-05-10T01:24:54Z"
     },
     {
       "id": "g100_t0600",
@@ -748,13 +756,15 @@
       "depends_on": [
         "g140_t0600"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": {
         "reason": "||F||inf=3.258e-01 > bail threshold 1e-04"
       },
       "solver_params": null,
-      "note": "RESET bailed\u2192ready"
+      "note": "RESET bailed\u2192ready",
+      "claimed_by": "gha-25616517268-g140_t0570",
+      "claimed_at": "2026-05-10T01:24:54Z"
     },
     {
       "id": "g140_t0600",
@@ -2619,7 +2629,7 @@
       "symmetric": true,
       "depends_on": [],
       "deps_satisfy": "all",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": {
         "reason": "TypeError: lgmres() got an unexpected keyword argument 'm'"
@@ -2631,7 +2641,9 @@
         "tol": 5e-07,
         "max_iters": 2000,
         "anderson_m": 20
-      }
+      },
+      "claimed_by": "gha-25616517268-symK3_g050_t0200_G15",
+      "claimed_at": "2026-05-10T01:24:54Z"
     },
     {
       "id": "symK4_g050_t0200_G15",
