@@ -1,0 +1,128 @@
+name: Solve
+
+on:
+  workflow_dispatch:
+    inputs:
+      workers:
+        description: 'How many workers?'
+        required: true
+        default: '20'
+
+permissions:
+  contents: write
+
+env:
+  PROJECT: REZN
+
+jobs:
+  schedule:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: solve-scheduler
+      cancel-in-progress: false
+    outputs:
+      tasks: ${{ steps.pick.outputs.tasks }}
+      count: ${{ steps.pick.outputs.count }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name  "fpf-solver[bot]"
+          git config user.email "fpf-solver@users.noreply.github.com"
+
+      - name: Claim tasks
+        id: pick
+        env:
+          N: ${{ github.event.inputs.workers }}
+          RUN: ${{ github.run_id }}
+        run: |
+          NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          PICKED=$(python3 - <<PY
+          import json, os
+          from pathlib import Path
+          N   = int(os.environ["N"])
+          RUN = os.environ["RUN"]
+          NOW = "$NOW"
+          q   = json.loads(Path("projects/${PROJECT}/TASK_QUEUE.json").read_text())
+          out = []
+          for t in q["tasks"]:
+              if len(out) >= N: break
+              if t.get("status") == "ready":
+                  wid = f"gha-{RUN}-{t['id']}"
+                  t.update(status="claimed", claimed_by=wid, claimed_at=NOW)
+                  out.append({"id": t["id"], "worker_id": wid})
+          Path("projects/${PROJECT}/TASK_QUEUE.json").write_text(json.dumps(q, indent=2)+"\n")
+          print(json.dumps(out))
+          PY
+          )
+          COUNT=$(echo "$PICKED" | python3 -c "import json,sys;print(len(json.load(sys.stdin)))")
+          echo "Claimed $COUNT task(s)"
+          echo "tasks=$PICKED" >> "$GITHUB_OUTPUT"
+          echo "count=$COUNT"  >> "$GITHUB_OUTPUT"
+
+      - name: Push claims
+        if: steps.pick.outputs.count != '0'
+        run: |
+          git add "projects/${PROJECT}/TASK_QUEUE.json"
+          git commit -m "Claim ${{ steps.pick.outputs.count }} task(s) (run ${{ github.run_id }})" || exit 0
+          for i in 1 2 3 4 5; do
+            git push origin HEAD:main && exit 0
+            git pull --rebase origin main && sleep $((i*2))
+          done; exit 1
+
+  solve:
+    needs: schedule
+    if: needs.schedule.outputs.count != '0' && needs.schedule.outputs.count != ''
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        task: ${{ fromJSON(needs.schedule.outputs.tasks) }}
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Configure git
+        run: |
+          git config user.name  "fpf-solver[bot]"
+          git config user.email "fpf-solver@users.noreply.github.com"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: |
+          pip install --upgrade pip
+          pip install --only-binary=:all: "numpy==2.0.2" "scipy==1.15.3" "numba==0.60.0"
+          pip install mpmath
+
+      - name: Clone REZN source
+        run: git clone --depth 1 https://github.com/mhpbreugem/REZN.git "$HOME/rezn-source"
+
+      - name: Run solver
+        env:
+          PYTHONUNBUFFERED: '1'
+          REZN_SRC: /home/runner/rezn-source
+        run: |
+          python3 "projects/${PROJECT}/solver_code/solve.py" \
+            --project "$PROJECT" \
+            --task-id  "${{ matrix.task.id }}" \
+            --branch   main \
+            --worker-id "${{ matrix.task.worker_id }}"
+
+      - name: Release claim on failure
+        if: failure()
+        run: |
+          git pull --rebase origin main || true
+          python3 core/claim_task.py release \
+            --project "$PROJECT" \
+            --worker-id "${{ matrix.task.worker_id }}" \
+            --branch main || true
