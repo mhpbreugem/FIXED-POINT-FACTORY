@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-10T16:37:30.914343Z",
+  "updated_at": "2026-05-10T16:45:21.730420Z",
   "params": {
     "G": 20,
     "UMAX": 5,
@@ -342,9 +342,11 @@
         "g100_t0080"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "bailed",
       "checkpoint": null,
-      "result": null,
+      "result": {
+        "reason": "||F||inf=5.643e-01 > bail threshold 1e-04"
+      },
       "note": "\u00cf\u0084-ladder between g100_t0080 (\u00cf\u0084=0.8) and g100_t0050 (\u00cf\u0084=0.5).",
       "completed_at": null,
       "solver_params": {
@@ -355,9 +357,7 @@
         "tol": 5e-07,
         "G_inner": 15
       },
-      "G": 15,
-      "claimed_by": "gha-25621109011-g100_t0063",
-      "claimed_at": "2026-05-10T14:16:27.403704Z"
+      "G": 15
     },
     {
       "id": "g100_t0050",
@@ -4456,9 +4456,9 @@
     "total": 200,
     "done": 2,
     "ready": 43,
-    "claimed": 9,
+    "claimed": 8,
     "blocked": 141,
-    "bailed": 5,
+    "bailed": 6,
     "skip": 0
   },
   "fanout": {
