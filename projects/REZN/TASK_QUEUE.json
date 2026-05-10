@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-10T03:00:11.610369+00:00",
+  "updated_at": "2026-05-10T04:59:41.614811+00:00",
   "params": {
     "G": 20,
     "UMAX": 5,
@@ -43,7 +43,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g050_t0030_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.037,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -64,7 +70,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g050_t0050_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.038,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -85,7 +97,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g050_t0080_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.047,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -106,7 +124,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g050_t0100_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.057,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -127,7 +151,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g050_t0150_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.094,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -143,12 +173,18 @@
       "id": "g050_t0200",
       "gamma": 0.5,
       "tau": 2.0,
-      "status": "ready",
+      "status": "done",
       "checkpoint": "results/full_ree/posterior_v3_G20_umax5_notrim_mp300.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.0,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max": "7.4e-119",
+        "F_source": "seed checkpoint (mp300 solver)"
+      },
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": null,
+      "completed_at": "2026-05-10T04:59:41.614629+00:00",
       "solver_params": {
         "mp_dps": 50,
         "mp_tol": "1e-100",
@@ -166,7 +202,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g075_t0030_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.032,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -187,7 +229,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g075_t0050_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.034,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -208,7 +256,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g075_t0080_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.042,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -229,7 +283,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g075_t0100_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.05,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -250,7 +310,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g075_t0150_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.079,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -271,7 +337,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g075_t0200_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.104,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -292,7 +364,14 @@
       ],
       "status": "ready",
       "checkpoint": "projects/REZN/checkpoints/g100_t0030.npz",
-      "result": null,
+      "result": {
+        "1-R2": 0.027,
+        "slope": 0.9358401723740598,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
+        "F_max": 4.111489e-12
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -360,7 +439,14 @@
       ],
       "status": "ready",
       "checkpoint": "projects/REZN/checkpoints/g100_t0080.npz",
-      "result": null,
+      "result": {
+        "1-R2": 0.039,
+        "slope": 0.8844043531577075,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
+        "F_max": 1.962874e-13
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -381,7 +467,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g100_t0100_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.047,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -402,7 +494,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g100_t0150_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.067,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -423,7 +521,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g100_t0200_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.097,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -510,7 +614,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g100_t0600_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.227,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -531,7 +641,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g100_t0800_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.335,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -552,7 +668,14 @@
       ],
       "status": "ready",
       "checkpoint": "projects/REZN/checkpoints/g100_t1000.npz",
-      "result": null,
+      "result": {
+        "1-R2": 0.427,
+        "slope": 0.40869272588927497,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
+        "F_max": 9.292854e-13
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -573,7 +696,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g125_t0030_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.023,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -594,7 +723,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g125_t0050_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.025,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -615,7 +750,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g125_t0080_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.03,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -636,7 +777,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g125_t0100_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.036,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -657,7 +804,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g125_t0150_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.056,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -678,7 +831,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g125_t0200_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.078,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -699,7 +858,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g125_t0400_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.175,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -720,7 +885,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g125_t0590_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.214,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -741,7 +912,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g125_t0600_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.216,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -762,7 +939,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g125_t0800_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.296,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -783,7 +966,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g125_t1000_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.365,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -804,7 +993,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t0030_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.02,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -825,7 +1020,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t0050_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.022,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -846,7 +1047,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t0080_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.026,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -867,7 +1074,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t0100_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.031,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -888,7 +1101,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t0150_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.046,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -909,7 +1128,14 @@
       ],
       "status": "ready",
       "checkpoint": "projects/REZN/checkpoints/g140_t0200.npz",
-      "result": null,
+      "result": {
+        "1-R2": 0.061,
+        "slope": 0.7489937074827431,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
+        "F_max": 3.663736e-15
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -930,7 +1156,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t0400_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.13,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -976,7 +1208,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t0600_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.168,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -997,7 +1235,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t0800_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.228,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1018,7 +1262,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t1000_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.287,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1039,7 +1289,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t1200_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.332,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1060,7 +1316,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t1400_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.372,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1081,7 +1343,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t1600_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.407,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1102,7 +1370,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t1800_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.439,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1123,7 +1397,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g140_t2000_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.466,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1165,7 +1445,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g013_t0100_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.11,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1186,7 +1472,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g013_t0200_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.127,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1207,7 +1499,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g013_t0400_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.17,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1228,7 +1526,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g013_t0600_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.212,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1249,7 +1553,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g013_t0800_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.257,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1267,7 +1577,13 @@
       "tau": 10.0,
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g013_t1000_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.302,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1309,7 +1625,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g010_t0100_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.118,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1330,7 +1652,14 @@
       ],
       "status": "ready",
       "checkpoint": "projects/REZN/checkpoints/g010_t0200.npz",
-      "result": null,
+      "result": {
+        "1-R2": 0.135,
+        "slope": 0.7087214073290626,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
+        "F_max": 9.436896e-15
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1351,7 +1680,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g010_t0400_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.179,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1372,7 +1707,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g010_t0600_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.22,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1393,7 +1734,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g010_t0800_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.266,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1411,7 +1758,13 @@
       "tau": 10.0,
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g010_t1000_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.311,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1432,7 +1785,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t0030_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.018,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1453,7 +1812,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t0050_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.02,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1474,7 +1839,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t0080_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.023,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1495,7 +1866,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t0100_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.028,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1516,7 +1893,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t0150_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.04,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1537,7 +1920,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t0200_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.051,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1558,7 +1947,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t0400_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.104,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1579,7 +1974,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t0600_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.141,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1600,7 +2001,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t0800_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.188,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1621,7 +2028,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t1000_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.233,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1642,7 +2055,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t1200_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.272,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1663,7 +2082,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t1400_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.307,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1684,7 +2109,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t1600_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.337,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1705,7 +2136,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t1800_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.365,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1726,7 +2163,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g160_t2000_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.389,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1747,7 +2190,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t0030_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.015,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1768,7 +2217,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t0050_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.017,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1789,7 +2244,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t0080_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.019,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1810,7 +2271,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t0100_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.023,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1831,7 +2298,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t0150_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.033,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1852,7 +2325,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t0200_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.042,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1873,7 +2352,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t0400_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.083,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1894,7 +2379,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t0600_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.113,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1915,7 +2406,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t0800_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.148,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1936,7 +2433,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t1000_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.181,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1957,7 +2460,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t1200_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.211,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1978,7 +2487,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t1400_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.238,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -1999,7 +2514,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t1600_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.261,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2020,7 +2541,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t1800_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.283,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2041,7 +2568,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g180_t2000_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.302,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2062,7 +2595,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g200_t0030_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.013,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2083,7 +2622,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g200_t0050_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.014,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2104,7 +2649,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g200_t0080_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.016,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2125,7 +2676,14 @@
       ],
       "status": "ready",
       "checkpoint": "projects/REZN/checkpoints/g200_t0100.npz",
-      "result": null,
+      "result": {
+        "1-R2": 0.019,
+        "slope": 0.8858063500340271,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
+        "F_max": 3.663736e-15
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2146,7 +2704,14 @@
       ],
       "status": "ready",
       "checkpoint": "projects/REZN/checkpoints/g200_t0150.npz",
-      "result": null,
+      "result": {
+        "1-R2": 0.027,
+        "slope": 0.766043155242148,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
+        "F_max": 3.774758e-15
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2167,7 +2732,14 @@
       ],
       "status": "ready",
       "checkpoint": "projects/REZN/checkpoints/g200_t0200.npz",
-      "result": null,
+      "result": {
+        "1-R2": 0.034,
+        "slope": 0.7584522200688487,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)",
+        "F_max": 3.663736e-15
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2188,7 +2760,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g200_t0400_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.065,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2209,7 +2787,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g200_t0600_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.087,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2230,7 +2814,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g200_t0800_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.113,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2251,7 +2841,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g200_t1000_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.137,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2272,7 +2868,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g200_t1200_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.159,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2293,7 +2895,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g200_t1400_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.18,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2314,7 +2922,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g200_t1600_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.198,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2335,7 +2949,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g200_t1800_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.215,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2356,7 +2976,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g200_t2000_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.23,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2377,7 +3003,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t0030_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.004,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2398,7 +3030,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t0050_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.004,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2419,7 +3057,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t0080_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.005,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2440,7 +3084,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t0100_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.006,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2461,7 +3111,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t0150_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.008,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2482,7 +3138,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t0200_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.01,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2503,7 +3165,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t0400_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.019,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2524,7 +3192,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t0600_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.026,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2545,7 +3219,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t0800_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.033,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2566,7 +3246,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t1000_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.04,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2587,7 +3273,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t1200_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.046,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2608,7 +3300,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t1400_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.052,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2629,7 +3327,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t1600_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.057,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2650,7 +3354,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t1800_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.062,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2671,7 +3381,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g500_t2000_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.067,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2692,7 +3408,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t0030_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.009,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2713,7 +3435,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t0050_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.009,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2734,7 +3462,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t0080_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.011,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2755,7 +3489,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t0100_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.013,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2776,7 +3516,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t0150_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.018,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2797,7 +3543,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t0200_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.022,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2818,7 +3570,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t0400_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.041,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2839,7 +3597,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t0600_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.055,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2860,7 +3624,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t0800_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.069,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2881,7 +3651,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t1000_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.083,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2902,7 +3678,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t1200_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.095,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2923,7 +3705,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t1400_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.107,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2944,7 +3732,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t1600_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.117,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2965,7 +3759,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t1800_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.127,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -2986,7 +3786,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_g300_t2000_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.135,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -3008,7 +3814,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_nc4_g010_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.012,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -3030,7 +3842,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_nc4_g013_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.012,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -3052,7 +3870,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_nc4_g050_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.009,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -3074,7 +3898,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_nc4_g075_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.008,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -3096,7 +3926,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_nc4_g100_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.007,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -3118,7 +3954,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_nc4_g125_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.006,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -3140,7 +3982,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_nc4_g140_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.006,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -3162,7 +4010,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_nc4_g160_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.005,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -3184,7 +4038,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_nc4_g180_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.004,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -3206,7 +4066,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_nc4_g200_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.004,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -3228,7 +4094,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_nc4_g300_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.002,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -3250,7 +4122,13 @@
       ],
       "status": "ready",
       "checkpoint": "results/full_ree/task3_nc4_g500_mp50.json",
-      "result": null,
+      "result": {
+        "1-R2": 0.001,
+        "slope": null,
+        "n_triples": 8000,
+        "F_max_bound": 1e-25,
+        "F_source": "original mp50 solver \u2014 F_tol=1e-25 (exact F not retained)"
+      },
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
