@@ -100,12 +100,18 @@
   </span>
 </div>
 <p class="meta" id="meta">loading…</p>
+<p class="meta" id="ticker" style="font-size:0.75rem;color:#666;margin-top:0"></p>
 
 <div class="topbar">
   <input type="password" id="pat-input" placeholder="GitHub PAT — required for live worker data" oninput="savePat(); loadAll();">
   <button class="btn-action btn-bailed" id="btn-reset-bailed" onclick="resetByStatus('bailed')">Reset bailed → ready</button>
   <button class="btn-action btn-claimed" id="btn-reset-claimed" onclick="resetByStatus('claimed')">Release claimed → ready</button>
-  <span id="reset-status" style="font-size:0.8rem;color:#555"></span>
+  <span style="display:inline-flex;align-items:center;gap:4px">
+    <input type="number" id="worker-count" value="20" min="1" max="50" style="width:52px;padding:0.3rem;background:#1e1e2e;color:#e0e0ff;border:1px solid #444;border-radius:4px;font-size:0.85rem">
+    <button class="btn-action" style="background:#1a5e2a" onclick="launchWorkers()">▶ Launch workers</button>
+    <button class="btn-action" style="background:#7a1a1a" onclick="cancelAllRuns()">✕ Cancel all runs</button>
+  </span>
+  <span id="reset-status" style="font-size:0.8rem;color:#aaa"></span>
 </div>
 
 <div class="tabs">
@@ -247,14 +253,13 @@
   // ═══════════════════════════════════════════════════════════════════════════
 
   async function loadTasks() {
-    // Use authenticated API fetch to avoid raw.githubusercontent.com CDN caching
     const data = getPat()
       ? await fetchApiContent(`projects/${PROJECT}/TASK_QUEUE.json`)
       : await fetchJson(rawUrl(`projects/${PROJECT}/TASK_QUEUE.json`));
     taskData = data;
     renderTasks();
     document.getElementById("meta").textContent =
-      `last refresh: ${new Date().toLocaleTimeString()}  ·  updated_at: ${data.updated_at || "?"}  ·  project: ${PROJECT}`;
+      `queue updated_at: ${data.updated_at || "?"}  ·  project: ${PROJECT}`;
   }
 
   function renderTasks() {
@@ -414,13 +419,13 @@
       return age < 0.5;
     }).map(f => {
       const workerName = f.name.replace(".txt","");
-      const hbAge = f.last_modified ? Math.round((now - new Date(f.last_modified).getTime())/60000) : null;
-      const isStale = hbAge != null && hbAge > 0.25;
+      const hbAge = f.last_modified ? (now - new Date(f.last_modified).getTime())/1000 : null;
+      const isStale = hbAge != null && hbAge > 15;
       const pr = progressData[workerName] || Object.values(progressData).find(p => p.worker_id === workerName);
       const taskId = pr ? pr.task_id : "—";
       const iter   = pr?.iter != null ? pr.iter : "—";
       const ftol   = pr?.ftol != null ? Number(pr.ftol).toExponential(1) : "—";
-      const ageStr = hbAge != null ? (isStale ? `<span class="stale">${hbAge}m ago</span>` : `${hbAge}m ago`) : "?";
+      const ageStr = hbAge != null ? (isStale ? `<span class="stale">${hbAge.toFixed(0)}s ago</span>` : `${hbAge.toFixed(0)}s ago`) : "?";
       return `<tr>
         <td class="mono">${esc(workerName)}</td>
         <td class="mono">${esc(taskId)}</td>
@@ -428,26 +433,28 @@
         <td>${methodLabel(pr)}</td>
         <td>${iter}</td>
         <td class="mono">${ftol}</td>
+        <td><button onclick="releaseWorker('${esc(taskId)}')" style="font-size:0.7rem;padding:1px 6px;cursor:pointer;background:#555;border:none;color:#fff;border-radius:3px">release</button></td>
       </tr>`;
     });
 
-    // Progress-file workers not in heartbeats — only if updated < 30 min ago
+    // Progress-file workers not in heartbeats — only if updated < 30s ago
     const progRows = Object.values(progressData)
       .filter(p => p.worker_id && !hbWorkers.has(p.worker_id))
-      .filter(p => { const age = p.last_update ? (now - new Date(p.last_update).getTime())/60000 : Infinity; return age < 0.5; })
+      .filter(p => { const age = p.last_update ? (now - new Date(p.last_update).getTime())/1000 : Infinity; return age < 30; })
       .map(p => {
-        const age = p.last_update ? Math.round((now - new Date(p.last_update).getTime())/60000) : null;
-        const isStale = age != null && age > 0.25;
-        const ageStr = age != null ? (isStale ? `<span class="stale">${age}m ago</span>` : `${age}m ago`) : "?";
+        const age = p.last_update ? (now - new Date(p.last_update).getTime())/1000 : null;
+        const isStale = age != null && age > 15;
+        const ageStr = age != null ? (isStale ? `<span class="stale">${age.toFixed(0)}s ago</span>` : `${age.toFixed(0)}s ago`) : "?";
         const iter = p.iter != null ? p.iter : "—";
         const ftol = p.ftol != null ? Number(p.ftol).toExponential(1) : "—";
         return `<tr>
           <td class="mono">${esc(p.worker_id)}</td>
           <td class="mono">${esc(p.task_id)}</td>
-          <td>${ageStr} <span style="color:#bbb;font-size:0.75rem">(progress)</span></td>
+          <td>${ageStr}</td>
           <td>${methodLabel(p)}</td>
           <td>${iter}</td>
           <td class="mono">${ftol}</td>
+          <td><button onclick="releaseWorker('${esc(p.task_id)}')" style="font-size:0.7rem;padding:1px 6px;cursor:pointer;background:#555;border:none;color:#fff;border-radius:3px">release</button></td>
         </tr>`;
       });
 
@@ -458,7 +465,7 @@
     }
     el.innerHTML = `<strong>Active workers (${allRows.length})</strong>
       <table style="margin-top:0.4rem;width:auto">
-        <thead><tr><th>worker</th><th>task</th><th>last seen</th><th>method</th><th>iter</th><th>ftol</th></tr></thead>
+        <thead><tr><th>worker</th><th>task</th><th>last seen</th><th>method</th><th>iter</th><th>ftol</th><th></th></tr></thead>
         <tbody>${allRows.join("")}</tbody>
       </table>`;
   }
@@ -469,20 +476,110 @@
   // LOAD ALL
   // ═══════════════════════════════════════════════════════════════════════════
 
-  async function loadAll() {
-    document.getElementById("meta").textContent = "loading…";
+  let _lastProgressUpdate = null;
+  let _lastQueueUpdate = null;
+
+  // Fast loop: progress + workers every 3s
+  async function pollProgress() {
     try {
-      await loadTasks();
-      await Promise.all([loadWorkers(), loadProgress(), loadFiguresData()]);
+      await Promise.all([loadWorkers(), loadProgress()]);
+      _lastProgressUpdate = Date.now();
+    } catch {}
+    updateTicker();
+  }
+
+  // Slow loop: task queue every 15s
+  async function pollQueue() {
+    try {
+      await Promise.all([loadTasks(), loadFiguresData()]);
+      _lastQueueUpdate = Date.now();
       if (document.getElementById("tab-figures").classList.contains("active"))
         renderFigures();
     } catch (e) {
       document.getElementById("meta").innerHTML = `<span class="err">error: ${esc(e.message)}</span>`;
     }
+    updateTicker();
   }
 
-  loadAll();
-  setInterval(loadAll, 10000);
+  function updateTicker() {
+    const el = document.getElementById("ticker");
+    if (!el) return;
+    const now = Date.now();
+    const ps = _lastProgressUpdate ? `workers: ${((now-_lastProgressUpdate)/1000).toFixed(0)}s ago` : "workers: —";
+    const qs = _lastQueueUpdate    ? `queue: ${((now-_lastQueueUpdate)/1000).toFixed(0)}s ago`       : "queue: —";
+    el.textContent = `⟳ ${ps}  ·  ${qs}`;
+  }
+
+  async function loadAll() {
+    await Promise.all([pollProgress(), pollQueue()]);
+  }
+
+  // ── Launch / Cancel workflow controls ──────────────────────────────────────
+  async function launchWorkers() {
+    const pat = getPat();
+    if (!pat) { alert('Paste a GitHub PAT first.'); return; }
+    const n = document.getElementById('worker-count').value || '20';
+    const st = document.getElementById('reset-status');
+    st.textContent = 'Launching…';
+    try {
+      const res = await fetch(
+        `https://api.github.com/repos/${OWNER}/${REPO}/actions/workflows/solve.yml/dispatches`,
+        { method: 'POST', headers: { Authorization: `token ${pat}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ref: BRANCH, inputs: { workers: String(n) } }) });
+      if (!res.ok) { const t = await res.text(); throw new Error(`${res.status} ${t}`); }
+      st.textContent = `✓ Launched ${n} workers`;
+      setTimeout(() => { st.textContent = ''; pollQueue(); }, 3000);
+    } catch(e) { st.textContent = `Error: ${e.message}`; }
+  }
+
+  async function cancelAllRuns() {
+    const pat = getPat();
+    if (!pat) { alert('Paste a GitHub PAT first.'); return; }
+    const st = document.getElementById('reset-status');
+    st.textContent = 'Cancelling…';
+    try {
+      const runs = await fetchJson(
+        `https://api.github.com/repos/${OWNER}/${REPO}/actions/runs?status=in_progress&per_page=50`);
+      const active = (runs.workflow_runs || []);
+      if (!active.length) { st.textContent = 'No active runs.'; return; }
+      await Promise.all(active.map(r =>
+        fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs/${r.id}/cancel`,
+          { method: 'POST', headers: { Authorization: `token ${pat}` } })));
+      st.textContent = `✓ Cancelled ${active.length} run(s)`;
+      setTimeout(() => { st.textContent = ''; }, 4000);
+    } catch(e) { st.textContent = `Error: ${e.message}`; }
+  }
+
+  async function releaseWorker(taskId) {
+    const pat = getPat();
+    if (!pat) { alert('Paste a GitHub PAT first.'); return; }
+    const st = document.getElementById('reset-status');
+    st.textContent = `Releasing ${taskId}…`;
+    const qpath = `projects/${PROJECT}/TASK_QUEUE.json`;
+    try {
+      const meta = await fetchJson(apiUrl(qpath));
+      const content = JSON.parse(atob(meta.content.replace(/\n/g, '')));
+      const task = content.tasks.find(t => t.id === taskId);
+      if (!task) throw new Error('task not found');
+      task.status = 'ready'; task.claimed_by = null; task.claimed_at = null;
+      const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2))));
+      const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${qpath}`, {
+        method: 'PUT',
+        headers: { Authorization: `token ${pat}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: `Release ${taskId} → ready`, content: newContent, sha: meta.sha, branch: BRANCH })
+      });
+      if (!res.ok) throw new Error(`${res.status}`);
+      st.textContent = `✓ Released ${taskId}`;
+      setTimeout(() => { st.textContent = ''; pollQueue(); }, 1500);
+    } catch(e) { st.textContent = `Error: ${e.message}`; }
+  }
+
+  // Start loops
+  pollQueue();
+  pollProgress();
+  setInterval(pollProgress, 3000);
+  setInterval(pollQueue, 15000);
+  setInterval(updateTicker, 1000);  // ticker counts up every second
 
   // ═══════════════════════════════════════════════════════════════════════════
   // FIGURES TAB
