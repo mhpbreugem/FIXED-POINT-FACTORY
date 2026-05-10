@@ -530,14 +530,16 @@ def main() -> None:
             reporter.update(iter=phi_calls["n"], ftol=F_inf)
             return out
 
-        print(f"[solve] params: presmooth={presmooth} alpha={presmooth_alpha} "
-              f"max_stages={max_stages} inner_rdiff={inner_rdiff:.0e} "
-              f"inner_max_iter={inner_max_iter}", flush=True)
+        anderson_m   = int(sp.get("anderson_m",   20))
+        anderson_tol = float(sp.get("anderson_tol", 1e-4))
+        anderson_max = int(sp.get("anderson_max",  2000))
+
+        print(f"[solve] params: anderson_m={anderson_m} anderson_tol={anderson_tol:.0e} "
+              f"anderson_max={anderson_max} presmooth={presmooth} "
+              f"alpha={presmooth_alpha}", flush=True)
 
         if sp.get("pure_picard"):
-            # Bypass staggered_solve entirely — pure damped Picard, no Newton.
-            # Avoids the oscillation where Newton accepts a bad iterate and
-            # stalls the solver in an indefinite presmooth/Newton cycle.
+            # Bypass anderson/staggered — pure damped Picard, no Newton.
             max_picard_iters = int(sp.get("picard_iters", 200000))
             picard_tol = float(sp.get("picard_tol", tol))
             print(f"[solve] pure_picard mode: alpha={presmooth_alpha} "
@@ -561,35 +563,58 @@ def main() -> None:
                       f"F={F_inf_cur:.4e}", flush=True)
 
             P_inner_final = extract_inner(P_full_cur, inner_lo, inner_hi)
+            F_inf_cur_inner = F_inf_cur
 
-            class _Stage:
-                def __init__(self, F, d):
-                    self.F_inner_inf = F
-                    self.deficit_f128 = d
-
-            class _History:
-                def __init__(self, F):
-                    self.stages = [_Stage(F, 0.0)]
-
-            history = _History(F_inf_cur)
         else:
-            P_inner_final, history = staggered_solve(
-                phi_full_fn, u_full, inner_lo, inner_hi,
-                u_grid_inner=u_grid_inner, tau_vec=tau_vec, K=K,
-                halo_initial=halo, inner_initial=P_inner_seed,
-                max_stages=max_stages,
-                stage_tol=1.0e-3,
-                inner_method="lgmres",
-                inner_max_iter=inner_max_iter,
-                inner_tol=tol,
-                inner_outer_k=40,
-                inner_inner_maxiter=80,
-                inner_rdiff=inner_rdiff,
-                presmooth_steps=presmooth,
-                presmooth_alpha=presmooth_alpha,
-                halo_update="no_learning",
-                heartbeat_s=30.0,
-            )
+            # Anderson acceleration warm-start (robust from cold start),
+            # then hand off to mp Newton for precision polish.
+            from scipy.optimize import anderson as _anderson, NoConvergence  # noqa: PLC0415
+
+            P_full_cur = replace_inner(halo, P_inner_seed, inner_lo, inner_hi)
+            eval_count = [0]
+
+            def _residual_full(P_flat: np.ndarray) -> np.ndarray:
+                P_f = phi_full_fn(P_flat)
+                eval_count[0] += 1
+                reporter.update(iter=eval_count[0],
+                                ftol=float(np.max(np.abs(
+                                    extract_inner(P_f, inner_lo, inner_hi)
+                                    - extract_inner(P_flat, inner_lo, inner_hi)))),
+                                extra={"phase": "anderson"})
+                return P_f - P_flat
+
+            print(f"[solve] anderson M={anderson_m} tol={anderson_tol:.0e} "
+                  f"max={anderson_max}", flush=True)
+            try:
+                P_full_cur = _anderson(
+                    _residual_full, P_full_cur,
+                    f_tol=anderson_tol, maxiter=anderson_max,
+                    M=anderson_m, verbose=False, line_search="armijo",
+                )
+            except NoConvergence as _e:
+                P_full_cur = np.asarray(_e.x)
+                print(f"[solve] anderson NoConvergence after {eval_count[0]} evals — "
+                      f"using best found", flush=True)
+
+            F_inf_cur_inner = float(np.max(np.abs(
+                extract_inner(phi_full_fn(P_full_cur), inner_lo, inner_hi)
+                - extract_inner(P_full_cur, inner_lo, inner_hi)
+            )))
+            print(f"[solve] anderson done  evals={eval_count[0]}  "
+                  f"||F||_inner={F_inf_cur_inner:.4e}", flush=True)
+
+            P_inner_final = extract_inner(P_full_cur, inner_lo, inner_hi)
+
+        class _Stage:
+            def __init__(self, F, d):
+                self.F_inner_inf = F
+                self.deficit_f128 = d
+
+        class _History:
+            def __init__(self, F):
+                self.stages = [_Stage(F, 0.0)]
+
+        history = _History(F_inf_cur_inner)
 
         # Final diagnostics (float64)
         P_full_final = replace_inner(halo, P_inner_final, inner_lo, inner_hi)
