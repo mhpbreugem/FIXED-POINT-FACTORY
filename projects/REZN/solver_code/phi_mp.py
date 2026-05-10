@@ -308,6 +308,8 @@ def phi_newton_mp(
     F_inf = _mp.mpf("inf")
     F_float = float("inf")
     n_steps = 0
+    n_fun = [0]   # mpmath phi evaluations
+    n_jac = [0]   # LGMRES solves (Jacobian applications)
 
     # Initialize — prefer high-precision strings from prior mp run over float64.
     P_full_mp = np_to_mp(_mp.mp, P_full_np)
@@ -331,6 +333,7 @@ def phi_newton_mp(
             _mp.mp, P_full_mp, u_full_mp, inner_lo, inner_hi,
             tau_mp, gamma_mp, W_mp, kernel_mp,
         )
+        n_fun[0] += 1
         F_inf = f_inf_mp(_mp.mp, P_new_mp, P_full_mp, inner_lo, inner_hi)
         n_steps = newton_it + 1
         F_float = float(F_inf)
@@ -339,7 +342,8 @@ def phi_newton_mp(
         print(f"[phi_mp/newton] step={n_steps:3d}  F={F_float:.4e}  "
               f"t_mp={elapsed_mp:.0f}s  t_total={elapsed_total:.0f}s", flush=True)
         if reporter is not None:
-            reporter.update(iter=n_steps, ftol=F_float)
+            reporter.update(iter=n_steps, ftol=F_float,
+                            phase="mp_newton", n_fun=n_fun[0], n_jac=n_jac[0])
 
         if F_inf < tol:
             print(f"[phi_mp/newton] converged at step={n_steps}  F={F_float:.4e}", flush=True)
@@ -398,6 +402,7 @@ def phi_newton_mp(
             maxiter=lgmres_outer,
             inner_m=lgmres_inner_m,
         )
+        n_jac[0] += 1
         elapsed_lgmres = time.perf_counter() - t_lgmres
         print(f"[phi_mp/newton]   LGMRES info={info} t={elapsed_lgmres:.0f}s "
               f"||r||={float(np.linalg.norm(J_op @ delta_scaled - F_scaled_np)):.2e}",

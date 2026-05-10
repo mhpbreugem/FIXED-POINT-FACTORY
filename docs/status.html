@@ -315,15 +315,15 @@
         const ex = pr.extra || {};
         let phaseLabel;
         if (ex.phase === "mp_newton") {
-          phaseLabel = `mp·newton`;
+          phaseLabel = `<span style="color:#7ecff7">mp·Newton</span> s${pr.iter ?? "?"} fun=${ex.n_fun ?? "?"} jac=${ex.n_jac ?? "?"}`;
         } else if (ex.phase === "newton") {
           phaseLabel = `newton s${ex.stage ?? "?"}·${ex.newton_iter ?? "?"}`;
         } else if (ex.phase === "presmooth") {
           phaseLabel = `smooth s${ex.stage ?? "?"}·${ex.newton_iter ?? "?"}`;
         } else if (ex.phase === "picard") {
-          phaseLabel = `picard·${ex.newton_iter ?? pr.iter ?? "?"}`;
+          phaseLabel = `<span style="color:#f7c87e">Picard</span> iter=${pr.iter ?? "?"} fun=${ex.n_fun ?? "?"}`;
         } else {
-          phaseLabel = `anderson`;
+          phaseLabel = `iter ${pr.iter ?? "?"}`;
         }
         liveStr = `<span class="live">${phaseLabel} ‖F‖=${ftolStr}</span>`;
         if (pr.worker_id) workerStr = `<span class="mono" style="font-size:0.78rem">${esc(pr.worker_id)}</span>`;
@@ -406,12 +406,14 @@
     function methodLabel(pr) {
       if (!pr) return "—";
       const ex = pr.extra || {};
-      if (ex.phase === "mp_newton")  return `<span style="color:#7ecff7">mp·Newton</span>`;
-      if (ex.phase === "newton")     return `<span style="color:#8ef78e">Newton s${ex.stage??""}</span>`;
-      if (ex.phase === "presmooth")  return `<span style="color:#f7c87e">Picard s${ex.stage??""}</span>`;
-      if (ex.phase === "picard")     return `<span style="color:#f7a07e">Picard</span>`;
-      if (ex.phase === "anderson")   return `<span style="color:#c87ef7">Anderson</span>`;
-      return `<span style="color:#c87ef7">Anderson</span>`;
+      const nf = ex.n_fun != null ? ` fun=${ex.n_fun}` : "";
+      const nj = ex.n_jac != null ? ` jac=${ex.n_jac}` : "";
+      if (ex.phase === "mp_newton") return `<span style="color:#7ecff7">mp·Newton</span> s${pr.iter??"?"}${nf}${nj}`;
+      if (ex.phase === "newton")    return `<span style="color:#8ef78e">Newton s${ex.stage??""}</span>`;
+      if (ex.phase === "presmooth") return `<span style="color:#f7c87e">Picard s${ex.stage??""}</span>`;
+      if (ex.phase === "picard")    return `<span style="color:#f7a07e">Picard</span> iter=${pr.iter??"?"}${nf}`;
+      if (pr.iter != null)          return `<span style="color:#aaa">iter ${pr.iter}</span>`;
+      return "—";
     }
 
     const hbRows = (workerData || []).filter(f => {

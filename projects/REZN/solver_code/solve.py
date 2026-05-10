@@ -260,7 +260,7 @@ def _run_sym_task(args, task: dict, gamma: float, tau: float) -> None:
 
     reporter = ProgressReporter(
         project=args.project, task_id=args.task_id,
-        worker_id=args.worker_id, branch=args.branch, interval=30,
+        worker_id=args.worker_id, branch=args.branch, interval=10,
         repo_root=ROOT,
     )
     reporter.start()
@@ -455,7 +455,7 @@ def main() -> None:
         print("[solve] TEST TASK — smoke-test mode, skipping full solve", flush=True)
         reporter = ProgressReporter(
             project=args.project, task_id=args.task_id,
-            worker_id=args.worker_id, branch=args.branch, interval=30,
+            worker_id=args.worker_id, branch=args.branch, interval=10,
             repo_root=ROOT,
         )
         reporter.start()
@@ -490,7 +490,7 @@ def main() -> None:
     # --- progress reporter ------------------------------------------------
     reporter = ProgressReporter(
         project=args.project, task_id=args.task_id,
-        worker_id=args.worker_id, branch=args.branch, interval=30,
+        worker_id=args.worker_id, branch=args.branch, interval=10,
         repo_root=ROOT,
     )
     reporter.start()
@@ -545,7 +545,7 @@ def main() -> None:
                 - extract_inner(P_full_cur, inner_lo, inner_hi)
             )))
             reporter.update(iter=_i + 1, ftol=F_inf_cur_inner,
-                            extra={"phase": "picard"})
+                            phase="picard", n_fun=_i + 1)
             P_full_cur = (1.0 - presmooth_alpha) * P_full_cur + presmooth_alpha * P_new
             if F_inf_cur_inner < picard_tol:
                 print(f"[solve] picard converged at iter={_i+1} F={F_inf_cur_inner:.4e}",
