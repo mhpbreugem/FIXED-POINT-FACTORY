@@ -259,7 +259,8 @@ def phi_newton_mp(
     lgmres_inner_m: int = 30,
     lgmres_outer: int = 10,
     reporter: Any = None,
-) -> tuple[np.ndarray, float, int]:
+    P_inner_mp_str: "np.ndarray | None" = None,  # saved mp strings from prior run
+) -> tuple[np.ndarray, float, int, np.ndarray]:
     """Inexact Newton-GMRES for high-precision fixed-point polishing.
 
     Algorithm per Newton step:
@@ -307,10 +308,18 @@ def phi_newton_mp(
     F_float = float("inf")
     n_steps = 0
 
-    # Initialize once — never reconstruct from float64 inside the loop.
-    # Reconstructing from P_full_np each iteration would discard sub-float64
-    # mpmath corrections once F < 1e-15.
+    # Initialize — prefer high-precision strings from prior mp run over float64.
     P_full_mp = np_to_mp(_mp.mp, P_full_np)
+    if P_inner_mp_str is not None:
+        try:
+            for i in range(G_inner):
+                for j in range(G_inner):
+                    for l in range(G_inner):
+                        P_full_mp[inner_lo+i][inner_lo+j][inner_lo+l] = \
+                            _mp.mpf(str(P_inner_mp_str[i, j, l]))
+            print("[phi_mp/newton] warm-started from saved mp-precision strings", flush=True)
+        except Exception as e:
+            print(f"[phi_mp/newton] mp-string warm-start failed ({e}), using float64", flush=True)
 
     for newton_it in range(max_newton):
         # ------------------------------------------------------------------
@@ -406,14 +415,15 @@ def phi_newton_mp(
 
     # Extract final inner block
     P_inner_final = np.zeros((G_inner, G_inner, G_inner), dtype=np.float64)
+    P_inner_mp_str = np.empty((G_inner, G_inner, G_inner), dtype=object)
     for i in range(G_inner):
         for j in range(G_inner):
             for l in range(G_inner):
-                P_inner_final[i, j, l] = float(
-                    P_full_mp[inner_lo + i][inner_lo + j][inner_lo + l]
-                )
+                v = P_full_mp[inner_lo + i][inner_lo + j][inner_lo + l]
+                P_inner_final[i, j, l] = float(v)
+                P_inner_mp_str[i, j, l] = _mp.nstr(v, _mp.mp.dps, strip_zeros=False)
 
-    return P_inner_final, float(F_inf), n_steps
+    return P_inner_final, float(F_inf), n_steps, P_inner_mp_str
 
 
 # ---------------------------------------------------------------------------

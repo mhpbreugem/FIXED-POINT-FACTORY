@@ -86,14 +86,19 @@ def dps_to_tol(dps) -> float:
 # Warm-start
 # ---------------------------------------------------------------------------
 
-def _try_load_npz(ckpt_path: Path) -> tuple[np.ndarray, np.ndarray] | None:
-    """Return (halo, P_inner) from an .npz checkpoint, or None on failure."""
+def _try_load_npz(ckpt_path: Path) -> tuple[np.ndarray, np.ndarray, np.ndarray | None] | None:
+    """Return (halo, P_inner_f64, P_inner_mp_str | None) or None on failure.
+
+    P_inner_mp_str is a string-dtype array with full mpmath precision values;
+    present only in checkpoints written after the mp Newton phase.
+    """
     if not ckpt_path.exists() or ckpt_path.suffix != ".npz":
         return None
     try:
-        arr = np.load(ckpt_path)
+        arr = np.load(ckpt_path, allow_pickle=True)
         if "P_inner" in arr and "halo" in arr:
-            return arr["halo"].astype(np.float64), arr["P_inner"].astype(np.float64)
+            mp_str = arr["P_inner_mp_str"] if "P_inner_mp_str" in arr else None
+            return arr["halo"].astype(np.float64), arr["P_inner"].astype(np.float64), mp_str
     except Exception as e:
         print(f"[solve] npz load failed ({e}): {ckpt_path.name}", flush=True)
     return None
@@ -104,17 +109,23 @@ def load_warm_start(
     u_full: np.ndarray, tau_vec: np.ndarray,
     gamma_vec: np.ndarray, W_vec: np.ndarray,
     inner_lo: int, inner_hi: int,
-) -> tuple[np.ndarray, np.ndarray]:
-    """Return (halo_full, P_inner).  Falls back to no-learning if no usable checkpoint."""
+) -> tuple[np.ndarray, np.ndarray, np.ndarray | None]:
+    """Return (halo_full, P_inner_f64, P_inner_mp_str | None).
+
+    P_inner_mp_str is the full-precision mpmath string array from a prior mp Newton
+    run — used to skip the float64 phase and warm-start the mp phase directly.
+    Falls back to no-learning init if no usable checkpoint exists.
+    """
     # 1. Try the task's own previous checkpoint (re-solve to higher precision)
     own_ckpt = task.get("checkpoint")
     if own_ckpt:
         result = _try_load_npz(ROOT / own_ckpt)
         if result is not None:
-            halo, P_inner = result
-            print(f"[solve] warm-start from own checkpoint: {Path(own_ckpt).name}",
+            halo, P_inner, mp_str = result
+            label = "(mp precision)" if mp_str is not None else ""
+            print(f"[solve] warm-start from own checkpoint: {Path(own_ckpt).name} {label}",
                   flush=True)
-            return halo, P_inner
+            return halo, P_inner, mp_str
 
     # 2. Try the task's dependency checkpoints
     queue = load_queue(project)
@@ -129,14 +140,14 @@ def load_warm_start(
             continue
         result = _try_load_npz(ROOT / ckpt)
         if result is not None:
-            halo, P_inner = result
+            halo, P_inner, mp_str = result
             print(f"[solve] warm-start from dep {dep_id}: {Path(ckpt).name}", flush=True)
-            return halo, P_inner
+            return halo, P_inner, mp_str
 
     print("[solve] cold start (no-learning init)", flush=True)
     halo = init_no_learning_K3(u_full, tau_vec, gamma_vec, W_vec)
     P_inner = extract_inner(halo, inner_lo, inner_hi)
-    return halo, P_inner
+    return halo, P_inner, None
 
 
 # ---------------------------------------------------------------------------
@@ -148,12 +159,14 @@ def save_checkpoint(project: str, task_id: str,
                     P_full: np.ndarray, u_full: np.ndarray,
                     u_grid_inner: np.ndarray, gamma_vec: np.ndarray,
                     tau_vec: np.ndarray, W_vec: np.ndarray,
-                    G_inner: int, pad: int, history) -> str:
+                    G_inner: int, pad: int, history,
+                    P_inner_mp_str: np.ndarray | None = None) -> str:
     out_dir = ROOT / "projects" / project / "checkpoints"
     out_dir.mkdir(parents=True, exist_ok=True)
     path = out_dir / f"{task_id}.npz"
     stage_F = np.array([r.F_inner_inf for r in history.stages], dtype=np.float64)
     stage_d = np.array([r.deficit_f128 for r in history.stages], dtype=np.float64)
+    extra = {"P_inner_mp_str": P_inner_mp_str} if P_inner_mp_str is not None else {}
     np.savez_compressed(
         path,
         P_inner=P_inner, halo=halo, P_full=P_full,
@@ -161,6 +174,7 @@ def save_checkpoint(project: str, task_id: str,
         gamma_vec=gamma_vec, tau_vec=tau_vec, W_vec=W_vec,
         G_inner=G_inner, pad=pad, K=3,
         stage_F_inf=stage_F, stage_deficit=stage_d,
+        **extra,
     )
     return str(path.relative_to(ROOT))
 
@@ -485,7 +499,7 @@ def main() -> None:
     exit_code = 0
 
     try:
-        halo, P_inner_seed = load_warm_start(
+        halo, P_inner_seed, P_inner_mp_str_warm = load_warm_start(
             args.project, task,
             u_full, tau_vec, gamma_vec, W_vec,
             inner_lo, inner_hi,
@@ -584,6 +598,8 @@ def main() -> None:
         F_inf_final = float(np.max(np.abs(F_inner)))
         deficit = revelation_deficit_f128(P_inner_final, u_grid_inner, tau_vec, K)
 
+        P_inner_mp_str = None   # filled by mp phase; saved in checkpoint for future warm-starts
+
         # ----------------------------------------------------------------
         # mpmath Newton polish phase — always runs (global precision policy).
         # Working precision: MP_DPS digits.  Target: ||F|| < MP_TOL.
@@ -606,7 +622,7 @@ def main() -> None:
                     tau_vec, gamma_vec, W_vec, kernel_h,
                 )
 
-            P_inner_mp, F_inf_mp_val, n_mp = phi_newton_mp(
+            P_inner_mp, F_inf_mp_val, n_mp, P_inner_mp_str = phi_newton_mp(
                 P_inner_final, halo, u_full,
                 inner_lo, inner_hi,
                 tau_vec, gamma_vec, W_vec,
@@ -619,6 +635,7 @@ def main() -> None:
                 lgmres_inner_m=lgmres_inner,
                 lgmres_outer=lgmres_outer,
                 reporter=reporter,
+                P_inner_mp_str=P_inner_mp_str_warm,
             )
             P_inner_final = P_inner_mp
             F_inf_final   = F_inf_mp_val
@@ -637,6 +654,7 @@ def main() -> None:
             u_full, u_grid_inner,
             gamma_vec, tau_vec, W_vec,
             G_inner, pad, history,
+            P_inner_mp_str=P_inner_mp_str,
         )
 
         result = {
