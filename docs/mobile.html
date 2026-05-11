@@ -120,8 +120,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 1.25;
-    height: 11px;
+    line-height: 1.3;
     min-width: 0;
   }
   th {
@@ -136,6 +135,8 @@
   tr:nth-child(even) td { background: var(--rowalt); }
   tr.row-claimed td { background:#1c1500 !important; }
 
+  th, td { height: 12px; }
+
   /* status colours */
   .st-done    { color:var(--done);    font-weight:700; }
   .st-ready   { color:var(--ready);   font-weight:700; }
@@ -144,10 +145,16 @@
   .st-bailed  { color:var(--bailed);  font-weight:700; }
   .st-skip    { color:var(--skip); }
 
-  .enorm { color:var(--done); }
-  .live  { color:var(--claimed); }
-  .muted { color:var(--muted); }
-  .err   { color:var(--bailed); }
+  .enorm   { color:var(--done); }
+  .live    { color:var(--claimed); }
+  .muted   { color:var(--muted); }
+  .err     { color:var(--bailed); }
+  .dim     { color:#3a3a3a; }
+  .stage-a { color:#b08000; font-weight:700; }
+  .stage-n { color:#2a7adf; font-weight:700; }
+
+  tr.row-claimed td { background:#1a1200 !important; border-left:2px solid #7a5800; }
+  tr:hover td       { filter:brightness(1.25); }
 
   /* workers tab */
   #workers-section { padding:2px 3px; font-size:7.6px; overflow-x:hidden; width:100%; }
@@ -185,16 +192,18 @@
   </div>
   <table>
     <colgroup>
-      <col style="width:15%"><!-- id -->
+      <col style="width:12%"><!-- id -->
       <col style="width:4%"> <!-- st -->
       <col style="width:7%"> <!-- γ -->
       <col style="width:7%"> <!-- τ -->
-      <col style="width:10%"><!-- ‖F‖ -->
-      <col style="width:7%"> <!-- 1-R² -->
-      <col style="width:7%"> <!-- Vi -->
-      <col style="width:7%"> <!-- TV -->
-      <col style="width:10%"><!-- phase -->
-      <col style="width:26%"><!-- t -->
+      <col style="width:9%"> <!-- ‖F‖ -->
+      <col style="width:6%"> <!-- 1-R² -->
+      <col style="width:6%"> <!-- Vi -->
+      <col style="width:6%"> <!-- TV -->
+      <col style="width:8%"> <!-- stage -->
+      <col style="width:7%"> <!-- K·G -->
+      <col style="width:12%"><!-- time -->
+      <col style="width:16%"><!-- last -->
     </colgroup>
     <thead><tr>
       <th onclick="sortBy('id')">id</th>
@@ -202,11 +211,11 @@
       <th onclick="sortBy('gamma')">γ</th>
       <th onclick="sortBy('tau')">τ</th>
       <th onclick="sortBy('F_max')">‖F‖</th>
-      <th>1-R²</th>
-      <th>Vi</th>
-      <th>TV</th>
-      <th>phase</th>
-      <th onclick="sortBy('completed_at')">t</th>
+      <th>1-R²</th><th>Vi</th><th>TV</th>
+      <th>stage</th>
+      <th class="dim">K·G</th>
+      <th onclick="sortBy('completed_at')">time</th>
+      <th>last</th>
     </tr></thead>
     <tbody id="task-body"></tbody>
   </table>
@@ -221,17 +230,18 @@
 <div id="tab-done" class="tab-content">
   <table id="done-table">
     <colgroup>
-      <col style="width:16%"><!-- id -->
+      <col style="width:13%"><!-- id -->
       <col style="width:8%"> <!-- γ -->
       <col style="width:8%"> <!-- τ -->
-      <col style="width:11%"><!-- ‖F‖ -->
+      <col style="width:10%"><!-- ‖F‖ -->
       <col style="width:8%"> <!-- 1-R² -->
-      <col style="width:9%"> <!-- Vi -->
-      <col style="width:9%"> <!-- TV -->
-      <col style="width:31%"><!-- when -->
+      <col style="width:8%"> <!-- Vi -->
+      <col style="width:8%"> <!-- TV -->
+      <col style="width:7%"> <!-- K·G -->
+      <col style="width:30%"><!-- when -->
     </colgroup>
     <thead><tr>
-      <th>id</th><th>γ</th><th>τ</th><th>‖F‖</th><th>1-R²</th><th>Vi</th><th>TV</th><th>when</th>
+      <th>id</th><th>γ</th><th>τ</th><th>‖F‖</th><th>1-R²</th><th>Vi</th><th>TV</th><th class="dim">K·G</th><th>when</th>
     </tr></thead>
     <tbody id="done-body"></tbody>
   </table>
@@ -289,23 +299,38 @@
   function fmtSig3(v){const n=sig3(v);return n!=null?String(n):"—";}
   function fmtDate(iso){const d=new Date(iso);return`${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;}
 
-  // Phase label — ultra compact
-  function phase(pr){
+  // Stage label: Axxx (Anderson) or Nxxx (Newton/mp)
+  function stageStr(pr){
     if(!pr)return'';
     const ex=pr.extra||{};
-    const p=ex.phase||ex.extra?.phase||null;
+    const p=ex.phase||null;
     const it=pr.iter??'';
-    const nf=ex.n_fun??ex.extra?.n_fun??'';
-    if(p==="mp_newton") return`mp${it} f${nf}`;
-    if(p==="anderson")  return`A${it} f${nf}`;
-    if(p==="picard")    return`Pi${it}`;
-    if(p==="newton")    return`N${ex.stage??''}·${ex.newton_iter??''}`;
-    if(it!=='')         return`i${it}`;
-    return'…';
+    if(p==="mp_newton"||p==="newton") return`<span class="stage-n">N${it}</span>`;
+    if(p==="anderson")                return`<span class="stage-a">A${it}</span>`;
+    if(p==="picard")                  return`<span class="stage-a">P${it}</span>`;
+    if(it!=='')                       return`i${it}`;
+    return'';
   }
 
-  // Elapsed time for claimed, short date for done
-  function fmtT(t,pr){
+  // K·G combined dim label
+  function fmtKG(t){
+    if(!t)return'';
+    const K=t.K??t.solver_params?.K??3;
+    const G=t.G??t.solver_params?.G??'?';
+    return`<span class="dim">${K}·${G}</span>`;
+  }
+
+  // Last-update relative time
+  function fmtLast(iso){
+    if(!iso)return'';
+    const s=(Date.now()-new Date(iso).getTime())/1000;
+    if(s<60) return`${Math.floor(s)}s`;
+    if(s<3600) return`${Math.floor(s/60)}m`;
+    return`${(s/3600).toFixed(1)}h`;
+  }
+
+  // Elapsed since claimed/started for active, completed date for done
+  function fmtTime(t,pr){
     if(t.completed_at)return fmtDate(t.completed_at);
     const iso=t.claimed_at||pr?.started_at;
     if(iso){const s=(Date.now()-new Date(iso).getTime())/1000;return s<3600?`${Math.floor(s/60)}m`:`${(s/3600).toFixed(1)}h`;}
@@ -387,8 +412,10 @@
         <td>${ds==="done"?fmtR2(r["1-R2"]):""}</td>
         <td class="muted">${ds==="done"?fmtSig3(r.Vi):""}</td>
         <td class="muted">${ds==="done"?fmtSig3(r.TV):""}</td>
-        <td class="live">${isCl?phase(pr):""}</td>
-        <td class="muted">${fmtT(t,pr)}</td>
+        <td>${isCl?stageStr(pr):""}</td>
+        <td>${fmtKG(t)}</td>
+        <td class="muted">${fmtTime(t,pr)}</td>
+        <td class="muted">${isCl?fmtLast(pr?.last_update):""}</td>
       </tr>`;
     }).join("");
   }
@@ -409,6 +436,7 @@
         <td>${fmtR2(r["1-R2"])}</td>
         <td class="muted">${fmtSig3(r.Vi)}</td>
         <td class="muted">${fmtSig3(r.TV)}</td>
+        <td>${fmtKG(t)}</td>
         <td class="muted">${fmtDate(t.completed_at)}</td>
       </tr>`;
     }).join("");
@@ -467,7 +495,7 @@
       return ms>1800000?`<span class="err">${s}s</span>`:`${s}s`;
     }
     function wRow(tid,ageMs,pr){
-      const {g,tau,K,G}=workerParams(tid);
+      const {g,tau}=workerParams(tid);
       const t=taskById(tid);const r=t?.result||{};
       const hist=pr?.ftol_history;
       let fStr="—";
@@ -477,15 +505,19 @@
         const prev=_prevFtol[tid]!=null&&_prevFtol[tid]!==pr.ftol?fmtF(_prevFtol[tid])+"→":"";
         fStr=prev+fmtF(pr.ftol);
       }
+      const lastIso=pr?.last_update;
+      const lastStr=lastIso?fmtLast(lastIso):"—";
+      const stale=lastIso&&(Date.now()-new Date(lastIso).getTime())>1800000;
       return`<tr>
         <td>${esc(shortId(tid))}</td>
-        <td>${g}</td><td>${tau}</td><td>${K}</td><td>${G}</td>
-        <td>${ageStr(ageMs)}</td>
-        <td class="live">${pr?phase(pr):"—"}</td>
+        <td>${g}</td><td>${tau}</td>
+        <td>${fmtKG(t)}</td>
+        <td>${stageStr(pr)}</td>
         <td class="enorm">${fStr}</td>
         <td>${r["1-R2"]!=null?fmtR2(r["1-R2"]):""}</td>
         <td class="muted">${fmtSig3(r.Vi)}</td>
         <td class="muted">${fmtSig3(r.TV)}</td>
+        <td class="${stale?"err":"muted"}">${lastStr}</td>
         <td><button onclick="releaseWorker('${esc(tid)}')" class="btn b-rel" style="padding:0 3px">r</button></td>
       </tr>`;
     }
@@ -512,10 +544,10 @@
     el.innerHTML=`<div class="muted" style="padding:2px 0">workers (${all.length})</div>
       <table>
         <colgroup>
-          <col style="width:14%"><col style="width:6%"><col style="width:6%"><col style="width:4%"><col style="width:4%">
-          <col style="width:5%"><col style="width:14%"><col style="width:17%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:9%">
+          <col style="width:12%"><col style="width:7%"><col style="width:7%"><col style="width:7%">
+          <col style="width:9%"><col style="width:19%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:10%"><col style="width:9%">
         </colgroup>
-        <thead><tr><th>task</th><th>γ</th><th>τ</th><th>K</th><th>G</th><th>age</th><th>phase</th><th>‖F‖</th><th>1-R²</th><th>Vi</th><th>TV</th><th></th></tr></thead>
+        <thead><tr><th>task</th><th>γ</th><th>τ</th><th class="dim">K·G</th><th>stage</th><th>‖F‖</th><th>1-R²</th><th>Vi</th><th>TV</th><th>last</th><th></th></tr></thead>
         <tbody>${all.join("")}</tbody>
       </table>`;
   }
