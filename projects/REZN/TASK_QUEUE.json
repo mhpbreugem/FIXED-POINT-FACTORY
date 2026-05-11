@@ -232,11 +232,15 @@
       "id": "g050_t0200",
       "gamma": 0.5,
       "tau": 2,
-      "status": "claimed",
-      "checkpoint": null,
-      "result": null,
-      "claimed_by": "gha-25684424584-g050_t0200",
-      "claimed_at": "2026-05-11T16:54:17Z",
+      "status": "ready",
+      "checkpoint": "projects/REZN/checkpoints/g050_t0200.npz",
+      "result": {
+        "1-R2": 0.08943085,
+        "F_max": 1.3904e-29,
+        "n_stages": 1,
+        "phi_calls": 240,
+        "wall_s": 17275.7
+      },
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -5041,8 +5045,8 @@
   "summary": {
     "total": 205,
     "done": 2,
-    "ready": 31,
-    "claimed": 18,
+    "ready": 32,
+    "claimed": 17,
     "blocked": 154,
     "bailed": 0,
     "skip": 0
