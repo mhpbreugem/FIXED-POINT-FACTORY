@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-11T02:05:50.616238Z",
+  "updated_at": "2026-05-11T02:25:43.626721Z",
   "params": {
     "G": 20,
     "UMAX": 5,
@@ -218,7 +218,7 @@
       "depends_on": [
         "g075_t0100"
       ],
-      "status": "ready",
+      "status": "bailed",
       "checkpoint": null,
       "result": {
         "reason": "||F||inf=1.288e-03 > bail threshold 1e-04"
@@ -4423,10 +4423,10 @@
   "summary": {
     "total": 200,
     "done": 2,
-    "ready": 59,
+    "ready": 58,
     "claimed": 0,
     "blocked": 138,
-    "bailed": 1,
+    "bailed": 2,
     "skip": 0
   },
   "fanout": {
