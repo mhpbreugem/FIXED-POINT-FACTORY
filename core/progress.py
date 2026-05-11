@@ -66,6 +66,7 @@ class ProgressReporter:
             "last_update": _utcnow_iso(),
             "iter": None,
             "ftol": None,
+            "ftol_history": [],
             "extra": {},
         }
         self._lock = threading.Lock()
@@ -80,9 +81,13 @@ class ProgressReporter:
                 self._state["iter"] = int(iter)
             if ftol is not None:
                 # store as string to preserve very small mp values
-                self._state["ftol"] = (
-                    str(ftol) if isinstance(ftol, str) else f"{float(ftol):.6e}"
-                )
+                ftol_str = str(ftol) if isinstance(ftol, str) else f"{float(ftol):.6e}"
+                self._state["ftol"] = ftol_str
+                hist = self._state["ftol_history"]
+                if not hist or hist[-1] != ftol_str:
+                    hist.append(ftol_str)
+                    if len(hist) > 8:
+                        hist.pop(0)
             if extra:
                 self._state["extra"].update(extra)
             self._state["last_update"] = _utcnow_iso()

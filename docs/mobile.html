@@ -464,9 +464,14 @@
     }
     function wRow(tid,ageMs,pr){
       const {g,tau,K}=workerParams(tid);
-      const curr=pr?.ftol!=null?fmtF(pr.ftol):null;
-      const prev=_prevFtol[tid]!=null&&_prevFtol[tid]!==pr?.ftol?fmtF(_prevFtol[tid]):null;
-      const fStr=curr!=null?(prev!=null?`${prev}→${curr}`:curr):"—";
+      const hist=pr?.ftol_history;
+      let fStr="—";
+      if(hist&&hist.length>0){
+        fStr=hist.map(fmtF).join("→");
+      } else if(pr?.ftol!=null){
+        const prev=_prevFtol[tid]!=null&&_prevFtol[tid]!==pr.ftol?fmtF(_prevFtol[tid])+"→":"";
+        fStr=prev+fmtF(pr.ftol);
+      }
       return`<tr>
         <td>${esc(shortId(tid))}</td>
         <td>${g}</td><td>${tau}</td><td>${K}</td>
@@ -499,8 +504,8 @@
     el.innerHTML=`<div class="muted" style="padding:2px 0">workers (${all.length})</div>
       <table>
         <colgroup>
-          <col style="width:20%"><col style="width:7%"><col style="width:7%"><col style="width:6%">
-          <col style="width:9%"><col style="width:23%"><col style="width:12%"><col style="width:16%">
+          <col style="width:17%"><col style="width:6%"><col style="width:6%"><col style="width:5%">
+          <col style="width:7%"><col style="width:16%"><col style="width:27%"><col style="width:16%">
         </colgroup>
         <thead><tr><th>task</th><th>γ</th><th>τ</th><th>K</th><th>age</th><th>phase</th><th>‖F‖</th><th></th></tr></thead>
         <tbody>${all.join("")}</tbody>
