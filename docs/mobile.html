@@ -337,7 +337,7 @@ function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").repl
 
     const filtered=tasks.filter(t=>{
       const ds=dsMap.get(t.id);
-      if(ds==="done"&&fv!=="done")return false; // done tasks hidden unless filtered
+      if(ds==="done"&&!fv)return false; // hide done by default; any filter reveals them
       if(!fv)return true;
       return t.id.toLowerCase().includes(fv)||ds.toLowerCase().includes(fv)||
              String(t.gamma||"").includes(fv)||String(t.tau||"").includes(fv);
