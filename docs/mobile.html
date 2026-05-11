@@ -153,7 +153,7 @@
   .stage-a { color:#b08000; font-weight:700; }
   .stage-n { color:#2a7adf; font-weight:700; }
 
-  tr.row-claimed td { background:#1a1200 !important; border-left:2px solid #7a5800; }
+  tr.row-claimed td { background:#1a1200 !important; }
   tr:hover td       { filter:brightness(1.25); }
 
   /* workers tab */
@@ -192,28 +192,30 @@
   </div>
   <table>
     <colgroup>
-      <col style="width:12%"><!-- id -->
-      <col style="width:4%"> <!-- st -->
+      <col style="width:11%"><!-- id -->
+      <col style="width:5%"> <!-- st -->
+      <col style="width:6%"> <!-- K·G -->
       <col style="width:7%"> <!-- γ -->
       <col style="width:7%"> <!-- τ -->
-      <col style="width:9%"> <!-- ‖F‖ -->
+      <col style="width:9%"> <!-- F -->
+      <col style="width:9%"> <!-- F₋₁ -->
       <col style="width:6%"> <!-- 1-R² -->
       <col style="width:6%"> <!-- Vi -->
       <col style="width:6%"> <!-- TV -->
-      <col style="width:8%"> <!-- stage -->
-      <col style="width:7%"> <!-- K·G -->
-      <col style="width:12%"><!-- time -->
-      <col style="width:16%"><!-- last -->
+      <col style="width:7%"> <!-- stage -->
+      <col style="width:9%"> <!-- time -->
+      <col style="width:12%"><!-- last -->
     </colgroup>
     <thead><tr>
       <th onclick="sortBy('id')">id</th>
       <th onclick="sortBy('status')">st</th>
+      <th class="dim">K·G</th>
       <th onclick="sortBy('gamma')">γ</th>
       <th onclick="sortBy('tau')">τ</th>
-      <th onclick="sortBy('F_max')">‖F‖</th>
+      <th onclick="sortBy('F_max')">F</th>
+      <th>F₋₁</th>
       <th>1-R²</th><th>Vi</th><th>TV</th>
-      <th>stage</th>
-      <th class="dim">K·G</th>
+      <th>stg</th>
       <th onclick="sortBy('completed_at')">time</th>
       <th>last</th>
     </tr></thead>
@@ -230,18 +232,18 @@
 <div id="tab-done" class="tab-content">
   <table id="done-table">
     <colgroup>
-      <col style="width:13%"><!-- id -->
+      <col style="width:12%"><!-- id -->
+      <col style="width:6%"> <!-- K·G -->
       <col style="width:8%"> <!-- γ -->
       <col style="width:8%"> <!-- τ -->
       <col style="width:10%"><!-- ‖F‖ -->
       <col style="width:8%"> <!-- 1-R² -->
       <col style="width:8%"> <!-- Vi -->
       <col style="width:8%"> <!-- TV -->
-      <col style="width:7%"> <!-- K·G -->
-      <col style="width:30%"><!-- when -->
+      <col style="width:32%"><!-- when -->
     </colgroup>
     <thead><tr>
-      <th>id</th><th>γ</th><th>τ</th><th>‖F‖</th><th>1-R²</th><th>Vi</th><th>TV</th><th class="dim">K·G</th><th>when</th>
+      <th>id</th><th class="dim">K·G</th><th>γ</th><th>τ</th><th>F</th><th>1-R²</th><th>Vi</th><th>TV</th><th>when</th>
     </tr></thead>
     <tbody id="done-body"></tbody>
   </table>
@@ -362,7 +364,7 @@
     return t.status;
   }
 
-  const ST2={done:"ok",ready:"rd",claimed:"cl",blocked:"bl",bailed:"ba",skip:"sk"};
+  const ST2={done:"done",ready:"rdy",claimed:"clmd",blocked:"blkd",bailed:"bail",skip:"skip"};
 
   function renderTasks(){
     if(!taskData)return;
@@ -403,17 +405,20 @@
       const fmaxDone=r.F_max!=null?fmtF(r.F_max):r.F_max_bound!=null?`<${fmtF(r.F_max_bound)}`:"";
       const fStr=isCl?(pr?.ftol!=null?fmtF(pr.ftol):""):fmaxDone;
       const rc=isCl?' class="row-claimed"':'';
+      const hist=pr?.ftol_history||[];
+      const fPrev=isCl&&hist.length>=2?fmtF(hist[hist.length-2]):"";
       return`<tr${rc}>
         <td>${esc(shortId(t.id))}</td>
-        <td class="st-${ds}">${ST2[ds]||ds.slice(0,2)}</td>
+        <td class="st-${ds}">${ST2[ds]||ds.slice(0,4)}</td>
+        <td>${fmtKG(t)}</td>
         <td>${sig4(t.gamma)??""}</td>
         <td>${sig4(t.tau)??""}</td>
         <td class="enorm">${fStr}</td>
+        <td class="muted">${fPrev}</td>
         <td>${ds==="done"?fmtR2(r["1-R2"]):""}</td>
         <td class="muted">${ds==="done"?fmtSig3(r.Vi):""}</td>
         <td class="muted">${ds==="done"?fmtSig3(r.TV):""}</td>
         <td>${isCl?stageStr(pr):""}</td>
-        <td>${fmtKG(t)}</td>
         <td class="muted">${fmtTime(t,pr)}</td>
         <td class="muted">${isCl?fmtLast(pr?.last_update):""}</td>
       </tr>`;
@@ -430,13 +435,13 @@
       const r=t.result||{};
       return`<tr>
         <td>${esc(shortId(t.id))}</td>
+        <td>${fmtKG(t)}</td>
         <td>${sig4(t.gamma)??""}</td>
         <td>${sig4(t.tau)??""}</td>
         <td class="enorm">${fmtF(r.F_max)}</td>
         <td>${fmtR2(r["1-R2"])}</td>
         <td class="muted">${fmtSig3(r.Vi)}</td>
         <td class="muted">${fmtSig3(r.TV)}</td>
-        <td>${fmtKG(t)}</td>
         <td class="muted">${fmtDate(t.completed_at)}</td>
       </tr>`;
     }).join("");
@@ -497,27 +502,23 @@
     function wRow(tid,ageMs,pr){
       const {g,tau}=workerParams(tid);
       const t=taskById(tid);const r=t?.result||{};
-      const hist=pr?.ftol_history;
-      let fStr="—";
-      if(hist&&hist.length>0){
-        fStr=hist.map(fmtF).join("→");
-      } else if(pr?.ftol!=null){
-        const prev=_prevFtol[tid]!=null&&_prevFtol[tid]!==pr.ftol?fmtF(_prevFtol[tid])+"→":"";
-        fStr=prev+fmtF(pr.ftol);
-      }
+      const hist=pr?.ftol_history||[];
+      const fCur=pr?.ftol!=null?fmtF(pr.ftol):"—";
+      const fPrev=hist.length>=2?fmtF(hist[hist.length-2]):
+                  (_prevFtol[tid]&&_prevFtol[tid]!==pr?.ftol?fmtF(_prevFtol[tid]):"");
       const lastIso=pr?.last_update;
-      const lastStr=lastIso?fmtLast(lastIso):"—";
       const stale=lastIso&&(Date.now()-new Date(lastIso).getTime())>1800000;
       return`<tr>
         <td>${esc(shortId(tid))}</td>
-        <td>${g}</td><td>${tau}</td>
         <td>${fmtKG(t)}</td>
+        <td>${g}</td><td>${tau}</td>
         <td>${stageStr(pr)}</td>
-        <td class="enorm">${fStr}</td>
+        <td class="enorm">${fCur}</td>
+        <td class="muted">${fPrev}</td>
         <td>${r["1-R2"]!=null?fmtR2(r["1-R2"]):""}</td>
         <td class="muted">${fmtSig3(r.Vi)}</td>
         <td class="muted">${fmtSig3(r.TV)}</td>
-        <td class="${stale?"err":"muted"}">${lastStr}</td>
+        <td class="${stale?"err":"muted"}">${lastIso?fmtLast(lastIso):"—"}</td>
         <td><button onclick="releaseWorker('${esc(tid)}')" class="btn b-rel" style="padding:0 3px">r</button></td>
       </tr>`;
     }
@@ -544,10 +545,10 @@
     el.innerHTML=`<div class="muted" style="padding:2px 0">workers (${all.length})</div>
       <table>
         <colgroup>
-          <col style="width:12%"><col style="width:7%"><col style="width:7%"><col style="width:7%">
-          <col style="width:9%"><col style="width:19%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:10%"><col style="width:9%">
+          <col style="width:11%"><col style="width:6%"><col style="width:7%"><col style="width:7%">
+          <col style="width:8%"><col style="width:10%"><col style="width:10%"><col style="width:6%"><col style="width:6%"><col style="width:6%"><col style="width:10%"><col style="width:13%">
         </colgroup>
-        <thead><tr><th>task</th><th>γ</th><th>τ</th><th class="dim">K·G</th><th>stage</th><th>‖F‖</th><th>1-R²</th><th>Vi</th><th>TV</th><th>last</th><th></th></tr></thead>
+        <thead><tr><th>task</th><th class="dim">K·G</th><th>γ</th><th>τ</th><th>stg</th><th>F</th><th>F₋₁</th><th>1-R²</th><th>Vi</th><th>TV</th><th>last</th><th></th></tr></thead>
         <tbody>${all.join("")}</tbody>
       </table>`;
   }
