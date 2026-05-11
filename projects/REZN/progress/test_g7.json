@@ -2,9 +2,21 @@
   "task_id": "test_g7",
   "worker_id": "claude-worker-1",
   "started_at": "2026-05-11T16:23:20Z",
-  "last_update": "2026-05-11T16:23:20Z",
-  "iter": null,
-  "ftol": null,
-  "ftol_history": [],
-  "extra": {}
+  "last_update": "2026-05-11T16:23:24Z",
+  "iter": 280,
+  "ftol": "9.911464e-05",
+  "ftol_history": [
+    "3.367011e-04",
+    "4.273115e-04",
+    "2.875333e-04",
+    "4.915711e-04",
+    "2.383044e-04",
+    "2.816350e-04",
+    "4.318437e-04",
+    "9.911464e-05"
+  ],
+  "extra": {
+    "phase": "anderson",
+    "n_fun": 278
+  }
 }
