@@ -250,7 +250,7 @@ function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").repl
   function fmtF(v){if(v==null)return"—";return Number(v).toExponential(0);}
   function fmtR2(v){if(v==null)return"—";return Number(v).toFixed(4).replace(/^0/,"");}
   function fmtSig3(v){const n=sig3(v);return n!=null?String(n):"—";}
-  function fmtDate(iso){const d=new Date(iso);return`${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;}
+  function fmtDate(iso){const d=new Date(iso);return`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;}
 
   // Stage label: Axxx (Anderson) or Nxxx (Newton/mp)
   function stageStr(pr){
