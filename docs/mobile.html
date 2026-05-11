@@ -193,7 +193,7 @@
   <table>
     <colgroup>
       <col style="width:11%"><!-- id -->
-      <col style="width:5%"> <!-- st -->
+      <col style="width:7%"> <!-- st -->
       <col style="width:6%"> <!-- K·G -->
       <col style="width:7%"> <!-- γ -->
       <col style="width:7%"> <!-- τ -->
@@ -204,7 +204,7 @@
       <col style="width:6%"> <!-- TV -->
       <col style="width:7%"> <!-- stage -->
       <col style="width:9%"> <!-- time -->
-      <col style="width:12%"><!-- last -->
+      <col style="width:10%"><!-- last -->
     </colgroup>
     <thead><tr>
       <th onclick="sortBy('id')">id</th>
@@ -319,7 +319,8 @@
     if(!t)return'';
     const K=t.K??t.solver_params?.K??3;
     const G=t.G??t.solver_params?.G??'?';
-    return`<span class="dim">${K}·${G}</span>`;
+    const Gs=typeof G==='number'?String(G).padStart(3,'0'):String(G);
+    return`<span class="dim">${K}·${Gs}</span>`;
   }
 
   // Last-update relative time
@@ -364,7 +365,7 @@
     return t.status;
   }
 
-  const ST2={done:"done",ready:"rdy",claimed:"clmd",blocked:"blkd",bailed:"bail",skip:"skip"};
+  const ST2={done:"done",ready:"ready",claimed:"claim",blocked:"block",bailed:"bailed",skip:"skip"};
 
   function renderTasks(){
     if(!taskData)return;
