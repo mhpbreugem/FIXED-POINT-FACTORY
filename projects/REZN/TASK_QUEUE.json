@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-11T14:07:22.204665+00:00",
+  "updated_at": "2026-05-11T14:36:54.444262Z",
   "params": {
     "G": 20,
     "UMAX": 4.0,
@@ -254,8 +254,8 @@
       "depends_on": [
         "g075_t0150"
       ],
-      "status": "claimed",
-      "checkpoint": "projects/REZN/checkpoints/g075_t0100.npz",
+      "status": "bailed",
+      "checkpoint": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
@@ -267,15 +267,9 @@
       },
       "G": 20,
       "result": {
-        "1-R2": 0.04144783,
-        "F_max": 5.4461e-79,
-        "n_stages": 1,
-        "phi_calls": 132,
-        "wall_s": 17242.6
+        "reason": "ValueError: could not broadcast input array from shape (15,15,15) into shape (19,19,19)"
       },
-      "completed_at": null,
-      "claimed_by": "gha-25676792514-g075_t0100",
-      "claimed_at": "2026-05-11T14:36:22Z"
+      "completed_at": null
     },
     {
       "id": "g075_t0150",
@@ -4943,10 +4937,10 @@
   "summary": {
     "total": 200,
     "done": 1,
-    "ready": 41,
+    "ready": 40,
     "claimed": 3,
     "blocked": 155,
-    "bailed": 0,
+    "bailed": 1,
     "skip": 0
   },
   "fanout": {
