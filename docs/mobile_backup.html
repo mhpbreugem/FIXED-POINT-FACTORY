@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>fpf</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<style>
+  :root {
+    --bg:#111; --fg:#ccc; --muted:#666;
+    --done:#2a9a30; --ready:#3a8ef7; --claimed:#c99000;
+    --bailed:#d03010; --blocked:#555; --skip:#444;
+    --hdr:#202020; --rowalt:#161616; --border:#252525;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin:0; padding:0; overflow-x:hidden; max-width:100vw; width:100%; }
+  body {
+    font-family: ui-monospace, 'Menlo', monospace;
+    font-size: 7.6px;
+    line-height: 1.25;
+    background: var(--bg);
+    color: var(--fg);
+  }
+
+  /* ── sticky top controls ── */
+  #topbar {
+    position: sticky; top:0; z-index:20;
+    background: #1a1a1a;
+    border-bottom: 1px solid #333;
+    padding: 2px 3px;
+    display: flex; flex-wrap: wrap; gap: 2px; align-items: center;
+    overflow-x: hidden; max-width: 100vw;
+  }
+  #pat-input {
+    font-family: inherit; font-size: 10.1px;
+    background: #222; color: #bbb; border: 1px solid #444;
+    border-radius: 2px; padding: 2px 3px;
+    width: min(130px, 35vw); min-width: 0;
+  }
+  .btn {
+    font-family: inherit; font-size: 10.1px; font-weight: 700;
+    border: none; border-radius: 2px; padding: 2px 5px;
+    cursor: pointer; color: #fff; white-space: nowrap; flex-shrink:0;
+  }
+  .b-bail   { background:#7a1808; }
+  .b-rel    { background:#5a4200; }
+  .b-go     { background:#1a5e2a; }
+  .b-stop   { background:#5e1a1a; }
+  .b-ref    { background:#333; }
+  #worker-count {
+    font-family: inherit; font-size: 10.1px;
+    background:#222; color:#bbb; border:1px solid #444;
+    border-radius:2px; padding:2px; width:28px; text-align:center;
+  }
+
+  /* ── meta / ticker ── */
+  #metabar {
+    font-size: 7.6px; color: var(--muted);
+    padding: 1px 3px; border-bottom: 1px solid #1e1e1e;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  #status-msg { color: var(--claimed); }
+
+  /* ── summary pills ── */
+  #summary {
+    display:flex; flex-wrap:wrap; gap:2px;
+    padding: 2px 3px; border-bottom:1px solid #1e1e1e;
+  }
+  .pill {
+    font-size:8.9px; font-weight:700; padding:3px 13px;
+    border-radius:2px; cursor:pointer; color:#fff;
+  }
+  .pill.done    { background:var(--done); }
+  .pill.ready   { background:var(--ready); }
+  .pill.claimed { background:var(--claimed); }
+  .pill.blocked { background:var(--blocked); }
+  .pill.bailed  { background:var(--bailed); }
+  .pill.skip    { background:var(--skip); }
+  .pill.total   { background:#333; }
+
+  /* ── filter ── */
+  #filterbar {
+    padding: 2px 3px; border-bottom:1px solid #1e1e1e;
+    display:flex; gap:2px; align-items:center;
+  }
+  #filter {
+    font-family:inherit; font-size:10.1px;
+    background:#1e1e1e; color:#ccc; border:1px solid #333;
+    border-radius:2px; padding:1px 3px; flex:1; min-width:0;
+  }
+
+  /* ── THE TABLE — fixed layout, no horizontal scroll ── */
+  table {
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%;
+    max-width: 100%;
+    font-size: 7.6px;
+  }
+  colgroup col { overflow:hidden; }
+  th, td {
+    padding: 0 2px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+    min-width: 0;
+  }
+  th {
+    background: var(--hdr);
+    font-weight: 700;
+    font-size: 7.6px;
+    color: #888;
+    cursor: pointer;
+    text-align: left;
+  }
+  th:hover { background:#2a2a2a; }
+  tr:nth-child(even) td { background: var(--rowalt); }
+  tr.row-claimed td { background:#1c1500 !important; }
+
+  th, td { height: 12px; }
+
+  /* status colours */
+  .st-done    { color:var(--done);    font-weight:700; }
+  .st-ready   { color:var(--ready);   font-weight:700; }
+  .st-claimed { color:var(--claimed); font-weight:700; }
+  .st-blocked { color:var(--blocked); }
+  .st-bailed  { color:var(--bailed);  font-weight:700; }
+  .st-skip    { color:var(--skip); }
+
+  .enorm   { color:var(--done); }
+  .live    { color:var(--claimed); }
+  .muted   { color:var(--muted); }
+  .err     { color:var(--bailed); }
+  .dim     { color:#888; }
+  .stage-a { color:#b08000; font-weight:700; }
+  .stage-n { color:#2a7adf; font-weight:700; }
+
+  tr.row-claimed td { background:#1a1200 !important; }
+  tr:hover td       { filter:brightness(1.25); }
+
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <input type="password" id="pat-input" placeholder="GitHub PAT" oninput="savePat();debouncedLoad();">
+  <button class="btn b-bail"  onclick="resetByStatus('bailed')">b→r</button>
+  <button class="btn b-rel"   onclick="resetByStatus('claimed')">c→r</button>
+  <input  type="number" id="worker-count" value="20" min="1" max="50">
+  <button class="btn b-go"    onclick="launchWorkers()">▶</button>
+  <button class="btn b-stop"  onclick="cancelAllRuns()">✕</button>
+  <button class="btn b-ref"   onclick="loadAll()">⟳</button>
+  <span id="status-msg" style="font-size:8.9px"></span>
+</div>
+
+<div id="metabar">
+  <span id="meta">loading…</span>&nbsp;·&nbsp;<span id="ticker"></span>
+  <br><span id="site-mod"></span>
+</div>
+
+<!-- TASKS -->
+<div id="tab-tasks">
+  <div id="summary"></div>
+  <div id="filterbar">
+    <input type="text" id="filter" placeholder="filter…" oninput="renderTasks()">
+  </div>
+  <table>
+    <colgroup>
+      <col style="width:11%"><!-- id -->
+      <col style="width:7%"> <!-- st -->
+      <col style="width:9%"> <!-- K·G -->
+      <col style="width:7%"> <!-- γ -->
+      <col style="width:7%"> <!-- τ -->
+      <col style="width:9%"> <!-- F -->
+      <col style="width:8%"> <!-- F₋₁ -->
+      <col style="width:7%"> <!-- 1-R² -->
+      <col style="width:6%"> <!-- Vi -->
+      <col style="width:6%"> <!-- TV -->
+      <col style="width:7%"> <!-- stage -->
+      <col style="width:9%"> <!-- time -->
+      <col style="width:7%"> <!-- last -->
+    </colgroup>
+    <thead><tr>
+      <th onclick="sortBy('id')">id</th>
+      <th onclick="sortBy('status')">st</th>
+      <th class="dim">K·G</th>
+      <th class="dim" onclick="sortBy('gamma')">γ</th>
+      <th class="dim" onclick="sortBy('tau')">τ</th>
+      <th onclick="sortBy('F_max')">F</th>
+      <th>F₋₁</th>
+      <th>1-R²</th><th>Vi</th><th>TV</th>
+      <th>stg</th>
+      <th onclick="sortBy('completed_at')">time</th>
+      <th>last</th>
+    </tr></thead>
+    <tbody id="task-body"></tbody>
+  </table>
+</div>
+
+
+<script>
+  const OWNER="mhpbreugem", REPO="fixed-point-factory", BRANCH="main", PROJECT="REZN";
+  let taskData=null, progressData={};
+  let sortCol="id", sortAsc=true;
+  let taskMap=new Map(); // rebuilt on each taskData load → O(1) lookups
+
+  // PAT
+  function savePat(){const v=document.getElementById('pat-input').value.trim();v?localStorage.setItem('fpf_pat',v):localStorage.removeItem('fpf_pat');}
+  function getPat(){return localStorage.getItem('fpf_pat')||'';}
+  window.addEventListener('DOMContentLoaded',()=>{const p=getPat();if(p)document.getElementById('pat-input').value=p;});
+
+  // Debounce: fire loadAll once 600ms after the last PAT keystroke
+  let _patTimer=null;
+  function debouncedLoad(){clearTimeout(_patTimer);_patTimer=setTimeout(loadAll,600);}
+
+  function setMsg(t,ms=0){const e=document.getElementById('status-msg');e.textContent=t;if(ms)setTimeout(()=>e.textContent='',ms);}
+
+  // URL / fetch helpers
+  function rawUrl(p){return`https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${p}`;}
+  function apiUrl(p){return`https://api.github.com/repos/${OWNER}/${REPO}/contents/${p}?ref=${BRANCH}`;}
+  function authH(){const p=getPat();return p?{Authorization:`token ${p}`}:{};}
+  async function fj(url){const r=await fetch(url,{cache:"no-store",headers:authH()});if(!r.ok)throw new Error(r.status);return r.json();}
+  async function apiContent(path){const m=await fj(apiUrl(path));if(m.content)return JSON.parse(atob(m.content.replace(/\n/g,"")));return fj(rawUrl(path));}
+
+  // UTF-8–safe btoa
+  function toB64(str){const b=new TextEncoder().encode(str);return btoa(Array.from(b,x=>String.fromCharCode(x)).join(''));}
+
+  function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+  // Formatting helpers — defined once, reused everywhere
+  const _sidCache=new Map();
+  function shortId(id){
+    if(_sidCache.has(id))return _sidCache.get(id);
+    const s=id.replace(/^g0*(\d+)_t0*(\d+)$/,(_,g,t)=>`g${g}t${t}`).slice(0,12);
+    _sidCache.set(id,s);return s;
+  }
+  function sig3(v){return v!=null?parseFloat(Number(v).toPrecision(3)):null;}
+  function sig4(v){return v!=null?parseFloat(Number(v).toPrecision(4)):null;}
+  function fmtF(v){if(v==null)return"—";return Number(v).toExponential(0);}
+  function fmtR2(v){if(v==null)return"—";return Number(v).toFixed(4).replace(/^0/,"");}
+  function fmtSig3(v){const n=sig3(v);return n!=null?String(n):"—";}
+  function fmtDate(iso){const d=new Date(iso);return`${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;}
+
+  // Stage label: Axxx (Anderson) or Nxxx (Newton/mp)
+  function stageStr(pr){
+    if(!pr)return'';
+    const ex=pr.extra||{};
+    const p=ex.phase||null;
+    const it=pr.iter??'';
+    if(p==="mp_newton"||p==="newton") return`<span class="stage-n">N${it}</span>`;
+    if(p==="anderson")                return`<span class="stage-a">A${it}</span>`;
+    if(p==="picard")                  return`<span class="stage-a">P${it}</span>`;
+    if(it!=='')                       return`i${it}`;
+    return'';
+  }
+
+  // K·G combined dim label
+  function fmtKG(t){
+    if(!t)return'';
+    const K=t.K??t.solver_params?.K??3;
+    const G=t.G??t.solver_params?.G??'?';
+    const Gs=typeof G==='number'?String(G).padStart(2,'0'):String(G);
+    return`<span class="dim">${K}·${Gs}</span>`;
+  }
+
+  // Last-update relative time
+  function fmtLast(iso){
+    if(!iso)return'';
+    const s=(Date.now()-new Date(iso).getTime())/1000;
+    if(s<60) return`${Math.floor(s)}s`;
+    if(s<3600) return`${Math.floor(s/60)}m`;
+    return`${(s/3600).toFixed(1)}h`;
+  }
+
+  // Elapsed since claimed/started for active, completed date for done
+  function fmtTime(t,pr){
+    if(t.completed_at)return fmtDate(t.completed_at);
+    const iso=t.claimed_at||pr?.started_at;
+    if(iso){const s=(Date.now()-new Date(iso).getTime())/1000;return s<3600?`${Math.floor(s/60)}m`:`${(s/3600).toFixed(1)}h`;}
+    return'';
+  }
+
+  // Task loading
+  let _qSha=null;
+  async function loadTasks(){
+    if(getPat()){
+      const m=await fj(apiUrl(`projects/${PROJECT}/TASK_QUEUE.json`));
+      if(m.sha===_qSha)return;
+      _qSha=m.sha;
+      taskData=JSON.parse(atob(m.content.replace(/\n/g,"")));
+    }else{
+      taskData=await fj(rawUrl(`projects/${PROJECT}/TASK_QUEUE.json`));
+    }
+    taskMap=new Map((taskData.tasks||[]).map(t=>[t.id,t]));
+    renderTasks();
+    const u=(taskData.updated_at||'?').replace('T',' ').slice(0,16);
+    document.getElementById("meta").textContent=`upd:${u}`;
+  }
+
+  function getDS(t){
+    const pr=progressData[t.id];
+    const fresh=pr&&pr.last_update&&(Date.now()-new Date(pr.last_update).getTime())<5400000;
+    if(fresh&&(t.status==="ready"||t.status==="bailed"))return"claimed";
+    return t.status;
+  }
+
+  const ST2={done:"done",ready:"ready",claimed:"claim",blocked:"block",bailed:"bailed",skip:"skip"};
+
+  function renderTasks(){
+    if(!taskData)return;
+    const tasks=taskData.tasks||[];
+    const fv=(document.getElementById("filter")?.value||"").toLowerCase();
+
+    // Precompute display-status once per task (used for pills, filter, and row colour)
+    const dsMap=new Map(tasks.map(t=>[t.id,getDS(t)]));
+
+    const counts={};
+    tasks.forEach(t=>{const ds=dsMap.get(t.id);counts[ds]=(counts[ds]||0)+1;});
+    const order=["done","claimed","ready","blocked","bailed","skip"];
+    document.getElementById("summary").innerHTML=
+      order.filter(s=>counts[s]).map(s=>{
+        const sel=fv===s?' style="outline:2px solid #fff"':'';
+        return`<span class="pill ${s}" onclick="(function(){var f=document.getElementById('filter');f.value=f.value.toLowerCase()==='${s}'?'':'${s}';renderTasks();})()"${sel}>${s[0]}:${counts[s]}</span>`;
+      }).join("")+`<span class="pill total">#${tasks.length}</span>`;
+
+    const filtered=tasks.filter(t=>{
+      const ds=dsMap.get(t.id);
+      if(ds==="done"&&fv!=="done")return false; // done tasks hidden unless filtered
+      if(!fv)return true;
+      return t.id.toLowerCase().includes(fv)||ds.toLowerCase().includes(fv)||
+             String(t.gamma||"").includes(fv)||String(t.tau||"").includes(fv);
+    });
+    const sorted=[...filtered].sort((a,b)=>{
+      let av=a[sortCol]??a.result?.[sortCol]??"";
+      let bv=b[sortCol]??b.result?.[sortCol]??"";
+      if(typeof av==="number"&&typeof bv==="number")return sortAsc?av-bv:bv-av;
+      return sortAsc?String(av).localeCompare(String(bv)):String(bv).localeCompare(String(av));
+    });
+
+    document.getElementById("task-body").innerHTML=sorted.map(t=>{
+      const pr=progressData[t.id];
+      const ds=dsMap.get(t.id);
+      const isCl=ds==="claimed";
+      const r=t.result||{};
+      const fmaxDone=r.F_max!=null?fmtF(r.F_max):r.F_max_bound!=null?`<${fmtF(r.F_max_bound)}`:"";
+      const fStr=isCl?(pr?.ftol!=null?fmtF(pr.ftol):""):fmaxDone;
+      const rc=isCl?' class="row-claimed"':'';
+      const hist=pr?.ftol_history||[];
+      const fPrev=isCl&&hist.length>=2?fmtF(hist[hist.length-2]):"";
+      return`<tr${rc}>
+        <td>${esc(shortId(t.id))}</td>
+        <td class="st-${ds}">${ST2[ds]||ds.slice(0,4)}</td>
+        <td>${fmtKG(t)}</td>
+        <td class="dim">${sig4(t.gamma)??""}</td>
+        <td class="dim">${sig4(t.tau)??""}</td>
+        <td class="enorm">${fStr}</td>
+        <td class="muted">${fPrev}</td>
+        <td>${ds==="done"?fmtR2(r["1-R2"]):""}</td>
+        <td class="muted">${ds==="done"?fmtSig3(r.Vi):""}</td>
+        <td class="muted">${ds==="done"?fmtSig3(r.TV):""}</td>
+        <td>${isCl?stageStr(pr):""}</td>
+        <td class="muted">${fmtTime(t,pr)}</td>
+        <td class="muted">${isCl?fmtLast(pr?.last_update):""}</td>
+      </tr>`;
+    }).join("");
+  }
+
+  function sortBy(col){if(sortCol===col)sortAsc=!sortAsc;else{sortCol=col;sortAsc=true;}renderTasks();}
+
+  const _prevFtol={};
+  async function loadProgress(){
+    if(!taskData)return;
+    const claimed=taskData.tasks.filter(t=>t.status==="claimed");
+    // Remove stale entries for tasks no longer claimed
+    const claimedIds=new Set(claimed.map(t=>t.id));
+    for(const id of Object.keys(progressData)){if(!claimedIds.has(id))delete progressData[id];}
+    // Fetch each claimed task's progress file directly — no directory listing needed
+    await Promise.all(claimed.map(async t=>{
+      const path=`projects/${PROJECT}/progress/${t.id}.json`;
+      try{
+        const d=getPat()?await apiContent(path):await fj(rawUrl(path));
+        if(progressData[t.id]?.ftol!=null)_prevFtol[t.id]=progressData[t.id].ftol;
+        progressData[t.id]=d;
+      }catch(e){
+        if(String(e.message)==='404')delete progressData[t.id];
+      }
+    }));
+    renderTasks();
+  }
+
+  function taskById(id){return taskMap.get(id)||null;}
+
+  // Actions
+  async function resetByStatus(fromStatus){
+    const pat=getPat();if(!pat){alert('Paste a PAT first.');return;}
+    setMsg('…');
+    const qpath=`projects/${PROJECT}/TASK_QUEUE.json`;
+    try{
+      const meta=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${qpath}?ref=${BRANCH}`,
+        {headers:{Authorization:`token ${pat}`}}).then(r=>r.json());
+      const content=JSON.parse(atob(meta.content.replace(/\n/g,'')));
+      let n=0;
+      for(const t of content.tasks){
+        if(t.status===fromStatus){t.status='ready';['worker','claimed_by','claimed_at','worker_id'].forEach(k=>delete t[k]);n++;}
+      }
+      if(!n){setMsg(`0 ${fromStatus}`,3000);return;}
+      const res=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${qpath}`,{
+        method:'PUT',headers:{Authorization:`token ${pat}`,'Content-Type':'application/json'},
+        body:JSON.stringify({message:`Reset ${n} ${fromStatus}→ready`,content:toB64(JSON.stringify(content,null,2)),sha:meta.sha,branch:BRANCH})
+      });
+      if(!res.ok)throw new Error(res.status);
+      setMsg(`✓ ${n} reset`,3000);setTimeout(()=>pollQueue(),1500);
+    }catch(e){setMsg(`✗ ${e.message}`,4000);}
+  }
+
+  async function launchWorkers(){
+    const pat=getPat();if(!pat){alert('PAT required');return;}
+    const n=document.getElementById('worker-count').value||'20';
+    setMsg('…');
+    try{
+      const res=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/workflows/solve.yml/dispatches`,
+        {method:'POST',headers:{Authorization:`token ${pat}`,'Content-Type':'application/json'},
+         body:JSON.stringify({ref:BRANCH,inputs:{workers:String(n)}})});
+      if(!res.ok)throw new Error(res.status);
+      setMsg(`✓ ${n}w`,3000);
+    }catch(e){setMsg(`✗ ${e.message}`,4000);}
+  }
+
+  async function cancelAllRuns(){
+    const pat=getPat();if(!pat){alert('PAT required');return;}
+    setMsg('…');
+    try{
+      const runs=await fj(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs?status=in_progress&per_page=50`);
+      const active=runs.workflow_runs||[];
+      if(!active.length){setMsg('0 runs',3000);return;}
+      await Promise.all(active.map(r=>fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs/${r.id}/cancel`,
+        {method:'POST',headers:{Authorization:`token ${pat}`}})));
+      setMsg(`✓ cancelled ${active.length}`,3000);
+    }catch(e){setMsg(`✗ ${e.message}`,4000);}
+  }
+
+  // Poll loops — pause when page is hidden
+  const POLL_MS=120000;
+  let _lp=null,_lq=null,_initTime=Date.now();
+  function _fmtTime(ms){const d=new Date(ms);return`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;}
+  function tick(){
+    const el=document.getElementById("ticker");if(!el)return;
+    el.textContent=`${_lp?`w:${_fmtTime(_lp)}`:'w:—'} ${_lq?`q:${_fmtTime(_lq)}`:'q:—'}`;
+  }
+  async function pollProgress(){
+    try{await loadProgress();_lp=Date.now();}catch{}
+    tick();
+  }
+  async function pollQueue(){
+    try{await loadTasks();_lq=Date.now();}
+    catch(e){document.getElementById("meta").textContent=`err:${e.message}`;}
+    tick();
+  }
+  async function loadAll(){await Promise.all([pollProgress(),pollQueue()]);}
+
+  (()=>{const m=new Date(document.lastModified);const p=n=>String(n).padStart(2,'0');document.getElementById("site-mod").textContent=`html:${m.getFullYear()}-${p(m.getMonth()+1)}-${p(m.getDate())} ${p(m.getHours())}:${p(m.getMinutes())}`;})();
+  pollQueue();pollProgress();
+  setInterval(()=>{if(!document.hidden)pollProgress();},POLL_MS);
+  setInterval(()=>{if(!document.hidden)pollQueue();},POLL_MS);
+  // Only reload on visibility-restore if polls are stale AND past init grace period
+  document.addEventListener('visibilitychange',()=>{
+    if(document.hidden)return;
+    const now=Date.now();
+    if(now-_initTime<30000)return;
+    const stale=(!_lp||now-_lp>90000)&&(!_lq||now-_lq>90000);
+    if(stale)loadAll();
+  });
+</script>
+</body>
+</html>
