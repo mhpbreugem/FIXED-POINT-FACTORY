@@ -137,7 +137,7 @@
       "depends_on": [
         "g050_t0200"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "results/full_ree/task3_g050_t0150_mp50.json",
       "solver_params": {
         "mp_dps": 200,
@@ -148,8 +148,8 @@
         "G_inner": 15
       },
       "G": 15,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25659244652-g050_t0150",
+      "claimed_at": "2026-05-11T08:32:32Z"
     },
     {
       "id": "g050_t0200",
@@ -184,7 +184,7 @@
       "depends_on": [
         "g075_t0050"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": {
         "reason": "||F||inf=1.053e-01 > bail threshold 1e-04"
@@ -198,7 +198,9 @@
         "tol": 5e-07,
         "G_inner": 15
       },
-      "G": 15
+      "G": 15,
+      "claimed_by": "gha-25659244652-g075_t0030",
+      "claimed_at": "2026-05-11T08:32:32Z"
     },
     {
       "id": "g075_t0050",
