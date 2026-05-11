@@ -576,6 +576,77 @@ def release_stale_claims(project: str, max_age_hours: float = 6.0,
     return released
 
 
+def save_checkpoint_release(project: str, task_id: str, checkpoint: str,
+                             result: dict, branch: str | None = None) -> bool:
+    """
+    Upload checkpoint via REST API, then release task back to ready.
+    Used when the solver partially converges: checkpoint is preserved for
+    warm-starting the next attempt, but the task is re-queued.
+    """
+    branch = branch or _current_branch()
+    token  = _gh_token()
+    owner, repo_name = _gh_repo()
+    queue_api_path = f"projects/{project}/TASK_QUEUE.json"
+
+    # Upload checkpoint file first (best-effort)
+    if checkpoint:
+        cp_abs = os.path.join(repo_root(), checkpoint)
+        if os.path.exists(cp_abs):
+            with open(cp_abs, "rb") as fh:
+                cp_bytes = fh.read()
+            try:
+                cp_meta = _api_get(token, owner, repo_name, checkpoint, branch)
+                cp_sha: str | None = cp_meta.get("sha")
+            except Exception:
+                cp_sha = None
+            rc = _api_put(token, owner, repo_name, checkpoint,
+                          f"{task_id}: partial checkpoint", cp_bytes, cp_sha, branch)
+            if rc not in (200, 201):
+                print(f"[save_checkpoint_release] checkpoint upload rc={rc}", flush=True)
+        else:
+            print(f"[save_checkpoint_release] checkpoint not found: {cp_abs}", flush=True)
+
+    # Update queue: save checkpoint path, release to ready
+    metric_str = _result_summary(result)
+    for attempt in range(10):
+        try:
+            meta = _api_get(token, owner, repo_name, queue_api_path, branch)
+        except Exception as exc:
+            print(f"[save_checkpoint_release] GET attempt {attempt}: {exc}", flush=True)
+            time.sleep(min(2 ** attempt, 30))
+            continue
+
+        file_sha = meta["sha"]
+        queue = json.loads(_b64.b64decode(meta["content"].replace("\n", "")))
+        task = _find_by_id(queue, task_id)
+        if task is None:
+            return False
+
+        task["status"]     = "ready"
+        task["checkpoint"] = checkpoint   # keep for warm-start on next attempt
+        task["result"]     = result       # keep partial metrics
+        task.pop("claimed_by", None)
+        task.pop("claimed_at", None)
+        _update_summary(queue)
+
+        status = _api_put(
+            token, owner, repo_name, queue_api_path,
+            f"{task_id}: partial {metric_str} → ready",
+            json.dumps(queue, indent=2).encode(), file_sha, branch,
+        )
+        if status in (200, 201):
+            print(f"[save_checkpoint_release] {task_id} checkpoint saved, released to ready",
+                  flush=True)
+            return True
+        if status == 409:
+            print(f"[save_checkpoint_release] 409 conflict attempt {attempt}", flush=True)
+            time.sleep(random.uniform(0, min(2 ** attempt, 8)))
+            continue
+        time.sleep(min(2 ** attempt, 15))
+
+    return False
+
+
 def release_worker_claims(project: str, worker_id: str,
                            branch: str | None = None) -> list[str]:
     """Release all claims held by a specific worker (clean exit)."""
@@ -653,7 +724,7 @@ def print_status(project: str) -> None:
 
 def main():
     parser = argparse.ArgumentParser(description="fixed-point-factory task manager")
-    parser.add_argument("command", choices=["claim", "done", "bail", "release", "status"])
+    parser.add_argument("command", choices=["claim", "done", "bail", "release", "save-release", "status"])
     parser.add_argument("--project", required=True)
     parser.add_argument("--task-id")
     parser.add_argument("--worker-id")
@@ -684,6 +755,16 @@ def main():
             parser.error("--task-id required for bail")
         mark_failed(args.project, args.task_id, args.reason or "no reason given", args.branch)
         print("bailed")
+
+    elif args.command == "save-release":
+        if not args.task_id:
+            parser.error("--task-id required for save-release")
+        if not args.checkpoint:
+            parser.error("--checkpoint required for save-release")
+        result = json.loads(args.result) if args.result else {}
+        ok = save_checkpoint_release(args.project, args.task_id, args.checkpoint, result, args.branch)
+        print("saved+released" if ok else "save-release failed after retries")
+        sys.exit(0 if ok else 1)
 
     elif args.command == "release":
         if args.worker_id:

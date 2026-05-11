@@ -210,6 +210,22 @@ def claim_release(project: str, worker_id: str, branch: str) -> None:
     )
 
 
+def claim_checkpoint_release(project: str, task_id: str, branch: str,
+                              checkpoint: str, result: dict) -> None:
+    """Upload checkpoint to repo and release task to ready for retry."""
+    proc = subprocess.run(
+        [sys.executable, "core/claim_task.py", "save-release",
+         "--project", project,
+         "--task-id", task_id,
+         "--branch", branch,
+         "--checkpoint", checkpoint,
+         "--result", json.dumps(result)],
+        check=False, cwd=str(ROOT),
+    )
+    if proc.returncode != 0:
+        print(f"[WARN] save-release for {task_id} exited {proc.returncode}", flush=True)
+
+
 def claim_bail(project: str, task_id: str, branch: str, reason: str) -> None:
     subprocess.run(
         [sys.executable, "core/claim_task.py", "bail",
@@ -701,10 +717,11 @@ def main() -> None:
                        f"||F||inf={F_inf_final:.3e} > bail threshold {BAIL_THRESHOLD:.0e}")
             exit_code = 1
         elif F_inf_final > DONE_THRESHOLD:
-            # mp phase made progress but didn't reach 1e-100 (wall timeout) — release for retry
-            print(f"[solve] F={F_inf_final:.3e} > 1e-100, checkpoint saved — releasing claim",
+            # mp phase made progress but didn't reach 1e-100 (wall timeout)
+            # Upload checkpoint to repo so it survives runner cleanup, then release for retry
+            print(f"[solve] F={F_inf_final:.3e} > 1e-100, uploading checkpoint and releasing",
                   flush=True)
-            claim_release(args.project, args.worker_id, args.branch)
+            claim_checkpoint_release(args.project, args.task_id, args.branch, ckpt_rel, result)
             exit_code = 0
         else:
             claim_done(args.project, args.task_id, args.branch, ckpt_rel, result)
