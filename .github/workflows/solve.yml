@@ -119,6 +119,7 @@ jobs:
         env:
           PYTHONUNBUFFERED: '1'
           REZN_SRC: /home/runner/rezn-source
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python3 "projects/${PROJECT}/solver_code/solve.py" \
             --project "$PROJECT" \
