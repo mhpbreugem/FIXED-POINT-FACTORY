@@ -1724,7 +1724,7 @@
         "Vi": -408695624570492.25,
         "n_stages": 1,
         "phi_calls": 715,
-        "wall_s": 17346.8
+        "wall_s": 17214.6
       },
       "completed_at": null,
       "solver_params": {
