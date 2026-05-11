@@ -1547,11 +1547,13 @@
       "status": "ready",
       "checkpoint": "projects/REZN/checkpoints/g013_t1000.npz",
       "result": {
-        "1-R2": 0.07668739,
-        "F_max": 2.323e-28,
+        "1-R2": 0.07691082,
+        "F_max": 1.1742e-90,
+        "TV": 2.665658,
+        "Vi": 28186623843146.81,
         "n_stages": 1,
-        "phi_calls": 785,
-        "wall_s": 19137.7
+        "phi_calls": 703,
+        "wall_s": 17731.3
       },
       "completed_at": null,
       "solver_params": {
