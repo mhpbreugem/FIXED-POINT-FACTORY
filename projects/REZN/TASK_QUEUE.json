@@ -230,7 +230,7 @@
       "depends_on": [
         "g075_t0100"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "projects/REZN/checkpoints/g075_t0080.npz",
       "result": {
         "1-R2": 0.0319261,
@@ -249,7 +249,9 @@
         "G_inner": 20,
         "u_inner_max": 4
       },
-      "G": 20
+      "G": 20,
+      "claimed_by": "gha-25680127068-g075_t0080",
+      "claimed_at": "2026-05-11T15:35:07Z"
     },
     {
       "id": "g075_t0100",
