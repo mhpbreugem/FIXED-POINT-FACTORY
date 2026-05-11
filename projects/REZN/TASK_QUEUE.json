@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-11T16:22:31.065612Z",
+  "updated_at": "2026-05-11T16:22:57.422308Z",
   "params": {
     "G": 20,
     "UMAX": 4.0,
@@ -23,12 +23,12 @@
       "id": "test_g7",
       "gamma": 0.5,
       "tau": 2.0,
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
-      "claimed_at": null,
-      "claimed_by": null,
+      "claimed_at": "2026-05-11T16:22:57.420539Z",
+      "claimed_by": "claude-worker-1",
       "depends_on": [],
       "solver_params": {
         "G_inner": 7,
