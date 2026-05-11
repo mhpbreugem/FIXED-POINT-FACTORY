@@ -1,9 +1,9 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-11T13:35:18.531886Z",
+  "updated_at": "2026-05-11T14:07:22.204665+00:00",
   "params": {
     "G": 20,
-    "UMAX": 5,
+    "UMAX": 4.0,
     "trim": 0,
     "K": 3,
     "dps": 50,
@@ -41,11 +41,9 @@
       "depends_on": [
         "g050_t0050"
       ],
-      "status": "bailed",
+      "status": "blocked",
       "checkpoint": null,
-      "result": {
-        "reason": "||F||inf=3.414e-01 > bail threshold 1e-04"
-      },
+      "result": null,
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -53,9 +51,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g050_t0050",
@@ -64,11 +65,9 @@
       "depends_on": [
         "g050_t0080"
       ],
-      "status": "bailed",
+      "status": "blocked",
       "checkpoint": null,
-      "result": {
-        "reason": "||F||inf=1.106e-01 > bail threshold 1e-04"
-      },
+      "result": null,
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -76,9 +75,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g050_t0080",
@@ -87,11 +89,9 @@
       "depends_on": [
         "g050_t0100"
       ],
-      "status": "ready",
+      "status": "blocked",
       "checkpoint": null,
-      "result": {
-        "reason": "||F||inf=1.854e-03 > bail threshold 1e-04"
-      },
+      "result": null,
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -99,9 +99,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g050_t0100",
@@ -111,7 +114,7 @@
         "g050_t0150"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g050_t0100_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -120,9 +123,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g050_t0150",
@@ -131,43 +137,43 @@
       "depends_on": [
         "g050_t0200"
       ],
-      "status": "ready",
-      "checkpoint": "results/full_ree/task3_g050_t0150_mp50.json",
+      "status": "blocked",
+      "checkpoint": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "result": null,
+      "completed_at": null,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g050_t0200",
       "gamma": 0.5,
       "tau": 2,
-      "status": "done",
-      "checkpoint": "results/full_ree/posterior_v3_G20_umax5_notrim_mp300.json",
-      "result": {
-        "1-R2": 0,
-        "slope": null,
-        "n_triples": 8000,
-        "F_max": "7.4e-119",
-        "F_source": "seed checkpoint (mp300 solver)"
-      },
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
       "claimed_by": null,
       "claimed_at": null,
-      "completed_at": "2026-05-10T04:59:41.614629+00:00",
+      "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20
     },
     {
       "id": "g075_t0030",
@@ -176,11 +182,9 @@
       "depends_on": [
         "g075_t0050"
       ],
-      "status": "bailed",
+      "status": "blocked",
       "checkpoint": null,
-      "result": {
-        "reason": "||F||inf=6.204e-02 > bail threshold 1e-04"
-      },
+      "result": null,
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -188,9 +192,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g075_t0050",
@@ -199,19 +206,22 @@
       "depends_on": [
         "g075_t0080"
       ],
-      "status": "claimed",
-      "checkpoint": "results/full_ree/task3_g075_t0050_mp50.json",
+      "status": "blocked",
+      "checkpoint": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15,
-      "claimed_by": "gha-25662769472-g075_t0050",
-      "claimed_at": "2026-05-11T09:46:51Z"
+      "G": 20,
+      "claimed_by": null,
+      "claimed_at": null,
+      "result": null,
+      "completed_at": null
     },
     {
       "id": "g075_t0080",
@@ -220,11 +230,9 @@
       "depends_on": [
         "g075_t0100"
       ],
-      "status": "claimed",
+      "status": "blocked",
       "checkpoint": null,
-      "result": {
-        "reason": "||F||inf=1.288e-03 > bail threshold 1e-04"
-      },
+      "result": null,
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -232,11 +240,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15,
-      "claimed_by": "gha-25662769472-g075_t0080",
-      "claimed_at": "2026-05-11T09:46:51Z"
+      "G": 20,
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g075_t0100",
@@ -245,19 +254,22 @@
       "depends_on": [
         "g075_t0150"
       ],
-      "status": "claimed",
-      "checkpoint": "results/full_ree/task3_g075_t0100_mp50.json",
+      "status": "blocked",
+      "checkpoint": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15,
-      "claimed_by": "gha-25662769472-g075_t0100",
-      "claimed_at": "2026-05-11T09:46:51Z"
+      "G": 20,
+      "claimed_by": null,
+      "claimed_at": null,
+      "result": null,
+      "completed_at": null
     },
     {
       "id": "g075_t0150",
@@ -266,19 +278,22 @@
       "depends_on": [
         "g075_t0200"
       ],
-      "status": "claimed",
-      "checkpoint": "results/full_ree/task3_g075_t0150_mp50.json",
+      "status": "blocked",
+      "checkpoint": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15,
-      "claimed_by": "gha-25670310665-g075_t0150",
-      "claimed_at": "2026-05-11T12:32:42Z"
+      "G": 20,
+      "claimed_by": null,
+      "claimed_at": null,
+      "result": null,
+      "completed_at": null
     },
     {
       "id": "g075_t0200",
@@ -287,7 +302,7 @@
       "depends_on": [
         "g050_t0200"
       ],
-      "status": "ready",
+      "status": "blocked",
       "checkpoint": null,
       "solver_params": {
         "mp_dps": 200,
@@ -295,9 +310,14 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "result": null,
+      "completed_at": null,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g100_t0030",
@@ -306,11 +326,9 @@
       "depends_on": [
         "g100_t0050"
       ],
-      "status": "ready",
+      "status": "blocked",
       "checkpoint": null,
-      "result": {
-        "reason": "||F||inf=9.740e-02 > bail threshold 1e-04"
-      },
+      "result": null,
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -318,9 +336,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g100_t0063",
@@ -330,11 +351,9 @@
         "g100_t0080"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "blocked",
       "checkpoint": null,
-      "result": {
-        "reason": "||F||inf=1.043e-01 > bail threshold 1e-04"
-      },
+      "result": null,
       "note": "\u00c3\u0083\u00c2\u008f\u00c3\u0082\u00c2\u0084-ladder between g100_t0080 (\u00c3\u0083\u00c2\u008f\u00c3\u0082\u00c2\u0084=0.8) and g100_t0050 (\u00c3\u0083\u00c2\u008f\u00c3\u0082\u00c2\u0084=0.5).",
       "completed_at": null,
       "solver_params": {
@@ -343,9 +362,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g100_t0050",
@@ -354,7 +376,7 @@
       "depends_on": [
         "g100_t0063"
       ],
-      "status": "ready",
+      "status": "blocked",
       "checkpoint": null,
       "solver_params": {
         "mp_dps": 200,
@@ -362,12 +384,16 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
       "note": "Auto-requeued (attempt 1): via new ladder g100_t0063. \u00c3\u0083\u00c2\u008f\u00c3\u0082\u00c2\u0084-ladder at \u00c3\u0083\u00c2\u008f\u00c3\u0082\u00c2\u0084=0.63",
       "deps_satisfy": "any",
-      "requeue_count": 1,
-      "G": 15
+      "G": 20,
+      "result": null,
+      "completed_at": null,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g100_t0080",
@@ -376,11 +402,9 @@
       "depends_on": [
         "g100_t0100"
       ],
-      "status": "ready",
+      "status": "blocked",
       "checkpoint": null,
-      "result": {
-        "reason": "||F||inf=6.472e-01 > bail threshold 1e-04"
-      },
+      "result": null,
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -388,9 +412,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g100_t0100",
@@ -399,17 +426,22 @@
       "depends_on": [
         "g100_t0150"
       ],
-      "status": "ready",
-      "checkpoint": "results/full_ree/task3_g100_t0100_mp50.json",
+      "status": "blocked",
+      "checkpoint": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "result": null,
+      "completed_at": null,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g100_t0150",
@@ -419,7 +451,7 @@
         "g100_t0200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g100_t0150_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -428,9 +460,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g100_t0200",
@@ -439,11 +474,9 @@
       "depends_on": [
         "g075_t0200"
       ],
-      "status": "ready",
+      "status": "blocked",
       "checkpoint": null,
-      "result": {
-        "reason": "||F||inf=5.810e-01 > bail threshold 1e-04"
-      },
+      "result": null,
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -451,9 +484,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g100_t0210",
@@ -462,7 +498,7 @@
       "depends_on": [
         "g100_t0200"
       ],
-      "status": "ready",
+      "status": "blocked",
       "checkpoint": null,
       "solver_params": {
         "mp_dps": 200,
@@ -470,10 +506,15 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
       "note": "RESET bailed\u00c3\u0083\u00c2\u00a2\u00c3\u0082\u00c2\u0086\u00c3\u0082\u00c2\u0092ready",
-      "G": 15
+      "G": 20,
+      "result": null,
+      "completed_at": null,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g100_t0400",
@@ -482,7 +523,7 @@
       "depends_on": [
         "g100_t0590"
       ],
-      "status": "ready",
+      "status": "blocked",
       "checkpoint": null,
       "solver_params": {
         "mp_dps": 200,
@@ -490,10 +531,15 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
       "note": "RESET bailed\u00c3\u0083\u00c2\u00a2\u00c3\u0082\u00c2\u0086\u00c3\u0082\u00c2\u0092ready",
-      "G": 15
+      "G": 20,
+      "result": null,
+      "completed_at": null,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g100_t0590",
@@ -511,11 +557,14 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
       "note": "RESET bailed\u00c3\u0083\u00c2\u00a2\u00c3\u0082\u00c2\u0086\u00c3\u0082\u00c2\u0092ready",
       "completed_at": null,
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g100_t0600",
@@ -525,7 +574,7 @@
         "g100_t0800"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g100_t0600_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -534,9 +583,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g100_t0800",
@@ -546,7 +598,7 @@
         "g100_t1000"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g100_t0800_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -555,9 +607,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g100_t1000",
@@ -576,9 +631,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g125_t0030",
@@ -588,7 +646,7 @@
         "g125_t0050"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g125_t0030_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -597,9 +655,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g125_t0050",
@@ -609,7 +670,7 @@
         "g125_t0080"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g125_t0050_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -618,9 +679,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g125_t0080",
@@ -630,7 +694,7 @@
         "g125_t0100"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g125_t0080_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -639,9 +703,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g125_t0100",
@@ -651,7 +718,7 @@
         "g125_t0150"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g125_t0100_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -660,9 +727,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g125_t0150",
@@ -672,7 +742,7 @@
         "g125_t0200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g125_t0150_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -681,9 +751,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g125_t0200",
@@ -693,7 +766,7 @@
         "g100_t0200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g125_t0200_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -702,9 +775,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g125_t0400",
@@ -714,7 +790,7 @@
         "g125_t0590"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g125_t0400_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -723,9 +799,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g125_t0590",
@@ -735,7 +814,7 @@
         "g125_t0600"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g125_t0590_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -744,9 +823,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g125_t0600",
@@ -756,7 +838,7 @@
         "g125_t0800"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g125_t0600_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -765,9 +847,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g125_t0800",
@@ -777,7 +862,7 @@
         "g125_t1000"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g125_t0800_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -786,9 +871,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g125_t1000",
@@ -798,7 +886,7 @@
         "g100_t0200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g125_t1000_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -807,9 +895,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g140_t0030",
@@ -819,7 +910,7 @@
         "g140_t0050"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g140_t0030_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -828,9 +919,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g140_t0050",
@@ -840,7 +934,7 @@
         "g140_t0080"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g140_t0050_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -849,9 +943,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g140_t0080",
@@ -861,7 +958,7 @@
         "g140_t0100"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g140_t0080_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -870,9 +967,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g140_t0100",
@@ -882,7 +982,7 @@
         "g140_t0150"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g140_t0100_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -891,9 +991,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g140_t0150",
@@ -903,7 +1006,7 @@
         "g140_t0200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g140_t0150_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -912,9 +1015,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g140_t0200",
@@ -933,9 +1039,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g140_t0400",
@@ -945,7 +1054,7 @@
         "g140_t0570"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g140_t0400_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -954,9 +1063,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g140_t0570",
@@ -975,13 +1087,15 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
       "note": "Auto-requeued (attempt 1): warm-start from g140_t0510 (log-dist=0.11).",
       "deps_satisfy": "any",
-      "requeue_count": 1,
       "completed_at": null,
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g140_t0600",
@@ -991,7 +1105,7 @@
         "g140_t0800"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g140_t0600_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1000,9 +1114,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g140_t0800",
@@ -1012,7 +1129,7 @@
         "g140_t1000"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g140_t0800_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1021,9 +1138,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g140_t1000",
@@ -1033,7 +1153,7 @@
         "g125_t0200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g140_t1000_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1042,9 +1162,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g140_t1200",
@@ -1054,7 +1177,7 @@
         "g140_t1000"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g140_t1200_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1063,9 +1186,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g140_t1400",
@@ -1075,7 +1201,7 @@
         "g140_t1200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g140_t1400_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1084,9 +1210,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g140_t1600",
@@ -1096,7 +1225,7 @@
         "g140_t1400"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g140_t1600_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1105,9 +1234,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g140_t1800",
@@ -1117,7 +1249,7 @@
         "g140_t1600"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g140_t1800_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1126,9 +1258,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g140_t2000",
@@ -1138,7 +1273,7 @@
         "g140_t1800"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g140_t2000_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1147,9 +1282,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g013_t0050",
@@ -1159,7 +1297,7 @@
         "g013_t0100"
       ],
       "status": "blocked",
-      "checkpoint": "",
+      "checkpoint": null,
       "completed_at": null,
       "result": null,
       "solver_params": {
@@ -1168,9 +1306,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g013_t0100",
@@ -1180,7 +1321,7 @@
         "g013_t0200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g013_t0100_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1189,9 +1330,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g013_t0200",
@@ -1201,7 +1345,7 @@
         "g013_t0400"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g013_t0200_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1210,9 +1354,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g013_t0400",
@@ -1222,7 +1369,7 @@
         "g013_t0600"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g013_t0400_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1231,9 +1378,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g013_t0600",
@@ -1243,7 +1393,7 @@
         "g013_t0800"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g013_t0600_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1252,9 +1402,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g013_t0800",
@@ -1264,7 +1417,7 @@
         "g013_t1000"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g013_t0800_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1273,16 +1426,19 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g013_t1000",
       "gamma": 0.13,
       "tau": 10,
       "status": "ready",
-      "checkpoint": "results/full_ree/task3_g013_t1000_mp50.json",
+      "checkpoint": null,
       "result": null,
       "claimed_by": null,
       "claimed_at": null,
@@ -1293,9 +1449,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20
     },
     {
       "id": "g010_t0050",
@@ -1305,7 +1462,7 @@
         "g010_t0100"
       ],
       "status": "blocked",
-      "checkpoint": "",
+      "checkpoint": null,
       "completed_at": null,
       "result": null,
       "solver_params": {
@@ -1314,9 +1471,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g010_t0100",
@@ -1326,7 +1486,7 @@
         "g010_t0200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g010_t0100_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1335,9 +1495,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g010_t0200",
@@ -1356,9 +1519,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g010_t0400",
@@ -1368,7 +1534,7 @@
         "g010_t0600"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g010_t0400_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1377,9 +1543,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g010_t0600",
@@ -1389,7 +1558,7 @@
         "g010_t0800"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g010_t0600_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1398,9 +1567,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g010_t0800",
@@ -1410,7 +1582,7 @@
         "g010_t1000"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g010_t0800_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1419,16 +1591,19 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g010_t1000",
       "gamma": 0.1,
       "tau": 10,
       "status": "ready",
-      "checkpoint": "results/full_ree/task3_g010_t1000_mp50.json",
+      "checkpoint": null,
       "result": null,
       "claimed_by": null,
       "claimed_at": null,
@@ -1439,9 +1614,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20
     },
     {
       "id": "g160_t0030",
@@ -1451,7 +1627,7 @@
         "g160_t0050"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g160_t0030_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1460,9 +1636,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g160_t0050",
@@ -1472,7 +1651,7 @@
         "g160_t0080"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g160_t0050_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1481,9 +1660,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g160_t0080",
@@ -1493,7 +1675,7 @@
         "g160_t0100"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g160_t0080_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1502,9 +1684,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g160_t0100",
@@ -1514,7 +1699,7 @@
         "g160_t0150"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g160_t0100_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1523,9 +1708,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g160_t0150",
@@ -1535,7 +1723,7 @@
         "g160_t0200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g160_t0150_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1544,9 +1732,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g160_t0200",
@@ -1556,7 +1747,7 @@
         "g140_t0200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g160_t0200_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1565,9 +1756,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g160_t0400",
@@ -1577,7 +1771,7 @@
         "g160_t0600"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g160_t0400_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1586,9 +1780,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g160_t0600",
@@ -1598,7 +1795,7 @@
         "g160_t0800"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g160_t0600_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1607,9 +1804,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g160_t0800",
@@ -1619,7 +1819,7 @@
         "g160_t1000"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g160_t0800_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1628,9 +1828,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g160_t1000",
@@ -1640,7 +1843,7 @@
         "g140_t0200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g160_t1000_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1649,9 +1852,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g160_t1200",
@@ -1661,7 +1867,7 @@
         "g160_t1000"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g160_t1200_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1670,9 +1876,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g160_t1400",
@@ -1682,7 +1891,7 @@
         "g160_t1200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g160_t1400_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1691,9 +1900,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g160_t1600",
@@ -1703,7 +1915,7 @@
         "g160_t1400"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g160_t1600_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1712,9 +1924,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g160_t1800",
@@ -1724,7 +1939,7 @@
         "g160_t1600"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g160_t1800_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1733,9 +1948,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g160_t2000",
@@ -1745,7 +1963,7 @@
         "g160_t1800"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g160_t2000_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1754,9 +1972,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g180_t0030",
@@ -1766,7 +1987,7 @@
         "g180_t0050"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g180_t0030_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1775,9 +1996,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g180_t0050",
@@ -1787,7 +2011,7 @@
         "g180_t0080"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g180_t0050_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1796,9 +2020,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g180_t0080",
@@ -1808,7 +2035,7 @@
         "g180_t0100"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g180_t0080_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1817,9 +2044,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g180_t0100",
@@ -1829,7 +2059,7 @@
         "g180_t0150"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g180_t0100_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1838,9 +2068,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g180_t0150",
@@ -1850,7 +2083,7 @@
         "g180_t0200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g180_t0150_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1859,9 +2092,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g180_t0200",
@@ -1871,7 +2107,7 @@
         "g160_t0200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g180_t0200_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1880,9 +2116,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g180_t0400",
@@ -1892,7 +2131,7 @@
         "g180_t0600"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g180_t0400_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1901,9 +2140,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g180_t0600",
@@ -1913,7 +2155,7 @@
         "g180_t0800"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g180_t0600_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1922,9 +2164,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g180_t0800",
@@ -1934,7 +2179,7 @@
         "g180_t1000"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g180_t0800_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1943,9 +2188,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g180_t1000",
@@ -1955,7 +2203,7 @@
         "g160_t0200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g180_t1000_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1964,9 +2212,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g180_t1200",
@@ -1976,7 +2227,7 @@
         "g180_t1000"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g180_t1200_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -1985,9 +2236,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g180_t1400",
@@ -1997,7 +2251,7 @@
         "g180_t1200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g180_t1400_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2006,9 +2260,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g180_t1600",
@@ -2018,7 +2275,7 @@
         "g180_t1400"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g180_t1600_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2027,9 +2284,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g180_t1800",
@@ -2039,7 +2299,7 @@
         "g180_t1600"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g180_t1800_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2048,9 +2308,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g180_t2000",
@@ -2060,7 +2323,7 @@
         "g180_t1800"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g180_t2000_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2069,9 +2332,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g200_t0030",
@@ -2081,7 +2347,7 @@
         "g200_t0050"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g200_t0030_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2090,9 +2356,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g200_t0050",
@@ -2102,7 +2371,7 @@
         "g200_t0080"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g200_t0050_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2111,9 +2380,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g200_t0080",
@@ -2123,7 +2395,7 @@
         "g200_t0100"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g200_t0080_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2132,9 +2404,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g200_t0100",
@@ -2153,9 +2428,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g200_t0150",
@@ -2174,9 +2452,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g200_t0200",
@@ -2195,9 +2476,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g200_t0400",
@@ -2207,7 +2491,7 @@
         "g200_t0600"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g200_t0400_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2216,9 +2500,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g200_t0600",
@@ -2228,7 +2515,7 @@
         "g200_t0800"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g200_t0600_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2237,9 +2524,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g200_t0800",
@@ -2249,7 +2539,7 @@
         "g200_t1000"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g200_t0800_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2258,9 +2548,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g200_t1000",
@@ -2270,7 +2563,7 @@
         "g180_t0200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g200_t1000_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2279,9 +2572,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g200_t1200",
@@ -2291,7 +2587,7 @@
         "g200_t1000"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g200_t1200_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2300,9 +2596,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g200_t1400",
@@ -2312,7 +2611,7 @@
         "g200_t1200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g200_t1400_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2321,9 +2620,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g200_t1600",
@@ -2333,7 +2635,7 @@
         "g200_t1400"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g200_t1600_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2342,9 +2644,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g200_t1800",
@@ -2354,7 +2659,7 @@
         "g200_t1600"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g200_t1800_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2363,9 +2668,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g200_t2000",
@@ -2375,7 +2683,7 @@
         "g200_t1800"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g200_t2000_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2384,9 +2692,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g500_t0030",
@@ -2396,7 +2707,7 @@
         "g500_t0050"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g500_t0030_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2405,9 +2716,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g500_t0050",
@@ -2417,7 +2731,7 @@
         "g500_t0080"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g500_t0050_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2426,9 +2740,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g500_t0080",
@@ -2438,7 +2755,7 @@
         "g500_t0100"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g500_t0080_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2447,9 +2764,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g500_t0100",
@@ -2459,7 +2779,7 @@
         "g500_t0150"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g500_t0100_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2468,9 +2788,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g500_t0150",
@@ -2480,7 +2803,7 @@
         "g500_t0200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g500_t0150_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2489,9 +2812,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g500_t0200",
@@ -2501,7 +2827,7 @@
         "g200_t0200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g500_t0200_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2510,9 +2836,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g500_t0400",
@@ -2522,7 +2851,7 @@
         "g500_t0600"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g500_t0400_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2531,9 +2860,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g500_t0600",
@@ -2543,7 +2875,7 @@
         "g500_t0800"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g500_t0600_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2552,9 +2884,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g500_t0800",
@@ -2564,7 +2899,7 @@
         "g500_t1000"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g500_t0800_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2573,9 +2908,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g500_t1000",
@@ -2585,7 +2923,7 @@
         "g200_t0200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g500_t1000_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2594,9 +2932,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g500_t1200",
@@ -2606,7 +2947,7 @@
         "g500_t1000"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g500_t1200_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2615,9 +2956,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g500_t1400",
@@ -2627,7 +2971,7 @@
         "g500_t1200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g500_t1400_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2636,9 +2980,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g500_t1600",
@@ -2648,7 +2995,7 @@
         "g500_t1400"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g500_t1600_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2657,9 +3004,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g500_t1800",
@@ -2669,7 +3019,7 @@
         "g500_t1600"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g500_t1800_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2678,9 +3028,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g500_t2000",
@@ -2690,7 +3043,7 @@
         "g500_t1800"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g500_t2000_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2699,9 +3052,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g300_t0030",
@@ -2711,7 +3067,7 @@
         "g300_t0050"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g300_t0030_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2720,9 +3076,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g300_t0050",
@@ -2732,7 +3091,7 @@
         "g300_t0080"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g300_t0050_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2741,9 +3100,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g300_t0080",
@@ -2753,7 +3115,7 @@
         "g300_t0100"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g300_t0080_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2762,9 +3124,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g300_t0100",
@@ -2774,7 +3139,7 @@
         "g300_t0150"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g300_t0100_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2783,9 +3148,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g300_t0150",
@@ -2795,7 +3163,7 @@
         "g300_t0200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g300_t0150_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2804,9 +3172,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g300_t0200",
@@ -2816,7 +3187,7 @@
         "g200_t0200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g300_t0200_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2825,9 +3196,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g300_t0400",
@@ -2837,7 +3211,7 @@
         "g300_t0600"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g300_t0400_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2846,9 +3220,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g300_t0600",
@@ -2858,7 +3235,7 @@
         "g300_t0800"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g300_t0600_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2867,9 +3244,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g300_t0800",
@@ -2879,7 +3259,7 @@
         "g300_t1000"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g300_t0800_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2888,9 +3268,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g300_t1000",
@@ -2900,7 +3283,7 @@
         "g200_t0200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g300_t1000_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2909,9 +3292,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g300_t1200",
@@ -2921,7 +3307,7 @@
         "g300_t1000"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g300_t1200_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2930,9 +3316,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g300_t1400",
@@ -2942,7 +3331,7 @@
         "g300_t1200"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g300_t1400_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2951,9 +3340,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g300_t1600",
@@ -2963,7 +3355,7 @@
         "g300_t1400"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g300_t1600_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2972,9 +3364,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g300_t1800",
@@ -2984,7 +3379,7 @@
         "g300_t1600"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g300_t1800_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -2993,9 +3388,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g300_t2000",
@@ -3005,7 +3403,7 @@
         "g300_t1800"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_g300_t2000_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -3014,9 +3412,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "nc4-g010",
@@ -3027,7 +3428,7 @@
         "g010_t0050"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_nc4_g010_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -3036,9 +3437,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "nc4-g013",
@@ -3049,7 +3453,7 @@
         "g013_t0050"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_nc4_g013_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -3058,9 +3462,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "nc4-g050",
@@ -3071,7 +3478,7 @@
         "g050_t0030"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_nc4_g050_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -3080,9 +3487,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "nc4-g075",
@@ -3093,7 +3503,7 @@
         "g075_t0030"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_nc4_g075_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -3102,9 +3512,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "nc4-g100",
@@ -3115,7 +3528,7 @@
         "g100_t0030"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_nc4_g100_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -3124,9 +3537,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "nc4-g125",
@@ -3137,7 +3553,7 @@
         "g125_t0030"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_nc4_g125_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -3146,9 +3562,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "nc4-g140",
@@ -3159,7 +3578,7 @@
         "g140_t0030"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_nc4_g140_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -3168,9 +3587,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "nc4-g160",
@@ -3181,7 +3603,7 @@
         "g160_t0030"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_nc4_g160_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -3190,9 +3612,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "nc4-g180",
@@ -3203,7 +3628,7 @@
         "g180_t0030"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_nc4_g180_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -3212,9 +3637,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "nc4-g200",
@@ -3225,7 +3653,7 @@
         "g200_t0030"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_nc4_g200_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -3234,9 +3662,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "nc4-g300",
@@ -3247,7 +3678,7 @@
         "g300_t0030"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_nc4_g300_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -3256,9 +3687,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "nc4-g500",
@@ -3269,7 +3703,7 @@
         "g500_t0030"
       ],
       "status": "blocked",
-      "checkpoint": "results/full_ree/task3_nc4_g500_mp50.json",
+      "checkpoint": null,
       "result": null,
       "completed_at": null,
       "solver_params": {
@@ -3278,9 +3712,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "G": 15
+      "G": 20,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "symK3_g050_t0200_G15",
@@ -3288,7 +3725,7 @@
       "K": 3,
       "gamma": 0.5,
       "tau": 2,
-      "G": 15,
+      "G": 20,
       "symmetric": true,
       "depends_on": [
         "seed_g050_t0200_3d"
@@ -3303,9 +3740,13 @@
         "G": 15,
         "tol": 5e-07,
         "max_iters": 2000,
-        "anderson_m": 20
+        "anderson_m": 20,
+        "G_inner": 20,
+        "u_inner_max": 4.0
       },
-      "requeue_count": 1
+      "completed_at": null,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "symK4_g050_t0200_G15",
@@ -3313,7 +3754,7 @@
       "K": 4,
       "gamma": 0.5,
       "tau": 2,
-      "G": 15,
+      "G": 20,
       "symmetric": true,
       "depends_on": [
         "symK3_g050_t0200_G15"
@@ -3328,8 +3769,13 @@
         "G": 15,
         "tol": 5e-07,
         "max_iters": 2000,
-        "anderson_m": 20
-      }
+        "anderson_m": 20,
+        "G_inner": 20,
+        "u_inner_max": 4.0
+      },
+      "completed_at": null,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "symK5_g050_t0200_G15",
@@ -3337,7 +3783,7 @@
       "K": 5,
       "gamma": 0.5,
       "tau": 2,
-      "G": 15,
+      "G": 20,
       "symmetric": true,
       "depends_on": [
         "symK4_g050_t0200_G15"
@@ -3352,8 +3798,13 @@
         "G": 15,
         "tol": 5e-07,
         "max_iters": 2000,
-        "anderson_m": 20
-      }
+        "anderson_m": 20,
+        "G_inner": 20,
+        "u_inner_max": 4.0
+      },
+      "completed_at": null,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "symK6_g050_t0200_G15",
@@ -3361,7 +3812,7 @@
       "K": 6,
       "gamma": 0.5,
       "tau": 2,
-      "G": 15,
+      "G": 20,
       "symmetric": true,
       "depends_on": [
         "symK5_g050_t0200_G15"
@@ -3376,8 +3827,13 @@
         "G": 15,
         "tol": 5e-07,
         "max_iters": 2000,
-        "anderson_m": 20
-      }
+        "anderson_m": 20,
+        "G_inner": 20,
+        "u_inner_max": 4.0
+      },
+      "completed_at": null,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "symK7_g050_t0200_G15",
@@ -3385,7 +3841,7 @@
       "K": 7,
       "gamma": 0.5,
       "tau": 2,
-      "G": 15,
+      "G": 20,
       "symmetric": true,
       "depends_on": [
         "symK6_g050_t0200_G15"
@@ -3400,8 +3856,13 @@
         "G": 15,
         "tol": 5e-07,
         "max_iters": 2000,
-        "anderson_m": 20
-      }
+        "anderson_m": 20,
+        "G_inner": 20,
+        "u_inner_max": 4.0
+      },
+      "completed_at": null,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "symK8_g050_t0200_G15",
@@ -3409,7 +3870,7 @@
       "K": 8,
       "gamma": 0.5,
       "tau": 2,
-      "G": 15,
+      "G": 20,
       "symmetric": true,
       "depends_on": [
         "symK7_g050_t0200_G15"
@@ -3424,15 +3885,20 @@
         "G": 15,
         "tol": 5e-07,
         "max_iters": 2000,
-        "anderson_m": 20
-      }
+        "anderson_m": 20,
+        "G_inner": 20,
+        "u_inner_max": 4.0
+      },
+      "completed_at": null,
+      "claimed_at": null,
+      "claimed_by": null
     },
     {
       "id": "g010_t0120",
       "kind": "ree",
       "gamma": 0.1,
       "tau": 1.2,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3449,7 +3915,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -3457,7 +3924,7 @@
       "kind": "ree",
       "gamma": 0.1,
       "tau": 1.4,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3474,7 +3941,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -3482,7 +3950,7 @@
       "kind": "ree",
       "gamma": 0.1,
       "tau": 1.5,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3499,7 +3967,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -3507,7 +3976,7 @@
       "kind": "ree",
       "gamma": 0.1,
       "tau": 1.7,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3524,7 +3993,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -3532,7 +4002,7 @@
       "kind": "ree",
       "gamma": 0.1,
       "tau": 5,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3549,7 +4019,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -3557,7 +4028,7 @@
       "kind": "ree",
       "gamma": 0.16000000000000003,
       "tau": 0.5,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3574,7 +4045,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -3582,7 +4054,7 @@
       "kind": "ree",
       "gamma": 0.25,
       "tau": 0.3,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3599,7 +4071,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -3607,7 +4080,7 @@
       "kind": "ree",
       "gamma": 0.25,
       "tau": 0.5,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3624,7 +4097,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -3632,7 +4106,7 @@
       "kind": "ree",
       "gamma": 0.25,
       "tau": 0.8,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3649,7 +4123,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -3657,7 +4132,7 @@
       "kind": "ree",
       "gamma": 0.25,
       "tau": 1,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3674,7 +4149,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -3682,7 +4158,7 @@
       "kind": "ree",
       "gamma": 0.25,
       "tau": 1.5,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3699,7 +4175,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -3707,7 +4184,7 @@
       "kind": "ree",
       "gamma": 0.25,
       "tau": 2,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3724,7 +4201,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -3732,7 +4210,7 @@
       "kind": "ree",
       "gamma": 0.25,
       "tau": 3,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3749,7 +4227,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -3757,7 +4236,7 @@
       "kind": "ree",
       "gamma": 0.35000000000000003,
       "tau": 2,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3774,7 +4253,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -3782,7 +4262,7 @@
       "kind": "ree",
       "gamma": 0.5,
       "tau": 4,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3799,7 +4279,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -3807,7 +4288,7 @@
       "kind": "ree",
       "gamma": 0.5,
       "tau": 5,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3824,7 +4305,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -3832,7 +4314,7 @@
       "kind": "ree",
       "gamma": 0.5,
       "tau": 7,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3849,7 +4331,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -3857,7 +4340,7 @@
       "kind": "ree",
       "gamma": 0.5,
       "tau": 10,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3874,7 +4357,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -3882,7 +4366,7 @@
       "kind": "ree",
       "gamma": 0.5,
       "tau": 12,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3899,7 +4383,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -3907,7 +4392,7 @@
       "kind": "ree",
       "gamma": 0.5,
       "tau": 15,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3924,7 +4409,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -3932,7 +4418,7 @@
       "kind": "ree",
       "gamma": 0.5,
       "tau": 20,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3949,7 +4435,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -3957,7 +4444,7 @@
       "kind": "ree",
       "gamma": 1,
       "tau": 2.5,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3974,7 +4461,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -3982,7 +4470,7 @@
       "kind": "ree",
       "gamma": 1,
       "tau": 3,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -3999,7 +4487,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -4007,7 +4496,7 @@
       "kind": "ree",
       "gamma": 1,
       "tau": 4.5,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4024,7 +4513,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -4032,7 +4522,7 @@
       "kind": "ree",
       "gamma": 1,
       "tau": 5,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4049,7 +4539,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -4057,7 +4548,7 @@
       "kind": "ree",
       "gamma": 1,
       "tau": 7,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4074,7 +4565,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -4082,7 +4574,7 @@
       "kind": "ree",
       "gamma": 1,
       "tau": 15,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4099,7 +4591,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -4107,7 +4600,7 @@
       "kind": "ree",
       "gamma": 1,
       "tau": 20,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4124,7 +4617,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -4132,7 +4626,7 @@
       "kind": "ree",
       "gamma": 1.4,
       "tau": 2.4,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4149,7 +4643,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -4157,7 +4652,7 @@
       "kind": "ree",
       "gamma": 1.4,
       "tau": 2.7,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4174,7 +4669,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -4182,7 +4678,7 @@
       "kind": "ree",
       "gamma": 1.4,
       "tau": 3.3,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4199,7 +4695,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -4207,7 +4704,7 @@
       "kind": "ree",
       "gamma": 1.4,
       "tau": 4.3,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4224,7 +4721,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -4232,7 +4730,7 @@
       "kind": "ree",
       "gamma": 1.4,
       "tau": 4.5,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4249,7 +4747,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -4257,7 +4756,7 @@
       "kind": "ree",
       "gamma": 1.4,
       "tau": 5.1,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4274,7 +4773,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -4282,7 +4782,7 @@
       "kind": "ree",
       "gamma": 2,
       "tau": 3,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4299,7 +4799,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -4307,7 +4808,7 @@
       "kind": "ree",
       "gamma": 2,
       "tau": 5,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4324,7 +4825,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -4332,7 +4834,7 @@
       "kind": "ree",
       "gamma": 4,
       "tau": 10,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4349,7 +4851,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -4357,7 +4860,7 @@
       "kind": "ree",
       "gamma": 4,
       "tau": 15,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4374,7 +4877,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -4382,7 +4886,7 @@
       "kind": "ree",
       "gamma": 4,
       "tau": 20,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4399,7 +4903,8 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     },
     {
@@ -4407,7 +4912,7 @@
       "kind": "ree",
       "gamma": 0.5,
       "tau": 2,
-      "G": 15,
+      "G": 20,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4424,18 +4929,15 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 15
+        "G_inner": 20,
+        "u_inner_max": 4.0
       }
     }
   ],
   "summary": {
-    "total": 200,
-    "done": 2,
-    "ready": 53,
-    "claimed": 4,
-    "blocked": 138,
-    "bailed": 3,
-    "skip": 0
+    "done": 1,
+    "blocked": 156,
+    "ready": 43
   },
   "fanout": {
     "g050": [
