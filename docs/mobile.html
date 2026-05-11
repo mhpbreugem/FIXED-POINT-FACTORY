@@ -396,7 +396,7 @@ function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").repl
         <td class="enorm">${fStr}</td>
         <td class="muted">${fPrev}</td>
         <td>${ds==="done"?fmtR2(r["1-R2"]):""}</td>
-        <td class="muted">${ds==="done"?fmtSig5(r.Vi):""}</td>
+        <td class="muted">${ds==="done"&&r.Vi!=null?Number(r.Vi).toFixed(2):"—"}</td>
         <td class="muted">${ds==="done"?fmtSig3(r.TV):""}</td>
         <td>${isCl?stageStr(pr):""}</td>
         <td class="muted">${fmtTime(t,pr)}</td>
