@@ -559,10 +559,12 @@ def sym_econ_metrics(
     observed price P(s)).
 
     TV = E[|x*(mu_k, P(s))|]   — per-agent expected absolute trade
-    Vi = E[EU(mu_k, P(s))] - u(W)  — per-agent value of private information
-         where EU(mu, P) = P*u(W+x*(1-P)) + (1-P)*u(W-x*P) integrates over
-         the true fundamental v~Bernoulli(P(s)), and u(W) is the no-trade
-         baseline (x*=0 when no private signal above the price).
+    Vi = E[EU(mu_k, P(s))] - E[EU_0(P(s))]  — per-agent value of private signal
+         Baseline EU_0: an agent who observes only the equilibrium price P(s),
+         infers mu_0 = ∏f1(u_k) / (∏f0+∏f1) (= full Bayes posterior, revealed by
+         the price in a fully-revealing REE), and trades optimally at P(s).
+         This measures the incremental value of the private signal u_k ABOVE
+         what is already learnable from the equilibrium price alone.
     """
     if sg.K >= 8:
         # sym_to_full materialises G^K; too large for K>=8.  Return NaN.
@@ -576,7 +578,6 @@ def sym_econ_metrics(
     f1 = np.sqrt(tau / (2.0 * math.pi)) * np.exp(-0.5 * tau * (u_grid - 0.5) ** 2)
 
     P_full = sym_to_full(P_sorted, sg)
-    u_baseline = _crra_u(W, gamma)   # x*=0 when no info above price
 
     tv_sum = vi_sum = weight_sum = 0.0
 
@@ -592,6 +593,18 @@ def sym_econ_metrics(
             prod_f1 *= float(f1[i_k])
         w_s = 0.5 * mult * (prod_f0 + prod_f1) * (du ** K)
         weight_sum += w_s
+
+        # Baseline: price-only observer infers mu_0 = full Bayes posterior
+        # = ∏f1(u_k) / (∏f0(u_k) + ∏f1(u_k)), trades x_0 at price P_s.
+        # In a fully-revealing REE the price discloses exactly this posterior.
+        mu_0_num = prod_f1
+        mu_0_den = prod_f0 + prod_f1
+        mu_0 = (mu_0_num / mu_0_den) if mu_0_den > eps else 0.5
+        mu_0 = max(eps, min(1.0 - eps, mu_0))
+        x_0 = _x_crra_single(mu_0, P_s, gamma, W)
+        W1_0 = W + x_0 * (1.0 - P_s)
+        W0_0 = W - x_0 * P_s
+        eu_0 = P_s * _crra_u(W1_0, gamma) + (1.0 - P_s) * _crra_u(W0_0, gamma)
 
         # Compute mu_k for each agent via contour integral (cache by signal index)
         cache_mu: dict[int, float] = {}
@@ -613,7 +626,7 @@ def sym_econ_metrics(
             W1 = W + x_k * (1.0 - P_s)
             W0 = W - x_k * P_s
             eu_k = P_s * _crra_u(W1, gamma) + (1.0 - P_s) * _crra_u(W0, gamma)
-            vi_sum += w_s * (eu_k - u_baseline)
+            vi_sum += w_s * (eu_k - eu_0)
 
     if weight_sum < eps:
         return {"TV": float("nan"), "Vi": float("nan")}
