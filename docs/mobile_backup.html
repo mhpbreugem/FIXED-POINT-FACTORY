@@ -21,53 +21,47 @@
     color: var(--fg);
   }
 
-  /* ── sticky top controls ── */
-  #topbar {
-    position: sticky; top:0; z-index:20;
-    background: #1a1a1a;
-    border-bottom: 1px solid #333;
-    padding: 2px 3px;
-    display: flex; flex-wrap: wrap; gap: 2px; align-items: center;
-    overflow-x: hidden; max-width: 100vw;
-  }
-  #pat-input {
-    font-family: inherit; font-size: 10.1px;
-    background: #222; color: #bbb; border: 1px solid #444;
-    border-radius: 2px; padding: 2px 3px;
-    width: min(130px, 35vw); min-width: 0;
-  }
-  .btn {
-    font-family: inherit; font-size: 10.1px; font-weight: 700;
-    border: none; border-radius: 2px; padding: 2px 5px;
-    cursor: pointer; color: #fff; white-space: nowrap; flex-shrink:0;
-  }
-  .b-bail   { background:#7a1808; }
-  .b-rel    { background:#5a4200; }
-  .b-go     { background:#1a5e2a; }
-  .b-stop   { background:#5e1a1a; }
-  .b-ref    { background:#333; }
-  #worker-count {
-    font-family: inherit; font-size: 10.1px;
-    background:#222; color:#bbb; border:1px solid #444;
-    border-radius:2px; padding:2px; width:28px; text-align:center;
+  #brand {
+    font-size: 9.5px; font-weight: 900; color: #fff;
+    letter-spacing: 0.5px; flex-shrink: 0; padding-right: 2px;
   }
 
-  /* ── meta / ticker ── */
-  #metabar {
-    font-size: 7.6px; color: var(--muted);
-    padding: 1px 3px; border-bottom: 1px solid #1e1e1e;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  /* ── single bar ── */
+  #bar {
+    position: sticky; top:0; z-index:20;
+    background: #1a1a1a; border-bottom: 1px solid #333;
+    padding: 2px 3px;
+    display: flex; flex-wrap: nowrap; gap: 2px; align-items: center;
+    overflow: hidden; max-width: 100vw;
   }
-  #status-msg { color: var(--claimed); }
+  #pills { display:flex; flex-wrap:nowrap; gap:2px; align-items:center; flex-shrink:0; }
+  .btn {
+    font-family: inherit; font-size: 9.5px; font-weight: 700;
+    border: none; border-radius: 2px; padding: 3px 0;
+    width: 22px; text-align: center;
+    cursor: pointer; color: #fff; white-space: nowrap; flex-shrink:0;
+    background:#333;
+  }
+  .b-go   { background:#1a5e2a; }
+  .b-kill { background:#5e1a1a; }
+  #pat-input {
+    font-family: inherit; font-size: 9.5px;
+    background: #1e1e1e; color: #bbb; border: 1px solid #444;
+    border-radius: 2px; padding: 1px 3px;
+    width: min(80px,20vw); min-width:0; flex-shrink:1;
+  }
+  #meta-right {
+    margin-left: auto;
+    font-size: 7px; color: var(--muted);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    flex-shrink: 1; min-width: 0;
+  }
+  #status-msg { font-size:8.5px; color:var(--claimed); white-space:nowrap; flex-shrink:0; }
 
   /* ── summary pills ── */
-  #summary {
-    display:flex; flex-wrap:wrap; gap:2px;
-    padding: 2px 3px; border-bottom:1px solid #1e1e1e;
-  }
   .pill {
-    font-size:8.9px; font-weight:700; padding:3px 13px;
-    border-radius:2px; cursor:pointer; color:#fff;
+    font-size:8.5px; font-weight:700; padding:2px 7px;
+    border-radius:2px; cursor:pointer; color:#fff; white-space:nowrap;
   }
   .pill.done    { background:var(--done); }
   .pill.ready   { background:var(--ready); }
@@ -75,7 +69,7 @@
   .pill.blocked { background:var(--blocked); }
   .pill.bailed  { background:var(--bailed); }
   .pill.skip    { background:var(--skip); }
-  .pill.total   { background:#333; }
+  .pill.total   { background:#333; padding:2px 4px; }
 
   /* ── filter ── */
   #filterbar {
@@ -86,6 +80,12 @@
     font-family:inherit; font-size:10.1px;
     background:#1e1e1e; color:#ccc; border:1px solid #333;
     border-radius:2px; padding:1px 3px; flex:1; min-width:0;
+  }
+
+  /* ── footer ── */
+  #footer {
+    font-size:7px; color:#444; text-align:center;
+    padding: 6px 0 4px; border-top:1px solid #1e1e1e; margin-top:4px;
   }
 
   /* ── THE TABLE — fixed layout, no horizontal scroll ── */
@@ -109,16 +109,17 @@
   th {
     background: var(--hdr);
     font-weight: 700;
-    font-size: 7.6px;
+    font-size: 5.3px;
     color: #888;
     cursor: pointer;
     text-align: left;
+    height: 9px;
   }
   th:hover { background:#2a2a2a; }
   tr:nth-child(even) td { background: var(--rowalt); }
   tr.row-claimed td { background:#1c1500 !important; }
 
-  th, td { height: 12px; }
+  td { height: 12px; }
 
   /* status colours */
   .st-done    { color:var(--done);    font-weight:700; }
@@ -143,43 +144,39 @@
 </head>
 <body>
 
-<div id="topbar">
-  <input type="password" id="pat-input" placeholder="GitHub PAT" oninput="savePat();debouncedLoad();">
-  <button class="btn b-bail"  onclick="resetByStatus('bailed')">b→r</button>
-  <button class="btn b-rel"   onclick="resetByStatus('claimed')">c→r</button>
-  <input  type="number" id="worker-count" value="20" min="1" max="50">
-  <button class="btn b-go"    onclick="launchWorkers()">▶</button>
-  <button class="btn b-stop"  onclick="cancelAllRuns()">✕</button>
-  <button class="btn b-ref"   onclick="loadAll()">⟳</button>
-  <span id="status-msg" style="font-size:8.9px"></span>
-</div>
-
-<div id="metabar">
-  <span id="meta">loading…</span>&nbsp;·&nbsp;<span id="ticker"></span>
-  <br><span id="site-mod"></span>
+<div id="bar">
+  <span id="brand">REZN</span>
+  <div id="pills"></div>
+  <button class="btn b-go"   onclick="launchOne()">+1</button>
+  <button class="btn b-kill" onclick="killAll()">✕✕</button>
+  <button class="btn"        onclick="resetBailed()">↺</button>
+  <button class="btn"        onclick="downloadAll()">⬇</button>
+  <button class="btn"        onclick="loadAll()">⟳</button>
+  <span id="meta-right"><span id="site-mod"></span></span>
+  <span id="status-msg"></span>
 </div>
 
 <!-- TASKS -->
 <div id="tab-tasks">
-  <div id="summary"></div>
   <div id="filterbar">
     <input type="text" id="filter" placeholder="filter…" oninput="renderTasks()">
+    <input type="password" id="pat-input" placeholder="PAT" oninput="savePat()">
   </div>
   <table>
     <colgroup>
-      <col style="width:11%"><!-- id -->
-      <col style="width:7%"> <!-- st -->
-      <col style="width:9%"> <!-- K·G -->
+      <col style="width:8%"> <!-- id -->
+      <col style="width:8%"> <!-- st -->
+      <col style="width:8%"> <!-- K·G -->
       <col style="width:7%"> <!-- γ -->
       <col style="width:7%"> <!-- τ -->
       <col style="width:9%"> <!-- F -->
       <col style="width:8%"> <!-- F₋₁ -->
-      <col style="width:7%"> <!-- 1-R² -->
-      <col style="width:6%"> <!-- Vi -->
-      <col style="width:6%"> <!-- TV -->
+      <col style="width:8%"> <!-- 1-R² -->
+      <col style="width:8%"> <!-- Vi -->
+      <col style="width:7%"> <!-- TV -->
       <col style="width:7%"> <!-- stage -->
       <col style="width:9%"> <!-- time -->
-      <col style="width:7%"> <!-- last -->
+      <col style="width:6%"> <!-- last -->
     </colgroup>
     <thead><tr>
       <th onclick="sortBy('id')">id</th>
@@ -205,16 +202,58 @@
   let sortCol="id", sortAsc=true;
   let taskMap=new Map(); // rebuilt on each taskData load → O(1) lookups
 
-  // PAT
-  function savePat(){const v=document.getElementById('pat-input').value.trim();v?localStorage.setItem('fpf_pat',v):localStorage.removeItem('fpf_pat');}
   function getPat(){return localStorage.getItem('fpf_pat')||'';}
+  function savePat(){const v=document.getElementById('pat-input').value.trim();v?localStorage.setItem('fpf_pat',v):localStorage.removeItem('fpf_pat');}
   window.addEventListener('DOMContentLoaded',()=>{const p=getPat();if(p)document.getElementById('pat-input').value=p;});
 
-  // Debounce: fire loadAll once 600ms after the last PAT keystroke
-  let _patTimer=null;
-  function debouncedLoad(){clearTimeout(_patTimer);_patTimer=setTimeout(loadAll,600);}
-
   function setMsg(t,ms=0){const e=document.getElementById('status-msg');e.textContent=t;if(ms)setTimeout(()=>e.textContent='',ms);}
+
+  async function launchOne(){
+    const pat=getPat();if(!pat){setMsg('PAT required',3000);return;}
+    setMsg('…');
+    try{
+      const res=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/workflows/solve.yml/dispatches`,
+        {method:'POST',headers:{Authorization:`token ${pat}`,'Content-Type':'application/json'},
+         body:JSON.stringify({ref:BRANCH,inputs:{workers:'1'}})});
+      if(!res.ok)throw new Error(res.status);
+      setMsg('✓ +1 agent launched',3000);
+    }catch(e){setMsg(`✗ ${e.message}`,4000);}
+  }
+
+  async function killAll(){
+    if(!confirm('Kill all running agents?'))return;
+    const pat=getPat();if(!pat){setMsg('PAT required',3000);return;}
+    setMsg('cancelling…');
+    try{
+      const runs=await fj(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs?status=in_progress&per_page=50`);
+      const active=(runs.workflow_runs||[]);
+      await Promise.all(active.map(r=>fetch(
+        `https://api.github.com/repos/${OWNER}/${REPO}/actions/runs/${r.id}/cancel`,
+        {method:'POST',headers:{Authorization:`token ${pat}`}})));
+      setMsg(`✓ cancelled ${active.length} run(s)`,4000);
+    }catch(e){setMsg(`✗ ${e.message}`,4000);}
+  }
+
+  async function resetBailed(){
+    const pat=getPat();if(!pat){setMsg('PAT required',3000);return;}
+    setMsg('resetting bailed…');
+    try{
+      const qpath=`projects/${PROJECT}/TASK_QUEUE.json`;
+      const meta=await fj(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${qpath}?ref=${BRANCH}`);
+      const q=JSON.parse(atob(meta.content.replace(/\n/g,'')));
+      let n=0;
+      (q.tasks||[]).forEach(t=>{if(t.status==='bailed'){t.status='ready';delete t.result;n++;}});
+      if(!n){setMsg('no bailed tasks',3000);return;}
+      q.updated_at=new Date().toISOString();
+      const body=JSON.stringify({message:`reset ${n} bailed → ready`,content:btoa(JSON.stringify(q,null,2)+'\n'),sha:meta.sha,branch:BRANCH});
+      const r=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${qpath}`,
+        {method:'PUT',headers:{Authorization:`token ${pat}`,'Content-Type':'application/json'},body});
+      if(!r.ok)throw new Error(await r.text());
+      setMsg(`✓ reset ${n} bailed → ready`,4000);
+      await loadAll();
+    }catch(e){setMsg(`✗ ${e.message}`,5000);}
+  }
+
 
   // URL / fetch helpers
   function rawUrl(p){return`https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${p}`;}
@@ -223,10 +262,7 @@
   async function fj(url){const r=await fetch(url,{cache:"no-store",headers:authH()});if(!r.ok)throw new Error(r.status);return r.json();}
   async function apiContent(path){const m=await fj(apiUrl(path));if(m.content)return JSON.parse(atob(m.content.replace(/\n/g,"")));return fj(rawUrl(path));}
 
-  // UTF-8–safe btoa
-  function toB64(str){const b=new TextEncoder().encode(str);return btoa(Array.from(b,x=>String.fromCharCode(x)).join(''));}
-
-  function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 
   // Formatting helpers — defined once, reused everywhere
   const _sidCache=new Map();
@@ -240,7 +276,9 @@
   function fmtF(v){if(v==null)return"—";return Number(v).toExponential(0);}
   function fmtR2(v){if(v==null)return"—";return Number(v).toFixed(4).replace(/^0/,"");}
   function fmtSig3(v){const n=sig3(v);return n!=null?String(n):"—";}
-  function fmtDate(iso){const d=new Date(iso);return`${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;}
+  function fmtSig4(v){const n=sig4(v);return n!=null?String(n):"—";}
+  function fmtSig5(v){return v!=null?String(parseFloat(Number(v).toPrecision(5))):"—";}
+  function fmtDate(iso){const d=new Date(iso);return`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;}
 
   // Stage label: Axxx (Anderson) or Nxxx (Newton/mp)
   function stageStr(pr){
@@ -294,6 +332,7 @@
     }
     taskMap=new Map((taskData.tasks||[]).map(t=>[t.id,t]));
     renderTasks();
+    loadProgress().catch(()=>{});
     const u=(taskData.updated_at||'?').replace('T',' ').slice(0,16);
     document.getElementById("meta").textContent=`upd:${u}`;
   }
@@ -318,7 +357,7 @@
     const counts={};
     tasks.forEach(t=>{const ds=dsMap.get(t.id);counts[ds]=(counts[ds]||0)+1;});
     const order=["done","claimed","ready","blocked","bailed","skip"];
-    document.getElementById("summary").innerHTML=
+    document.getElementById("pills").innerHTML=
       order.filter(s=>counts[s]).map(s=>{
         const sel=fv===s?' style="outline:2px solid #fff"':'';
         return`<span class="pill ${s}" onclick="(function(){var f=document.getElementById('filter');f.value=f.value.toLowerCase()==='${s}'?'':'${s}';renderTasks();})()"${sel}>${s[0]}:${counts[s]}</span>`;
@@ -326,7 +365,7 @@
 
     const filtered=tasks.filter(t=>{
       const ds=dsMap.get(t.id);
-      if(ds==="done"&&fv!=="done")return false; // done tasks hidden unless filtered
+      if(ds==="blocked"&&!fv)return false; // hide blocked by default; any filter reveals
       if(!fv)return true;
       return t.id.toLowerCase().includes(fv)||ds.toLowerCase().includes(fv)||
              String(t.gamma||"").includes(fv)||String(t.tau||"").includes(fv);
@@ -357,7 +396,7 @@
         <td class="enorm">${fStr}</td>
         <td class="muted">${fPrev}</td>
         <td>${ds==="done"?fmtR2(r["1-R2"]):""}</td>
-        <td class="muted">${ds==="done"?fmtSig3(r.Vi):""}</td>
+        <td class="muted">${ds==="done"&&r.Vi!=null?Number(r.Vi).toFixed(2):"—"}</td>
         <td class="muted">${ds==="done"?fmtSig3(r.TV):""}</td>
         <td>${isCl?stageStr(pr):""}</td>
         <td class="muted">${fmtTime(t,pr)}</td>
@@ -392,56 +431,58 @@
   function taskById(id){return taskMap.get(id)||null;}
 
   // Actions
-  async function resetByStatus(fromStatus){
-    const pat=getPat();if(!pat){alert('Paste a PAT first.');return;}
-    setMsg('…');
-    const qpath=`projects/${PROJECT}/TASK_QUEUE.json`;
-    try{
-      const meta=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${qpath}?ref=${BRANCH}`,
-        {headers:{Authorization:`token ${pat}`}}).then(r=>r.json());
-      const content=JSON.parse(atob(meta.content.replace(/\n/g,'')));
-      let n=0;
-      for(const t of content.tasks){
-        if(t.status===fromStatus){t.status='ready';['worker','claimed_by','claimed_at','worker_id'].forEach(k=>delete t[k]);n++;}
-      }
-      if(!n){setMsg(`0 ${fromStatus}`,3000);return;}
-      const res=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${qpath}`,{
-        method:'PUT',headers:{Authorization:`token ${pat}`,'Content-Type':'application/json'},
-        body:JSON.stringify({message:`Reset ${n} ${fromStatus}→ready`,content:toB64(JSON.stringify(content,null,2)),sha:meta.sha,branch:BRANCH})
+  async function downloadAll(){
+    if(!taskData){alert('Load tasks first');return;}
+
+    // Only tasks: done, non-test, F_max < 1e-100
+    const eligible=(taskData.tasks||[]).filter(t=>
+      t.status==="done" && !t.test && t.checkpoint &&
+      Number(t.result?.F_max) < 1e-100
+    );
+    if(!eligible.length){setMsg('No emin100 solutions yet',3000);return;}
+
+    setMsg('Loading JSZip…');
+    if(!window.JSZip){
+      await new Promise((res,rej)=>{
+        const s=document.createElement('script');
+        s.src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+        s.onload=res;s.onerror=()=>rej(new Error('JSZip load failed'));
+        document.head.appendChild(s);
       });
-      if(!res.ok)throw new Error(res.status);
-      setMsg(`✓ ${n} reset`,3000);setTimeout(()=>pollQueue(),1500);
-    }catch(e){setMsg(`✗ ${e.message}`,4000);}
-  }
+    }
+    const zip=new JSZip();
 
-  async function launchWorkers(){
-    const pat=getPat();if(!pat){alert('PAT required');return;}
-    const n=document.getElementById('worker-count').value||'20';
-    setMsg('…');
-    try{
-      const res=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/workflows/solve.yml/dispatches`,
-        {method:'POST',headers:{Authorization:`token ${pat}`,'Content-Type':'application/json'},
-         body:JSON.stringify({ref:BRANCH,inputs:{workers:String(n)}})});
-      if(!res.ok)throw new Error(res.status);
-      setMsg(`✓ ${n}w`,3000);
-    }catch(e){setMsg(`✗ ${e.message}`,4000);}
-  }
+    zip.file('metadata.json',JSON.stringify(eligible.map(t=>({
+      id:t.id,gamma:t.gamma,tau:t.tau,G:t.G,K:t.K,
+      result:t.result,completed_at:t.completed_at,checkpoint:t.checkpoint
+    })),null,2));
 
-  async function cancelAllRuns(){
-    const pat=getPat();if(!pat){alert('PAT required');return;}
-    setMsg('…');
-    try{
-      const runs=await fj(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs?status=in_progress&per_page=50`);
-      const active=runs.workflow_runs||[];
-      if(!active.length){setMsg('0 runs',3000);return;}
-      await Promise.all(active.map(r=>fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs/${r.id}/cancel`,
-        {method:'POST',headers:{Authorization:`token ${pat}`}})));
-      setMsg(`✓ cancelled ${active.length}`,3000);
-    }catch(e){setMsg(`✗ ${e.message}`,4000);}
+    let n=0;
+    setMsg(`Fetching 0/${eligible.length}…`);
+    await Promise.all(eligible.map(async t=>{
+      try{
+        const r=await fetch(
+          `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${t.checkpoint}`,
+          {headers:authH()});
+        if(!r.ok)return;
+        const buf=await r.arrayBuffer();
+        zip.file(t.checkpoint.split('/').pop(),buf);
+        setMsg(`Fetching ${++n}/${eligible.length}…`);
+      }catch{}
+    }));
+
+    setMsg('Zipping…');
+    const blob=await zip.generateAsync({type:'blob',compression:'STORE'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=`REZN_emin100_${new Date().toISOString().slice(0,10)}.zip`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    setMsg(`✓ ${n}/${eligible.length} files + metadata.json`,5000);
   }
 
   // Poll loops — pause when page is hidden
-  const POLL_MS=120000;
+  const POLL_MS=120000, PROGRESS_MS=60000;
   let _lp=null,_lq=null,_initTime=Date.now();
   function _fmtTime(ms){const d=new Date(ms);return`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;}
   function tick(){
@@ -459,9 +500,9 @@
   }
   async function loadAll(){await Promise.all([pollProgress(),pollQueue()]);}
 
-  (()=>{const m=new Date(document.lastModified);const p=n=>String(n).padStart(2,'0');document.getElementById("site-mod").textContent=`html:${m.getFullYear()}-${p(m.getMonth()+1)}-${p(m.getDate())} ${p(m.getHours())}:${p(m.getMinutes())}`;})();
+  (()=>{const m=new Date(document.lastModified);const p=n=>String(n).padStart(2,'0');document.getElementById("site-mod").textContent=`${p(m.getHours())}:${p(m.getMinutes())}`;})();
   pollQueue();pollProgress();
-  setInterval(()=>{if(!document.hidden)pollProgress();},POLL_MS);
+  setInterval(()=>{if(!document.hidden)pollProgress();},PROGRESS_MS);
   setInterval(()=>{if(!document.hidden)pollQueue();},POLL_MS);
   // Only reload on visibility-restore if polls are stale AND past init grace period
   document.addEventListener('visibilitychange',()=>{
@@ -472,5 +513,6 @@
     if(stale)loadAll();
   });
 </script>
+<div id="footer">(c) Matthijs Breugem</div>
 </body>
 </html>
