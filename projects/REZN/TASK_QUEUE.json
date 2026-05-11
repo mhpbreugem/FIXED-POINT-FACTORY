@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-11T14:07:22.204665+00:00",
+  "updated_at": "2026-05-11T14:36:54.444262Z",
   "params": {
     "G": 20,
     "UMAX": 4.0,
@@ -254,7 +254,7 @@
       "depends_on": [
         "g075_t0150"
       ],
-      "status": "blocked",
+      "status": "bailed",
       "checkpoint": null,
       "solver_params": {
         "mp_dps": 200,
@@ -266,9 +266,9 @@
         "u_inner_max": 4.0
       },
       "G": 20,
-      "claimed_by": null,
-      "claimed_at": null,
-      "result": null,
+      "result": {
+        "reason": "ValueError: could not broadcast input array from shape (15,15,15) into shape (19,19,19)"
+      },
       "completed_at": null
     },
     {
@@ -4935,9 +4935,13 @@
     }
   ],
   "summary": {
+    "total": 200,
     "done": 1,
-    "blocked": 156,
-    "ready": 43
+    "ready": 40,
+    "claimed": 3,
+    "blocked": 155,
+    "bailed": 1,
+    "skip": 0
   },
   "fanout": {
     "g050": [
