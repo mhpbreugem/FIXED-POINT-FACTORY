@@ -297,7 +297,7 @@ function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").repl
   function fmtKG(t){
     if(!t)return'';
     const K=t.K??t.solver_params?.K??3;
-    const G=t.G??t.solver_params?.G??'?';
+    const G=t.G??t.solver_params?.G??t.solver_params?.G_inner??16;
     const Gs=typeof G==='number'?String(G).padStart(2,'0'):String(G);
     return`<span class="dim">${K}·${Gs}</span>`;
   }
