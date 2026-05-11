@@ -194,7 +194,7 @@
     <colgroup>
       <col style="width:11%"><!-- id -->
       <col style="width:7%"> <!-- st -->
-      <col style="width:6%"> <!-- K·G -->
+      <col style="width:9%"> <!-- K·G -->
       <col style="width:7%"> <!-- γ -->
       <col style="width:7%"> <!-- τ -->
       <col style="width:9%"> <!-- F -->
@@ -204,7 +204,7 @@
       <col style="width:6%"> <!-- TV -->
       <col style="width:7%"> <!-- stage -->
       <col style="width:9%"> <!-- time -->
-      <col style="width:10%"><!-- last -->
+      <col style="width:7%"> <!-- last -->
     </colgroup>
     <thead><tr>
       <th onclick="sortBy('id')">id</th>
@@ -233,14 +233,14 @@
   <table id="done-table">
     <colgroup>
       <col style="width:12%"><!-- id -->
-      <col style="width:6%"> <!-- K·G -->
+      <col style="width:9%"> <!-- K·G -->
       <col style="width:8%"> <!-- γ -->
       <col style="width:8%"> <!-- τ -->
       <col style="width:10%"><!-- ‖F‖ -->
       <col style="width:8%"> <!-- 1-R² -->
       <col style="width:8%"> <!-- Vi -->
       <col style="width:8%"> <!-- TV -->
-      <col style="width:32%"><!-- when -->
+      <col style="width:29%"><!-- when -->
     </colgroup>
     <thead><tr>
       <th>id</th><th class="dim">K·G</th><th>γ</th><th>τ</th><th>F</th><th>1-R²</th><th>Vi</th><th>TV</th><th>when</th>
@@ -546,8 +546,8 @@
     el.innerHTML=`<div class="muted" style="padding:2px 0">workers (${all.length})</div>
       <table>
         <colgroup>
-          <col style="width:11%"><col style="width:6%"><col style="width:7%"><col style="width:7%">
-          <col style="width:8%"><col style="width:10%"><col style="width:10%"><col style="width:6%"><col style="width:6%"><col style="width:6%"><col style="width:10%"><col style="width:13%">
+          <col style="width:11%"><col style="width:9%"><col style="width:7%"><col style="width:7%">
+          <col style="width:8%"><col style="width:10%"><col style="width:10%"><col style="width:6%"><col style="width:6%"><col style="width:6%"><col style="width:7%"><col style="width:13%">
         </colgroup>
         <thead><tr><th>task</th><th class="dim">K·G</th><th>γ</th><th>τ</th><th>stg</th><th>F</th><th>F₋₁</th><th>1-R²</th><th>Vi</th><th>TV</th><th>last</th><th></th></tr></thead>
         <tbody>${all.join("")}</tbody>
