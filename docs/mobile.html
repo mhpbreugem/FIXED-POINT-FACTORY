@@ -564,7 +564,8 @@
   }
 
   // Poll loops — pause when page is hidden (saves battery / data on mobile)
-  let _lp=null,_lq=null;
+  const POLL_MS=120000;
+  let _lp=null,_lq=null,_initTime=Date.now();
   async function pollProgress(){
     try{await Promise.all([loadWorkers(),loadProgress()]);_lp=Date.now();}catch{}
     tick();
@@ -577,18 +578,21 @@
   function tick(){
     const el=document.getElementById("ticker");if(!el)return;
     const now=Date.now();
-    el.textContent=`${_lp?`w:${((now-_lp)/1000).toFixed(0)}s`:"w:—"} ${_lq?`q:${((now-_lq)/1000).toFixed(0)}s`:"q:—"}`;
+    const wcd=_lp?Math.max(0,Math.round((POLL_MS-(now-_lp))/1000)):null;
+    const qcd=_lq?Math.max(0,Math.round((POLL_MS-(now-_lq))/1000)):null;
+    el.textContent=`${wcd!=null?`w↻${wcd}s`:'w:—'} ${qcd!=null?`q↻${qcd}s`:'q:—'}`;
   }
   async function loadAll(){await Promise.all([pollProgress(),pollQueue()]);}
 
   pollQueue();pollProgress();
-  setInterval(()=>{if(!document.hidden)pollProgress();},120000);
-  setInterval(()=>{if(!document.hidden)pollQueue();},120000);
+  setInterval(()=>{if(!document.hidden)pollProgress();},POLL_MS);
+  setInterval(()=>{if(!document.hidden)pollQueue();},POLL_MS);
   setInterval(tick,1000);
-  // Only reload on visibility-restore if both polls are stale (>90s old)
+  // Only reload on visibility-restore if polls are stale AND past init grace period
   document.addEventListener('visibilitychange',()=>{
     if(document.hidden)return;
     const now=Date.now();
+    if(now-_initTime<30000)return; // 30s grace: don't re-poll during page init
     const stale=(!_lp||now-_lp>90000)&&(!_lq||now-_lq>90000);
     if(stale)loadAll();
   });
