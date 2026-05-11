@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-11T17:29:23.334365Z",
+  "updated_at": "2026-05-11T18:30:22.943180Z",
   "params": {
     "G": 16,
     "UMAX": 4.0,
@@ -304,10 +304,11 @@
       "gamma": 0.75,
       "tau": 1.5,
       "depends_on": [
-        "g075_t0200"
+        "g075_t0200",
+        "test_g6"
       ],
-      "status": "claimed",
-      "checkpoint": "projects/REZN/checkpoints/g075_t0150.npz",
+      "status": "ready",
+      "checkpoint": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
@@ -318,16 +319,11 @@
         "u_inner_max": 4.0
       },
       "G": 16,
-      "result": {
-        "1-R2": 0.06950892,
-        "F_max": 1.699e-89,
-        "n_stages": 1,
-        "phi_calls": 40,
-        "wall_s": 17133.6
-      },
+      "result": null,
       "completed_at": null,
-      "claimed_by": "gha-25689364229-g075_t0150",
-      "claimed_at": "2026-05-11T18:29:51Z"
+      "deps_satisfy": "any",
+      "requeue_count": 1,
+      "note": "Auto-requeued (attempt 1): warm-start from test_g6 (log-dist=0.50)."
     },
     {
       "id": "g075_t0200",
