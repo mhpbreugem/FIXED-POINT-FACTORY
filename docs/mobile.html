@@ -185,15 +185,16 @@
   </div>
   <table>
     <colgroup>
-      <col style="width:19%"><!-- id -->
-      <col style="width:5%"> <!-- st -->
-      <col style="width:6%"> <!-- γ -->
-      <col style="width:6%"> <!-- τ -->
-      <col style="width:12%"><!-- ‖F‖ -->
-      <col style="width:14%"><!-- phase/live -->
-      <col style="width:9%"> <!-- Vi -->
-      <col style="width:9%"> <!-- TV -->
-      <col style="width:20%"><!-- t -->
+      <col style="width:15%"><!-- id -->
+      <col style="width:4%"> <!-- st -->
+      <col style="width:7%"> <!-- γ -->
+      <col style="width:7%"> <!-- τ -->
+      <col style="width:10%"><!-- ‖F‖ -->
+      <col style="width:7%"> <!-- 1-R² -->
+      <col style="width:7%"> <!-- Vi -->
+      <col style="width:7%"> <!-- TV -->
+      <col style="width:10%"><!-- phase -->
+      <col style="width:26%"><!-- t -->
     </colgroup>
     <thead><tr>
       <th onclick="sortBy('id')">id</th>
@@ -201,9 +202,10 @@
       <th onclick="sortBy('gamma')">γ</th>
       <th onclick="sortBy('tau')">τ</th>
       <th onclick="sortBy('F_max')">‖F‖</th>
-      <th>phase</th>
+      <th>1-R²</th>
       <th>Vi</th>
       <th>TV</th>
+      <th>phase</th>
       <th onclick="sortBy('completed_at')">t</th>
     </tr></thead>
     <tbody id="task-body"></tbody>
@@ -219,14 +221,14 @@
 <div id="tab-done" class="tab-content">
   <table id="done-table">
     <colgroup>
-      <col style="width:18%"><!-- id -->
-      <col style="width:7%"> <!-- γ -->
-      <col style="width:7%"> <!-- τ -->
+      <col style="width:16%"><!-- id -->
+      <col style="width:8%"> <!-- γ -->
+      <col style="width:8%"> <!-- τ -->
       <col style="width:11%"><!-- ‖F‖ -->
-      <col style="width:9%"> <!-- 1-R² -->
-      <col style="width:10%"><!-- Vi -->
-      <col style="width:10%"><!-- TV -->
-      <col style="width:28%"><!-- when -->
+      <col style="width:8%"> <!-- 1-R² -->
+      <col style="width:9%"> <!-- Vi -->
+      <col style="width:9%"> <!-- TV -->
+      <col style="width:31%"><!-- when -->
     </colgroup>
     <thead><tr>
       <th>id</th><th>γ</th><th>τ</th><th>‖F‖</th><th>1-R²</th><th>Vi</th><th>TV</th><th>when</th>
@@ -281,6 +283,7 @@
     _sidCache.set(id,s);return s;
   }
   function sig3(v){return v!=null?parseFloat(Number(v).toPrecision(3)):null;}
+  function sig4(v){return v!=null?parseFloat(Number(v).toPrecision(4)):null;}
   function fmtF(v){if(v==null)return"—";return Number(v).toExponential(0);}
   function fmtR2(v){if(v==null)return"—";return Number(v).toFixed(3).replace(/^0/,"");}
   function fmtSig3(v){const n=sig3(v);return n!=null?String(n):"—";}
@@ -378,12 +381,13 @@
       return`<tr${rc}>
         <td>${esc(shortId(t.id))}</td>
         <td class="st-${ds}">${ST2[ds]||ds.slice(0,2)}</td>
-        <td>${sig3(t.gamma)??""}</td>
-        <td>${sig3(t.tau)??""}</td>
+        <td>${sig4(t.gamma)??""}</td>
+        <td>${sig4(t.tau)??""}</td>
         <td class="enorm">${fStr}</td>
-        <td class="live">${isCl?phase(pr):""}</td>
+        <td>${ds==="done"?fmtR2(r["1-R2"]):""}</td>
         <td class="muted">${ds==="done"?fmtSig3(r.Vi):""}</td>
         <td class="muted">${ds==="done"?fmtSig3(r.TV):""}</td>
+        <td class="live">${isCl?phase(pr):""}</td>
         <td class="muted">${fmtT(t,pr)}</td>
       </tr>`;
     }).join("");
@@ -399,8 +403,8 @@
       const r=t.result||{};
       return`<tr>
         <td>${esc(shortId(t.id))}</td>
-        <td>${sig3(t.gamma)??""}</td>
-        <td>${sig3(t.tau)??""}</td>
+        <td>${sig4(t.gamma)??""}</td>
+        <td>${sig4(t.tau)??""}</td>
         <td class="enorm">${fmtF(r.F_max)}</td>
         <td>${fmtR2(r["1-R2"])}</td>
         <td class="muted">${fmtSig3(r.Vi)}</td>
@@ -442,8 +446,8 @@
   function taskById(id){return taskMap.get(id)||null;}
   function workerParams(tid){
     const t=taskById(tid);
-    if(!t)return{g:"—",tau:"—",K:"—"};
-    return{g:String(sig3(t.gamma)??"—"),tau:String(sig3(t.tau)??"—"),K:String(t.K??t.solver_params?.K??t.G??"—")};
+    if(!t)return{g:"—",tau:"—",K:"—",G:"—"};
+    return{g:String(sig4(t.gamma)??"—"),tau:String(sig4(t.tau)??"—"),K:String(t.K??t.solver_params?.K??3),G:String(t.G??t.solver_params?.G??"—")};
   }
 
   function renderWorkersSection(){
@@ -463,7 +467,8 @@
       return ms>1800000?`<span class="err">${s}s</span>`:`${s}s`;
     }
     function wRow(tid,ageMs,pr){
-      const {g,tau,K}=workerParams(tid);
+      const {g,tau,K,G}=workerParams(tid);
+      const t=taskById(tid);const r=t?.result||{};
       const hist=pr?.ftol_history;
       let fStr="—";
       if(hist&&hist.length>0){
@@ -474,10 +479,13 @@
       }
       return`<tr>
         <td>${esc(shortId(tid))}</td>
-        <td>${g}</td><td>${tau}</td><td>${K}</td>
+        <td>${g}</td><td>${tau}</td><td>${K}</td><td>${G}</td>
         <td>${ageStr(ageMs)}</td>
         <td class="live">${pr?phase(pr):"—"}</td>
         <td class="enorm">${fStr}</td>
+        <td>${r["1-R2"]!=null?fmtR2(r["1-R2"]):""}</td>
+        <td class="muted">${fmtSig3(r.Vi)}</td>
+        <td class="muted">${fmtSig3(r.TV)}</td>
         <td><button onclick="releaseWorker('${esc(tid)}')" class="btn b-rel" style="padding:0 3px">r</button></td>
       </tr>`;
     }
@@ -504,10 +512,10 @@
     el.innerHTML=`<div class="muted" style="padding:2px 0">workers (${all.length})</div>
       <table>
         <colgroup>
-          <col style="width:17%"><col style="width:6%"><col style="width:6%"><col style="width:5%">
-          <col style="width:7%"><col style="width:16%"><col style="width:27%"><col style="width:16%">
+          <col style="width:14%"><col style="width:6%"><col style="width:6%"><col style="width:4%"><col style="width:4%">
+          <col style="width:5%"><col style="width:14%"><col style="width:17%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:9%">
         </colgroup>
-        <thead><tr><th>task</th><th>γ</th><th>τ</th><th>K</th><th>age</th><th>phase</th><th>‖F‖</th><th></th></tr></thead>
+        <thead><tr><th>task</th><th>γ</th><th>τ</th><th>K</th><th>G</th><th>age</th><th>phase</th><th>‖F‖</th><th>1-R²</th><th>Vi</th><th>TV</th><th></th></tr></thead>
         <tbody>${all.join("")}</tbody>
       </table>`;
   }
