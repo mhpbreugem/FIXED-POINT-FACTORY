@@ -32,7 +32,8 @@
   #pills { display:flex; flex-wrap:nowrap; gap:2px; align-items:center; flex-shrink:0; }
   .btn {
     font-family: inherit; font-size: 9.5px; font-weight: 700;
-    border: none; border-radius: 2px; padding: 3px 4px;
+    border: none; border-radius: 2px; padding: 3px 0;
+    width: 22px; text-align: center;
     cursor: pointer; color: #fff; white-space: nowrap; flex-shrink:0;
     background:#333;
   }
@@ -471,7 +472,7 @@ function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").repl
   }
   async function loadAll(){await Promise.all([pollProgress(),pollQueue()]);}
 
-  (()=>{const m=new Date(document.lastModified);const p=n=>String(n).padStart(2,'0');document.getElementById("site-mod").textContent=`html:${m.getFullYear()}-${p(m.getMonth()+1)}-${p(m.getDate())} ${p(m.getHours())}:${p(m.getMinutes())}`;})();
+  (()=>{const m=new Date(document.lastModified);const p=n=>String(n).padStart(2,'0');document.getElementById("site-mod").textContent=`${p(m.getHours())}:${p(m.getMinutes())}`;})();
   pollQueue();pollProgress();
   setInterval(()=>{if(!document.hidden)pollProgress();},PROGRESS_MS);
   setInterval(()=>{if(!document.hidden)pollQueue();},POLL_MS);
