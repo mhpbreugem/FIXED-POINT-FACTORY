@@ -294,6 +294,7 @@
     }
     taskMap=new Map((taskData.tasks||[]).map(t=>[t.id,t]));
     renderTasks();
+    loadProgress().catch(()=>{});
     const u=(taskData.updated_at||'?').replace('T',' ').slice(0,16);
     document.getElementById("meta").textContent=`upd:${u}`;
   }
@@ -441,7 +442,7 @@
   }
 
   // Poll loops — pause when page is hidden
-  const POLL_MS=120000;
+  const POLL_MS=120000, PROGRESS_MS=60000;
   let _lp=null,_lq=null,_initTime=Date.now();
   function _fmtTime(ms){const d=new Date(ms);return`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;}
   function tick(){
@@ -461,7 +462,7 @@
 
   (()=>{const m=new Date(document.lastModified);const p=n=>String(n).padStart(2,'0');document.getElementById("site-mod").textContent=`html:${m.getFullYear()}-${p(m.getMonth()+1)}-${p(m.getDate())} ${p(m.getHours())}:${p(m.getMinutes())}`;})();
   pollQueue();pollProgress();
-  setInterval(()=>{if(!document.hidden)pollProgress();},POLL_MS);
+  setInterval(()=>{if(!document.hidden)pollProgress();},PROGRESS_MS);
   setInterval(()=>{if(!document.hidden)pollQueue();},POLL_MS);
   // Only reload on visibility-restore if polls are stale AND past init grace period
   document.addEventListener('visibilitychange',()=>{
