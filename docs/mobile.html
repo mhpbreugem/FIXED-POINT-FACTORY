@@ -514,7 +514,7 @@
         body:JSON.stringify({message:`Reset ${n} ${fromStatus}→ready`,content:toB64(JSON.stringify(content,null,2)),sha:meta.sha,branch:BRANCH})
       });
       if(!res.ok)throw new Error(res.status);
-      setMsg(`✓ ${n} reset`,3000);setTimeout(()=>loadAll(),1500);
+      setMsg(`✓ ${n} reset`,3000);setTimeout(()=>pollQueue(),1500);
     }catch(e){setMsg(`✗ ${e.message}`,4000);}
   }
 
@@ -527,7 +527,7 @@
         {method:'POST',headers:{Authorization:`token ${pat}`,'Content-Type':'application/json'},
          body:JSON.stringify({ref:BRANCH,inputs:{workers:String(n)}})});
       if(!res.ok)throw new Error(res.status);
-      setMsg(`✓ ${n}w`,3000);setTimeout(()=>pollQueue(),3000);
+      setMsg(`✓ ${n}w`,3000);
     }catch(e){setMsg(`✗ ${e.message}`,4000);}
   }
 
@@ -559,7 +559,7 @@
         body:JSON.stringify({message:`Release ${taskId}`,content:toB64(JSON.stringify(content,null,2)),sha:meta.sha,branch:BRANCH})
       });
       if(!res.ok)throw new Error(res.status);
-      setMsg(`✓ rel`,2000);setTimeout(()=>{pollQueue();renderWorkersSection();},1200);
+      setMsg(`✓ rel`,2000);setTimeout(()=>pollQueue(),2000);
     }catch(e){setMsg(`✗ ${e.message}`,4000);}
   }
 
@@ -585,7 +585,13 @@
   setInterval(()=>{if(!document.hidden)pollProgress();},120000);
   setInterval(()=>{if(!document.hidden)pollQueue();},120000);
   setInterval(tick,1000);
-  document.addEventListener('visibilitychange',()=>{if(!document.hidden)loadAll();});
+  // Only reload on visibility-restore if both polls are stale (>90s old)
+  document.addEventListener('visibilitychange',()=>{
+    if(document.hidden)return;
+    const now=Date.now();
+    const stale=(!_lp||now-_lp>90000)&&(!_lq||now-_lq>90000);
+    if(stale)loadAll();
+  });
 </script>
 </body>
 </html>
