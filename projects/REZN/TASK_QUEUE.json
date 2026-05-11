@@ -272,7 +272,7 @@
       "depends_on": [
         "g075_t0200"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "results/full_ree/task3_g075_t0150_mp50.json",
       "solver_params": {
         "mp_dps": 200,
@@ -282,7 +282,9 @@
         "tol": 5e-07,
         "G_inner": 15
       },
-      "G": 15
+      "G": 15,
+      "claimed_by": "gha-25670310665-g075_t0150",
+      "claimed_at": "2026-05-11T12:32:42Z"
     },
     {
       "id": "g075_t0200",
