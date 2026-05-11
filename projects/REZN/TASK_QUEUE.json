@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-11T01:41:43.096179Z",
+  "updated_at": "2026-05-11T02:05:50.616238Z",
   "params": {
     "G": 20,
     "UMAX": 5,
@@ -368,10 +368,10 @@
       "depends_on": [
         "g100_t0100"
       ],
-      "status": "ready",
+      "status": "bailed",
       "checkpoint": null,
       "result": {
-        "reason": "ValueError: could not broadcast input array from shape (12,12,12) into shape (15,15,15)"
+        "reason": "||F||inf=6.472e-01 > bail threshold 1e-04"
       },
       "completed_at": null,
       "solver_params": {
@@ -4423,10 +4423,10 @@
   "summary": {
     "total": 200,
     "done": 2,
-    "ready": 47,
+    "ready": 59,
     "claimed": 0,
-    "blocked": 141,
-    "bailed": 10,
+    "blocked": 138,
+    "bailed": 1,
     "skip": 0
   },
   "fanout": {
