@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-11T18:54:46.116107Z",
+  "updated_at": "2026-05-11T18:55:05.887741Z",
   "params": {
     "G": 16,
     "UMAX": 4.0,
@@ -314,12 +314,24 @@
       "claimed_by": null
     },
     {
+      "id": "g061_t0150",
+      "gamma": 0.61,
+      "tau": 1.5,
+      "depends_on": [
+        "test_g6"
+      ],
+      "deps_satisfy": "any",
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "note": "\u03b3-ladder between test_g6 (\u03b3=0.5) and g075_t0150 (\u03b3=0.75) at \u03c4=1.5."
+    },
+    {
       "id": "g075_t0150",
       "gamma": 0.75,
       "tau": 1.5,
       "depends_on": [
-        "g075_t0200",
-        "test_g6"
+        "g061_t0150"
       ],
       "status": "ready",
       "checkpoint": null,
@@ -336,8 +348,8 @@
       "result": null,
       "completed_at": null,
       "deps_satisfy": "any",
-      "requeue_count": 1,
-      "note": "Auto-requeued (attempt 1): warm-start from test_g6 (log-dist=0.50)."
+      "requeue_count": 2,
+      "note": "Auto-requeued (attempt 2): via new ladder g061_t0150. \u03b3-ladder at \u03b3=0.61"
     },
     {
       "id": "g075_t0200",
@@ -4979,9 +4991,9 @@
     }
   ],
   "summary": {
-    "total": 202,
+    "total": 203,
     "done": 2,
-    "ready": 44,
+    "ready": 45,
     "claimed": 2,
     "blocked": 154,
     "bailed": 0,
