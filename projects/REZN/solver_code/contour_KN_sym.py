@@ -508,6 +508,122 @@ def sym_weighted_R2(P_sorted: np.ndarray, sg: SymGrid,
     }
 
 
+
+# =====================================================================
+# Economic metrics: trading volume (TV) and value of information (Vi)
+# =====================================================================
+
+def _x_crra_single(mu: float, p: float, gamma: float, W: float) -> float:
+    """Optimal CRRA demand x*(mu, p) in closed form (no root-finder needed).
+
+    Derived from FOC: mu*(1-p)*(W+x(1-p))^-gamma = (1-mu)*p*(W-xp)^-gamma.
+    With z = (log_odds(mu) - log_odds(p)) / gamma:
+      z>0 → agent buys:  x = W*(1-e^-z) / ((1-p)*e^-z + p)
+      z<0 → agent sells: x = W*(e^z-1)  / ((1-p) + p*e^z)
+    """
+    eps = 1e-12
+    mu = max(eps, min(1.0 - eps, mu))
+    p  = max(eps, min(1.0 - eps, p))
+    z = (math.log(mu / (1.0 - mu)) - math.log(p / (1.0 - p))) / gamma
+    if z >= 0.0:
+        e = math.exp(-z)
+        return W * (1.0 - e) / ((1.0 - p) * e + p)
+    else:
+        e = math.exp(z)
+        return W * (e - 1.0) / ((1.0 - p) + p * e)
+
+
+def _crra_u(w: float, gamma: float) -> float:
+    if w <= 0.0:
+        return -1e18
+    if abs(gamma - 1.0) < 1e-9:
+        return math.log(w)
+    return w ** (1.0 - gamma) / (1.0 - gamma)
+
+
+def sym_econ_metrics(
+    P_sorted: np.ndarray,
+    sg: "SymGrid",
+    u_grid: np.ndarray,
+    tau: float,
+    gamma: float,
+    W: float,
+) -> dict:
+    """Compute per-agent trading volume (TV) and value of information (Vi).
+
+    Integrates over the joint distribution of (fundamental v, signal tuple s):
+      w(s) = 0.5 * mult(s) * [∏ f0(u_k) + ∏ f1(u_k)] * du^K
+
+    For each state s, each agent k's posterior mu_k is derived via the same
+    contour-integral Bayesian update used in sym_phi (conditioning on the
+    observed price P(s)).
+
+    TV = E[|x*(mu_k, P(s))|]   — per-agent expected absolute trade
+    Vi = E[EU(mu_k, P(s))] - u(W)  — per-agent value of private information
+         where EU(mu, P) = P*u(W+x*(1-P)) + (1-P)*u(W-x*P) integrates over
+         the true fundamental v~Bernoulli(P(s)), and u(W) is the no-trade
+         baseline (x*=0 when no private signal above the price).
+    """
+    if sg.K >= 8:
+        # sym_to_full materialises G^K; too large for K>=8.  Return NaN.
+        return {"TV": float("nan"), "Vi": float("nan")}
+
+    G, K = sg.G, sg.K
+    eps = 1e-12
+    du = float(u_grid[1] - u_grid[0]) if G > 1 else 1.0
+
+    f0 = np.sqrt(tau / (2.0 * math.pi)) * np.exp(-0.5 * tau * (u_grid + 0.5) ** 2)
+    f1 = np.sqrt(tau / (2.0 * math.pi)) * np.exp(-0.5 * tau * (u_grid - 0.5) ** 2)
+
+    P_full = sym_to_full(P_sorted, sg)
+    u_baseline = _crra_u(W, gamma)   # x*=0 when no info above price
+
+    tv_sum = vi_sum = weight_sum = 0.0
+
+    for s in range(sg.n):
+        i_tuple = sg.tuples[s]
+        mult = sg.multiplicity(s)
+        P_s = float(P_sorted[s])
+
+        # Marginal weight w(s) = 0.5*mult*(∏f0_k + ∏f1_k)*du^K
+        prod_f0 = prod_f1 = 1.0
+        for i_k in i_tuple:
+            prod_f0 *= float(f0[i_k])
+            prod_f1 *= float(f1[i_k])
+        w_s = 0.5 * mult * (prod_f0 + prod_f1) * (du ** K)
+        weight_sum += w_s
+
+        # Compute mu_k for each agent via contour integral (cache by signal index)
+        cache_mu: dict[int, float] = {}
+        for k in range(K):
+            i_k = int(i_tuple[k])
+            if i_k not in cache_mu:
+                P_slice = np.take(P_full, i_k, axis=k)
+                A0, A1 = _contour_integral_kd(P_slice, P_s, u_grid, f0, f1, tau)
+                num = float(f1[i_k]) * A1
+                den = float(f0[i_k]) * A0 + num
+                mu = (num / den) if den > eps else 0.5
+                cache_mu[i_k] = max(eps, min(1.0 - eps, mu))
+
+            mu_k = cache_mu[i_k]
+            x_k = _x_crra_single(mu_k, P_s, gamma, W)
+            tv_sum += w_s * abs(x_k)
+
+            # Realized EU: integrate over true v with P[v=1|all signals] = P_s
+            W1 = W + x_k * (1.0 - P_s)
+            W0 = W - x_k * P_s
+            eu_k = P_s * _crra_u(W1, gamma) + (1.0 - P_s) * _crra_u(W0, gamma)
+            vi_sum += w_s * (eu_k - u_baseline)
+
+    if weight_sum < eps:
+        return {"TV": float("nan"), "Vi": float("nan")}
+
+    return {
+        "TV": float(tv_sum / (weight_sum * K)),
+        "Vi": float(vi_sum / (weight_sum * K)),
+    }
+
+
 # =====================================================================
 # Smoke test
 # =====================================================================

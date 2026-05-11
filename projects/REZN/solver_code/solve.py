@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import subprocess
 import sys
@@ -247,6 +248,7 @@ def _try_load_sym_npz(ckpt_path: Path, K: int, G: int):
 def _run_sym_task(args, task: dict, gamma: float, tau: float) -> None:
     from contour_KN_sym import (  # noqa: PLC0415
         SymGrid, sym_phi, sym_newton, sym_weighted_R2, sym_init_no_learning,
+        sym_econ_metrics,
     )
 
     K = int(task.get("K", 3))
@@ -338,6 +340,9 @@ def _run_sym_task(args, task: dict, gamma: float, tau: float) -> None:
             args.project, args.task_id, P_sorted, sg, u_grid, gamma, tau, metrics
         )
 
+        econ = sym_econ_metrics(P_sorted, sg, u_grid, tau, gamma, W)
+        print(f"[solve] econ  TV={econ['TV']:.4e}  Vi={econ['Vi']:.4e}", flush=True)
+
         result = {
             "1-R2":      round(metrics["1-R2"], 8),
             "slope":     round(metrics["slope"], 6),
@@ -346,6 +351,8 @@ def _run_sym_task(args, task: dict, gamma: float, tau: float) -> None:
             "K":         K,
             "G":         G,
             "wall_s":    round(wall_s, 1),
+            "TV":        round(econ["TV"], 6) if not math.isnan(econ["TV"]) else None,
+            "Vi":        round(econ["Vi"], 6) if not math.isnan(econ["Vi"]) else None,
         }
 
         BAIL_THRESHOLD = 1e-4
