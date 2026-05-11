@@ -145,13 +145,20 @@
         "g050_t0160"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
-      "checkpoint": null,
-      "result": null,
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g050_t0130.npz",
+      "result": {
+        "1-R2": 0.06910793,
+        "F_max": 3.4336e-101,
+        "TV": 0.469406,
+        "Vi": 0.00293,
+        "n_stages": 1,
+        "phi_calls": 10053,
+        "wall_s": 12819.3
+      },
       "note": "Auto-requeued (attempt 1): via new ladder g050_t0160. \u03c4-ladder at \u03c4=1.6",
       "requeue_count": 1,
-      "claimed_by": "gha-25690827466-g050_t0130",
-      "claimed_at": "2026-05-11T18:57:50Z"
+      "completed_at": "2026-05-11T23:21:46.235462Z"
     },
     {
       "id": "g050_t0080",
@@ -5044,9 +5051,9 @@
   ],
   "summary": {
     "total": 205,
-    "done": 2,
+    "done": 3,
     "ready": 32,
-    "claimed": 17,
+    "claimed": 16,
     "blocked": 154,
     "bailed": 0,
     "skip": 0
