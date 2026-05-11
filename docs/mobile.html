@@ -145,9 +145,7 @@
   <button class="btn b-kill" onclick="killAll()">✕✕</button>
   <button class="btn"        onclick="downloadAll()">⬇</button>
   <button class="btn"        onclick="loadAll()">⟳</button>
-  <span id="meta-right">
-    <span id="meta">…</span> · <span id="ticker"></span> · <span id="site-mod"></span>
-  </span>
+  <span id="meta-right"><span id="site-mod"></span></span>
   <span id="status-msg"></span>
 </div>
 
@@ -472,7 +470,7 @@ function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").repl
   }
   async function loadAll(){await Promise.all([pollProgress(),pollQueue()]);}
 
-  (()=>{const m=new Date(document.lastModified);const p=n=>String(n).padStart(2,'0');document.getElementById("site-mod").textContent=`${p(m.getHours())}:${p(m.getMinutes())}`;})();
+  (()=>{const m=new Date(document.lastModified);const p=n=>String(n).padStart(2,'0');document.getElementById("site-mod").textContent=`web:${p(m.getHours())}:${p(m.getMinutes())}`;})();
   pollQueue();pollProgress();
   setInterval(()=>{if(!document.hidden)pollProgress();},PROGRESS_MS);
   setInterval(()=>{if(!document.hidden)pollQueue();},POLL_MS);
