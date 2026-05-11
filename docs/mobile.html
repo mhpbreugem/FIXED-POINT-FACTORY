@@ -21,6 +21,11 @@
     color: var(--fg);
   }
 
+  #brand {
+    font-size: 9.5px; font-weight: 900; color: #fff;
+    letter-spacing: 0.5px; flex-shrink: 0; padding-right: 2px;
+  }
+
   /* ── single bar ── */
   #bar {
     position: sticky; top:0; z-index:20;
@@ -140,6 +145,7 @@
 <body>
 
 <div id="bar">
+  <span id="brand">REZN</span>
   <div id="pills"></div>
   <button class="btn b-go"   onclick="launchOne()">+1</button>
   <button class="btn b-kill" onclick="killAll()">✕✕</button>
@@ -492,7 +498,7 @@ function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").repl
   }
   async function loadAll(){await Promise.all([pollProgress(),pollQueue()]);}
 
-  (()=>{const m=new Date(document.lastModified);const p=n=>String(n).padStart(2,'0');document.getElementById("site-mod").textContent=`web:${p(m.getHours())}:${p(m.getMinutes())}`;})();
+  (()=>{const m=new Date(document.lastModified);const p=n=>String(n).padStart(2,'0');document.getElementById("site-mod").textContent=`REZN@${p(m.getHours())}:${p(m.getMinutes())}`;})();
   pollQueue();pollProgress();
   setInterval(()=>{if(!document.hidden)pollProgress();},PROGRESS_MS);
   setInterval(()=>{if(!document.hidden)pollQueue();},POLL_MS);

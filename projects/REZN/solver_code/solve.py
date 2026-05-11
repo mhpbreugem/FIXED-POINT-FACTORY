@@ -693,6 +693,18 @@ def main() -> None:
         print(f"[solve] done  ||F_inner||inf={F_inf_final:.4e}  "
               f"1-R²={deficit:.6e}  wall={wall_s:.0f}s", flush=True)
 
+        # Economic metrics (Vi, TV) via symmetric integration
+        try:
+            from contour_KN_sym import SymGrid, sym_econ_metrics  # noqa: PLC0415
+            sg_econ = SymGrid.build(G_inner, K)
+            P_sorted_econ = np.array([P_inner_final[tuple(t)] for t in sg_econ.tuples])
+            econ = sym_econ_metrics(P_sorted_econ, sg_econ, u_grid_inner,
+                                    tau, gamma, float(W_vec[0]))
+            print(f"[solve] econ  TV={econ['TV']:.4e}  Vi={econ['Vi']:.4e}", flush=True)
+        except Exception as _e:
+            econ = {"TV": None, "Vi": None}
+            print(f"[solve] econ failed: {_e}", flush=True)
+
         ckpt_rel = save_checkpoint(
             args.project, args.task_id,
             P_inner_final, halo, P_full_final,
@@ -705,6 +717,8 @@ def main() -> None:
         result = {
             "1-R2":        round(deficit, 8),
             "F_max":       float(f"{F_inf_final:.4e}"),
+            "TV":          round(econ["TV"], 6) if econ["TV"] is not None and not math.isnan(econ["TV"]) else None,
+            "Vi":          round(econ["Vi"], 6) if econ["Vi"] is not None and not math.isnan(econ["Vi"]) else None,
             "n_stages":    len(history.stages),
             "phi_calls":   phi_calls["n"],
             "wall_s":      round(wall_s, 1),
