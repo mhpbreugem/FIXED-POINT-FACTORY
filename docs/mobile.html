@@ -143,6 +143,7 @@
   <div id="pills"></div>
   <button class="btn b-go"   onclick="launchOne()">+1</button>
   <button class="btn b-kill" onclick="killAll()">✕✕</button>
+  <button class="btn"        onclick="resetBailed()">↺</button>
   <button class="btn"        onclick="downloadAll()">⬇</button>
   <button class="btn"        onclick="loadAll()">⟳</button>
   <span id="meta-right"><span id="site-mod"></span></span>
@@ -226,6 +227,27 @@
       setMsg(`✓ cancelled ${active.length} run(s)`,4000);
     }catch(e){setMsg(`✗ ${e.message}`,4000);}
   }
+
+  async function resetBailed(){
+    const pat=getPat();if(!pat){setMsg('PAT required',3000);return;}
+    setMsg('resetting bailed…');
+    try{
+      const qpath=`projects/${PROJECT}/TASK_QUEUE.json`;
+      const meta=await fj(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${qpath}?ref=${BRANCH}`);
+      const q=JSON.parse(atob(meta.content.replace(/\n/g,'')));
+      let n=0;
+      (q.tasks||[]).forEach(t=>{if(t.status==='bailed'){t.status='ready';delete t.result;n++;}});
+      if(!n){setMsg('no bailed tasks',3000);return;}
+      q.updated_at=new Date().toISOString();
+      const body=JSON.stringify({message:`reset ${n} bailed → ready`,content:btoa(JSON.stringify(q,null,2)+'\n'),sha:meta.sha,branch:BRANCH});
+      const r=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${qpath}`,
+        {method:'PUT',headers:{Authorization:`token ${pat}`,'Content-Type':'application/json'},body});
+      if(!r.ok)throw new Error(await r.text());
+      setMsg(`✓ reset ${n} bailed → ready`,4000);
+      await loadAll();
+    }catch(e){setMsg(`✗ ${e.message}`,5000);}
+  }
+
 
   // URL / fetch helpers
   function rawUrl(p){return`https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${p}`;}
