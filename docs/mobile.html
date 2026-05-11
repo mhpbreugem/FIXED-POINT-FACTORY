@@ -319,7 +319,7 @@
     if(!t)return'';
     const K=t.K??t.solver_params?.K??3;
     const G=t.G??t.solver_params?.G??'?';
-    const Gs=typeof G==='number'?String(G).padStart(4,'0'):String(G);
+    const Gs=typeof G==='number'?String(G).padStart(2,'0'):String(G);
     return`<span class="dim">${K}·${Gs}</span>`;
   }
 
