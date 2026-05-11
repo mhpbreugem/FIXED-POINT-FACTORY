@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-11T02:31:39.355147Z",
+  "updated_at": "2026-05-11T02:37:26.053487Z",
   "params": {
     "G": 20,
     "UMAX": 5,
@@ -64,10 +64,10 @@
       "depends_on": [
         "g050_t0080"
       ],
-      "status": "ready",
+      "status": "bailed",
       "checkpoint": null,
       "result": {
-        "reason": "||F||inf=2.928e-01 > bail threshold 1e-04"
+        "reason": "||F||inf=5.835e-02 > bail threshold 1e-04"
       },
       "completed_at": null,
       "solver_params": {
@@ -4425,10 +4425,10 @@
   "summary": {
     "total": 200,
     "done": 2,
-    "ready": 55,
+    "ready": 54,
     "claimed": 0,
     "blocked": 138,
-    "bailed": 5,
+    "bailed": 6,
     "skip": 0
   },
   "fanout": {
