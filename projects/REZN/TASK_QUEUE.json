@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-10T22:19:16Z",
+  "updated_at": "2026-05-11T01:37:15.707599Z",
   "params": {
     "G": 20,
     "UMAX": 5,
@@ -131,10 +131,14 @@
       "depends_on": [
         "g050_t0200"
       ],
-      "status": "ready",
+      "status": "done",
       "checkpoint": "results/full_ree/task3_g050_t0150_mp50.json",
-      "result": null,
-      "completed_at": null,
+      "result": {
+        "F_max": 5.79e-38,
+        "converged": true,
+        "source": "manual-mark-from-progress"
+      },
+      "completed_at": "2026-05-11T01:27:43Z",
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
@@ -201,10 +205,14 @@
       "depends_on": [
         "g075_t0080"
       ],
-      "status": "blocked",
+      "status": "done",
       "checkpoint": "results/full_ree/task3_g075_t0050_mp50.json",
-      "result": null,
-      "completed_at": null,
+      "result": {
+        "F_max": 4.01e-63,
+        "converged": true,
+        "source": "manual-mark-from-progress"
+      },
+      "completed_at": "2026-05-11T01:29:19Z",
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
@@ -245,10 +253,14 @@
       "depends_on": [
         "g075_t0150"
       ],
-      "status": "ready",
+      "status": "done",
       "checkpoint": "results/full_ree/task3_g075_t0100_mp50.json",
-      "result": null,
-      "completed_at": null,
+      "result": {
+        "F_max": 1.35e-58,
+        "converged": true,
+        "source": "manual-mark-from-progress"
+      },
+      "completed_at": "2026-05-11T01:20:13Z",
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
@@ -266,10 +278,14 @@
       "depends_on": [
         "g075_t0200"
       ],
-      "status": "ready",
+      "status": "done",
       "checkpoint": "results/full_ree/task3_g075_t0150_mp50.json",
-      "result": null,
-      "completed_at": null,
+      "result": {
+        "F_max": 3.82e-66,
+        "converged": true,
+        "source": "manual-mark-from-progress"
+      },
+      "completed_at": "2026-05-11T01:19:11Z",
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
@@ -287,12 +303,14 @@
       "depends_on": [
         "g050_t0200"
       ],
-      "status": "ready",
+      "status": "done",
       "checkpoint": null,
       "result": {
-        "reason": "||F||inf=3.139e-03 > bail threshold 1e-04"
+        "F_max": 2.99e-56,
+        "converged": true,
+        "source": "manual-mark-from-progress"
       },
-      "completed_at": null,
+      "completed_at": "2026-05-11T01:27:42Z",
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
@@ -358,9 +376,13 @@
       "depends_on": [
         "g100_t0063"
       ],
-      "status": "blocked",
+      "status": "done",
       "checkpoint": null,
-      "result": null,
+      "result": {
+        "F_max": 4.39e-63,
+        "converged": true,
+        "source": "manual-mark-from-progress"
+      },
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
@@ -372,7 +394,7 @@
       "note": "Auto-requeued (attempt 1): via new ladder g100_t0063. \u00c3\u0083\u00c2\u008f\u00c3\u0082\u00c2\u0084-ladder at \u00c3\u0083\u00c2\u008f\u00c3\u0082\u00c2\u0084=0.63",
       "deps_satisfy": "any",
       "requeue_count": 1,
-      "completed_at": null,
+      "completed_at": "2026-05-11T01:32:06Z",
       "G": 15
     },
     {
@@ -405,10 +427,14 @@
       "depends_on": [
         "g100_t0150"
       ],
-      "status": "blocked",
+      "status": "done",
       "checkpoint": "results/full_ree/task3_g100_t0100_mp50.json",
-      "result": null,
-      "completed_at": null,
+      "result": {
+        "F_max": 1.91e-53,
+        "converged": true,
+        "source": "manual-mark-from-progress"
+      },
+      "completed_at": "2026-05-11T01:22:36Z",
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
@@ -470,10 +496,12 @@
       "depends_on": [
         "g100_t0200"
       ],
-      "status": "ready",
+      "status": "done",
       "checkpoint": null,
       "result": {
-        "reason": "||F||inf=1.759e-02 > bail threshold 1e-04"
+        "F_max": 1.73e-39,
+        "converged": true,
+        "source": "manual-mark-from-progress"
       },
       "solver_params": {
         "mp_dps": 200,
@@ -484,7 +512,7 @@
         "G_inner": 15
       },
       "note": "RESET bailed\u00c3\u0083\u00c2\u00a2\u00c3\u0082\u00c2\u0086\u00c3\u0082\u00c2\u0092ready",
-      "completed_at": null,
+      "completed_at": "2026-05-11T01:20:01Z",
       "G": 15
     },
     {
@@ -494,9 +522,13 @@
       "depends_on": [
         "g100_t0590"
       ],
-      "status": "ready",
+      "status": "done",
       "checkpoint": null,
-      "result": null,
+      "result": {
+        "F_max": 6.21e-55,
+        "converged": true,
+        "source": "manual-mark-from-progress"
+      },
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
@@ -506,7 +538,7 @@
         "G_inner": 15
       },
       "note": "RESET bailed\u00c3\u0083\u00c2\u00a2\u00c3\u0082\u00c2\u0086\u00c3\u0082\u00c2\u0092ready",
-      "completed_at": null,
+      "completed_at": "2026-05-11T01:30:54Z",
       "G": 15
     },
     {
