@@ -239,7 +239,7 @@
         "F_max": 1.3904e-29,
         "n_stages": 1,
         "phi_calls": 240,
-        "wall_s": 17275.7
+        "wall_s": 17360.2
       },
       "completed_at": null,
       "solver_params": {
