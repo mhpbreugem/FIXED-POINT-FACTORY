@@ -2,8 +2,8 @@
   "task_id": "test_g7",
   "worker_id": "claude-worker-1",
   "started_at": "2026-05-11T16:23:20Z",
-  "last_update": "2026-05-11T16:23:24Z",
-  "iter": 280,
+  "last_update": "2026-05-11T16:24:54Z",
+  "iter": 1,
   "ftol": "9.911464e-05",
   "ftol_history": [
     "3.367011e-04",
@@ -16,7 +16,8 @@
     "9.911464e-05"
   ],
   "extra": {
-    "phase": "anderson",
-    "n_fun": 278
+    "phase": "mp_newton",
+    "n_fun": 1,
+    "n_jac": 0
   }
 }
