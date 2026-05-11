@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-11T02:37:26.053487Z",
+  "updated_at": "2026-05-11T02:43:01.349613Z",
   "params": {
     "G": 20,
     "UMAX": 5,
@@ -324,10 +324,10 @@
         "g100_t0080"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "bailed",
       "checkpoint": null,
       "result": {
-        "reason": "||F||inf=5.643e-01 > bail threshold 1e-04"
+        "reason": "||F||inf=1.043e-01 > bail threshold 1e-04"
       },
       "note": "\u00c3\u0083\u00c2\u008f\u00c3\u0082\u00c2\u0084-ladder between g100_t0080 (\u00c3\u0083\u00c2\u008f\u00c3\u0082\u00c2\u0084=0.8) and g100_t0050 (\u00c3\u0083\u00c2\u008f\u00c3\u0082\u00c2\u0084=0.5).",
       "completed_at": null,
@@ -4425,10 +4425,10 @@
   "summary": {
     "total": 200,
     "done": 2,
-    "ready": 54,
+    "ready": 53,
     "claimed": 0,
     "blocked": 138,
-    "bailed": 6,
+    "bailed": 7,
     "skip": 0
   },
   "fanout": {
