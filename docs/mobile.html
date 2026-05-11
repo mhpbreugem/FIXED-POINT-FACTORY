@@ -132,7 +132,7 @@
   .live    { color:var(--claimed); }
   .muted   { color:var(--muted); }
   .err     { color:var(--bailed); }
-  .dim     { color:#3a3a3a; }
+  .dim     { color:#888; }
   .stage-a { color:#b08000; font-weight:700; }
   .stage-n { color:#2a7adf; font-weight:700; }
 
@@ -185,8 +185,8 @@
       <th onclick="sortBy('id')">id</th>
       <th onclick="sortBy('status')">st</th>
       <th class="dim">K·G</th>
-      <th onclick="sortBy('gamma')">γ</th>
-      <th onclick="sortBy('tau')">τ</th>
+      <th class="dim" onclick="sortBy('gamma')">γ</th>
+      <th class="dim" onclick="sortBy('tau')">τ</th>
       <th onclick="sortBy('F_max')">F</th>
       <th>F₋₁</th>
       <th>1-R²</th><th>Vi</th><th>TV</th>
@@ -352,8 +352,8 @@
         <td>${esc(shortId(t.id))}</td>
         <td class="st-${ds}">${ST2[ds]||ds.slice(0,4)}</td>
         <td>${fmtKG(t)}</td>
-        <td>${sig4(t.gamma)??""}</td>
-        <td>${sig4(t.tau)??""}</td>
+        <td class="dim">${sig4(t.gamma)??""}</td>
+        <td class="dim">${sig4(t.tau)??""}</td>
         <td class="enorm">${fStr}</td>
         <td class="muted">${fPrev}</td>
         <td>${ds==="done"?fmtR2(r["1-R2"]):""}</td>
