@@ -254,8 +254,8 @@
       "depends_on": [
         "g075_t0150"
       ],
-      "status": "blocked",
-      "checkpoint": null,
+      "status": "ready",
+      "checkpoint": "projects/REZN/checkpoints/g075_t0100.npz",
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
@@ -266,9 +266,13 @@
         "u_inner_max": 4.0
       },
       "G": 20,
-      "claimed_by": null,
-      "claimed_at": null,
-      "result": null,
+      "result": {
+        "1-R2": 0.04144783,
+        "F_max": 5.4461e-79,
+        "n_stages": 1,
+        "phi_calls": 132,
+        "wall_s": 17242.6
+      },
       "completed_at": null
     },
     {
@@ -4935,9 +4939,13 @@
     }
   ],
   "summary": {
+    "total": 200,
     "done": 1,
-    "blocked": 156,
-    "ready": 43
+    "ready": 41,
+    "claimed": 3,
+    "blocked": 155,
+    "bailed": 0,
+    "skip": 0
   },
   "fanout": {
     "g050": [
