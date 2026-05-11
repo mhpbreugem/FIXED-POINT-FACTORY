@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-11T12:37:33.546125Z",
+  "updated_at": "2026-05-11T13:31:42.520252Z",
   "params": {
     "G": 20,
     "UMAX": 5,
@@ -131,7 +131,7 @@
       "depends_on": [
         "g050_t0200"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": "results/full_ree/task3_g050_t0150_mp50.json",
       "solver_params": {
         "mp_dps": 200,
@@ -141,9 +141,7 @@
         "tol": 5e-07,
         "G_inner": 15
       },
-      "G": 15,
-      "claimed_by": "gha-25659244652-g050_t0150",
-      "claimed_at": "2026-05-11T08:32:32Z"
+      "G": 15
     },
     {
       "id": "g050_t0200",
