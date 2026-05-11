@@ -66,7 +66,7 @@
     padding: 2px 3px; border-bottom:1px solid #1e1e1e;
   }
   .pill {
-    font-size:8.9px; font-weight:700; padding:1px 4px;
+    font-size:8.9px; font-weight:700; padding:2px 7px;
     border-radius:2px; cursor:pointer; color:#fff;
   }
   .pill.done    { background:var(--done); }
@@ -173,8 +173,8 @@
       <col style="width:7%"> <!-- γ -->
       <col style="width:7%"> <!-- τ -->
       <col style="width:9%"> <!-- F -->
-      <col style="width:9%"> <!-- F₋₁ -->
-      <col style="width:6%"> <!-- 1-R² -->
+      <col style="width:8%"> <!-- F₋₁ -->
+      <col style="width:7%"> <!-- 1-R² -->
       <col style="width:6%"> <!-- Vi -->
       <col style="width:6%"> <!-- TV -->
       <col style="width:7%"> <!-- stage -->
@@ -238,7 +238,7 @@
   function sig3(v){return v!=null?parseFloat(Number(v).toPrecision(3)):null;}
   function sig4(v){return v!=null?parseFloat(Number(v).toPrecision(4)):null;}
   function fmtF(v){if(v==null)return"—";return Number(v).toExponential(0);}
-  function fmtR2(v){if(v==null)return"—";return Number(v).toFixed(3).replace(/^0/,"");}
+  function fmtR2(v){if(v==null)return"—";return Number(v).toFixed(4).replace(/^0/,"");}
   function fmtSig3(v){const n=sig3(v);return n!=null?String(n):"—";}
   function fmtDate(iso){const d=new Date(iso);return`${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;}
 
@@ -368,29 +368,25 @@
 
   function sortBy(col){if(sortCol===col)sortAsc=!sortAsc;else{sortCol=col;sortAsc=true;}renderTasks();}
 
-  const _psha={},_prevFtol={};
+  const _prevFtol={};
   async function loadProgress(){
-    try{
-      const pDir=await fj(apiUrl(`projects/${PROJECT}/progress`));
-      if(!Array.isArray(pDir))return;
-      const activeNames=new Set(pDir.filter(f=>f.name.endsWith(".json")).map(f=>f.name));
-      let changed=false;
-      for(const fn of Object.keys(_psha)){
-        if(!activeNames.has(fn)){delete _psha[fn];delete progressData[fn.replace(".json","")];_qSha=null;changed=true;}
+    if(!taskData)return;
+    const claimed=taskData.tasks.filter(t=>t.status==="claimed");
+    // Remove stale entries for tasks no longer claimed
+    const claimedIds=new Set(claimed.map(t=>t.id));
+    for(const id of Object.keys(progressData)){if(!claimedIds.has(id))delete progressData[id];}
+    // Fetch each claimed task's progress file directly — no directory listing needed
+    await Promise.all(claimed.map(async t=>{
+      const path=`projects/${PROJECT}/progress/${t.id}.json`;
+      try{
+        const d=getPat()?await apiContent(path):await fj(rawUrl(path));
+        if(progressData[t.id]?.ftol!=null)_prevFtol[t.id]=progressData[t.id].ftol;
+        progressData[t.id]=d;
+      }catch(e){
+        if(String(e.message)==='404')delete progressData[t.id];
       }
-      await Promise.all(pDir.filter(f=>f.name.endsWith(".json")).map(async f=>{
-        if(_psha[f.name]===f.sha)return;
-        const isNew=!(f.name in _psha);
-        try{
-          const d=getPat()?await apiContent(`projects/${PROJECT}/progress/${f.name}`):await fj(rawUrl(`projects/${PROJECT}/progress/${f.name}`));
-          if(progressData[d.task_id]?.ftol!=null)_prevFtol[d.task_id]=progressData[d.task_id].ftol;
-          progressData[d.task_id]=d;_psha[f.name]=f.sha;
-          if(isNew){_qSha=null;changed=true;}
-        }catch{}
-      }));
-      if(changed)loadTasks().catch(()=>{});
-      else renderTasks(); // refresh elapsed times / live ftol without reloading queue
-    }catch{}
+    }));
+    renderTasks();
   }
 
   function taskById(id){return taskMap.get(id)||null;}
