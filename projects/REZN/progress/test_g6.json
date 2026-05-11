@@ -1,0 +1,10 @@
+{
+  "task_id": "test_g6",
+  "worker_id": "claude-worker-1",
+  "started_at": "2026-05-11T16:57:39Z",
+  "last_update": "2026-05-11T16:57:39Z",
+  "iter": null,
+  "ftol": null,
+  "ftol_history": [],
+  "extra": {}
+}
