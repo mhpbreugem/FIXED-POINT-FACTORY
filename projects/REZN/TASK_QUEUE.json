@@ -23,12 +23,16 @@
       "id": "test_g6",
       "gamma": 0.5,
       "tau": 2.0,
-      "status": "claimed",
-      "checkpoint": null,
-      "result": null,
-      "completed_at": null,
-      "claimed_at": "2026-05-11T16:57:33.525362Z",
-      "claimed_by": "claude-worker-1",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/test_g6.npz",
+      "result": {
+        "1-R2": 0.09532086,
+        "F_max": 2.4829e-103,
+        "n_stages": 1,
+        "phi_calls": 753,
+        "wall_s": 1361.8
+      },
+      "completed_at": "2026-05-11T17:20:22.327326Z",
       "depends_on": [],
       "solver_params": {
         "G_inner": 6,
@@ -4962,9 +4966,9 @@
   ],
   "summary": {
     "total": 201,
-    "done": 1,
+    "done": 2,
     "ready": 43,
-    "claimed": 2,
+    "claimed": 1,
     "blocked": 155,
     "bailed": 0,
     "skip": 0
