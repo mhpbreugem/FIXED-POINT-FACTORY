@@ -118,10 +118,12 @@
         "test_g6"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
-      "note": "\u03c4-ladder between test_g6 (\u03c4=2.0) and g050_t0160 (\u03c4=1.6)."
+      "note": "\u03c4-ladder between test_g6 (\u03c4=2.0) and g050_t0160 (\u03c4=1.6).",
+      "claimed_by": "gha-25704426148-g050_t0180",
+      "claimed_at": "2026-05-11T23:55:43Z"
     },
     {
       "id": "g050_t0160",
