@@ -541,7 +541,15 @@
         return[wRow(p.task_id,ageMs,p)];
       });
 
-    const all=[...hbRows,...progRows];
+    // Claimed tasks with no heartbeat/progress yet (just claimed, solver not started)
+    const seenTids=new Set([...hbRows,...progRows].length?
+      [...Object.values(progressData).map(p=>p.task_id),(workerData||[]).map(f=>f.name.replace(".txt",""))].flat():
+      []);
+    const claimedRows=(taskData?.tasks||[])
+      .filter(t=>t.status==="claimed"&&!seenTids.has(t.id))
+      .map(t=>wRow(t.id,null,null));
+
+    const all=[...hbRows,...progRows,...claimedRows];
     if(!all.length){el.innerHTML=`<span class="muted">no active workers</span>`;return;}
     el.innerHTML=`<div class="muted" style="padding:2px 0">workers (${all.length})</div>
       <table>
@@ -632,6 +640,7 @@
   }
   async function pollProgress(){
     try{await Promise.all([loadWorkers(),loadProgress()]);_lp=Date.now();}catch{}
+    if(document.getElementById("tab-workers")?.classList.contains("active"))renderWorkersSection();
     tick();
   }
   async function pollQueue(){
