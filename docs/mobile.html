@@ -21,50 +21,29 @@
     color: var(--fg);
   }
 
-  /* ── sticky top controls ── */
-  #topbar {
+  /* ── single bar ── */
+  #bar {
     position: sticky; top:0; z-index:20;
-    background: #1a1a1a;
-    border-bottom: 1px solid #333;
+    background: #1a1a1a; border-bottom: 1px solid #333;
     padding: 2px 3px;
-    display: flex; flex-wrap: wrap; gap: 2px; align-items: center;
+    display: flex; flex-wrap: wrap; gap: 3px; align-items: center;
     overflow-x: hidden; max-width: 100vw;
   }
-  #pat-input {
-    font-family: inherit; font-size: 10.1px;
-    background: #222; color: #bbb; border: 1px solid #444;
-    border-radius: 2px; padding: 2px 3px;
-    width: min(130px, 35vw); min-width: 0;
-  }
+  #pills { display:flex; flex-wrap:wrap; gap:2px; align-items:center; }
   .btn {
     font-family: inherit; font-size: 10.1px; font-weight: 700;
     border: none; border-radius: 2px; padding: 2px 5px;
     cursor: pointer; color: #fff; white-space: nowrap; flex-shrink:0;
+    background:#333;
   }
-  .b-bail   { background:#7a1808; }
-  .b-rel    { background:#5a4200; }
-  .b-go     { background:#1a5e2a; }
-  .b-stop   { background:#5e1a1a; }
-  .b-ref    { background:#333; }
-  #worker-count {
-    font-family: inherit; font-size: 10.1px;
-    background:#222; color:#bbb; border:1px solid #444;
-    border-radius:2px; padding:2px; width:28px; text-align:center;
-  }
-
-  /* ── meta / ticker ── */
-  #metabar {
+  #meta-right {
+    margin-left: auto;
     font-size: 7.6px; color: var(--muted);
-    padding: 1px 3px; border-bottom: 1px solid #1e1e1e;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  #status-msg { color: var(--claimed); }
+  #status-msg { font-size:8.9px; color:var(--claimed); white-space:nowrap; }
 
   /* ── summary pills ── */
-  #summary {
-    display:flex; flex-wrap:wrap; gap:2px;
-    padding: 2px 3px; border-bottom:1px solid #1e1e1e;
-  }
   .pill {
     font-size:8.9px; font-weight:700; padding:3px 13px;
     border-radius:2px; cursor:pointer; color:#fff;
@@ -88,6 +67,12 @@
     border-radius:2px; padding:1px 3px; flex:1; min-width:0;
   }
 
+  /* ── footer ── */
+  #footer {
+    font-size:7px; color:#444; text-align:center;
+    padding: 6px 0 4px; border-top:1px solid #1e1e1e; margin-top:4px;
+  }
+
   /* ── THE TABLE — fixed layout, no horizontal scroll ── */
   table {
     border-collapse: collapse;
@@ -109,16 +94,17 @@
   th {
     background: var(--hdr);
     font-weight: 700;
-    font-size: 7.6px;
+    font-size: 5.3px;
     color: #888;
     cursor: pointer;
     text-align: left;
+    height: 9px;
   }
   th:hover { background:#2a2a2a; }
   tr:nth-child(even) td { background: var(--rowalt); }
   tr.row-claimed td { background:#1c1500 !important; }
 
-  th, td { height: 12px; }
+  td { height: 12px; }
 
   /* status colours */
   .st-done    { color:var(--done);    font-weight:700; }
@@ -143,26 +129,18 @@
 </head>
 <body>
 
-<div id="topbar">
-  <input type="password" id="pat-input" placeholder="GitHub PAT" oninput="savePat();debouncedLoad();">
-  <button class="btn b-bail"  onclick="resetByStatus('bailed')">b→r</button>
-  <button class="btn b-rel"   onclick="resetByStatus('claimed')">c→r</button>
-  <input  type="number" id="worker-count" value="20" min="1" max="50">
-  <button class="btn b-go"    onclick="launchWorkers()">▶</button>
-  <button class="btn b-stop"  onclick="cancelAllRuns()">✕</button>
-  <button class="btn b-ref"   onclick="loadAll()">⟳</button>
-  <button class="btn b-ref"   onclick="downloadAll()">⬇</button>
-  <span id="status-msg" style="font-size:8.9px"></span>
-</div>
-
-<div id="metabar">
-  <span id="meta">loading…</span>&nbsp;·&nbsp;<span id="ticker"></span>
-  <br><span id="site-mod"></span>
+<div id="bar">
+  <div id="pills"></div>
+  <button class="btn" onclick="downloadAll()">⬇</button>
+  <button class="btn" onclick="loadAll()">⟳</button>
+  <span id="meta-right">
+    <span id="meta">…</span> · <span id="ticker"></span> · <span id="site-mod"></span>
+  </span>
+  <span id="status-msg"></span>
 </div>
 
 <!-- TASKS -->
 <div id="tab-tasks">
-  <div id="summary"></div>
   <div id="filterbar">
     <input type="text" id="filter" placeholder="filter…" oninput="renderTasks()">
   </div>
@@ -206,14 +184,7 @@
   let sortCol="id", sortAsc=true;
   let taskMap=new Map(); // rebuilt on each taskData load → O(1) lookups
 
-  // PAT
-  function savePat(){const v=document.getElementById('pat-input').value.trim();v?localStorage.setItem('fpf_pat',v):localStorage.removeItem('fpf_pat');}
   function getPat(){return localStorage.getItem('fpf_pat')||'';}
-  window.addEventListener('DOMContentLoaded',()=>{const p=getPat();if(p)document.getElementById('pat-input').value=p;});
-
-  // Debounce: fire loadAll once 600ms after the last PAT keystroke
-  let _patTimer=null;
-  function debouncedLoad(){clearTimeout(_patTimer);_patTimer=setTimeout(loadAll,600);}
 
   function setMsg(t,ms=0){const e=document.getElementById('status-msg');e.textContent=t;if(ms)setTimeout(()=>e.textContent='',ms);}
 
@@ -224,10 +195,7 @@
   async function fj(url){const r=await fetch(url,{cache:"no-store",headers:authH()});if(!r.ok)throw new Error(r.status);return r.json();}
   async function apiContent(path){const m=await fj(apiUrl(path));if(m.content)return JSON.parse(atob(m.content.replace(/\n/g,"")));return fj(rawUrl(path));}
 
-  // UTF-8–safe btoa
-  function toB64(str){const b=new TextEncoder().encode(str);return btoa(Array.from(b,x=>String.fromCharCode(x)).join(''));}
-
-  function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 
   // Formatting helpers — defined once, reused everywhere
   const _sidCache=new Map();
@@ -320,7 +288,7 @@
     const counts={};
     tasks.forEach(t=>{const ds=dsMap.get(t.id);counts[ds]=(counts[ds]||0)+1;});
     const order=["done","claimed","ready","blocked","bailed","skip"];
-    document.getElementById("summary").innerHTML=
+    document.getElementById("pills").innerHTML=
       order.filter(s=>counts[s]).map(s=>{
         const sel=fv===s?' style="outline:2px solid #fff"':'';
         return`<span class="pill ${s}" onclick="(function(){var f=document.getElementById('filter');f.value=f.value.toLowerCase()==='${s}'?'':'${s}';renderTasks();})()"${sel}>${s[0]}:${counts[s]}</span>`;
@@ -394,54 +362,6 @@
   function taskById(id){return taskMap.get(id)||null;}
 
   // Actions
-  async function resetByStatus(fromStatus){
-    const pat=getPat();if(!pat){alert('Paste a PAT first.');return;}
-    setMsg('…');
-    const qpath=`projects/${PROJECT}/TASK_QUEUE.json`;
-    try{
-      const meta=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${qpath}?ref=${BRANCH}`,
-        {headers:{Authorization:`token ${pat}`}}).then(r=>r.json());
-      const content=JSON.parse(atob(meta.content.replace(/\n/g,'')));
-      let n=0;
-      for(const t of content.tasks){
-        if(t.status===fromStatus){t.status='ready';['worker','claimed_by','claimed_at','worker_id'].forEach(k=>delete t[k]);n++;}
-      }
-      if(!n){setMsg(`0 ${fromStatus}`,3000);return;}
-      const res=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${qpath}`,{
-        method:'PUT',headers:{Authorization:`token ${pat}`,'Content-Type':'application/json'},
-        body:JSON.stringify({message:`Reset ${n} ${fromStatus}→ready`,content:toB64(JSON.stringify(content,null,2)),sha:meta.sha,branch:BRANCH})
-      });
-      if(!res.ok)throw new Error(res.status);
-      setMsg(`✓ ${n} reset`,3000);setTimeout(()=>pollQueue(),1500);
-    }catch(e){setMsg(`✗ ${e.message}`,4000);}
-  }
-
-  async function launchWorkers(){
-    const pat=getPat();if(!pat){alert('PAT required');return;}
-    const n=document.getElementById('worker-count').value||'20';
-    setMsg('…');
-    try{
-      const res=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/workflows/solve.yml/dispatches`,
-        {method:'POST',headers:{Authorization:`token ${pat}`,'Content-Type':'application/json'},
-         body:JSON.stringify({ref:BRANCH,inputs:{workers:String(n)}})});
-      if(!res.ok)throw new Error(res.status);
-      setMsg(`✓ ${n}w`,3000);
-    }catch(e){setMsg(`✗ ${e.message}`,4000);}
-  }
-
-  async function cancelAllRuns(){
-    const pat=getPat();if(!pat){alert('PAT required');return;}
-    setMsg('…');
-    try{
-      const runs=await fj(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs?status=in_progress&per_page=50`);
-      const active=runs.workflow_runs||[];
-      if(!active.length){setMsg('0 runs',3000);return;}
-      await Promise.all(active.map(r=>fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs/${r.id}/cancel`,
-        {method:'POST',headers:{Authorization:`token ${pat}`}})));
-      setMsg(`✓ cancelled ${active.length}`,3000);
-    }catch(e){setMsg(`✗ ${e.message}`,4000);}
-  }
-
   async function downloadAll(){
     if(!taskData){alert('Load tasks first');return;}
 
@@ -524,5 +444,6 @@
     if(stale)loadAll();
   });
 </script>
+<div id="footer">(c) Matthijs Breugem</div>
 </body>
 </html>
