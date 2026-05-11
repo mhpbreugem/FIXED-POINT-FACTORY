@@ -236,10 +236,10 @@
       "checkpoint": "projects/REZN/checkpoints/g050_t0200.npz",
       "result": {
         "1-R2": 0.08943085,
-        "F_max": 1.3904e-29,
+        "F_max": 7.3367e-37,
         "n_stages": 1,
         "phi_calls": 240,
-        "wall_s": 17360.2
+        "wall_s": 17913.5
       },
       "completed_at": null,
       "solver_params": {
