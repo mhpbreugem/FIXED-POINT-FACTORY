@@ -172,11 +172,11 @@
       <col style="width:9%"> <!-- F -->
       <col style="width:8%"> <!-- F₋₁ -->
       <col style="width:8%"> <!-- 1-R² -->
-      <col style="width:9%"> <!-- Vi -->
+      <col style="width:10%"> <!-- Vi -->
       <col style="width:7%"> <!-- TV -->
       <col style="width:7%"> <!-- stage -->
       <col style="width:9%"> <!-- time -->
-      <col style="width:7%"> <!-- last -->
+      <col style="width:6%"> <!-- last -->
     </colgroup>
     <thead><tr>
       <th onclick="sortBy('id')">id</th>
@@ -277,6 +277,7 @@ function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").repl
   function fmtR2(v){if(v==null)return"—";return Number(v).toFixed(4).replace(/^0/,"");}
   function fmtSig3(v){const n=sig3(v);return n!=null?String(n):"—";}
   function fmtSig4(v){const n=sig4(v);return n!=null?String(n):"—";}
+  function fmtSig5(v){return v!=null?String(parseFloat(Number(v).toPrecision(5))):"—";}
   function fmtDate(iso){const d=new Date(iso);return`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;}
 
   // Stage label: Axxx (Anderson) or Nxxx (Newton/mp)
@@ -395,7 +396,7 @@ function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").repl
         <td class="enorm">${fStr}</td>
         <td class="muted">${fPrev}</td>
         <td>${ds==="done"?fmtR2(r["1-R2"]):""}</td>
-        <td class="muted">${ds==="done"?fmtSig4(r.Vi):""}</td>
+        <td class="muted">${ds==="done"?fmtSig5(r.Vi):""}</td>
         <td class="muted">${ds==="done"?fmtSig3(r.TV):""}</td>
         <td>${isCl?stageStr(pr):""}</td>
         <td class="muted">${fmtTime(t,pr)}</td>
