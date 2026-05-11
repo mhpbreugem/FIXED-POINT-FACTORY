@@ -151,6 +151,7 @@
   <button class="btn b-go"    onclick="launchWorkers()">▶</button>
   <button class="btn b-stop"  onclick="cancelAllRuns()">✕</button>
   <button class="btn b-ref"   onclick="loadAll()">⟳</button>
+  <button class="btn b-ref"   onclick="downloadAll()">⬇</button>
   <span id="status-msg" style="font-size:8.9px"></span>
 </div>
 
@@ -439,6 +440,47 @@
         {method:'POST',headers:{Authorization:`token ${pat}`}})));
       setMsg(`✓ cancelled ${active.length}`,3000);
     }catch(e){setMsg(`✗ ${e.message}`,4000);}
+  }
+
+  async function downloadAll(){
+    if(!taskData){alert('Load tasks first');return;}
+    const done=(taskData.tasks||[]).filter(t=>t.status==="done"&&!t.test);
+    if(!done.length){setMsg('No completed tasks',3000);return;}
+    setMsg('Loading JSZip…');
+    if(!window.JSZip){
+      await new Promise((res,rej)=>{
+        const s=document.createElement('script');
+        s.src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+        s.onload=res;s.onerror=()=>rej(new Error('JSZip load failed'));
+        document.head.appendChild(s);
+      });
+    }
+    const zip=new JSZip();
+    zip.file('metadata.json',JSON.stringify(done.map(t=>({
+      id:t.id,gamma:t.gamma,tau:t.tau,G:t.G,K:t.K,
+      result:t.result,completed_at:t.completed_at,checkpoint:t.checkpoint
+    })),null,2));
+    const withCkpt=done.filter(t=>t.checkpoint);
+    let n=0;
+    setMsg(`Fetching 0/${withCkpt.length}…`);
+    await Promise.all(withCkpt.map(async t=>{
+      try{
+        const url=`https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${t.checkpoint}`;
+        const r=await fetch(url,{headers:authH()});
+        if(!r.ok)return;
+        const buf=await r.arrayBuffer();
+        zip.file(t.checkpoint.split('/').pop(),buf);
+        setMsg(`Fetching ${++n}/${withCkpt.length}…`);
+      }catch{}
+    }));
+    setMsg('Zipping…');
+    const blob=await zip.generateAsync({type:'blob',compression:'STORE'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=`REZN_solutions_${new Date().toISOString().slice(0,10)}.zip`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    setMsg(`✓ ${n} checkpoint${n!==1?'s':''} + metadata.json`,5000);
   }
 
   // Poll loops — pause when page is hidden
