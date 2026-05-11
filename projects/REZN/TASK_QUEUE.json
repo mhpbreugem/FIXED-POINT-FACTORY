@@ -118,7 +118,7 @@
         "g050_t0100",
         "test_g6"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
@@ -134,7 +134,9 @@
       "G": 16,
       "deps_satisfy": "any",
       "requeue_count": 1,
-      "note": "Auto-requeued (attempt 1): warm-start from test_g6 (log-dist=0.92)."
+      "note": "Auto-requeued (attempt 1): warm-start from test_g6 (log-dist=0.92).",
+      "claimed_by": "gha-25690641808-g050_t0080",
+      "claimed_at": "2026-05-11T18:54:21Z"
     },
     {
       "id": "g050_t0100",
