@@ -185,13 +185,15 @@
   </div>
   <table>
     <colgroup>
-      <col style="width:26%"><!-- id -->
-      <col style="width:7%"> <!-- st -->
-      <col style="width:9%"> <!-- γ -->
-      <col style="width:9%"> <!-- τ -->
-      <col style="width:17%"><!-- ‖F‖ -->
-      <col style="width:22%"><!-- phase/live -->
-      <col style="width:10%"><!-- t -->
+      <col style="width:19%"><!-- id -->
+      <col style="width:5%"> <!-- st -->
+      <col style="width:6%"> <!-- γ -->
+      <col style="width:6%"> <!-- τ -->
+      <col style="width:12%"><!-- ‖F‖ -->
+      <col style="width:14%"><!-- phase/live -->
+      <col style="width:9%"> <!-- Vi -->
+      <col style="width:9%"> <!-- TV -->
+      <col style="width:20%"><!-- t -->
     </colgroup>
     <thead><tr>
       <th onclick="sortBy('id')">id</th>
@@ -200,6 +202,8 @@
       <th onclick="sortBy('tau')">τ</th>
       <th onclick="sortBy('F_max')">‖F‖</th>
       <th>phase</th>
+      <th>Vi</th>
+      <th>TV</th>
       <th onclick="sortBy('completed_at')">t</th>
     </tr></thead>
     <tbody id="task-body"></tbody>
@@ -351,7 +355,7 @@
 
     const filtered=tasks.filter(t=>{
       const ds=dsMap.get(t.id);
-      if(ds==="done")return false; // done tasks live in the Done tab
+      if(ds==="done"&&fv!=="done")return false; // done tasks hidden unless filtered
       if(!fv)return true;
       return t.id.toLowerCase().includes(fv)||ds.toLowerCase().includes(fv)||
              String(t.gamma||"").includes(fv)||String(t.tau||"").includes(fv);
@@ -378,6 +382,8 @@
         <td>${sig3(t.tau)??""}</td>
         <td class="enorm">${fStr}</td>
         <td class="live">${isCl?phase(pr):""}</td>
+        <td class="muted">${ds==="done"?fmtSig3(r.Vi):""}</td>
+        <td class="muted">${ds==="done"?fmtSig3(r.TV):""}</td>
         <td class="muted">${fmtT(t,pr)}</td>
       </tr>`;
     }).join("");
@@ -408,7 +414,7 @@
   async function loadWorkers(){
     try{const d=await fj(apiUrl(`projects/${PROJECT}/heartbeats`));workerData=Array.isArray(d)?d:[];}catch{workerData=[];}
   }
-  const _psha={};
+  const _psha={},_prevFtol={};
   async function loadProgress(){
     try{
       const pDir=await fj(apiUrl(`projects/${PROJECT}/progress`));
@@ -423,6 +429,7 @@
         const isNew=!(f.name in _psha);
         try{
           const d=getPat()?await apiContent(`projects/${PROJECT}/progress/${f.name}`):await fj(rawUrl(`projects/${PROJECT}/progress/${f.name}`));
+          if(progressData[d.task_id]?.ftol!=null)_prevFtol[d.task_id]=progressData[d.task_id].ftol;
           progressData[d.task_id]=d;_psha[f.name]=f.sha;
           if(isNew){_qSha=null;changed=true;}
         }catch{}
@@ -457,12 +464,15 @@
     }
     function wRow(tid,ageMs,pr){
       const {g,tau,K}=workerParams(tid);
+      const curr=pr?.ftol!=null?fmtF(pr.ftol):null;
+      const prev=_prevFtol[tid]!=null&&_prevFtol[tid]!==pr?.ftol?fmtF(_prevFtol[tid]):null;
+      const fStr=curr!=null?(prev!=null?`${prev}→${curr}`:curr):"—";
       return`<tr>
         <td>${esc(shortId(tid))}</td>
         <td>${g}</td><td>${tau}</td><td>${K}</td>
         <td>${ageStr(ageMs)}</td>
         <td class="live">${pr?phase(pr):"—"}</td>
-        <td class="enorm">${pr?.ftol!=null?fmtF(pr.ftol):"—"}</td>
+        <td class="enorm">${fStr}</td>
         <td><button onclick="releaseWorker('${esc(tid)}')" class="btn b-rel" style="padding:0 3px">r</button></td>
       </tr>`;
     }
