@@ -87,7 +87,7 @@
       "depends_on": [
         "g050_t0100"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": {
         "reason": "||F||inf=1.854e-03 > bail threshold 1e-04"
@@ -101,7 +101,9 @@
         "tol": 5e-07,
         "G_inner": 15
       },
-      "G": 15
+      "G": 15,
+      "claimed_by": "gha-25674703321-g050_t0080",
+      "claimed_at": "2026-05-11T13:57:20Z"
     },
     {
       "id": "g050_t0100",
