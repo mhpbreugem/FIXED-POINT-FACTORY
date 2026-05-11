@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-11T14:36:54.444262Z",
+  "updated_at": "2026-05-11T16:22:31.065612Z",
   "params": {
     "G": 20,
     "UMAX": 4.0,
@@ -19,6 +19,29 @@
     "dps": 300
   },
   "tasks": [
+    {
+      "id": "test_g7",
+      "gamma": 0.5,
+      "tau": 2.0,
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "completed_at": null,
+      "claimed_at": null,
+      "claimed_by": null,
+      "depends_on": [],
+      "solver_params": {
+        "G_inner": 7,
+        "u_inner_max": 4.0,
+        "mp_dps": 50,
+        "mp_tol": "1e-25",
+        "mp_iters": 10,
+        "presmooth": 0,
+        "tol": 1e-06
+      },
+      "G": 7,
+      "note": "claude-worker G=7 pipeline test"
+    },
     {
       "id": "test_ci_smoke",
       "gamma": 1,
