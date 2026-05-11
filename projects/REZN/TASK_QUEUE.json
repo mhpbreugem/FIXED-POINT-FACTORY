@@ -4295,12 +4295,18 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "claimed",
-      "claimed_by": "gha-25690827466-g025_t0150",
-      "claimed_at": "2026-05-11T18:57:50Z",
+      "status": "ready",
       "completed_at": null,
-      "checkpoint": null,
-      "result": null,
+      "checkpoint": "projects/REZN/checkpoints/g025_t0150.npz",
+      "result": {
+        "1-R2": 0.09396767,
+        "F_max": 8.4884e-52,
+        "TV": 1.51751,
+        "Vi": 56999262.866612,
+        "n_stages": 1,
+        "phi_calls": 2077,
+        "wall_s": 17847.7
+      },
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
         "mp_dps": 200,
