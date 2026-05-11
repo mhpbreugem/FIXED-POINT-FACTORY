@@ -368,7 +368,8 @@ def _update_summary(queue: dict) -> None:
 def _unblock_downstream(queue: dict) -> list[str]:
     """Flip blocked tasks whose deps are now fully satisfied to ready."""
     done_ids = {t["id"] for t in queue["tasks"] if t["status"] == "done"}
-    default_mode = queue.get("deps_semantics", {}).get("default", "all")
+    deps_sem = queue.get("deps_semantics", {})
+    default_mode = deps_sem.get("default", "all") if isinstance(deps_sem, dict) else "all"
     unblocked = []
     for t in queue["tasks"]:
         if t["status"] != "blocked":
