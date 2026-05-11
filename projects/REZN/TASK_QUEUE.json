@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-11T12:11:51.546393Z",
+  "updated_at": "2026-05-11T12:28:10.863267Z",
   "params": {
     "G": 20,
     "UMAX": 5,
@@ -41,10 +41,10 @@
       "depends_on": [
         "g050_t0050"
       ],
-      "status": "claimed",
+      "status": "bailed",
       "checkpoint": null,
       "result": {
-        "reason": "||F||inf=7.622e-02 > bail threshold 1e-04"
+        "reason": "||F||inf=3.414e-01 > bail threshold 1e-04"
       },
       "completed_at": null,
       "solver_params": {
@@ -55,9 +55,7 @@
         "tol": 5e-07,
         "G_inner": 15
       },
-      "G": 15,
-      "claimed_by": "gha-25656194809-g050_t0030",
-      "claimed_at": "2026-05-11T07:23:17Z"
+      "G": 15
     },
     {
       "id": "g050_t0050",
@@ -4438,9 +4436,9 @@
     "total": 200,
     "done": 2,
     "ready": 52,
-    "claimed": 7,
+    "claimed": 6,
     "blocked": 138,
-    "bailed": 1,
+    "bailed": 2,
     "skip": 0
   },
   "fanout": {
