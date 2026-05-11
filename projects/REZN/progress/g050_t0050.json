@@ -2,11 +2,11 @@
   "task_id": "g050_t0050",
   "worker_id": "gha-25641312234-g050_t0050",
   "started_at": "2026-05-11T02:58:53Z",
-  "last_update": "2026-05-11T02:59:26Z",
-  "iter": 417,
-  "ftol": "1.672778e-03",
+  "last_update": "2026-05-11T02:59:37Z",
+  "iter": 579,
+  "ftol": "2.077164e-03",
   "extra": {
     "phase": "anderson",
-    "n_fun": 417
+    "n_fun": 579
   }
 }
