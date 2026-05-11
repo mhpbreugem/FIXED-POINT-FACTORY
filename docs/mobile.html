@@ -213,17 +213,16 @@
 <div id="tab-done" class="tab-content">
   <table id="done-table">
     <colgroup>
-      <col style="width:20%"><!-- id -->
-      <col style="width:7%"> <!-- γ -->
-      <col style="width:7%"> <!-- τ -->
-      <col style="width:11%"><!-- ‖F‖ -->
-      <col style="width:9%"> <!-- 1-R² -->
-      <col style="width:12%"><!-- Vi -->
-      <col style="width:12%"><!-- TV -->
-      <col style="width:22%"><!-- when -->
+      <col style="width:22%"><!-- id -->
+      <col style="width:8%"> <!-- γ -->
+      <col style="width:8%"> <!-- τ -->
+      <col style="width:13%"><!-- ‖F‖ -->
+      <col style="width:10%"><!-- 1-R² -->
+      <col style="width:10%"><!-- K -->
+      <col style="width:29%"><!-- when -->
     </colgroup>
     <thead><tr>
-      <th>id</th><th>γ</th><th>τ</th><th>‖F‖</th><th>1-R²</th><th>Vi</th><th>TV</th><th>when</th>
+      <th>id</th><th>γ</th><th>τ</th><th>‖F‖</th><th>1-R²</th><th>K</th><th>when</th>
     </tr></thead>
     <tbody id="done-body"></tbody>
   </table>
@@ -395,8 +394,7 @@
         <td>${sig3(t.tau)??""}</td>
         <td class="enorm">${fmtF(r.F_max)}</td>
         <td>${fmtR2(r["1-R2"])}</td>
-        <td class="muted">${fmtSig3(r.Vi)}</td>
-        <td class="muted">${fmtSig3(r.TV)}</td>
+        <td class="muted">${r.K??r.n_cells??""}</td>
         <td class="muted">${fmtDate(t.completed_at)}</td>
       </tr>`;
     }).join("");
