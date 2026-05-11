@@ -227,6 +227,36 @@ def _api_get(token: str, owner: str, repo: str, path: str, branch: str) -> dict:
         return json.loads(r.read().decode())
 
 
+def _upload_checkpoint(token: str, owner: str, repo: str, path: str,
+                       task_id: str, branch: str, max_retries: int = 8) -> bool:
+    """Upload a checkpoint file to GitHub with retries. Returns True on success."""
+    cp_abs = os.path.join(repo_root(), path)
+    if not os.path.exists(cp_abs):
+        print(f"[checkpoint] file not found: {cp_abs}", flush=True)
+        return False
+    with open(cp_abs, "rb") as fh:
+        cp_bytes = fh.read()
+    for attempt in range(max_retries):
+        try:
+            cp_sha: str | None = None
+            try:
+                cp_meta = _api_get(token, owner, repo, path, branch)
+                cp_sha = cp_meta.get("sha")
+            except Exception:
+                pass
+            rc = _api_put(token, owner, repo, path,
+                          f"{task_id}: checkpoint", cp_bytes, cp_sha, branch)
+            if rc in (200, 201):
+                print(f"[checkpoint] uploaded {path} (attempt {attempt})", flush=True)
+                return True
+            print(f"[checkpoint] upload attempt {attempt} rc={rc}", flush=True)
+        except Exception as exc:
+            print(f"[checkpoint] upload attempt {attempt} error: {exc}", flush=True)
+        time.sleep(min(2 ** attempt, 30))
+    print(f"[checkpoint] FAILED all {max_retries} upload attempts for {path}", flush=True)
+    return False
+
+
 def _api_put(token: str, owner: str, repo: str, path: str,
              message: str, content_bytes: bytes, sha: str | None, branch: str) -> int:
     url = f"https://api.github.com/repos/{owner}/{repo}/contents/{path}"
@@ -250,9 +280,12 @@ def mark_done(project: str, task_id: str, checkpoint: str | None,
     """
     Flip task to done and upload checkpoint via GitHub REST API.
 
-    Uses SHA-based optimistic locking on TASK_QUEUE.json.  Progress commits
-    never touch TASK_QUEUE.json so its SHA is stable; 409 conflicts only occur
-    when two tasks finish simultaneously, and resolve in 1–2 retries.
+    Checkpoint is uploaded FIRST with hard retries.  Only after the file is
+    safely on GitHub is the queue commit made.  If all upload attempts fail,
+    falls back to save_checkpoint_release so the run is re-queued rather than
+    silently lost.
+
+    Uses SHA-based optimistic locking on TASK_QUEUE.json.
     """
     branch = branch or _current_branch()
     token = _gh_token()
@@ -260,10 +293,17 @@ def mark_done(project: str, task_id: str, checkpoint: str | None,
     metric_str = _result_summary(result)
     queue_api_path = f"projects/{project}/TASK_QUEUE.json"
 
+    # ── Step 1: upload checkpoint before touching the queue ──────────────────
+    if checkpoint:
+        ok = _upload_checkpoint(token, owner, repo_name, checkpoint,
+                                task_id, branch, max_retries=10)
+        if not ok:
+            print(f"[mark_done] checkpoint upload failed — falling back to "
+                  f"save_checkpoint_release so the run is not lost", flush=True)
+            return save_checkpoint_release(project, task_id, checkpoint, result, branch)
+
+    # ── Step 2: mark task done in queue ──────────────────────────────────────
     for attempt in range(20):
-        # Fetch live queue + its SHA (the optimistic-lock key).
-        # Progress commits never touch TASK_QUEUE.json, so SHA only changes on
-        # done/claim events — conflicts are rare and resolve in 1-2 retries.
         try:
             meta = _api_get(token, owner, repo_name, queue_api_path, branch)
         except Exception as exc:
@@ -297,26 +337,9 @@ def mark_done(project: str, task_id: str, checkpoint: str | None,
         )
 
         if status in (200, 201):
-            # Upload checkpoint via REST API (best-effort; non-critical)
-            if checkpoint:
-                cp_abs = os.path.join(repo_root(), checkpoint)
-                if os.path.exists(cp_abs):
-                    with open(cp_abs, "rb") as fh:
-                        cp_bytes = fh.read()
-                    try:
-                        cp_meta = _api_get(token, owner, repo_name, checkpoint, branch)
-                        cp_sha: str | None = cp_meta["sha"]
-                    except Exception:
-                        cp_sha = None
-                    rc = _api_put(token, owner, repo_name, checkpoint,
-                                  f"{task_id}: checkpoint", cp_bytes, cp_sha, branch)
-                    if rc not in (200, 201):
-                        print(f"[mark_done] checkpoint upload returned {rc} (non-fatal)",
-                              flush=True)
             return True
 
         if status == 409:
-            # SHA changed: another done/claim commit landed between GET and PUT
             print(f"[mark_done] 409 conflict attempt {attempt}, retrying", flush=True)
             time.sleep(random.uniform(0, min(2 ** attempt, 8)))
             continue
@@ -588,23 +611,10 @@ def save_checkpoint_release(project: str, task_id: str, checkpoint: str,
     owner, repo_name = _gh_repo()
     queue_api_path = f"projects/{project}/TASK_QUEUE.json"
 
-    # Upload checkpoint file first (best-effort)
+    # Upload checkpoint first with retries — the file must land before re-queuing
     if checkpoint:
-        cp_abs = os.path.join(repo_root(), checkpoint)
-        if os.path.exists(cp_abs):
-            with open(cp_abs, "rb") as fh:
-                cp_bytes = fh.read()
-            try:
-                cp_meta = _api_get(token, owner, repo_name, checkpoint, branch)
-                cp_sha: str | None = cp_meta.get("sha")
-            except Exception:
-                cp_sha = None
-            rc = _api_put(token, owner, repo_name, checkpoint,
-                          f"{task_id}: partial checkpoint", cp_bytes, cp_sha, branch)
-            if rc not in (200, 201):
-                print(f"[save_checkpoint_release] checkpoint upload rc={rc}", flush=True)
-        else:
-            print(f"[save_checkpoint_release] checkpoint not found: {cp_abs}", flush=True)
+        _upload_checkpoint(token, owner, repo_name, checkpoint,
+                           task_id, branch, max_retries=10)
 
     # Update queue: save checkpoint path, release to ready
     metric_str = _result_summary(result)
