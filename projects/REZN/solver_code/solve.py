@@ -200,6 +200,16 @@ def claim_done(project: str, task_id: str, branch: str,
               f"— done commit may not have landed on origin", flush=True)
 
 
+def claim_release(project: str, worker_id: str, branch: str) -> None:
+    subprocess.run(
+        [sys.executable, "core/claim_task.py", "release",
+         "--project", project,
+         "--worker-id", worker_id,
+         "--branch", branch],
+        check=False, cwd=str(ROOT),
+    )
+
+
 def claim_bail(project: str, task_id: str, branch: str, reason: str) -> None:
     subprocess.run(
         [sys.executable, "core/claim_task.py", "bail",
@@ -684,13 +694,18 @@ def main() -> None:
             "wall_s":      round(wall_s, 1),
         }
 
-        # Bail threshold: mp phase always runs, so accept if ||F|| < 1e-4.
-        # (mp converges to ~MP_TOL; bail only on gross stalling.)
         BAIL_THRESHOLD = 1.0e-4
+        DONE_THRESHOLD = 1.0e-100
         if F_inf_final > BAIL_THRESHOLD:
             claim_bail(args.project, args.task_id, args.branch,
                        f"||F||inf={F_inf_final:.3e} > bail threshold {BAIL_THRESHOLD:.0e}")
             exit_code = 1
+        elif F_inf_final > DONE_THRESHOLD:
+            # mp phase made progress but didn't reach 1e-100 (wall timeout) — release for retry
+            print(f"[solve] F={F_inf_final:.3e} > 1e-100, checkpoint saved — releasing claim",
+                  flush=True)
+            claim_release(args.project, args.worker_id, args.branch)
+            exit_code = 0
         else:
             claim_done(args.project, args.task_id, args.branch, ckpt_rel, result)
             exit_code = 0
