@@ -167,6 +167,7 @@
 
 <div id="metabar">
   <span id="meta">loading…</span>&nbsp;·&nbsp;<span id="ticker"></span>
+  <br><span id="site-mod"></span>
 </div>
 
 <div id="tabs">
@@ -582,6 +583,7 @@
   }
   async function loadAll(){await Promise.all([pollProgress(),pollQueue()]);}
 
+  (()=>{const m=new Date(document.lastModified);const p=n=>String(n).padStart(2,'0');document.getElementById("site-mod").textContent=`html:${m.getFullYear()}-${p(m.getMonth()+1)}-${p(m.getDate())} ${p(m.getHours())}:${p(m.getMinutes())}`;})();
   pollQueue();pollProgress();
   setInterval(()=>{if(!document.hidden)pollProgress();},POLL_MS);
   setInterval(()=>{if(!document.hidden)pollQueue();},POLL_MS);
