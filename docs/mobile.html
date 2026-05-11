@@ -444,6 +444,14 @@
 
   async function downloadAll(){
     if(!taskData){alert('Load tasks first');return;}
+
+    // Only tasks: done, non-test, F_max < 1e-100
+    const eligible=(taskData.tasks||[]).filter(t=>
+      t.status==="done" && !t.test && t.checkpoint &&
+      Number(t.result?.F_max) < 1e-100
+    );
+    if(!eligible.length){setMsg('No emin100 solutions yet',3000);return;}
+
     setMsg('Loading JSZip…');
     if(!window.JSZip){
       await new Promise((res,rej)=>{
@@ -455,40 +463,22 @@
     }
     const zip=new JSZip();
 
-    // metadata: all non-test tasks with result or checkpoint
-    const allTasks=(taskData.tasks||[]).filter(t=>!t.test);
-    zip.file('metadata.json',JSON.stringify(allTasks.map(t=>({
-      id:t.id,gamma:t.gamma,tau:t.tau,G:t.G,K:t.K,status:t.status,
+    zip.file('metadata.json',JSON.stringify(eligible.map(t=>({
+      id:t.id,gamma:t.gamma,tau:t.tau,G:t.G,K:t.K,
       result:t.result,completed_at:t.completed_at,checkpoint:t.checkpoint
     })),null,2));
 
-    // Collect all checkpoint files: scan the checkpoints directory via API
-    setMsg('Listing checkpoints…');
-    let ckptFiles=[];
-    try{
-      const dir=await fj(apiUrl(`projects/${PROJECT}/checkpoints`));
-      if(Array.isArray(dir))ckptFiles=dir.filter(f=>f.name.endsWith('.npz')||f.name.endsWith('.json'));
-    }catch{}
-
-    // Also add any task checkpoint paths not already in the directory listing
-    const seenNames=new Set(ckptFiles.map(f=>f.name));
-    for(const t of allTasks){
-      if(t.checkpoint&&!seenNames.has(t.checkpoint.split('/').pop())){
-        ckptFiles.push({name:t.checkpoint.split('/').pop(),_path:t.checkpoint});
-      }
-    }
-
     let n=0;
-    setMsg(`Fetching 0/${ckptFiles.length}…`);
-    await Promise.all(ckptFiles.map(async f=>{
-      const path=f._path||`projects/${PROJECT}/checkpoints/${f.name}`;
+    setMsg(`Fetching 0/${eligible.length}…`);
+    await Promise.all(eligible.map(async t=>{
       try{
-        const r=await fetch(`https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${path}`,
-                            {headers:authH()});
+        const r=await fetch(
+          `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${t.checkpoint}`,
+          {headers:authH()});
         if(!r.ok)return;
         const buf=await r.arrayBuffer();
-        zip.file(f.name,buf);
-        setMsg(`Fetching ${++n}/${ckptFiles.length}…`);
+        zip.file(t.checkpoint.split('/').pop(),buf);
+        setMsg(`Fetching ${++n}/${eligible.length}…`);
       }catch{}
     }));
 
@@ -496,10 +486,10 @@
     const blob=await zip.generateAsync({type:'blob',compression:'STORE'});
     const a=document.createElement('a');
     a.href=URL.createObjectURL(blob);
-    a.download=`REZN_solutions_${new Date().toISOString().slice(0,10)}.zip`;
+    a.download=`REZN_emin100_${new Date().toISOString().slice(0,10)}.zip`;
     a.click();
     URL.revokeObjectURL(a.href);
-    setMsg(`✓ ${n} files + metadata.json`,5000);
+    setMsg(`✓ ${n}/${eligible.length} files + metadata.json`,5000);
   }
 
   // Poll loops — pause when page is hidden
