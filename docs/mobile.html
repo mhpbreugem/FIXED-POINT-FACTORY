@@ -36,6 +36,14 @@
     cursor: pointer; color: #fff; white-space: nowrap; flex-shrink:0;
     background:#333;
   }
+  .b-go   { background:#1a5e2a; }
+  .b-kill { background:#5e1a1a; }
+  #pat-input {
+    font-family: inherit; font-size: 10.1px;
+    background: #1e1e1e; color: #bbb; border: 1px solid #444;
+    border-radius: 2px; padding: 1px 3px;
+    width: min(110px,28vw); min-width:0; flex-shrink:1;
+  }
   #meta-right {
     margin-left: auto;
     font-size: 7.6px; color: var(--muted);
@@ -131,8 +139,10 @@
 
 <div id="bar">
   <div id="pills"></div>
-  <button class="btn" onclick="downloadAll()">⬇</button>
-  <button class="btn" onclick="loadAll()">⟳</button>
+  <button class="btn b-go"   onclick="launchOne()">+1</button>
+  <button class="btn b-kill" onclick="killAll()">✕✕</button>
+  <button class="btn"        onclick="downloadAll()">⬇</button>
+  <button class="btn"        onclick="loadAll()">⟳</button>
   <span id="meta-right">
     <span id="meta">…</span> · <span id="ticker"></span> · <span id="site-mod"></span>
   </span>
@@ -143,6 +153,7 @@
 <div id="tab-tasks">
   <div id="filterbar">
     <input type="text" id="filter" placeholder="filter…" oninput="renderTasks()">
+    <input type="password" id="pat-input" placeholder="PAT" oninput="savePat()">
   </div>
   <table>
     <colgroup>
@@ -185,8 +196,36 @@
   let taskMap=new Map(); // rebuilt on each taskData load → O(1) lookups
 
   function getPat(){return localStorage.getItem('fpf_pat')||'';}
+  function savePat(){const v=document.getElementById('pat-input').value.trim();v?localStorage.setItem('fpf_pat',v):localStorage.removeItem('fpf_pat');}
+  window.addEventListener('DOMContentLoaded',()=>{const p=getPat();if(p)document.getElementById('pat-input').value=p;});
 
   function setMsg(t,ms=0){const e=document.getElementById('status-msg');e.textContent=t;if(ms)setTimeout(()=>e.textContent='',ms);}
+
+  async function launchOne(){
+    const pat=getPat();if(!pat){setMsg('PAT required',3000);return;}
+    setMsg('…');
+    try{
+      const res=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/workflows/solve.yml/dispatches`,
+        {method:'POST',headers:{Authorization:`token ${pat}`,'Content-Type':'application/json'},
+         body:JSON.stringify({ref:BRANCH,inputs:{workers:'1'}})});
+      if(!res.ok)throw new Error(res.status);
+      setMsg('✓ +1 agent launched',3000);
+    }catch(e){setMsg(`✗ ${e.message}`,4000);}
+  }
+
+  async function killAll(){
+    if(!confirm('Kill all running agents?'))return;
+    const pat=getPat();if(!pat){setMsg('PAT required',3000);return;}
+    setMsg('cancelling…');
+    try{
+      const runs=await fj(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs?status=in_progress&per_page=50`);
+      const active=(runs.workflow_runs||[]);
+      await Promise.all(active.map(r=>fetch(
+        `https://api.github.com/repos/${OWNER}/${REPO}/actions/runs/${r.id}/cancel`,
+        {method:'POST',headers:{Authorization:`token ${pat}`}})));
+      setMsg(`✓ cancelled ${active.length} run(s)`,4000);
+    }catch(e){setMsg(`✗ ${e.message}`,4000);}
+  }
 
   // URL / fetch helpers
   function rawUrl(p){return`https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${p}`;}
