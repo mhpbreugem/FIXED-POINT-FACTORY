@@ -254,7 +254,7 @@
       "depends_on": [
         "g075_t0150"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": "projects/REZN/checkpoints/g075_t0100.npz",
       "solver_params": {
         "mp_dps": 200,
@@ -273,7 +273,9 @@
         "phi_calls": 132,
         "wall_s": 17242.6
       },
-      "completed_at": null
+      "completed_at": null,
+      "claimed_by": "gha-25676792514-g075_t0100",
+      "claimed_at": "2026-05-11T14:36:22Z"
     },
     {
       "id": "g075_t0150",
