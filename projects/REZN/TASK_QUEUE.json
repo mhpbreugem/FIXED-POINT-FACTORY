@@ -30,7 +30,7 @@
         "smoke": true,
         "1-R2": 0.00015319,
         "F_max": 0.20528,
-        "note": "CI smoke test Ã¢ÂÂ one phi eval, no convergence required"
+        "note": "CI smoke test \u00c3\u00a2\u00c2\u0080\u00c2\u0094 one phi eval, no convergence required"
       },
       "completed_at": "2026-05-07T18:31:51.999548Z"
     },
@@ -50,7 +50,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -74,7 +74,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -98,7 +98,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -122,7 +122,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -144,7 +144,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -169,7 +169,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -191,7 +191,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -213,7 +213,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -234,22 +234,26 @@
       "depends_on": [
         "g075_t0100"
       ],
-      "status": "blocked",
-      "checkpoint": null,
-      "result": null,
+      "status": "ready",
+      "checkpoint": "projects/REZN/checkpoints/g075_t0080.npz",
+      "result": {
+        "1-R2": 0.0319261,
+        "F_max": 1.5461e-54,
+        "n_stages": 1,
+        "phi_calls": 535,
+        "wall_s": 17928.2
+      },
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
-      "G": 20,
-      "claimed_by": null,
-      "claimed_at": null
+      "G": 20
     },
     {
       "id": "g075_t0100",
@@ -265,7 +269,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -286,7 +290,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -310,7 +314,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -336,7 +340,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -355,14 +359,14 @@
       "status": "blocked",
       "checkpoint": null,
       "result": null,
-      "note": "ÃÂ-ladder between g100_t0080 (ÃÂ=0.8) and g100_t0050 (ÃÂ=0.5).",
+      "note": "\u00c3\u008f\u00c2\u0084-ladder between g100_t0080 (\u00c3\u008f\u00c2\u0084=0.8) and g100_t0050 (\u00c3\u008f\u00c2\u0084=0.5).",
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -384,11 +388,11 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
-      "note": "Auto-requeued (attempt 1): via new ladder g100_t0063. ÃÂ-ladder at ÃÂ=0.63",
+      "note": "Auto-requeued (attempt 1): via new ladder g100_t0063. \u00c3\u008f\u00c2\u0084-ladder at \u00c3\u008f\u00c2\u0084=0.63",
       "deps_satisfy": "any",
       "G": 20,
       "result": null,
@@ -412,7 +416,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -434,7 +438,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -460,7 +464,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -484,7 +488,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -506,11 +510,11 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
-      "note": "RESET bailedÃ¢ÂÂready",
+      "note": "RESET bailed\u00c3\u00a2\u00c2\u0086\u00c2\u0092ready",
       "G": 20,
       "result": null,
       "completed_at": null,
@@ -531,11 +535,11 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
-      "note": "RESET bailedÃ¢ÂÂready",
+      "note": "RESET bailed\u00c3\u00a2\u00c2\u0086\u00c2\u0092ready",
       "G": 20,
       "result": null,
       "completed_at": null,
@@ -557,11 +561,11 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
-      "note": "RESET bailedÃ¢ÂÂready",
+      "note": "RESET bailed\u00c3\u00a2\u00c2\u0086\u00c2\u0092ready",
       "completed_at": null,
       "G": 20,
       "claimed_at": null,
@@ -583,7 +587,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -607,7 +611,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -631,7 +635,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -655,7 +659,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -679,7 +683,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -703,7 +707,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -727,7 +731,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -751,7 +755,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -775,7 +779,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -799,7 +803,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -823,7 +827,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -847,7 +851,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -871,7 +875,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -895,7 +899,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -919,7 +923,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -943,7 +947,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -967,7 +971,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -991,7 +995,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1015,7 +1019,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1039,7 +1043,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1063,7 +1067,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1087,7 +1091,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1114,7 +1118,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1138,7 +1142,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1162,7 +1166,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1186,7 +1190,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1210,7 +1214,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1234,7 +1238,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1258,7 +1262,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1282,7 +1286,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1306,7 +1310,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1330,7 +1334,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1354,7 +1358,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1378,7 +1382,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1402,7 +1406,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1426,7 +1430,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1449,7 +1453,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1471,7 +1475,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1495,7 +1499,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1519,7 +1523,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1543,7 +1547,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1567,7 +1571,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1591,7 +1595,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1614,7 +1618,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1636,7 +1640,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1660,7 +1664,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1684,7 +1688,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1708,7 +1712,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1732,7 +1736,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1756,7 +1760,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1780,7 +1784,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1804,7 +1808,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1828,7 +1832,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1852,7 +1856,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1876,7 +1880,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1900,7 +1904,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1924,7 +1928,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1948,7 +1952,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1972,7 +1976,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -1996,7 +2000,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2020,7 +2024,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2044,7 +2048,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2068,7 +2072,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2092,7 +2096,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2116,7 +2120,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2140,7 +2144,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2164,7 +2168,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2188,7 +2192,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2212,7 +2216,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2236,7 +2240,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2260,7 +2264,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2284,7 +2288,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2308,7 +2312,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2332,7 +2336,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2356,7 +2360,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2380,7 +2384,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2404,7 +2408,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2428,7 +2432,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2452,7 +2456,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2476,7 +2480,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2500,7 +2504,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2524,7 +2528,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2548,7 +2552,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2572,7 +2576,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2596,7 +2600,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2620,7 +2624,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2644,7 +2648,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2668,7 +2672,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2692,7 +2696,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2716,7 +2720,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2740,7 +2744,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2764,7 +2768,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2788,7 +2792,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2812,7 +2816,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2836,7 +2840,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2860,7 +2864,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2884,7 +2888,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2908,7 +2912,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2932,7 +2936,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2956,7 +2960,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -2980,7 +2984,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3004,7 +3008,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3028,7 +3032,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3052,7 +3056,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3076,7 +3080,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3100,7 +3104,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3124,7 +3128,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3148,7 +3152,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3172,7 +3176,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3196,7 +3200,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3220,7 +3224,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3244,7 +3248,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3268,7 +3272,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3292,7 +3296,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3316,7 +3320,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3340,7 +3344,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3364,7 +3368,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3388,7 +3392,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3412,7 +3416,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3437,7 +3441,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3462,7 +3466,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3487,7 +3491,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3512,7 +3516,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3537,7 +3541,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3562,7 +3566,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3587,7 +3591,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3612,7 +3616,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3637,7 +3641,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3662,7 +3666,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3687,7 +3691,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3712,7 +3716,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       },
@@ -3739,7 +3743,7 @@
       "solver_params": {
         "u_max": 3,
         "G": 15,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "max_iters": 2000,
         "anderson_m": 20,
         "G_inner": 20,
@@ -3768,7 +3772,7 @@
       "solver_params": {
         "u_max": 3,
         "G": 15,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "max_iters": 2000,
         "anderson_m": 20,
         "G_inner": 20,
@@ -3797,7 +3801,7 @@
       "solver_params": {
         "u_max": 3,
         "G": 15,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "max_iters": 2000,
         "anderson_m": 20,
         "G_inner": 20,
@@ -3826,7 +3830,7 @@
       "solver_params": {
         "u_max": 3,
         "G": 15,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "max_iters": 2000,
         "anderson_m": 20,
         "G_inner": 20,
@@ -3855,7 +3859,7 @@
       "solver_params": {
         "u_max": 3,
         "G": 15,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "max_iters": 2000,
         "anderson_m": 20,
         "G_inner": 20,
@@ -3884,7 +3888,7 @@
       "solver_params": {
         "u_max": 3,
         "G": 15,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "max_iters": 2000,
         "anderson_m": 20,
         "G_inner": 20,
@@ -3915,7 +3919,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -3941,7 +3945,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -3967,7 +3971,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -3993,7 +3997,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4019,7 +4023,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4045,7 +4049,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4071,7 +4075,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4097,7 +4101,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4123,7 +4127,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4149,7 +4153,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4175,7 +4179,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4201,7 +4205,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4227,7 +4231,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4253,7 +4257,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4279,7 +4283,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4305,7 +4309,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4331,7 +4335,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4357,7 +4361,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4383,7 +4387,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4409,7 +4413,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4435,7 +4439,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4461,7 +4465,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4487,7 +4491,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4513,7 +4517,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4539,7 +4543,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4565,7 +4569,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4591,7 +4595,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4617,7 +4621,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4643,7 +4647,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4669,7 +4673,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4695,7 +4699,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4721,7 +4725,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4747,7 +4751,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4773,7 +4777,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4799,7 +4803,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4825,7 +4829,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4851,7 +4855,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4877,7 +4881,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4903,7 +4907,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4929,7 +4933,7 @@
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
-        "tol": 5e-7,
+        "tol": 5e-07,
         "G_inner": 20,
         "u_inner_max": 4
       }
@@ -4938,10 +4942,10 @@
   "summary": {
     "total": 200,
     "done": 1,
-    "ready": 41,
+    "ready": 43,
     "claimed": 3,
-    "blocked": 154,
-    "bailed": 1,
+    "blocked": 153,
+    "bailed": 0,
     "skip": 0
   },
   "fanout": {
@@ -5105,7 +5109,7 @@
   "notes": [
     "g100_t0150 and g100_t0200: re-queued after gha-25460609459 stalled at iter=4000. Both now done.",
     "nc4-sweeps added as parallel chains.",
-    "All 1-RÃÂ² values are weighted by ex-ante probability (see EQUATIONS.md ÃÂ§7).",
+    "All 1-R\u00c3\u0082\u00c2\u00b2 values are weighted by ex-ante probability (see EQUATIONS.md \u00c3\u0082\u00c2\u00a77).",
     "Checkpoints listed for done tasks are the expected paths."
   ]
 }
