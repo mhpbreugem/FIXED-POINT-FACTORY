@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-12T00:48:19.838350Z",
+  "updated_at": "2026-05-12T03:41:34.273006Z",
   "params": {
     "G": 16,
     "UMAX": 4.0,
@@ -79,10 +79,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -103,10 +103,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -118,16 +118,24 @@
         "test_g6"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "blocked",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 1): noise perturbation noise_level=0.002.",
       "solver_params": {
-        "noise_level": 0.002,
-        "presmooth": 100,
-        "presmooth_alpha": 0.02
+        "mp_dps": 200,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07,
+        "G_inner": 12,
+        "u_inner_max": 4.0
       },
-      "requeue_count": 1
+      "requeue_count": 1,
+      "G": 12,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null
     },
     {
       "id": "g050_t0160",
@@ -137,11 +145,24 @@
         "g050_t0180"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "blocked",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 1): via new ladder g050_t0180. \u03c4-ladder at \u03c4=1.8",
-      "requeue_count": 1
+      "requeue_count": 1,
+      "G": 12,
+      "solver_params": {
+        "mp_dps": 200,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07,
+        "G_inner": 12,
+        "u_inner_max": 4.0
+      },
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null
     },
     {
       "id": "g050_t0130",
@@ -151,20 +172,24 @@
         "g050_t0160"
       ],
       "deps_satisfy": "any",
-      "status": "done",
-      "checkpoint": "projects/REZN/checkpoints/g050_t0130.npz",
-      "result": {
-        "1-R2": 0.06910793,
-        "F_max": 3.4336e-101,
-        "TV": 0.469406,
-        "Vi": 0.00293,
-        "n_stages": 1,
-        "phi_calls": 10053,
-        "wall_s": 12819.3
-      },
+      "status": "blocked",
+      "checkpoint": null,
+      "result": null,
       "note": "Auto-requeued (attempt 1): via new ladder g050_t0160. \u03c4-ladder at \u03c4=1.6",
       "requeue_count": 1,
-      "completed_at": "2026-05-11T23:21:46.235462Z"
+      "completed_at": null,
+      "G": 12,
+      "solver_params": {
+        "mp_dps": 200,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07,
+        "G_inner": 12,
+        "u_inner_max": 4.0
+      },
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g050_t0080",
@@ -173,7 +198,7 @@
       "depends_on": [
         "g050_t0130"
       ],
-      "status": "ready",
+      "status": "blocked",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
@@ -183,15 +208,15 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
-        "u_inner_max": 4.0,
-        "noise_level": 0.002,
-        "presmooth_alpha": 0.02
+        "G_inner": 12,
+        "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "deps_satisfy": "any",
       "requeue_count": 3,
-      "note": "Auto-requeued (attempt 3): noise perturbation noise_level=0.002."
+      "note": "Auto-requeued (attempt 3): noise perturbation noise_level=0.002.",
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g050_t0100",
@@ -210,10 +235,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -232,10 +257,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "result": null,
       "completed_at": null,
       "claimed_at": null,
@@ -246,14 +271,8 @@
       "gamma": 0.5,
       "tau": 2,
       "status": "ready",
-      "checkpoint": "projects/REZN/checkpoints/g050_t0200.npz",
-      "result": {
-        "1-R2": 0.08943085,
-        "F_max": 7.3367e-37,
-        "n_stages": 1,
-        "phi_calls": 240,
-        "wall_s": 17913.5
-      },
+      "checkpoint": null,
+      "result": null,
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -261,10 +280,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16
+      "G": 12,
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g075_t0030",
@@ -283,10 +304,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -305,10 +326,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_by": null,
       "claimed_at": null,
       "result": null,
@@ -331,10 +352,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_by": null,
       "claimed_at": null
     },
@@ -353,10 +374,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "result": null,
       "completed_at": null,
       "claimed_at": null,
@@ -370,16 +391,24 @@
         "test_g6"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "blocked",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 1): noise perturbation noise_level=0.002.",
       "solver_params": {
-        "noise_level": 0.002,
-        "presmooth": 100,
-        "presmooth_alpha": 0.02
+        "mp_dps": 200,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07,
+        "G_inner": 12,
+        "u_inner_max": 4.0
       },
-      "requeue_count": 1
+      "requeue_count": 1,
+      "G": 12,
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null
     },
     {
       "id": "g075_t0150",
@@ -388,31 +417,25 @@
       "depends_on": [
         "g061_t0150"
       ],
-      "status": "ready",
-      "checkpoint": "projects/REZN/checkpoints/g075_t0150.npz",
+      "status": "blocked",
+      "checkpoint": null,
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
-      "result": {
-        "1-R2": 0.06519013,
-        "F_max": 7.905e-76,
-        "TV": 0.380251,
-        "Vi": 0.000545,
-        "n_stages": 1,
-        "phi_calls": 45,
-        "wall_s": 18003.4
-      },
+      "G": 12,
+      "result": null,
       "completed_at": null,
       "deps_satisfy": "any",
       "requeue_count": 2,
-      "note": "Auto-requeued (attempt 2): via new ladder g061_t0150. \u03b3-ladder at \u03b3=0.61"
+      "note": "Auto-requeued (attempt 2): via new ladder g061_t0150. \u03b3-ladder at \u03b3=0.61",
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g075_t0200",
@@ -429,10 +452,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "result": null,
       "completed_at": null,
       "claimed_at": null,
@@ -455,10 +478,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -481,10 +504,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -503,12 +526,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
       "note": "Auto-requeued (attempt 1): via new ladder g100_t0063. \u00c3\u0083\u00c2\u008f\u00c3\u0082\u00c2\u0084-ladder at \u00c3\u0083\u00c2\u008f\u00c3\u0082\u00c2\u0084=0.63",
       "deps_satisfy": "any",
-      "G": 16,
+      "G": 12,
       "result": null,
       "completed_at": null,
       "claimed_at": null,
@@ -531,10 +554,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -553,10 +576,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "result": null,
       "completed_at": null,
       "claimed_at": null,
@@ -579,10 +602,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -603,10 +626,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -625,11 +648,11 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
       "note": "RESET bailed\u00c3\u0083\u00c2\u00a2\u00c3\u0082\u00c2\u0086\u00c3\u0082\u00c2\u0092ready",
-      "G": 16,
+      "G": 12,
       "result": null,
       "completed_at": null,
       "claimed_at": null,
@@ -650,11 +673,11 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
       "note": "RESET bailed\u00c3\u0083\u00c2\u00a2\u00c3\u0082\u00c2\u0086\u00c3\u0082\u00c2\u0092ready",
-      "G": 16,
+      "G": 12,
       "result": null,
       "completed_at": null,
       "claimed_at": null,
@@ -676,12 +699,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
       "note": "RESET bailed\u00c3\u0083\u00c2\u00a2\u00c3\u0082\u00c2\u0086\u00c3\u0082\u00c2\u0092ready",
       "completed_at": null,
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -702,10 +725,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -726,10 +749,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -750,10 +773,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -774,10 +797,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -798,10 +821,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -822,10 +845,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -846,10 +869,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -870,10 +893,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -894,10 +917,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -918,10 +941,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -942,10 +965,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -966,10 +989,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -990,10 +1013,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1014,10 +1037,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1038,10 +1061,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1062,10 +1085,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1086,10 +1109,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1110,10 +1133,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1134,10 +1157,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1158,10 +1181,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1182,10 +1205,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1206,13 +1229,13 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
       "note": "Auto-requeued (attempt 1): warm-start from g140_t0510 (log-dist=0.11).",
       "deps_satisfy": "any",
       "completed_at": null,
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1233,10 +1256,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1257,10 +1280,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1281,10 +1304,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1305,10 +1328,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1329,10 +1352,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1353,10 +1376,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1377,10 +1400,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1401,10 +1424,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1425,10 +1448,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1449,10 +1472,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1473,10 +1496,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1497,10 +1520,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1521,10 +1544,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1545,10 +1568,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1557,16 +1580,8 @@
       "gamma": 0.13,
       "tau": 10,
       "status": "ready",
-      "checkpoint": "projects/REZN/checkpoints/g013_t1000.npz",
-      "result": {
-        "1-R2": 0.07691082,
-        "F_max": 1.1742e-90,
-        "TV": 2.665658,
-        "Vi": 28186623843146.81,
-        "n_stages": 1,
-        "phi_calls": 703,
-        "wall_s": 17731.3
-      },
+      "checkpoint": null,
+      "result": null,
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -1574,10 +1589,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16
+      "G": 12,
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g010_t0050",
@@ -1596,10 +1613,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1620,10 +1637,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1644,10 +1661,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1668,10 +1685,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1692,10 +1709,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1716,10 +1733,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1728,16 +1745,8 @@
       "gamma": 0.1,
       "tau": 10,
       "status": "ready",
-      "checkpoint": "projects/REZN/checkpoints/g010_t1000.npz",
-      "result": {
-        "1-R2": 0.07773722,
-        "F_max": 2.8679e-59,
-        "TV": 2.631222,
-        "Vi": -408695624570492.25,
-        "n_stages": 1,
-        "phi_calls": 715,
-        "wall_s": 17214.6
-      },
+      "checkpoint": null,
+      "result": null,
       "completed_at": null,
       "solver_params": {
         "mp_dps": 200,
@@ -1745,10 +1754,12 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16
+      "G": 12,
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g160_t0030",
@@ -1767,10 +1778,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1791,10 +1802,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1815,10 +1826,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1839,10 +1850,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1863,10 +1874,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1887,10 +1898,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1911,10 +1922,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1935,10 +1946,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1959,10 +1970,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -1983,10 +1994,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2007,10 +2018,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2031,10 +2042,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2055,10 +2066,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2079,10 +2090,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2103,10 +2114,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2127,10 +2138,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2151,10 +2162,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2175,10 +2186,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2199,10 +2210,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2223,10 +2234,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2247,10 +2258,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2271,10 +2282,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2295,10 +2306,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2319,10 +2330,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2343,10 +2354,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2367,10 +2378,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2391,10 +2402,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2415,10 +2426,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2439,10 +2450,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2463,10 +2474,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2487,10 +2498,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2511,10 +2522,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2535,10 +2546,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2559,10 +2570,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2583,10 +2594,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2607,10 +2618,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2631,10 +2642,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2655,10 +2666,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2679,10 +2690,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2703,10 +2714,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2727,10 +2738,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2751,10 +2762,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2775,10 +2786,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2799,10 +2810,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2823,10 +2834,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2847,10 +2858,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2871,10 +2882,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2895,10 +2906,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2919,10 +2930,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2943,10 +2954,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2967,10 +2978,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -2991,10 +3002,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3015,10 +3026,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3039,10 +3050,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3063,10 +3074,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3087,10 +3098,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3111,10 +3122,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3135,10 +3146,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3159,10 +3170,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3183,10 +3194,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3207,10 +3218,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3231,10 +3242,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3255,10 +3266,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3279,10 +3290,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3303,10 +3314,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3327,10 +3338,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3351,10 +3362,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3375,10 +3386,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3399,10 +3410,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3423,10 +3434,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3447,10 +3458,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3471,10 +3482,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3495,10 +3506,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3519,10 +3530,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3543,10 +3554,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3568,10 +3579,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3593,10 +3604,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3618,10 +3629,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3643,10 +3654,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3668,10 +3679,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3693,10 +3704,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3718,10 +3729,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3743,10 +3754,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3768,10 +3779,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3793,10 +3804,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3818,10 +3829,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3843,10 +3854,10 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "G": 16,
+      "G": 12,
       "claimed_at": null,
       "claimed_by": null
     },
@@ -3856,7 +3867,7 @@
       "K": 3,
       "gamma": 0.5,
       "tau": 2,
-      "G": 16,
+      "G": 12,
       "symmetric": true,
       "depends_on": [
         "seed_g050_t0200_3d"
@@ -3867,12 +3878,12 @@
       "result": null,
       "note": "Auto-requeued (attempt 1): warm-start from seed_g050_t0200_3d (log-dist=0.00).",
       "solver_params": {
-        "u_max": 3,
-        "G": 15,
+        "mp_dps": 200,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
         "tol": 5e-07,
-        "max_iters": 2000,
-        "anderson_m": 20,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
       "completed_at": null,
@@ -3885,7 +3896,7 @@
       "K": 4,
       "gamma": 0.5,
       "tau": 2,
-      "G": 16,
+      "G": 12,
       "symmetric": true,
       "depends_on": [
         "symK3_g050_t0200_G15"
@@ -3896,12 +3907,12 @@
       "result": null,
       "note": "Symmetric K=4; warm-starts from K=3.",
       "solver_params": {
-        "u_max": 3,
-        "G": 15,
+        "mp_dps": 200,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
         "tol": 5e-07,
-        "max_iters": 2000,
-        "anderson_m": 20,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
       "completed_at": null,
@@ -3914,7 +3925,7 @@
       "K": 5,
       "gamma": 0.5,
       "tau": 2,
-      "G": 16,
+      "G": 12,
       "symmetric": true,
       "depends_on": [
         "symK4_g050_t0200_G15"
@@ -3925,12 +3936,12 @@
       "result": null,
       "note": "Symmetric K=5; warm-starts from K=4.",
       "solver_params": {
-        "u_max": 3,
-        "G": 15,
+        "mp_dps": 200,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
         "tol": 5e-07,
-        "max_iters": 2000,
-        "anderson_m": 20,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
       "completed_at": null,
@@ -3943,7 +3954,7 @@
       "K": 6,
       "gamma": 0.5,
       "tau": 2,
-      "G": 16,
+      "G": 12,
       "symmetric": true,
       "depends_on": [
         "symK5_g050_t0200_G15"
@@ -3954,12 +3965,12 @@
       "result": null,
       "note": "Symmetric K=6; warm-starts from K=5.",
       "solver_params": {
-        "u_max": 3,
-        "G": 15,
+        "mp_dps": 200,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
         "tol": 5e-07,
-        "max_iters": 2000,
-        "anderson_m": 20,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
       "completed_at": null,
@@ -3972,7 +3983,7 @@
       "K": 7,
       "gamma": 0.5,
       "tau": 2,
-      "G": 16,
+      "G": 12,
       "symmetric": true,
       "depends_on": [
         "symK6_g050_t0200_G15"
@@ -3983,12 +3994,12 @@
       "result": null,
       "note": "Symmetric K=7; warm-starts from K=6.",
       "solver_params": {
-        "u_max": 3,
-        "G": 15,
+        "mp_dps": 200,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
         "tol": 5e-07,
-        "max_iters": 2000,
-        "anderson_m": 20,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
       "completed_at": null,
@@ -4001,7 +4012,7 @@
       "K": 8,
       "gamma": 0.5,
       "tau": 2,
-      "G": 16,
+      "G": 12,
       "symmetric": true,
       "depends_on": [
         "symK7_g050_t0200_G15"
@@ -4012,12 +4023,12 @@
       "result": null,
       "note": "Symmetric K=8; warm-starts from K=7.",
       "solver_params": {
-        "u_max": 3,
-        "G": 15,
+        "mp_dps": 200,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
         "tol": 5e-07,
-        "max_iters": 2000,
-        "anderson_m": 20,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
       "completed_at": null,
@@ -4029,109 +4040,11 @@
       "kind": "ree",
       "gamma": 0.1,
       "tau": 1.2,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
       "status": "ready",
-      "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g010_t0120.npz",
-      "result": {
-        "1-R2": 0.06812419,
-        "F_max": 3.9955e-60,
-        "TV": 2.121808,
-        "Vi": 30967435237925.2,
-        "n_stages": 1,
-        "phi_calls": 285,
-        "wall_s": 18002.3
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
-      "solver_params": {
-        "mp_dps": 200,
-        "mp_tol": "1e-100",
-        "mp_iters": 20,
-        "presmooth": 0,
-        "tol": 5e-07,
-        "G_inner": 16,
-        "u_inner_max": 4.0
-      }
-    },
-    {
-      "id": "g010_t0140",
-      "kind": "ree",
-      "gamma": 0.1,
-      "tau": 1.4,
-      "G": 16,
-      "K": 3,
-      "depends_on": [],
-      "deps_satisfy": "any",
-      "status": "ready",
-      "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g010_t0140.npz",
-      "result": {
-        "1-R2": 0.09752058,
-        "F_max": 1.1457e-54,
-        "TV": 2.90477,
-        "Vi": 151154139950342.66,
-        "n_stages": 1,
-        "phi_calls": 1182,
-        "wall_s": 18136.1
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
-      "solver_params": {
-        "mp_dps": 200,
-        "mp_tol": "1e-100",
-        "mp_iters": 20,
-        "presmooth": 0,
-        "tol": 5e-07,
-        "G_inner": 16,
-        "u_inner_max": 4.0
-      }
-    },
-    {
-      "id": "g010_t0150",
-      "kind": "ree",
-      "gamma": 0.1,
-      "tau": 1.5,
-      "G": 16,
-      "K": 3,
-      "depends_on": [],
-      "deps_satisfy": "any",
-      "status": "ready",
-      "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g010_t0150.npz",
-      "result": {
-        "1-R2": 0.10130727,
-        "F_max": 1.5202e-55,
-        "TV": 3.260929,
-        "Vi": 234582085458531.0,
-        "n_stages": 1,
-        "phi_calls": 511,
-        "wall_s": 17920.0
-      },
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
-      "solver_params": {
-        "mp_dps": 200,
-        "mp_tol": "1e-100",
-        "mp_iters": 20,
-        "presmooth": 0,
-        "tol": 5e-07,
-        "G_inner": 16,
-        "u_inner_max": 4.0
-      }
-    },
-    {
-      "id": "g010_t0170",
-      "kind": "ree",
-      "gamma": 0.1,
-      "tau": 1.7,
-      "G": 16,
-      "K": 3,
-      "depends_on": [],
-      "deps_satisfy": "any",
-      "status": "claimed",
-      "claimed_by": "gha-25690827466-g010_t0170",
-      "claimed_at": "2026-05-11T18:57:50Z",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4142,7 +4055,87 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
+        "u_inner_max": 4.0
+      },
+      "claimed_by": null,
+      "claimed_at": null
+    },
+    {
+      "id": "g010_t0140",
+      "kind": "ree",
+      "gamma": 0.1,
+      "tau": 1.4,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "ready",
+      "completed_at": null,
+      "checkpoint": null,
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 200,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07,
+        "G_inner": 12,
+        "u_inner_max": 4.0
+      },
+      "claimed_by": null,
+      "claimed_at": null
+    },
+    {
+      "id": "g010_t0150",
+      "kind": "ree",
+      "gamma": 0.1,
+      "tau": 1.5,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "ready",
+      "completed_at": null,
+      "checkpoint": null,
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 200,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07,
+        "G_inner": 12,
+        "u_inner_max": 4.0
+      },
+      "claimed_by": null,
+      "claimed_at": null
+    },
+    {
+      "id": "g010_t0170",
+      "kind": "ree",
+      "gamma": 0.1,
+      "tau": 1.7,
+      "G": 12,
+      "K": 3,
+      "depends_on": [],
+      "deps_satisfy": "any",
+      "status": "ready",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "checkpoint": null,
+      "result": null,
+      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "solver_params": {
+        "mp_dps": 200,
+        "mp_tol": "1e-100",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -4151,13 +4144,13 @@
       "kind": "ree",
       "gamma": 0.1,
       "tau": 5,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "claimed",
-      "claimed_by": "gha-25690827466-g010_t0500",
-      "claimed_at": "2026-05-11T18:57:50Z",
+      "status": "ready",
+      "claimed_by": null,
+      "claimed_at": null,
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4168,7 +4161,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -4177,13 +4170,13 @@
       "kind": "ree",
       "gamma": 0.16000000000000003,
       "tau": 0.5,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [
         "g050_t0130"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "blocked",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4194,23 +4187,25 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       },
-      "requeue_count": 1
+      "requeue_count": 1,
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g025_t0030",
       "kind": "ree",
       "gamma": 0.25,
       "tau": 0.3,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "claimed",
-      "claimed_by": "gha-25690827466-g025_t0030",
-      "claimed_at": "2026-05-11T18:57:50Z",
+      "status": "ready",
+      "claimed_by": null,
+      "claimed_at": null,
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4221,7 +4216,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -4230,22 +4225,14 @@
       "kind": "ree",
       "gamma": 0.25,
       "tau": 0.5,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
       "status": "ready",
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g025_t0050.npz",
-      "result": {
-        "1-R2": 0.03054842,
-        "F_max": 1.7696e-87,
-        "TV": 0.395611,
-        "Vi": 0.006501,
-        "n_stages": 1,
-        "phi_calls": 1020,
-        "wall_s": 17792.3
-      },
+      "checkpoint": null,
+      "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
         "mp_dps": 200,
@@ -4253,31 +4240,25 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
-      }
+      },
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g025_t0080",
       "kind": "ree",
       "gamma": 0.25,
       "tau": 0.8,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
       "status": "ready",
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g025_t0080.npz",
-      "result": {
-        "1-R2": 0.0604226,
-        "F_max": 2.3688e-47,
-        "TV": 0.701945,
-        "Vi": 0.006822,
-        "n_stages": 1,
-        "phi_calls": 748,
-        "wall_s": 17946.7
-      },
+      "checkpoint": null,
+      "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
         "mp_dps": 200,
@@ -4285,31 +4266,25 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
-      }
+      },
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g025_t0100",
       "kind": "ree",
       "gamma": 0.25,
       "tau": 1,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
       "status": "ready",
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g025_t0100.npz",
-      "result": {
-        "1-R2": 0.06908122,
-        "F_max": 1.4296e-56,
-        "TV": 0.787488,
-        "Vi": 0.008256,
-        "n_stages": 1,
-        "phi_calls": 32,
-        "wall_s": 17616.4
-      },
+      "checkpoint": null,
+      "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
         "mp_dps": 200,
@@ -4317,31 +4292,25 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
-      }
+      },
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g025_t0150",
       "kind": "ree",
       "gamma": 0.25,
       "tau": 1.5,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
       "status": "ready",
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g025_t0150.npz",
-      "result": {
-        "1-R2": 0.09396767,
-        "F_max": 8.4884e-52,
-        "TV": 1.51751,
-        "Vi": 56999262.866612,
-        "n_stages": 1,
-        "phi_calls": 2077,
-        "wall_s": 17847.7
-      },
+      "checkpoint": null,
+      "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
         "mp_dps": 200,
@@ -4349,31 +4318,25 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
-      }
+      },
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g025_t0200",
       "kind": "ree",
       "gamma": 0.25,
       "tau": 2,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
       "status": "ready",
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g025_t0200.npz",
-      "result": {
-        "1-R2": 0.09360278,
-        "F_max": 5.2529e-45,
-        "TV": 1.874537,
-        "Vi": 19333543829.03731,
-        "n_stages": 1,
-        "phi_calls": 670,
-        "wall_s": 17929.6
-      },
+      "checkpoint": null,
+      "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
         "mp_dps": 200,
@@ -4381,31 +4344,25 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
-      }
+      },
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g025_t0300",
       "kind": "ree",
       "gamma": 0.25,
       "tau": 3,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
       "status": "ready",
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g025_t0300.npz",
-      "result": {
-        "1-R2": 0.11189581,
-        "F_max": 4.1424e-63,
-        "TV": 2.977932,
-        "Vi": 1102636833510.206,
-        "n_stages": 1,
-        "phi_calls": 740,
-        "wall_s": 17321.2
-      },
+      "checkpoint": null,
+      "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
         "mp_dps": 200,
@@ -4413,31 +4370,25 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
-      }
+      },
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g035_t0200",
       "kind": "ree",
       "gamma": 0.35000000000000003,
       "tau": 2,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
       "status": "ready",
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g035_t0200.npz",
-      "result": {
-        "1-R2": 0.0910083,
-        "F_max": 1.2703e-55,
-        "TV": 1.04042,
-        "Vi": 392894.738848,
-        "n_stages": 1,
-        "phi_calls": 598,
-        "wall_s": 17821.4
-      },
+      "checkpoint": null,
+      "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
         "mp_dps": 200,
@@ -4445,16 +4396,18 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
-      }
+      },
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g050_t0400",
       "kind": "ree",
       "gamma": 0.5,
       "tau": 4,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4471,7 +4424,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -4480,7 +4433,7 @@
       "kind": "ree",
       "gamma": 0.5,
       "tau": 5,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4497,7 +4450,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -4506,7 +4459,7 @@
       "kind": "ree",
       "gamma": 0.5,
       "tau": 7,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4523,7 +4476,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -4532,7 +4485,7 @@
       "kind": "ree",
       "gamma": 0.5,
       "tau": 10,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4549,7 +4502,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -4558,7 +4511,7 @@
       "kind": "ree",
       "gamma": 0.5,
       "tau": 12,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4575,7 +4528,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -4584,7 +4537,7 @@
       "kind": "ree",
       "gamma": 0.5,
       "tau": 15,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4601,7 +4554,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -4610,7 +4563,7 @@
       "kind": "ree",
       "gamma": 0.5,
       "tau": 20,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4627,7 +4580,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -4636,7 +4589,7 @@
       "kind": "ree",
       "gamma": 1,
       "tau": 2.5,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4653,7 +4606,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -4662,7 +4615,7 @@
       "kind": "ree",
       "gamma": 1,
       "tau": 3,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4679,7 +4632,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -4688,7 +4641,7 @@
       "kind": "ree",
       "gamma": 1,
       "tau": 4.5,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4705,7 +4658,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -4714,7 +4667,7 @@
       "kind": "ree",
       "gamma": 1,
       "tau": 5,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4731,7 +4684,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -4740,7 +4693,7 @@
       "kind": "ree",
       "gamma": 1,
       "tau": 7,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4757,7 +4710,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -4766,7 +4719,7 @@
       "kind": "ree",
       "gamma": 1,
       "tau": 15,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4783,7 +4736,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -4792,7 +4745,7 @@
       "kind": "ree",
       "gamma": 1,
       "tau": 20,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4809,7 +4762,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -4818,7 +4771,7 @@
       "kind": "ree",
       "gamma": 1.4,
       "tau": 2.4,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4835,7 +4788,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -4844,7 +4797,7 @@
       "kind": "ree",
       "gamma": 1.4,
       "tau": 2.7,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4861,7 +4814,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -4870,7 +4823,7 @@
       "kind": "ree",
       "gamma": 1.4,
       "tau": 3.3,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4887,7 +4840,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -4896,7 +4849,7 @@
       "kind": "ree",
       "gamma": 1.4,
       "tau": 4.3,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4913,7 +4866,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -4922,7 +4875,7 @@
       "kind": "ree",
       "gamma": 1.4,
       "tau": 4.5,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4939,7 +4892,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -4948,7 +4901,7 @@
       "kind": "ree",
       "gamma": 1.4,
       "tau": 5.1,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4965,7 +4918,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -4974,7 +4927,7 @@
       "kind": "ree",
       "gamma": 2,
       "tau": 3,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -4991,7 +4944,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -5000,7 +4953,7 @@
       "kind": "ree",
       "gamma": 2,
       "tau": 5,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -5017,7 +4970,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -5026,7 +4979,7 @@
       "kind": "ree",
       "gamma": 4,
       "tau": 10,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -5043,7 +4996,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -5052,7 +5005,7 @@
       "kind": "ree",
       "gamma": 4,
       "tau": 15,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -5069,7 +5022,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -5078,7 +5031,7 @@
       "kind": "ree",
       "gamma": 4,
       "tau": 20,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -5095,7 +5048,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     },
@@ -5104,7 +5057,7 @@
       "kind": "ree",
       "gamma": 0.5,
       "tau": 2,
-      "G": 16,
+      "G": 12,
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
@@ -5121,7 +5074,7 @@
         "mp_iters": 20,
         "presmooth": 0,
         "tol": 5e-07,
-        "G_inner": 16,
+        "G_inner": 12,
         "u_inner_max": 4.0
       }
     }
