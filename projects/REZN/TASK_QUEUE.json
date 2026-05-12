@@ -4102,12 +4102,12 @@
       "checkpoint": "projects/REZN/checkpoints/g010_t0150.npz",
       "result": {
         "1-R2": 0.10130727,
-        "F_max": 1.7322e-64,
+        "F_max": 1.5202e-55,
         "TV": 3.260929,
         "Vi": 234582085458531.0,
         "n_stages": 1,
         "phi_calls": 511,
-        "wall_s": 17472.5
+        "wall_s": 17920.0
       },
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
