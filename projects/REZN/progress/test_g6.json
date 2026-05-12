@@ -2,9 +2,21 @@
   "task_id": "test_g6",
   "worker_id": "gha-25722833823-test_g6",
   "started_at": "2026-05-12T08:29:21Z",
-  "last_update": "2026-05-12T08:29:21Z",
-  "iter": null,
-  "ftol": null,
-  "ftol_history": [],
-  "extra": {}
+  "last_update": "2026-05-12T08:29:32Z",
+  "iter": 66,
+  "ftol": "1.207209e-01",
+  "ftol_history": [
+    "1.384331e-01",
+    "1.384293e-01",
+    "1.389038e-01",
+    "1.324051e-01",
+    "1.190305e-01",
+    "1.264385e-01",
+    "1.229462e-01",
+    "1.207209e-01"
+  ],
+  "extra": {
+    "phase": "anderson",
+    "n_fun": 66
+  }
 }
