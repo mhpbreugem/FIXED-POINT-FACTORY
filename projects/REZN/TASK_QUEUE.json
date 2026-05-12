@@ -4072,10 +4072,10 @@
         "1-R2": 0.09752058,
         "F_max": 1.1457e-54,
         "TV": 2.90477,
-        "Vi": -97270366043444.16,
+        "Vi": 151154139950342.66,
         "n_stages": 1,
         "phi_calls": 1182,
-        "wall_s": 18073.5
+        "wall_s": 18136.1
       },
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
