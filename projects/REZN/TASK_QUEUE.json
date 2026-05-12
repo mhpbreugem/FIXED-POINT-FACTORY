@@ -1542,9 +1542,17 @@
       "id": "g013_t1000",
       "gamma": 0.13,
       "tau": 10,
-      "status": "claimed",
-      "checkpoint": null,
-      "result": null,
+      "status": "ready",
+      "checkpoint": "projects/REZN/checkpoints/g013_t1000.npz",
+      "result": {
+        "1-R2": 0.06427845,
+        "F_max": 4.8001e-74,
+        "TV": 32.235103,
+        "Vi": 31077720974578.695,
+        "n_stages": 1,
+        "phi_calls": 416,
+        "wall_s": 17664.1
+      },
       "completed_at": null,
       "solver_params": {
         "mp_dps": 50,
@@ -1555,9 +1563,7 @@
         "G_inner": 17,
         "u_inner_max": 4.0
       },
-      "G": 17,
-      "claimed_by": "gha-25722898400-g013_t1000",
-      "claimed_at": "2026-05-12T08:30:11Z"
+      "G": 17
     },
     {
       "id": "g010_t0050",
@@ -5045,8 +5051,8 @@
   "summary": {
     "total": 203,
     "done": 0,
-    "ready": 37,
-    "claimed": 5,
+    "ready": 38,
+    "claimed": 4,
     "blocked": 161,
     "bailed": 0,
     "skip": 0
