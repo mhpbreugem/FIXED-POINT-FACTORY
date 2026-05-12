@@ -4210,11 +4210,17 @@
       "depends_on": [],
       "deps_satisfy": "any",
       "status": "ready",
-      "claimed_by": null,
-      "claimed_at": null,
       "completed_at": null,
-      "checkpoint": null,
-      "result": null,
+      "checkpoint": "projects/REZN/checkpoints/g025_t0030.npz",
+      "result": {
+        "1-R2": 0.05294055,
+        "F_max": 4.8581e-56,
+        "TV": 0.493474,
+        "Vi": 0.005486,
+        "n_stages": 1,
+        "phi_calls": 2697,
+        "wall_s": 17796.8
+      },
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
         "mp_dps": 100,
