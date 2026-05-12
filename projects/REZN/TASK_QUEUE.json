@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-11T23:56:13.830815Z",
+  "updated_at": "2026-05-12T00:48:19.838350Z",
   "params": {
     "G": 16,
     "UMAX": 4.0,
@@ -4179,15 +4179,15 @@
       "tau": 0.5,
       "G": 16,
       "K": 3,
-      "depends_on": [],
+      "depends_on": [
+        "g050_t0130"
+      ],
       "deps_satisfy": "any",
-      "status": "claimed",
-      "claimed_by": "gha-25690827466-g016_t0050",
-      "claimed_at": "2026-05-11T18:57:50Z",
+      "status": "ready",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "note": "Auto-requeued (attempt 1): warm-start from g050_t0130 (log-dist=1.49).",
       "solver_params": {
         "mp_dps": 200,
         "mp_tol": "1e-100",
@@ -4196,7 +4196,8 @@
         "tol": 5e-07,
         "G_inner": 16,
         "u_inner_max": 4.0
-      }
+      },
+      "requeue_count": 1
     },
     {
       "id": "g025_t0030",
@@ -5116,8 +5117,8 @@
   "summary": {
     "total": 205,
     "done": 3,
-    "ready": 42,
-    "claimed": 6,
+    "ready": 43,
+    "claimed": 5,
     "blocked": 154,
     "bailed": 0,
     "skip": 0
