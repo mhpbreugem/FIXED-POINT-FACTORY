@@ -227,7 +227,7 @@
       "id": "g050_t0200",
       "gamma": 0.5,
       "tau": 2,
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
@@ -241,8 +241,8 @@
         "u_inner_max": 4.0
       },
       "G": 17,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25722898400-g050_t0200",
+      "claimed_at": "2026-05-12T08:30:11Z"
     },
     {
       "id": "g075_t0030",
@@ -1536,7 +1536,7 @@
       "id": "g013_t1000",
       "gamma": 0.13,
       "tau": 10,
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
@@ -1550,8 +1550,8 @@
         "u_inner_max": 4.0
       },
       "G": 17,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25722898400-g013_t1000",
+      "claimed_at": "2026-05-12T08:30:11Z"
     },
     {
       "id": "g010_t0050",
@@ -1701,7 +1701,7 @@
       "id": "g010_t1000",
       "gamma": 0.1,
       "tau": 10,
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
@@ -1715,8 +1715,8 @@
         "u_inner_max": 4.0
       },
       "G": 17,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25722898400-g010_t1000",
+      "claimed_at": "2026-05-12T08:30:11Z"
     },
     {
       "id": "g160_t0030",
@@ -4001,7 +4001,7 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4015,8 +4015,8 @@
         "G_inner": 17,
         "u_inner_max": 4.0
       },
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25722898400-g010_t0120",
+      "claimed_at": "2026-05-12T08:30:11Z"
     },
     {
       "id": "g010_t0140",
