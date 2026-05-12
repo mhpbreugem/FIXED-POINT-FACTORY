@@ -4233,12 +4233,18 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "claimed",
-      "claimed_by": "gha-25690827466-g025_t0050",
-      "claimed_at": "2026-05-11T18:57:50Z",
+      "status": "ready",
       "completed_at": null,
-      "checkpoint": null,
-      "result": null,
+      "checkpoint": "projects/REZN/checkpoints/g025_t0050.npz",
+      "result": {
+        "1-R2": 0.03054842,
+        "F_max": 1.7696e-87,
+        "TV": 0.395611,
+        "Vi": 0.006501,
+        "n_stages": 1,
+        "phi_calls": 1020,
+        "wall_s": 17792.3
+      },
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
         "mp_dps": 200,
@@ -5110,8 +5116,8 @@
   "summary": {
     "total": 205,
     "done": 3,
-    "ready": 41,
-    "claimed": 7,
+    "ready": 42,
+    "claimed": 6,
     "blocked": 154,
     "bailed": 0,
     "skip": 0
