@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-12T08:29:36.936062Z",
+  "updated_at": "2026-05-12T13:50:22.846309Z",
   "params": {
     "G": 16,
     "UMAX": 4.0,
@@ -4051,10 +4051,12 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "bailed",
       "completed_at": null,
       "checkpoint": null,
-      "result": null,
+      "result": {
+        "reason": "||F||inf=2.233e-01 > bail threshold 1e-04"
+      },
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
         "mp_dps": 50,
@@ -4064,9 +4066,7 @@
         "tol": 5e-07,
         "G_inner": 17,
         "u_inner_max": 4.0
-      },
-      "claimed_by": "gha-25723607761-g010_t0140",
-      "claimed_at": "2026-05-12T08:44:49Z"
+      }
     },
     {
       "id": "g010_t0150",
@@ -5064,9 +5064,9 @@
     "total": 203,
     "done": 0,
     "ready": 40,
-    "claimed": 2,
+    "claimed": 1,
     "blocked": 161,
-    "bailed": 0,
+    "bailed": 1,
     "skip": 0
   },
   "fanout": {
