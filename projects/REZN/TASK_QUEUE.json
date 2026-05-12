@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-12T08:27:55.576954Z",
+  "updated_at": "2026-05-12T08:29:36.936062Z",
   "params": {
     "G": 16,
     "UMAX": 4.0,
@@ -19,51 +19,6 @@
     "dps": 300
   },
   "tasks": [
-    {
-      "id": "test_g6",
-      "gamma": 0.5,
-      "tau": 2.0,
-      "status": "claimed",
-      "checkpoint": null,
-      "result": null,
-      "completed_at": null,
-      "depends_on": [],
-      "solver_params": {
-        "mp_dps": 50,
-        "mp_tol": "1e-40",
-        "mp_iters": 20,
-        "presmooth": 0,
-        "tol": 5e-07,
-        "G_inner": 17,
-        "u_inner_max": 4.0
-      },
-      "G": 17,
-      "note": "claude-worker G=6 pipeline test",
-      "claimed_by": "gha-25722833823-test_g6",
-      "claimed_at": "2026-05-12T08:28:47Z"
-    },
-    {
-      "id": "test_ci_smoke",
-      "gamma": 1,
-      "tau": 0.3,
-      "test": true,
-      "status": "ready",
-      "checkpoint": null,
-      "result": null,
-      "completed_at": null,
-      "G": 17,
-      "solver_params": {
-        "mp_dps": 50,
-        "mp_tol": "1e-40",
-        "mp_iters": 20,
-        "presmooth": 0,
-        "tol": 5e-07,
-        "G_inner": 17,
-        "u_inner_max": 4.0
-      },
-      "claimed_by": null,
-      "claimed_at": null
-    },
     {
       "id": "g050_t0030",
       "gamma": 0.5,
