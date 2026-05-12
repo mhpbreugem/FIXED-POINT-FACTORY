@@ -23,7 +23,7 @@
       "id": "test_g6",
       "gamma": 0.5,
       "tau": 2.0,
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
@@ -39,8 +39,8 @@
       },
       "G": 17,
       "note": "claude-worker G=6 pipeline test",
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25722833823-test_g6",
+      "claimed_at": "2026-05-12T08:28:47Z"
     },
     {
       "id": "test_ci_smoke",
