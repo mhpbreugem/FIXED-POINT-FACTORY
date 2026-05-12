@@ -1,0 +1,10 @@
+{
+  "task_id": "test_g6",
+  "worker_id": "gha-25722833823-test_g6",
+  "started_at": "2026-05-12T08:29:21Z",
+  "last_update": "2026-05-12T08:29:21Z",
+  "iter": null,
+  "ftol": null,
+  "ftol_history": [],
+  "extra": {}
+}
