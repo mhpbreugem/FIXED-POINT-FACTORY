@@ -1557,7 +1557,7 @@
       "depends_on": [
         "g013_t1000"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
@@ -1571,8 +1571,8 @@
         "u_inner_max": 4.0
       },
       "G": 17,
-      "claimed_at": null,
-      "claimed_by": null
+      "claimed_at": "2026-05-13T14:30:35Z",
+      "claimed_by": "gha-25805693456-g013_t0800"
     },
     {
       "id": "g013_t1000",
@@ -1728,7 +1728,7 @@
       "depends_on": [
         "g010_t1000"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
@@ -1742,8 +1742,8 @@
         "u_inner_max": 4.0
       },
       "G": 17,
-      "claimed_at": null,
-      "claimed_by": null
+      "claimed_at": "2026-05-13T14:30:35Z",
+      "claimed_by": "gha-25805693456-g010_t0800"
     },
     {
       "id": "g010_t1000",
@@ -4145,7 +4145,7 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4159,8 +4159,8 @@
         "G_inner": 17,
         "u_inner_max": 4.0
       },
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25805693456-g010_t0170",
+      "claimed_at": "2026-05-13T14:30:35Z"
     },
     {
       "id": "g010_t0500",
@@ -4171,7 +4171,7 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4185,8 +4185,8 @@
         "G_inner": 17,
         "u_inner_max": 4.0
       },
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25805693456-g010_t0500",
+      "claimed_at": "2026-05-13T14:30:35Z"
     },
     {
       "id": "g016_t0050",
@@ -4226,7 +4226,7 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4240,8 +4240,8 @@
         "G_inner": 17,
         "u_inner_max": 4.0
       },
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25805693456-g025_t0030",
+      "claimed_at": "2026-05-13T14:30:35Z"
     },
     {
       "id": "g025_t0050",
@@ -4252,7 +4252,7 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4266,8 +4266,8 @@
         "G_inner": 17,
         "u_inner_max": 4.0
       },
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25805693456-g025_t0050",
+      "claimed_at": "2026-05-13T14:30:35Z"
     },
     {
       "id": "g025_t0080",
@@ -4278,7 +4278,7 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4292,8 +4292,8 @@
         "G_inner": 17,
         "u_inner_max": 4.0
       },
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25805693456-g025_t0080",
+      "claimed_at": "2026-05-13T14:30:35Z"
     },
     {
       "id": "g025_t0100",
@@ -4304,7 +4304,7 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4318,8 +4318,8 @@
         "G_inner": 17,
         "u_inner_max": 4.0
       },
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25805693456-g025_t0100",
+      "claimed_at": "2026-05-13T14:30:35Z"
     },
     {
       "id": "g025_t0150",
@@ -4330,7 +4330,7 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4344,8 +4344,8 @@
         "G_inner": 17,
         "u_inner_max": 4.0
       },
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25805693456-g025_t0150",
+      "claimed_at": "2026-05-13T14:30:35Z"
     },
     {
       "id": "g025_t0200",
@@ -4356,7 +4356,7 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4370,8 +4370,8 @@
         "G_inner": 17,
         "u_inner_max": 4.0
       },
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25805693456-g025_t0200",
+      "claimed_at": "2026-05-13T14:30:35Z"
     },
     {
       "id": "g025_t0300",
@@ -4382,7 +4382,7 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4396,8 +4396,8 @@
         "G_inner": 17,
         "u_inner_max": 4.0
       },
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25805693456-g025_t0300",
+      "claimed_at": "2026-05-13T14:30:35Z"
     },
     {
       "id": "g035_t0200",
@@ -4408,7 +4408,7 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4422,8 +4422,8 @@
         "G_inner": 17,
         "u_inner_max": 4.0
       },
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25805693456-g035_t0200",
+      "claimed_at": "2026-05-13T14:30:35Z"
     },
     {
       "id": "g050_t0400",
@@ -4434,9 +4434,9 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "ready",
-      "claimed_by": null,
-      "claimed_at": null,
+      "status": "claimed",
+      "claimed_by": "gha-25805693456-g050_t0400",
+      "claimed_at": "2026-05-13T14:30:35Z",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4460,9 +4460,9 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "ready",
-      "claimed_by": null,
-      "claimed_at": null,
+      "status": "claimed",
+      "claimed_by": "gha-25805693456-g050_t0500",
+      "claimed_at": "2026-05-13T14:30:35Z",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4486,9 +4486,9 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "ready",
-      "claimed_by": null,
-      "claimed_at": null,
+      "status": "claimed",
+      "claimed_by": "gha-25805693456-g050_t0700",
+      "claimed_at": "2026-05-13T14:30:35Z",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4512,9 +4512,9 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "ready",
-      "claimed_by": null,
-      "claimed_at": null,
+      "status": "claimed",
+      "claimed_by": "gha-25805693456-g050_t1000",
+      "claimed_at": "2026-05-13T14:30:35Z",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4538,9 +4538,9 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "ready",
-      "claimed_by": null,
-      "claimed_at": null,
+      "status": "claimed",
+      "claimed_by": "gha-25805693456-g050_t1200",
+      "claimed_at": "2026-05-13T14:30:35Z",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4564,9 +4564,9 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "ready",
-      "claimed_by": null,
-      "claimed_at": null,
+      "status": "claimed",
+      "claimed_by": "gha-25805693456-g050_t1500",
+      "claimed_at": "2026-05-13T14:30:35Z",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4590,9 +4590,9 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "ready",
-      "claimed_by": null,
-      "claimed_at": null,
+      "status": "claimed",
+      "claimed_by": "gha-25805693456-g050_t2000",
+      "claimed_at": "2026-05-13T14:30:35Z",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4616,9 +4616,9 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "ready",
-      "claimed_by": null,
-      "claimed_at": null,
+      "status": "claimed",
+      "claimed_by": "gha-25805693456-g100_t0250",
+      "claimed_at": "2026-05-13T14:30:35Z",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
