@@ -1545,7 +1545,7 @@
       "id": "g013_t1000",
       "gamma": 0.13,
       "tau": 10,
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
@@ -1558,7 +1558,9 @@
         "G_inner": 17,
         "u_inner_max": 4.0
       },
-      "G": 17
+      "G": 17,
+      "claimed_by": "gha-25785293074-g013_t1000",
+      "claimed_at": "2026-05-13T07:37:31Z"
     },
     {
       "id": "g010_t0050",
