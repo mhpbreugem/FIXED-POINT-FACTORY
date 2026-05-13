@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-13T08:04:52Z",
+  "updated_at": "2026-05-13T10:16:27Z",
   "params": {
     "G": 16,
     "UMAX": 4.0,
@@ -20,13 +20,34 @@
   },
   "tasks": [
     {
+      "id": "smoke_g5",
+      "gamma": 0.5,
+      "tau": 1.0,
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "completed_at": null,
+      "claimed_by": null,
+      "claimed_at": null,
+      "solver_params": {
+        "mp_dps": 50,
+        "mp_tol": "1e-50",
+        "mp_iters": 20,
+        "presmooth": 0,
+        "tol": 5e-07,
+        "G_inner": 5,
+        "u_inner_max": 4.0
+      },
+      "G": 5
+    },
+    {
       "id": "smoke_selfhosted",
       "gamma": 1.0,
       "tau": 0.3,
       "test": true,
-      "status": "claimed",
-      "claimed_by": "gha-25786609619-smoke_selfhosted",
-      "claimed_at": "2026-05-13T08:06:56Z"
+      "status": "ready",
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g050_t0030",
@@ -236,7 +257,7 @@
       "id": "g050_t0200",
       "gamma": 0.5,
       "tau": 2,
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
@@ -250,8 +271,8 @@
         "u_inner_max": 4.0
       },
       "G": 17,
-      "claimed_by": "gha-25786707833-g050_t0200",
-      "claimed_at": "2026-05-13T08:09:11Z"
+      "claimed_by": null,
+      "claimed_at": null
     },
     {
       "id": "g075_t0030",
