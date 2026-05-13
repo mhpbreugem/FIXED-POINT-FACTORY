@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-13T21:22:27Z",
+  "updated_at": "2026-05-13T23:52:50.468051Z",
   "params": {
     "G": 21,
     "UMAX": 5.0,
@@ -593,7 +593,7 @@
       "depends_on": [
         "g100_t0300"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "solver_params": {
         "mp_dps": 70,
@@ -608,8 +608,6 @@
       "G": 21,
       "result": null,
       "completed_at": null,
-      "claimed_at": "2026-05-13T21:23:04Z",
-      "claimed_by": "gha-25827205663-g100_t0400",
       "deps_satisfy": "any"
     },
     {
@@ -4124,7 +4122,7 @@
         "g100_t0300"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4137,9 +4135,7 @@
         "tol": 5e-07,
         "G_inner": 21,
         "u_inner_max": 5.0
-      },
-      "claimed_by": "gha-25827205663-g025_t0300",
-      "claimed_at": "2026-05-13T21:23:04Z"
+      }
     },
     {
       "id": "g035_t0200",
@@ -4360,7 +4356,7 @@
         "g100_t0300"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4373,9 +4369,7 @@
         "tol": 5e-07,
         "G_inner": 21,
         "u_inner_max": 5.0
-      },
-      "claimed_by": "gha-25827205663-g100_t0250",
-      "claimed_at": "2026-05-13T21:23:04Z"
+      }
     },
     {
       "id": "g100_t0300",
@@ -4706,9 +4700,7 @@
         "g100_t0300"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
-      "claimed_by": "gha-25827205663-g200_t0300",
-      "claimed_at": "2026-05-13T21:23:04Z",
+      "status": "ready",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
