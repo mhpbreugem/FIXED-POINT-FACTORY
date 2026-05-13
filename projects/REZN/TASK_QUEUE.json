@@ -269,7 +269,7 @@
       "id": "g050_t0200",
       "gamma": 0.5,
       "tau": 2,
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
@@ -283,8 +283,8 @@
         "u_inner_max": 4.0
       },
       "G": 17,
-      "claimed_by": null,
-      "claimed_at": null
+      "claimed_by": "gha-25801148703-g050_t0200",
+      "claimed_at": "2026-05-13T13:09:17Z"
     },
     {
       "id": "g075_t0030",
