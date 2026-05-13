@@ -23,12 +23,18 @@
       "id": "smoke_g5",
       "gamma": 0.5,
       "tau": 1.0,
-      "status": "claimed",
-      "checkpoint": null,
-      "result": null,
-      "completed_at": null,
-      "claimed_by": "gha-25793427509-smoke_g5",
-      "claimed_at": "2026-05-13T10:29:04Z",
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/smoke_g5.npz",
+      "result": {
+        "1-R2": 0.12059121,
+        "F_max": 2.4784e-52,
+        "TV": 0.444672,
+        "Vi": 3e-05,
+        "n_stages": 1,
+        "phi_calls": 456,
+        "wall_s": 134.4
+      },
+      "completed_at": "2026-05-13T10:31:49.161770Z",
       "solver_params": {
         "mp_dps": 50,
         "mp_tol": "1e-50",
@@ -5057,12 +5063,13 @@
     }
   ],
   "summary": {
-    "total": 204,
+    "total": 205,
+    "done": 1,
     "ready": 43,
     "claimed": 0,
-    "done": 0,
     "blocked": 161,
-    "bailed": 0
+    "bailed": 0,
+    "skip": 0
   },
   "fanout": {
     "g050": [
