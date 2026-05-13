@@ -76,7 +76,7 @@ jobs:
   solve:
     needs: schedule
     if: needs.schedule.outputs.count != '0' && needs.schedule.outputs.count != ''
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       max-parallel: 20
