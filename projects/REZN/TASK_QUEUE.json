@@ -51,9 +51,9 @@
       "gamma": 1.0,
       "tau": 0.3,
       "test": true,
-      "status": "ready",
-      "claimed_by": null,
-      "claimed_at": null
+      "status": "claimed",
+      "claimed_by": "gha-25801128189-smoke_selfhosted",
+      "claimed_at": "2026-05-13T13:08:50Z"
     },
     {
       "id": "g050_t0030",
