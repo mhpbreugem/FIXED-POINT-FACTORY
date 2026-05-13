@@ -113,7 +113,7 @@ class ProgressReporter:
         self._stop_event = threading.Event()
         self._thread: Optional[threading.Thread] = None
 
-    # ── public API ────────────────────────────────────────────────────────
+    # ── public API ────────────────────────────────────────────────────────────────────
     def update(self, iter: Optional[int] = None, ftol: Optional[float] = None,
                **extra) -> None:
         """Called by the solver inner loop. Cheap: just updates memory."""
@@ -152,7 +152,7 @@ class ProgressReporter:
         if delete and self._api_enabled:
             self._api_delete()
 
-    # ── internals ─────────────────────────────────────────────────────────
+    # ── internals ────────────────────────────────────────────────────────────────────
     def _loop(self) -> None:
         while not self._stop_event.is_set():
             self._flush()
@@ -160,9 +160,8 @@ class ProgressReporter:
                 if self._stop_event.is_set():
                     break
                 time.sleep(1)
-        # Final flush before exit (unless stop(delete=True) will wipe it)
-        if not self._stop_event.is_set():
-            self._flush()
+        # Final flush — always runs so the last state is written before stop()/delete()
+        self._flush()
 
     def _flush(self) -> None:
         """PUT the current state to GitHub. Caches the new file SHA on success."""
@@ -195,7 +194,8 @@ class ProgressReporter:
                 # File missing on remote; clear cached SHA so next PUT creates it.
                 self._remote_sha = None
                 continue
-            print(f"[progress] PUT rc={status} attempt {attempt}", flush=True)
+            print(f"[progress] PUT rc={status} attempt {attempt} — check token/permissions",
+                  flush=True)
             time.sleep(2 * (attempt + 1))
 
     def _api_put(self, body: bytes, message: str,
@@ -220,6 +220,11 @@ class ProgressReporter:
                 resp = json.loads(r.read().decode())
                 return r.status, resp.get("content", {}).get("sha")
         except urllib.error.HTTPError as e:
+            try:
+                body_txt = e.read().decode(errors="replace")[:400]
+                print(f"[progress] PUT {e.code} body: {body_txt}", flush=True)
+            except Exception:
+                pass
             return e.code, None
 
     def _api_get_sha(self) -> Optional[str]:

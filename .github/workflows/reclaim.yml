@@ -1,0 +1,39 @@
+name: Release stale claims
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_age_hours:
+        description: 'Release tasks claimed more than this many hours ago (default 1)'
+        required: false
+        default: '1'
+  schedule:
+    # Every 30 minutes — auto-releases tasks stuck in "claimed" if runner went offline
+    - cron: '*/30 * * * *'
+
+permissions:
+  contents: write
+
+env:
+  PROJECT: REZN
+
+jobs:
+  reclaim:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name  "fpf-solver[bot]"
+          git config user.email "fpf-solver@users.noreply.github.com"
+
+      - name: Release stale claims
+        env:
+          MAX_AGE: ${{ github.event.inputs.max_age_hours || '1' }}
+        run: |
+          python3 core/claim_task.py release \
+            --project "$PROJECT" \
+            --max-age-hours "$MAX_AGE"
