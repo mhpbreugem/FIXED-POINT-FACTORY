@@ -51,9 +51,15 @@
       "gamma": 1.0,
       "tau": 0.3,
       "test": true,
-      "status": "claimed",
-      "claimed_by": "gha-25801128189-smoke_selfhosted",
-      "claimed_at": "2026-05-13T13:08:50Z"
+      "status": "done",
+      "checkpoint": "",
+      "result": {
+        "smoke": true,
+        "1-R2": 0.00015319,
+        "F_max": 0.20528,
+        "note": "CI smoke test \u2014 one phi eval, no convergence required"
+      },
+      "completed_at": "2026-05-13T13:09:19.255259Z"
     },
     {
       "id": "g050_t0030",
@@ -5064,8 +5070,8 @@
   ],
   "summary": {
     "total": 205,
-    "done": 1,
-    "ready": 43,
+    "done": 2,
+    "ready": 42,
     "claimed": 0,
     "blocked": 161,
     "bailed": 0,
