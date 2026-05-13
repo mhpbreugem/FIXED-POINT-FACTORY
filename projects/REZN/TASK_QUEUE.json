@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-13T17:41:44Z",
+  "updated_at": "2026-05-13T19:49:18.935082Z",
   "params": {
     "G": 21,
     "UMAX": 5.0,
@@ -4380,9 +4380,7 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "claimed",
-      "claimed_by": "gha-25816116734-g100_t0300",
-      "claimed_at": "2026-05-13T17:42:30Z",
+      "status": "ready",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
