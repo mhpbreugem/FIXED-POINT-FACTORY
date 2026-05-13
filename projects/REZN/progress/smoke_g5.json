@@ -2,9 +2,22 @@
   "task_id": "smoke_g5",
   "worker_id": "gha-25793427509-smoke_g5",
   "started_at": "2026-05-13T10:29:32Z",
-  "last_update": "2026-05-13T10:29:32Z",
-  "iter": null,
-  "ftol": null,
-  "ftol_history": [],
-  "extra": {}
+  "last_update": "2026-05-13T10:31:32Z",
+  "iter": 15,
+  "ftol": "3.454843e-46",
+  "ftol_history": [
+    "1.107042e-24",
+    "9.372890e-28",
+    "7.938011e-31",
+    "6.720798e-34",
+    "5.698893e-37",
+    "4.826341e-40",
+    "4.080704e-43",
+    "3.454843e-46"
+  ],
+  "extra": {
+    "phase": "mp_newton",
+    "n_fun": 15,
+    "n_jac": 14
+  }
 }
