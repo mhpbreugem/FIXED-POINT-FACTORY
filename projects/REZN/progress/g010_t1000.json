@@ -1,0 +1,10 @@
+{
+  "task_id": "g010_t1000",
+  "worker_id": "gha-25801201213-g010_t1000",
+  "started_at": "2026-05-13T13:10:45Z",
+  "last_update": "2026-05-13T13:10:45Z",
+  "iter": null,
+  "ftol": null,
+  "ftol_history": [],
+  "extra": {}
+}
