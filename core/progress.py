@@ -1,17 +1,9 @@
 """
-progress.py — Worker progress reporter (REST API edition).
-
+progress.py — Worker progress reporter.
 Solvers import this and call `update(iter=N, ftol=X)` periodically.
-A background thread PUTs the latest snapshot to
+A background thread writes the latest state to
     projects/$PROJECT/progress/$TASK_ID.json
-once per `interval` seconds via the GitHub Contents API.
-
-Why REST API instead of git push?
-Many workers writing their own progress files in parallel used to collide
-at `git push` time, dropping snapshots and (worse) leaving the worker's
-local tree diverged from main.  Each progress file is owned by exactly one
-worker, so the only conflict path is the file's own previous SHA — which
-we cache from the last successful PUT.  No git operations at all.
+once per `interval` seconds, commits it, and pushes.
 
 Usage from a solver:
     from core.progress import ProgressReporter
@@ -25,20 +17,16 @@ Usage from a solver:
         reporter.update(iter=it, ftol=ftol)
         if ftol < target_tol:
             break
-    reporter.stop()    # final flush + thread join + delete from repo
+    reporter.stop()    # final flush + thread join
 """
 from __future__ import annotations
 
-import base64
 import datetime
 import json
 import os
-import re
 import subprocess
 import threading
 import time
-import urllib.error
-import urllib.request
 from pathlib import Path
 from typing import Optional
 
@@ -53,23 +41,6 @@ def _repo_root() -> Path:
         capture_output=True, text=True,
     )
     return Path(result.stdout.strip()) if result.returncode == 0 else Path(".")
-
-
-def _gh_token() -> str:
-    t = os.environ.get("GITHUB_TOKEN", "")
-    if t:
-        return t
-    r = subprocess.run(["git", "remote", "get-url", "origin"],
-                       capture_output=True, text=True)
-    m = re.search(r"https://([A-Za-z0-9_]+)@github\.com", r.stdout.strip())
-    return m.group(1) if m else ""
-
-
-def _gh_repo() -> tuple[str, str]:
-    r = subprocess.run(["git", "remote", "get-url", "origin"],
-                       capture_output=True, text=True)
-    m = re.search(r"github\.com[:/]([^/]+)/([^/.]+?)(?:\.git)?$", r.stdout.strip())
-    return (m.group(1), m.group(2)) if m else ("", "")
 
 
 class ProgressReporter:
@@ -88,16 +59,8 @@ class ProgressReporter:
         self.branch = branch
         self.interval = interval
         self.repo_root = Path(repo_root) if repo_root else _repo_root()
-        self.api_path = f"projects/{project}/progress/{task_id}.json"
-
-        # API auth — fall back to no-op mode if no token (local testing)
-        self._token = _gh_token()
-        self._owner, self._repo = _gh_repo()
-        self._api_enabled = bool(self._token and self._owner and self._repo)
-
-        # Cached SHA of the latest version of the file on the remote.
-        # None means "file doesn't exist on remote yet" (first PUT omits sha).
-        self._remote_sha: Optional[str] = None
+        self.progress_dir = self.repo_root / "projects" / project / "progress"
+        self.progress_file = self.progress_dir / f"{task_id}.json"
 
         self._state: dict = {
             "task_id":      task_id,
@@ -136,21 +99,25 @@ class ProgressReporter:
         """Start the background flusher thread."""
         if self._thread is not None:
             return
-        if not self._api_enabled:
-            print("[progress] GITHUB_TOKEN missing — progress reporting disabled",
-                  flush=True)
-            return
+        self.progress_dir.mkdir(parents=True, exist_ok=True)
         self._thread = threading.Thread(target=self._loop, daemon=True)
         self._thread.start()
 
     def stop(self, delete: bool = True) -> None:
-        """Stop the flusher. If delete=True, remove the progress file from remote."""
+        """Stop the flusher. If delete=True, remove the progress file."""
         self._stop_event.set()
         if self._thread:
             self._thread.join(timeout=15)
             self._thread = None
-        if delete and self._api_enabled:
-            self._api_delete()
+        if delete and self.progress_file.exists():
+            try:
+                self.progress_file.unlink()
+                self._git_commit_push(
+                    f"progress cleanup {self.task_id} ({self.worker_id})",
+                    delete=True,
+                )
+            except Exception as exc:
+                print(f"[progress] cleanup failed (non-fatal): {exc}", flush=True)
 
     # ── internals ────────────────────────────────────────────────────────────────────
     def _loop(self) -> None:
@@ -164,100 +131,43 @@ class ProgressReporter:
         self._flush()
 
     def _flush(self) -> None:
-        """PUT the current state to GitHub. Caches the new file SHA on success."""
         with self._lock:
             snapshot = dict(self._state)
-        body = json.dumps(snapshot, indent=2).encode()
-        message = (f"progress {self.task_id} "
-                   f"iter={snapshot.get('iter')} ftol={snapshot.get('ftol')} "
-                   f"({self.worker_id})")
-        # 3 attempts: 200/201 = success, 409 = stale SHA (refresh and retry),
-        # transient errors = backoff and retry.
-        for attempt in range(3):
-            try:
-                status, new_sha = self._api_put(body, message, self._remote_sha)
-            except Exception as exc:
-                print(f"[progress] flush exc attempt {attempt}: {exc}", flush=True)
-                time.sleep(2 * (attempt + 1))
-                continue
-            if status in (200, 201):
-                if new_sha:
-                    self._remote_sha = new_sha
-                return
-            if status == 409:
-                # Lost the SHA somehow (e.g. cleanup deleted the file).
-                # Refresh and try again on next loop iteration.
-                self._remote_sha = self._api_get_sha()
-                time.sleep(1 + attempt)
-                continue
-            if status == 404:
-                # File missing on remote; clear cached SHA so next PUT creates it.
-                self._remote_sha = None
-                continue
-            print(f"[progress] PUT rc={status} attempt {attempt} — check token/permissions",
-                  flush=True)
-            time.sleep(2 * (attempt + 1))
-
-    def _api_put(self, body: bytes, message: str,
-                 sha: Optional[str]) -> tuple[int, Optional[str]]:
-        url = (f"https://api.github.com/repos/{self._owner}/{self._repo}"
-               f"/contents/{self.api_path}")
-        payload: dict = {
-            "message": message,
-            "content": base64.b64encode(body).decode(),
-            "branch":  self.branch,
-        }
-        if sha:
-            payload["sha"] = sha
-        req = urllib.request.Request(
-            url, data=json.dumps(payload).encode(), method="PUT",
-            headers={"Authorization": f"token {self._token}",
-                     "Content-Type":  "application/json",
-                     "Accept":        "application/vnd.github+json"},
-        )
         try:
-            with urllib.request.urlopen(req, timeout=25) as r:
-                resp = json.loads(r.read().decode())
-                return r.status, resp.get("content", {}).get("sha")
-        except urllib.error.HTTPError as e:
-            try:
-                body_txt = e.read().decode(errors="replace")[:400]
-                print(f"[progress] PUT {e.code} body: {body_txt}", flush=True)
-            except Exception:
-                pass
-            return e.code, None
-
-    def _api_get_sha(self) -> Optional[str]:
-        url = (f"https://api.github.com/repos/{self._owner}/{self._repo}"
-               f"/contents/{self.api_path}?ref={self.branch}")
-        req = urllib.request.Request(
-            url, headers={"Authorization": f"token {self._token}"},
-        )
-        try:
-            with urllib.request.urlopen(req, timeout=20) as r:
-                return json.loads(r.read().decode()).get("sha")
-        except urllib.error.HTTPError:
-            return None
-        except Exception:
-            return None
-
-    def _api_delete(self) -> None:
-        sha = self._remote_sha or self._api_get_sha()
-        if not sha:
-            return  # nothing to delete
-        url = (f"https://api.github.com/repos/{self._owner}/{self._repo}"
-               f"/contents/{self.api_path}")
-        payload = {
-            "message": f"progress cleanup {self.task_id} ({self.worker_id})",
-            "sha":     sha,
-            "branch":  self.branch,
-        }
-        req = urllib.request.Request(
-            url, data=json.dumps(payload).encode(), method="DELETE",
-            headers={"Authorization": f"token {self._token}",
-                     "Content-Type":  "application/json"},
-        )
-        try:
-            urllib.request.urlopen(req, timeout=20).read()
+            self.progress_file.write_text(json.dumps(snapshot, indent=2))
+            self._git_commit_push(
+                f"progress {self.task_id} iter={snapshot.get('iter')} "
+                f"ftol={snapshot.get('ftol')} ({self.worker_id})"
+            )
         except Exception as exc:
-            print(f"[progress] cleanup failed (non-fatal): {exc}", flush=True)
+            print(f"[progress] flush failed (non-fatal): {exc}", flush=True)
+
+    def _git_commit_push(self, message: str, delete: bool = False) -> None:
+        rel = f"projects/{self.project}/progress/{self.task_id}.json"
+        cwd = str(self.repo_root)
+        # Pull first to minimise conflicts
+        subprocess.run(["git", "pull", "--rebase", "origin", self.branch],
+                       cwd=cwd, capture_output=True, timeout=30)
+        if delete:
+            subprocess.run(["git", "rm", "-f", "--ignore-unmatch", rel],
+                           cwd=cwd, capture_output=True)
+        else:
+            subprocess.run(["git", "add", rel], cwd=cwd, capture_output=True)
+        # Anything staged?
+        diff = subprocess.run(["git", "diff", "--cached", "--quiet"],
+                              cwd=cwd, capture_output=True)
+        if diff.returncode == 0:
+            return  # nothing changed
+        subprocess.run(["git", "commit", "-m", message, "--quiet"],
+                       cwd=cwd, capture_output=True)
+        # Push with retries
+        for attempt in range(3):
+            push = subprocess.run(
+                ["git", "push", "origin", self.branch, "--quiet"],
+                cwd=cwd, capture_output=True, timeout=30,
+            )
+            if push.returncode == 0:
+                return
+            subprocess.run(["git", "pull", "--rebase", "origin", self.branch],
+                           cwd=cwd, capture_output=True, timeout=30)
+            time.sleep(2 * (attempt + 1))
