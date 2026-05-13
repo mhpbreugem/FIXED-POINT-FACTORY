@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-13T19:49:18.935082Z",
+  "updated_at": "2026-05-13T21:22:27Z",
   "params": {
     "G": 21,
     "UMAX": 5.0,
@@ -590,8 +590,10 @@
       "id": "g100_t0400",
       "gamma": 1,
       "tau": 4,
-      "depends_on": [],
-      "status": "blocked",
+      "depends_on": [
+        "g100_t0300"
+      ],
+      "status": "ready",
       "checkpoint": null,
       "solver_params": {
         "mp_dps": 70,
@@ -4118,9 +4120,11 @@
       "tau": 3,
       "G": 21,
       "K": 3,
-      "depends_on": [],
+      "depends_on": [
+        "g100_t0300"
+      ],
       "deps_satisfy": "any",
-      "status": "blocked",
+      "status": "ready",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4352,9 +4356,11 @@
       "tau": 2.5,
       "G": 21,
       "K": 3,
-      "depends_on": [],
+      "depends_on": [
+        "g100_t0300"
+      ],
       "deps_satisfy": "any",
-      "status": "blocked",
+      "status": "ready",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4696,9 +4702,11 @@
       "tau": 3,
       "G": 21,
       "K": 3,
-      "depends_on": [],
+      "depends_on": [
+        "g100_t0300"
+      ],
       "deps_satisfy": "any",
-      "status": "blocked",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
