@@ -368,20 +368,33 @@ def _update_summary(queue: dict) -> None:
 def _unblock_downstream(queue: dict) -> list[str]:
     """Unblock tasks whose immediate grid neighbor (adjacent γ or τ) is now done.
 
+    "Adjacent" is defined per-row/per-column: the next/previous τ value among
+    tasks that share the same γ, and the next/previous γ among tasks that share
+    the same τ.  This handles incomplete grids correctly.
+
     Sets depends_on = [best_neighbor_id] so load_warm_start picks up that
     checkpoint automatically.  Tasks without gamma/tau coordinates fall back
     to the old depends_on logic.
     """
+    from collections import defaultdict
+
     done_ids = {t["id"] for t in queue["tasks"] if t["status"] == "done"}
 
-    # Build sorted coordinate lists and a (gamma, tau) → task index.
     real = [t for t in queue["tasks"]
             if t.get("gamma") is not None and t.get("tau") is not None]
-    gammas = sorted(set(float(t["gamma"]) for t in real))
-    taus   = sorted(set(float(t["tau"])   for t in real))
-    by_coords: dict[tuple, dict] = {
-        (float(t["gamma"]), float(t["tau"])): t for t in real
-    }
+
+    # Per-row/column sorted neighbour lists
+    taus_for_gamma: dict[float, list[float]] = defaultdict(list)
+    gammas_for_tau: dict[float, list[float]] = defaultdict(list)
+    by_coords: dict[tuple, dict] = {}
+    for t in real:
+        g2 = float(t["gamma"])
+        t2 = float(t["tau"])
+        taus_for_gamma[g2].append(t2)
+        gammas_for_tau[t2].append(g2)
+        by_coords[(g2, t2)] = t
+    taus_for_gamma = {k: sorted(set(v)) for k, v in taus_for_gamma.items()}
+    gammas_for_tau = {k: sorted(set(v)) for k, v in gammas_for_tau.items()}
 
     unblocked = []
     for t in queue["tasks"]:
@@ -400,21 +413,21 @@ def _unblock_downstream(queue: dict) -> list[str]:
             continue
 
         g, tau = float(g), float(tau)
-        try:
-            gi = gammas.index(g)
-        except ValueError:
-            gi = -1
-        try:
-            ti = taus.index(tau)
-        except ValueError:
-            ti = -1
 
-        # Immediate grid neighbors (up/down in γ, left/right in τ)
+        # τ-neighbours: prev/next τ at the same γ
         neighbor_coords = []
-        if gi > 0:               neighbor_coords.append((gammas[gi - 1], tau))
-        if gi < len(gammas) - 1: neighbor_coords.append((gammas[gi + 1], tau))
-        if ti > 0:               neighbor_coords.append((g, taus[ti - 1]))
-        if ti < len(taus) - 1:   neighbor_coords.append((g, taus[ti + 1]))
+        row = taus_for_gamma.get(g, [])
+        if tau in row:
+            ti = row.index(tau)
+            if ti > 0:               neighbor_coords.append((g, row[ti - 1]))
+            if ti < len(row) - 1:    neighbor_coords.append((g, row[ti + 1]))
+
+        # γ-neighbours: prev/next γ at the same τ
+        col = gammas_for_tau.get(tau, [])
+        if g in col:
+            gi = col.index(g)
+            if gi > 0:               neighbor_coords.append((col[gi - 1], tau))
+            if gi < len(col) - 1:    neighbor_coords.append((col[gi + 1], tau))
 
         done_neighbors = [
             by_coords[c] for c in neighbor_coords
@@ -423,7 +436,6 @@ def _unblock_downstream(queue: dict) -> list[str]:
         if not done_neighbors:
             continue
 
-        # Warm-start from the closest done neighbor (log-distance)
         def _log_dist(dn: dict) -> float:
             return math.hypot(
                 math.log(max(g, 1e-9) / max(float(dn["gamma"]), 1e-9)),
