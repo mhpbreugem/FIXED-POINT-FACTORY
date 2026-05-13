@@ -541,6 +541,16 @@ def _crra_u(w: float, gamma: float) -> float:
     return w ** (1.0 - gamma) / (1.0 - gamma)
 
 
+def _crra_inv(eu: float, gamma: float) -> float:
+    """Invert CRRA: given E[u(W)], return certainty-equivalent wealth CE where u(CE)=eu."""
+    if abs(gamma - 1.0) < 1e-9:
+        return math.exp(eu)
+    val = eu * (1.0 - gamma)
+    if val <= 0.0:
+        return 1e-18
+    return val ** (1.0 / (1.0 - gamma))
+
+
 def sym_econ_metrics(
     P_sorted: np.ndarray,
     sg: "SymGrid",
@@ -579,7 +589,7 @@ def sym_econ_metrics(
 
     P_full = sym_to_full(P_sorted, sg)
 
-    tv_sum = vi_sum = weight_sum = 0.0
+    tv_sum = eu_k_sum = eu_0_sum = weight_sum = 0.0
 
     for s in range(sg.n):
         i_tuple = sg.tuples[s]
@@ -594,17 +604,16 @@ def sym_econ_metrics(
         w_s = 0.5 * mult * (prod_f0 + prod_f1) * (du ** K)
         weight_sum += w_s
 
-        # Baseline: price-only observer infers mu_0 = full Bayes posterior
-        # = ∏f1(u_k) / (∏f0(u_k) + ∏f1(u_k)), trades x_0 at price P_s.
-        # In a fully-revealing REE the price discloses exactly this posterior.
-        mu_0_num = prod_f1
+        # Baseline: price-only observer infers the equilibrium-price posterior.
+        # In a fully-revealing REE the price discloses mu_0 = ∏f1/(∏f0+∏f1).
         mu_0_den = prod_f0 + prod_f1
-        mu_0 = (mu_0_num / mu_0_den) if mu_0_den > eps else 0.5
+        mu_0 = (prod_f1 / mu_0_den) if mu_0_den > eps else 0.5
         mu_0 = max(eps, min(1.0 - eps, mu_0))
         x_0 = _x_crra_single(mu_0, P_s, gamma, W)
         W1_0 = W + x_0 * (1.0 - P_s)
         W0_0 = W - x_0 * P_s
         eu_0 = P_s * _crra_u(W1_0, gamma) + (1.0 - P_s) * _crra_u(W0_0, gamma)
+        eu_0_sum += w_s * eu_0
 
         # Compute mu_k for each agent via contour integral (cache by signal index)
         cache_mu: dict[int, float] = {}
@@ -622,18 +631,21 @@ def sym_econ_metrics(
             x_k = _x_crra_single(mu_k, P_s, gamma, W)
             tv_sum += w_s * abs(x_k)
 
-            # Realized EU: integrate over true v with P[v=1|all signals] = P_s
             W1 = W + x_k * (1.0 - P_s)
             W0 = W - x_k * P_s
             eu_k = P_s * _crra_u(W1, gamma) + (1.0 - P_s) * _crra_u(W0, gamma)
-            vi_sum += w_s * (eu_k - eu_0)
+            eu_k_sum += w_s * eu_k
 
     if weight_sum < eps:
         return {"TV": float("nan"), "Vi": float("nan")}
 
+    # Vi = CE(informed agent) - CE(price-only agent), both in wealth units.
+    ce_k = _crra_inv(eu_k_sum / (weight_sum * K), gamma)
+    ce_0 = _crra_inv(eu_0_sum / weight_sum, gamma)
+
     return {
         "TV": float(tv_sum / (weight_sum * K)),
-        "Vi": float(vi_sum / (weight_sum * K)),
+        "Vi": float(ce_k - ce_0),
     }
 
 
