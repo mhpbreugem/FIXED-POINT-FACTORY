@@ -366,25 +366,76 @@ def _update_summary(queue: dict) -> None:
 
 
 def _unblock_downstream(queue: dict) -> list[str]:
-    """Flip blocked tasks whose deps are now fully satisfied to ready."""
+    """Unblock tasks whose immediate grid neighbor (adjacent γ or τ) is now done.
+
+    Sets depends_on = [best_neighbor_id] so load_warm_start picks up that
+    checkpoint automatically.  Tasks without gamma/tau coordinates fall back
+    to the old depends_on logic.
+    """
     done_ids = {t["id"] for t in queue["tasks"] if t["status"] == "done"}
-    deps_sem = queue.get("deps_semantics", {})
-    default_mode = deps_sem.get("default", "all") if isinstance(deps_sem, dict) else "all"
+
+    # Build sorted coordinate lists and a (gamma, tau) → task index.
+    real = [t for t in queue["tasks"]
+            if t.get("gamma") is not None and t.get("tau") is not None]
+    gammas = sorted(set(float(t["gamma"]) for t in real))
+    taus   = sorted(set(float(t["tau"])   for t in real))
+    by_coords: dict[tuple, dict] = {
+        (float(t["gamma"]), float(t["tau"])): t for t in real
+    }
+
     unblocked = []
     for t in queue["tasks"]:
         if t["status"] != "blocked":
             continue
-        deps = set(t.get("depends_on", []))
-        mode = t.get("deps_satisfy", default_mode)
-        if not deps:
-            satisfied = True
-        elif mode == "any":
-            satisfied = bool(deps & done_ids)
-        else:
-            satisfied = deps <= done_ids
-        if satisfied:
-            t["status"] = "ready"
-            unblocked.append(t["id"])
+
+        g = t.get("gamma")
+        tau = t.get("tau")
+
+        # No coordinates: legacy depends_on fallback
+        if g is None or tau is None:
+            deps = set(t.get("depends_on", []))
+            if deps and (deps & done_ids):
+                t["status"] = "ready"
+                unblocked.append(t["id"])
+            continue
+
+        g, tau = float(g), float(tau)
+        try:
+            gi = gammas.index(g)
+        except ValueError:
+            gi = -1
+        try:
+            ti = taus.index(tau)
+        except ValueError:
+            ti = -1
+
+        # Immediate grid neighbors (up/down in γ, left/right in τ)
+        neighbor_coords = []
+        if gi > 0:               neighbor_coords.append((gammas[gi - 1], tau))
+        if gi < len(gammas) - 1: neighbor_coords.append((gammas[gi + 1], tau))
+        if ti > 0:               neighbor_coords.append((g, taus[ti - 1]))
+        if ti < len(taus) - 1:   neighbor_coords.append((g, taus[ti + 1]))
+
+        done_neighbors = [
+            by_coords[c] for c in neighbor_coords
+            if c in by_coords and by_coords[c]["status"] == "done"
+        ]
+        if not done_neighbors:
+            continue
+
+        # Warm-start from the closest done neighbor (log-distance)
+        def _log_dist(dn: dict) -> float:
+            return math.hypot(
+                math.log(max(g, 1e-9) / max(float(dn["gamma"]), 1e-9)),
+                math.log(max(tau, 1e-9) / max(float(dn["tau"]), 1e-9)),
+            )
+
+        best = min(done_neighbors, key=_log_dist)
+        t["status"] = "ready"
+        t["depends_on"] = [best["id"]]
+        t["deps_satisfy"] = "any"
+        unblocked.append(t["id"])
+
     return unblocked
 
 
