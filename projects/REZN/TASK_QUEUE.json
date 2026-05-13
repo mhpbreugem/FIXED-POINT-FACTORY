@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-13T10:16:27Z",
+  "updated_at": "2026-05-13T10:28:42Z",
   "params": {
     "G": 16,
     "UMAX": 4.0,
@@ -23,12 +23,12 @@
       "id": "smoke_g5",
       "gamma": 0.5,
       "tau": 1.0,
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
-      "claimed_by": "gha-25792900615-smoke_g5",
-      "claimed_at": "2026-05-13T10:17:34Z",
+      "claimed_by": null,
+      "claimed_at": null,
       "solver_params": {
         "mp_dps": 50,
         "mp_tol": "1e-50",
