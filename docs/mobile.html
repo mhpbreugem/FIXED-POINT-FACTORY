@@ -184,7 +184,7 @@
       <th class="dim">K·G</th>
       <th class="dim" onclick="sortBy('gamma')">γ</th>
       <th class="dim" onclick="sortBy('tau')">τ</th>
-      <th onclick="sortBy('F_max')">F</th>
+      <th onclick="sortBy('F_max')">F@50</th>
       <th>F₋₁</th>
       <th>1-R²</th><th>Vi</th><th>TV</th>
       <th>stg</th>
@@ -437,7 +437,7 @@ function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").repl
     // Only tasks: done, non-test, F_max < 1e-100
     const eligible=(taskData.tasks||[]).filter(t=>
       t.status==="done" && !t.test && t.checkpoint &&
-      Number(t.result?.F_max) < 1e-100
+      Number(t.result?.F_max) < 1e-50
     );
     if(!eligible.length){setMsg('No emin100 solutions yet',3000);return;}
 

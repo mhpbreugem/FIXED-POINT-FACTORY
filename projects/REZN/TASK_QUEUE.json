@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-12T13:50:22.846309Z",
+  "updated_at": "2026-05-13T00:00:00Z",
   "params": {
     "G": 16,
     "UMAX": 4.0,
@@ -19,6 +19,13 @@
     "dps": 300
   },
   "tasks": [
+    {
+      "id": "smoke_selfhosted",
+      "gamma": 1.0,
+      "tau": 0.3,
+      "test": true,
+      "status": "ready"
+    },
     {
       "id": "g050_t0030",
       "gamma": 0.5,
