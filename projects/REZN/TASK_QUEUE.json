@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-13T00:00:00Z",
+  "updated_at": "2026-05-13T07:12:00Z",
   "params": {
     "G": 16,
     "UMAX": 4.0,
@@ -235,16 +235,8 @@
       "gamma": 0.5,
       "tau": 2,
       "status": "ready",
-      "checkpoint": "projects/REZN/checkpoints/g050_t0200.npz",
-      "result": {
-        "1-R2": 0.08475254,
-        "F_max": 3.5414e-45,
-        "TV": 0.668,
-        "Vi": 0.005059,
-        "n_stages": 1,
-        "phi_calls": 627,
-        "wall_s": 17617.6
-      },
+      "checkpoint": null,
+      "result": null,
       "completed_at": null,
       "solver_params": {
         "mp_dps": 50,
@@ -1550,16 +1542,8 @@
       "gamma": 0.13,
       "tau": 10,
       "status": "ready",
-      "checkpoint": "projects/REZN/checkpoints/g013_t1000.npz",
-      "result": {
-        "1-R2": 0.06427845,
-        "F_max": 4.8001e-74,
-        "TV": 32.235103,
-        "Vi": 31077720974578.695,
-        "n_stages": 1,
-        "phi_calls": 416,
-        "wall_s": 17664.1
-      },
+      "checkpoint": null,
+      "result": null,
       "completed_at": null,
       "solver_params": {
         "mp_dps": 50,
@@ -1721,16 +1705,8 @@
       "gamma": 0.1,
       "tau": 10,
       "status": "ready",
-      "checkpoint": "projects/REZN/checkpoints/g010_t1000.npz",
-      "result": {
-        "1-R2": 0.06423337,
-        "F_max": 6.3534e-62,
-        "TV": 35.158542,
-        "Vi": 19327275552451.81,
-        "n_stages": 1,
-        "phi_calls": 329,
-        "wall_s": 17980.2
-      },
+      "checkpoint": null,
+      "result": null,
       "completed_at": null,
       "solver_params": {
         "mp_dps": 50,
@@ -4028,16 +4004,8 @@
       "deps_satisfy": "any",
       "status": "ready",
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g010_t0120.npz",
-      "result": {
-        "1-R2": 0.07598594,
-        "F_max": 3.512e-47,
-        "TV": 2.108988,
-        "Vi": 76345778892228.4,
-        "n_stages": 1,
-        "phi_calls": 2031,
-        "wall_s": 18752.3
-      },
+      "checkpoint": null,
+      "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
         "mp_dps": 50,
@@ -4058,12 +4026,10 @@
       "K": 3,
       "depends_on": [],
       "deps_satisfy": "any",
-      "status": "bailed",
+      "status": "ready",
       "completed_at": null,
       "checkpoint": null,
-      "result": {
-        "reason": "||F||inf=2.233e-01 > bail threshold 1e-04"
-      },
+      "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
         "mp_dps": 50,
@@ -4086,16 +4052,8 @@
       "deps_satisfy": "any",
       "status": "ready",
       "completed_at": null,
-      "checkpoint": "projects/REZN/checkpoints/g010_t0150.npz",
-      "result": {
-        "1-R2": 0.07666938,
-        "F_max": 1.2639e-51,
-        "TV": 2.71258,
-        "Vi": 76446518417150.2,
-        "n_stages": 1,
-        "phi_calls": 370,
-        "wall_s": 18379.3
-      },
+      "checkpoint": null,
+      "result": null,
       "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
       "solver_params": {
         "mp_dps": 50,
@@ -5074,13 +5032,9 @@
     }
   ],
   "summary": {
-    "total": 203,
-    "done": 0,
-    "ready": 41,
-    "claimed": 0,
-    "blocked": 161,
-    "bailed": 1,
-    "skip": 0
+    "total": 204,
+    "ready": 43,
+    "blocked": 161
   },
   "fanout": {
     "g050": [
