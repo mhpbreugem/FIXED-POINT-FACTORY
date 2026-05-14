@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Newton JFNK continuation with adaptive step size.
+"""Newton JFNK continuation — adaptive step + linear extrapolation predictor.
 
-Anchor : g100_t0300_G21.npz  gamma=1.0 → sweep left toward gamma=0
-Solver : JFNK, no Anderson, no predictor, damping=1.0 (full Newton)
-Step   : adaptive — grows on easy steps, shrinks on hard/failed steps
-Max iter: 10 per Newton solve; failure → halve step, retry
+Predictor: finite-difference tangent from last 2 converged points.
+           P_pred = P_{k-1} + (Δγ / Δγ_prev) * (P_{k-1} - P_{k-2})
+           Falls back to P_prev when only one prior point available.
+Step ctrl: grows ×1.5 when ≤4 iters, shrinks ×0.5 when ≥8 or failed.
 """
 import sys, json, time
 from pathlib import Path
@@ -63,7 +63,7 @@ def phi_factory(g):
         return phi_K3_halo_smooth(P, u_full, lo, hi, tau, gv, W, kernel_h)
     return fn
 
-# ── JFNK Newton — full step, no Anderson ─────────────────────────────────────
+# ── JFNK Newton ───────────────────────────────────────────────────────────────
 def newton_solve(phi_fn, P0, tol=1e-12, max_iter=10, tag=""):
     P = P0.copy()
     phi_P = phi_fn(P)
@@ -93,80 +93,92 @@ def newton_solve(phi_fn, P0, tol=1e-12, max_iter=10, tag=""):
         phi_P = phi_fn(P)
         F_in = (phi_P - P)[sl, sl, sl].ravel()
         res = float(np.max(np.abs(F_in)))
-        log(f"    {tag} it={it:2d}  ||F||={res:.3e}  info={info}  t={time.time()-t0:.0f}s")
-    return P, res, max_iter   # did not converge
+        log(f"    {tag} it={it:2d}  ||F||={res:.3e}  t={time.time()-t0:.0f}s")
+    return P, res, max_iter
 
-# ── Adaptive continuation: gamma = 1.0 → 0.0 ─────────────────────────────────
+# ── Linear extrapolation predictor from last 2 solved points ─────────────────
+def predict(g_next, solved_gammas, solved_P):
+    """P_pred = P_{k-1} + (dg/dg_prev) * (P_{k-1} - P_{k-2})"""
+    if len(solved_gammas) < 2:
+        return solved_P[-1].copy()
+    g0, g1 = solved_gammas[-2], solved_gammas[-1]
+    P0, P1 = solved_P[-2],      solved_P[-1]
+    dg_prev = g1 - g0           # negative (decreasing gamma)
+    dg      = g_next - g1
+    P_pred = P1 + (dg / dg_prev) * (P1 - P0)
+    return np.clip(P_pred, 1e-12, 1.0 - 1e-12)
+
+# ── Adaptive continuation ─────────────────────────────────────────────────────
 TOL       = 1e-12
 STEP_INIT = 0.005
 STEP_MIN  = 1e-5
 STEP_MAX  = 0.05
-GAMMA_MIN = 0.01     # stop here
+GAMMA_MIN = 0.01
 MAX_ITER  = 10
-GROW      = 1.5      # step multiplier on easy convergence (iters <= 4)
-SHRINK    = 0.5      # step multiplier on hard convergence or failure
+GROW      = 1.5
+SHRINK    = 0.5
 
-results = []
-g     = anchor_gamma
-P_prev = P_anchor.copy()
-step  = STEP_INIT
-t_total = time.time()
+results      = []
+solved_gammas = [anchor_gamma]
+solved_P      = [P_anchor.copy()]
 
-# record anchor itself
 r0 = revelation_deficit(P_anchor[sl, sl, sl], u_inner, np.full(3, tau_fixed), 3)
-results.append({"gamma": g, "one_minus_R2": float(r0),
+results.append({"gamma": anchor_gamma, "one_minus_R2": float(r0),
                 "F_reinsert": 3.664e-15, "newton_iters": 0, "step": 0.0})
-log(f"  anchor gamma={g:.6f}  1-R2={r0:.6e}  ||F||=3.664e-15  step=—")
+log(f"  anchor  gamma={anchor_gamma:.5f}  1-R2={r0:.6e}  ||F||=3.66e-15")
+
+g    = anchor_gamma
+step = STEP_INIT
+t_total = time.time()
 
 while g - 1e-9 > GAMMA_MIN:
     g_next = max(GAMMA_MIN, round(g - step, 8))
+    P_pred = predict(g_next, solved_gammas, solved_P)
+    F0 = float(np.max(np.abs((phi_factory(g_next)(P_pred) - P_pred)[sl, sl, sl])))
     phi = phi_factory(g_next)
     t0 = time.time()
-    P_try, res, nit = newton_solve(phi, P_prev, tol=TOL, max_iter=MAX_ITER,
-                                    tag=f"g={g_next:.4f}")
+    P_try, res, nit = newton_solve(phi, P_pred, tol=TOL, max_iter=MAX_ITER,
+                                    tag=f"g={g_next:.5f}")
     dt = time.time() - t0
 
-    if res < TOL:          # ── converged ──────────────────────────────────────
+    if res < TOL:
         F_check = float(np.max(np.abs((phi(P_try) - P_try)[sl, sl, sl])))
         r2 = revelation_deficit(P_try[sl, sl, sl], u_inner, np.full(3, tau_fixed), 3)
         results.append({"gamma": float(g_next), "one_minus_R2": float(r2),
                         "F_reinsert": F_check, "newton_iters": nit, "step": float(step)})
-        log(f"  ✓ gamma={g_next:.6f}  1-R2={r2:.6e}  ||F||={F_check:.3e}"
-            f"  iters={nit}  step={step:.5f}  t={dt:.0f}s")
-        P_prev = P_try
+        log(f"  ✓ gamma={g_next:.5f}  1-R2={r2:.6e}  ||F||={F_check:.2e}"
+            f"  pred={F0:.2e}  iters={nit}  step={step:.5f}  t={dt:.0f}s")
+        solved_gammas.append(g_next)
+        solved_P.append(P_try)
         g = g_next
-        # adapt step up if easy, down if hard
         if nit <= 4:
             step = min(step * GROW, STEP_MAX)
         elif nit >= 8:
             step = max(step * SHRINK, STEP_MIN)
-    else:                  # ── failed — shrink step and retry ─────────────────
+    else:
         step = max(step * SHRINK, STEP_MIN)
-        log(f"  ✗ gamma={g_next:.6f}  ||F||={res:.3e}  FAILED — step → {step:.5f}")
+        log(f"  ✗ gamma={g_next:.5f}  ||F||={res:.2e}  pred={F0:.2e}"
+            f"  FAILED → step={step:.5f}")
         if step < STEP_MIN * 2:
-            log("  step at minimum, skipping to next")
-            g = g_next   # advance anyway to avoid infinite loop
+            log("  step at minimum — advancing past stiff point")
+            g = g_next
 
 log(f"sweep done in {time.time()-t_total:.0f}s  ({len(results)} points)")
 
-# ── Summary table ─────────────────────────────────────────────────────────────
-log("=" * 72)
+# ── Table ─────────────────────────────────────────────────────────────────────
+log("=" * 68)
 log(f"{'gamma':>8} | {'1-R^2':>12} | {'||F||':>10} | {'iters':>5} | {'step':>7}")
-log("-" * 72)
+log("-" * 68)
 for r in results:
     log(f"{r['gamma']:>8.5f} | {r['one_minus_R2']:>12.6e} | "
-        f"{r['F_reinsert']:>10.3e} | {r['newton_iters']:>5d} | {r['step']:>7.5f}")
-log("=" * 72)
+        f"{r['F_reinsert']:>10.2e} | {r['newton_iters']:>5d} | {r['step']:>7.5f}")
+log("=" * 68)
 
-# ── Write JSON ────────────────────────────────────────────────────────────────
-meta = {
-    "generated_at": datetime.now().isoformat(),
-    "phase": "adaptive Newton JFNK, step 0.005 adaptive, gamma 1→0",
-    "anchor_file": ANCHOR.name,
-    "operator": f"phi_K3_halo_smooth kernel_h={kernel_h}",
-    "tau": tau_fixed,
-    "rows": results,
-}
+meta = {"generated_at": datetime.now().isoformat(),
+        "phase": "adaptive Newton JFNK, linear extrapolation predictor",
+        "anchor_file": ANCHOR.name,
+        "operator": f"phi_K3_halo_smooth kernel_h={kernel_h}",
+        "tau": tau_fixed, "rows": results}
 out_path = OUT / "newton_sweep.json"
 with open(out_path, "w") as fh:
     json.dump(meta, fh, indent=2)
