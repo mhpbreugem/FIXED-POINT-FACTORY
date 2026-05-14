@@ -205,7 +205,7 @@ while g_cur > GAMMA_MIN:
     converged   = res_nk < TOL
 
     if converged:
-        deficit = float(revelation_deficit(P_new, u_full, lo, hi, tau, W))
+        deficit = float(revelation_deficit(P_new[lo:hi, lo:hi, lo:hi], u_full[lo:hi], tau, 3))
         log(f"  CONVERGED  ||F||={res_nk:.2e}  1-R²={deficit*100:.4f}%  "
             f"iters=AA:{aa_it}+NK:{nk_it}")
         history.append((g_next, P_new.copy()))
