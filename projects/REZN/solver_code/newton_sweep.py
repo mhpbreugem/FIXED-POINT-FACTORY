@@ -73,7 +73,7 @@ def phi_factory(g):
 
 # ── JFNK Newton solver — line-search globalised, no Anderson ─────────────────
 def newton_solve(phi_fn, P0, tol=1e-12, max_iter=60,
-                 lgmres_tol=1e-4, lgmres_maxiter=40, lgmres_inner_m=25,
+                 lgmres_tol=1e-8, lgmres_maxiter=60, lgmres_inner_m=30,
                  tag=""):
     """Jacobian-free Newton-Krylov with Armijo backtracking line search.
 
@@ -84,12 +84,13 @@ def newton_solve(phi_fn, P0, tol=1e-12, max_iter=60,
     P = P0.copy()
     phi_P = phi_fn(P)
     F_in = (phi_P - P)[sl, sl, sl].ravel()
-    res = float(np.max(np.abs(F_in)))
+    res_inf = float(np.max(np.abs(F_in)))
+    res2    = float(np.linalg.norm(F_in))
     n_iter = 0
     for it in range(max_iter):
         n_iter = it
-        if res < tol:
-            log(f"    {tag} newton it={it:2d}  ||F||={res:.4e}  [converged]")
+        if res_inf < tol:
+            log(f"    {tag} newton it={it:2d}  ||F||inf={res_inf:.4e}  [converged]")
             break
         normP = np.linalg.norm(P[sl, sl, sl])
         phi_P_in = phi_P[sl, sl, sl].ravel()
@@ -114,25 +115,27 @@ def newton_solve(phi_fn, P0, tol=1e-12, max_iter=60,
                              maxiter=lgmres_maxiter, inner_m=lgmres_inner_m)
         d3 = d.reshape(G_inner, G_inner, G_inner)
 
-        # Armijo backtracking line search on ||F||_inf
+        # Armijo backtracking line search on ||F||_2 (smooth, consistent with LGMRES)
         lam = 1.0
         accepted = False
-        for _ls in range(12):
+        for _ls in range(16):
             P_try = P.copy()
             P_try[sl, sl, sl] += lam * d3
             P_try = np.clip(P_try, 1e-12, 1.0 - 1e-12)
             phi_try = phi_fn(P_try)
             F_try = (phi_try - P_try)[sl, sl, sl].ravel()
-            res_try = float(np.max(np.abs(F_try)))
-            if res_try < (1.0 - 1e-4 * lam) * res:
+            res_try2   = float(np.linalg.norm(F_try))
+            res_try_inf = float(np.max(np.abs(F_try)))
+            if res_try2 < (1.0 - 1e-4 * lam) * res2:
                 accepted = True
                 break
             lam *= 0.5
-        P, phi_P, F_in, res = P_try, phi_try, F_try, res_try
-        log(f"    {tag} newton it={it:2d}  ||F||={res:.4e}  lam={lam:.4f}  "
-            f"lgmres_info={info}  t={time.time()-t_g:.0f}s"
+        P, phi_P, F_in = P_try, phi_try, F_try
+        res_inf, res2 = res_try_inf, res_try2
+        log(f"    {tag} newton it={it:2d}  ||F||inf={res_inf:.4e}  ||F||2={res2:.4e}  "
+            f"lam={lam:.4f}  lgmres_info={info}  t={time.time()-t_g:.0f}s"
             + ("" if accepted else "  [LS failed — least-bad step]"))
-    return P, res, n_iter
+    return P, res_inf, n_iter
 
 # ── gamma grid [0.2, 5], 20 log points ───────────────────────────────────────
 gamma_grid = [float(10**x) for x in np.linspace(np.log10(0.2), np.log10(5.0), 20)]
