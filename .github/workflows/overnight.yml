@@ -1,0 +1,60 @@
+name: ODE Sweep
+
+on:
+  workflow_dispatch:
+    inputs:
+      passes:
+        description: "Precision passes to run (comma-separated: A,B,C)"
+        required: false
+        default: "A,B,C"
+      tau:
+        description: "Fixed tau value (leave blank to auto-select from checkpoints)"
+        required: false
+        default: ""
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install numpy mpmath matplotlib
+
+      - name: Clone REZN source
+        run: |
+          git clone --depth 1 https://github.com/mhpbreugem/REZN.git ~/rezn-source
+
+      - name: Run sweep
+        env:
+          GITHUB_WORKSPACE: ${{ github.workspace }}
+          REZN_SRC: ${{ github.workspace }}/../rezn-source
+          SWEEP_PASSES: ${{ github.event.inputs.passes }}
+          SWEEP_TAU: ${{ github.event.inputs.tau }}
+        run: |
+          cd $GITHUB_WORKSPACE
+          python projects/REZN/solver_code/run_sweep.py \
+            --passes "${{ github.event.inputs.passes || 'A,B,C' }}" \
+            ${{ github.event.inputs.tau && format('--tau {0}', github.event.inputs.tau) || '' }}
+
+      - name: Commit results
+        run: |
+          cd $GITHUB_WORKSPACE
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add projects/REZN/overnight/deficits.json \
+                  projects/REZN/overnight/REPORT.md \
+                  projects/REZN/overnight/sweep.log || true
+          git diff --cached --quiet && echo "no changes" && exit 0
+          git commit -m "sweep: ODE results $(date -u +%Y-%m-%dT%H:%M)"
+          git push origin main
