@@ -83,7 +83,7 @@ def phi_mp_factory(gamma_scalar):
     return phi_mp_fn
 
 # ── Run RK4 sweep ────────────────────────────────────────────────────────────
-log("=== RK4 sweep: f64-only, 50-point grid [0.1, 1000] ===")
+log("=== RK4 sweep: pure ODE mode (no corrector), 50-point grid [0.1, 1000] ===")
 mp.dps = 50
 t0 = time.time()
 sweep = solve_sweep_rk4(
@@ -102,7 +102,7 @@ sweep = solve_sweep_rk4(
     gmres_restart     = 30,
     gmres_maxiter     = 5,
     f64_tol           = 1e-12,
-    corrector_max_iter= 400,
+    corrector_max_iter= 0,        # pure ODE mode: accept RK4 prediction directly
     anderson_m        = 5,
     mp_max_iter       = 0,
     verbose           = True,

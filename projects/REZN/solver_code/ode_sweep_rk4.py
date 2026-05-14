@@ -289,6 +289,7 @@ def solve_sweep_rk4(
                 print(f"\n  {direction} γ={gamma:.4f} (idx={idx})", flush=True)
 
             # ── 1. RK4 predictor ────────────────────────────────────────────────────
+            res_pred = float("nan")
             try:
                 P_pred, res_pred = _rk4_predict(
                     phi_f64_fn, P_prev, g_prev, gamma,
@@ -303,19 +304,26 @@ def solve_sweep_rk4(
                     print(f"    RK4 failed ({exc}), using P_prev", flush=True)
                 P_pred = P_prev.copy()
 
-            # ── 2. Anderson corrector ────────────────────────────────────────────────
-            phi_fn = phi_f64_fn(gamma)
-            P_corr, res_f64 = anderson_solve(
-                phi_fn, P_pred,
-                tol=f64_tol,
-                max_iter=corrector_max_iter,
-                m=anderson_m,
-                verbose=verbose,
-            )
-            F_f64_out[idx] = res_f64
-            if verbose:
-                print(f"    corrector  ‖F‖={res_f64:.3e}  "
-                      f"t={time.time()-t0:.0f}s", flush=True)
+            # ── 2. Anderson corrector (skip when corrector_max_iter=0) ──────────────
+            if corrector_max_iter > 0:
+                phi_fn = phi_f64_fn(gamma)
+                P_corr, res_f64 = anderson_solve(
+                    phi_fn, P_pred,
+                    tol=f64_tol,
+                    max_iter=corrector_max_iter,
+                    m=anderson_m,
+                    verbose=verbose,
+                )
+                F_f64_out[idx] = res_f64
+                if verbose:
+                    print(f"    corrector  ‖F‖={res_f64:.3e}  "
+                          f"t={time.time()-t0:.0f}s", flush=True)
+            else:
+                # Pure ODE mode: accept RK4 prediction as-is
+                P_corr = P_pred
+                F_f64_out[idx] = res_pred
+                if verbose:
+                    print(f"    (corrector skipped — pure ODE mode)", flush=True)
 
             # ── 3. mpmath polish (skipped when mp_max_iter=0) ───────────────────────
             if mp_max_iter > 0:
