@@ -4,7 +4,7 @@
 Anchor : g100_t0300_G21.npz  (G_inner=21, pad=4, gamma=1.0, tau=3.0)
 Operator: phi_K3_halo_smooth  kernel_h=0.025
 Grid   : gamma 1.0 → 0.20, linear step 0.01 (left sweep only)
-Predictor: Euler tangent  (I-J)v = dφ/dγ  →  P + Δγ·v
+Start  : nearest converged point (P_prev), no predictor
 Newton : JFNK with fixed damping 0.7 (no Armijo), no Anderson
 """
 import sys, json, time
@@ -64,39 +64,6 @@ def phi_factory(g):
         return phi_K3_halo_smooth(P, u_full, lo, hi, tau, gv, W, kernel_h)
     return fn
 
-# ── LGMRES helper shared by predictor and Newton ──────────────────────────────
-def _lgmres(A, b, tol=1e-4):
-    try:
-        x, info = lgmres(A, b, rtol=tol, maxiter=40, inner_m=25)
-    except TypeError:
-        x, info = lgmres(A, b, tol=tol, maxiter=40, inner_m=25)
-    return x, info
-
-def _jac_op(phi_fn, P, phi_P):
-    """Return (I-J) as LinearOperator, finite-diff Jacobian-vector product."""
-    normP = np.linalg.norm(P[sl, sl, sl])
-    phi_P_in = phi_P[sl, sl, sl].ravel()
-    def mv(w):
-        wn = np.linalg.norm(w)
-        if wn == 0.0: return w
-        dlt = 1.5e-8 * (1.0 + normP) / wn
-        Pp = P.copy()
-        Pp[sl, sl, sl] += dlt * w.reshape(G_inner, G_inner, G_inner)
-        return w - (phi_fn(Pp)[sl, sl, sl].ravel() - phi_P_in) / dlt
-    return LinearOperator((n_inner, n_inner), matvec=mv, dtype=np.float64)
-
-# ── Euler tangent predictor ───────────────────────────────────────────────────
-def tangent_predict(phi_prev, phi_next, P, g_prev, g_next):
-    """Solve (I-J)v = dφ/dγ, return P + Δγ·v."""
-    dg = g_next - g_prev
-    phi_P = phi_prev(P)
-    dphi_dg = (phi_next(P) - phi_P) / dg
-    A = _jac_op(phi_prev, P, phi_P)
-    v, _ = _lgmres(A, dphi_dg[sl, sl, sl].ravel())
-    P_pred = P.copy()
-    P_pred[sl, sl, sl] += dg * v.reshape(G_inner, G_inner, G_inner)
-    return np.clip(P_pred, 1e-12, 1.0 - 1e-12)
-
 # ── JFNK Newton — fixed damping, no Anderson ─────────────────────────────────
 def newton_solve(phi_fn, P0, tol=1e-12, max_iter=30, damping=0.7, tag=""):
     """JFNK with fixed step damping. Each step: P += damping * (I-J)^{-1} F."""
@@ -111,8 +78,20 @@ def newton_solve(phi_fn, P0, tol=1e-12, max_iter=30, damping=0.7, tag=""):
             log(f"    {tag} newton it={it:2d}  ||F||={res_inf:.4e}  [converged]")
             break
         t_g = time.time()
-        A = _jac_op(phi_fn, P, phi_P)
-        d_vec, info = _lgmres(A, F_in)
+        normP = np.linalg.norm(P[sl, sl, sl])
+        phi_P_in = phi_P[sl, sl, sl].ravel()
+        def mv(w, _normP=normP, _phi_P_in=phi_P_in, _P=P):
+            wn = np.linalg.norm(w)
+            if wn == 0.0: return w
+            dlt = 1.5e-8 * (1.0 + _normP) / wn
+            Pp = _P.copy()
+            Pp[sl, sl, sl] += dlt * w.reshape(G_inner, G_inner, G_inner)
+            return w - (phi_fn(Pp)[sl, sl, sl].ravel() - _phi_P_in) / dlt
+        A = LinearOperator((n_inner, n_inner), matvec=mv, dtype=np.float64)
+        try:
+            d_vec, info = lgmres(A, F_in, rtol=1e-4, maxiter=40, inner_m=25)
+        except TypeError:
+            d_vec, info = lgmres(A, F_in, tol=1e-4, maxiter=40, inner_m=25)
         P[sl, sl, sl] += damping * d_vec.reshape(G_inner, G_inner, G_inner)
         P = np.clip(P, 1e-12, 1.0 - 1e-12)
         phi_P = phi_fn(P)
@@ -132,13 +111,12 @@ log(f"Grid: {n_pts} points {gamma_grid[0]:.4f} → {gamma_grid[-1]:.4f}  step={S
 # ── Left sweep only (γ decreasing from 1.0 to 0.20) ──────────────────────────
 results = []
 
-def solve_point(g, P_prev, g_prev):
+def solve_point(g, P_prev):
     t0 = time.time()
-    P_pred = tangent_predict(phi_factory(g_prev), phi_factory(g), P_prev, g_prev, g)
-    F0 = float(np.max(np.abs((phi_factory(g)(P_pred) - P_pred)[sl, sl, sl])))
-    log(f"  ← gamma={g:.4f}  [predictor ||F||={F0:.3e}]")
+    F0 = float(np.max(np.abs((phi_factory(g)(P_prev) - P_prev)[sl, sl, sl])))
+    log(f"  ← gamma={g:.4f}  [start ||F||={F0:.3e}]")
     phi = phi_factory(g)
-    P, res, nit = newton_solve(phi, P_pred, damping=0.7, tag=f"g={g:.3f}")
+    P, res, nit = newton_solve(phi, P_prev, damping=0.7, tag=f"g={g:.3f}")
     F_check = float(np.max(np.abs((phi(P) - P)[sl, sl, sl])))
     r2 = revelation_deficit(P[sl, sl, sl], u_inner, np.full(3, tau_fixed), 3)
     dt = time.time() - t0
@@ -150,10 +128,8 @@ def solve_point(g, P_prev, g_prev):
 
 t_sweep = time.time()
 P_prev = P_anchor.copy()
-g_prev = anchor_gamma
 for g in gamma_grid:
-    P_prev = solve_point(g, P_prev, g_prev)
-    g_prev = g
+    P_prev = solve_point(g, P_prev)
 
 log(f"sweep done in {time.time()-t_sweep:.0f}s")
 
