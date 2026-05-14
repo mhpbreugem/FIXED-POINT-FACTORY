@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-14T02:21:08.271415Z",
+  "updated_at": "2026-05-14T11:25:16.153012Z",
   "params": {
     "G": 21,
     "UMAX": 5.0,
@@ -593,7 +593,7 @@
       "depends_on": [
         "g100_t0300"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "solver_params": {
         "mp_dps": 70,
@@ -608,9 +608,7 @@
       "G": 21,
       "result": null,
       "completed_at": null,
-      "deps_satisfy": "any",
-      "claimed_by": "gha-25851022688-g100_t0400",
-      "claimed_at": "2026-05-14T08:50:57Z"
+      "deps_satisfy": "any"
     },
     {
       "id": "g100_t0590",
