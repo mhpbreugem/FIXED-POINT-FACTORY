@@ -116,7 +116,7 @@ def solve_point(g, P_prev):
     F0 = float(np.max(np.abs((phi_factory(g)(P_prev) - P_prev)[sl, sl, sl])))
     log(f"  ← gamma={g:.4f}  [start ||F||={F0:.3e}]")
     phi = phi_factory(g)
-    P, res, nit = newton_solve(phi, P_prev, damping=0.7, tag=f"g={g:.3f}")
+    P, res, nit = newton_solve(phi, P_prev, damping=1.0, tag=f"g={g:.3f}")
     F_check = float(np.max(np.abs((phi(P) - P)[sl, sl, sl])))
     r2 = revelation_deficit(P[sl, sl, sl], u_inner, np.full(3, tau_fixed), 3)
     dt = time.time() - t0
