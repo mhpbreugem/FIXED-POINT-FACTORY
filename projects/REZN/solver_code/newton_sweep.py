@@ -18,7 +18,7 @@ from pathlib import Path
 from datetime import datetime
 
 import numpy as np
-from scipy.sparse.linalg import gmres, LinearOperator
+from scipy.sparse.linalg import lgmres, LinearOperator
 
 REPO   = Path("/home/user/FIXED-POINT-FACTORY")
 CKPT   = REPO / "projects/REZN/checkpoints"
@@ -71,21 +71,25 @@ def phi_factory(g):
         return phi_K3_halo_smooth(P, u_full, lo, hi, tau, gv, W, kernel_h)
     return fn
 
-# ── JFNK Newton solver (no Anderson) ─────────────────────────────────────────
-def newton_solve(phi_fn, P0, tol=1e-12, max_iter=30,
-                 gmres_tol=1e-8, gmres_restart=40, gmres_maxiter=20,
+# ── JFNK Newton solver — line-search globalised, no Anderson ─────────────────
+def newton_solve(phi_fn, P0, tol=1e-12, max_iter=60,
+                 lgmres_tol=1e-4, lgmres_maxiter=40, lgmres_inner_m=25,
                  tag=""):
+    """Jacobian-free Newton-Krylov with Armijo backtracking line search.
+
+    Each step: solve (I-J) d = F with LGMRES, then take P += lam*d with lam
+    backtracked so ||F|| decreases monotonically.  No Anderson, no Picard
+    mixing — just globalised Newton.
+    """
     P = P0.copy()
-    res = float("inf")
+    phi_P = phi_fn(P)
+    F_in = (phi_P - P)[sl, sl, sl].ravel()
+    res = float(np.max(np.abs(F_in)))
     n_iter = 0
     for it in range(max_iter):
-        phi_P = phi_fn(P)
-        F_full = phi_P - P
-        F_in = F_full[sl, sl, sl].ravel()
-        res = float(np.max(np.abs(F_in)))
         n_iter = it
-        log(f"    {tag} newton it={it:2d}  ||F||={res:.4e}")
         if res < tol:
+            log(f"    {tag} newton it={it:2d}  ||F||={res:.4e}  [converged]")
             break
         normP = np.linalg.norm(P[sl, sl, sl])
         phi_P_in = phi_P[sl, sl, sl].ravel()
@@ -94,22 +98,40 @@ def newton_solve(phi_fn, P0, tol=1e-12, max_iter=30,
             wn = np.linalg.norm(w)
             if wn == 0.0:
                 return w
-            delta = 1.5e-8 * (1.0 + normP) / wn
+            dlt = 1.5e-8 * (1.0 + normP) / wn
             P_pert = P.copy()
-            P_pert[sl, sl, sl] += delta * w.reshape(G_inner, G_inner, G_inner)
-            Jw = (phi_fn(P_pert)[sl, sl, sl].ravel() - phi_P_in) / delta
+            P_pert[sl, sl, sl] += dlt * w.reshape(G_inner, G_inner, G_inner)
+            Jw = (phi_fn(P_pert)[sl, sl, sl].ravel() - phi_P_in) / dlt
             return w - Jw
 
         A = LinearOperator((n_inner, n_inner), matvec=matvec, dtype=np.float64)
+        t_g = time.time()
         try:
-            delta, info = gmres(A, F_in, rtol=gmres_tol,
-                                restart=gmres_restart, maxiter=gmres_maxiter)
+            d, info = lgmres(A, F_in, rtol=lgmres_tol,
+                             maxiter=lgmres_maxiter, inner_m=lgmres_inner_m)
         except TypeError:
-            delta, info = gmres(A, F_in, tol=gmres_tol,
-                                restart=gmres_restart, maxiter=gmres_maxiter)
-        P_new = P.copy()
-        P_new[sl, sl, sl] += delta.reshape(G_inner, G_inner, G_inner)
-        P = np.clip(P_new, 1e-12, 1.0 - 1e-12)
+            d, info = lgmres(A, F_in, tol=lgmres_tol,
+                             maxiter=lgmres_maxiter, inner_m=lgmres_inner_m)
+        d3 = d.reshape(G_inner, G_inner, G_inner)
+
+        # Armijo backtracking line search on ||F||_inf
+        lam = 1.0
+        accepted = False
+        for _ls in range(12):
+            P_try = P.copy()
+            P_try[sl, sl, sl] += lam * d3
+            P_try = np.clip(P_try, 1e-12, 1.0 - 1e-12)
+            phi_try = phi_fn(P_try)
+            F_try = (phi_try - P_try)[sl, sl, sl].ravel()
+            res_try = float(np.max(np.abs(F_try)))
+            if res_try < (1.0 - 1e-4 * lam) * res:
+                accepted = True
+                break
+            lam *= 0.5
+        P, phi_P, F_in, res = P_try, phi_try, F_try, res_try
+        log(f"    {tag} newton it={it:2d}  ||F||={res:.4e}  lam={lam:.4f}  "
+            f"lgmres_info={info}  t={time.time()-t_g:.0f}s"
+            + ("" if accepted else "  [LS failed — least-bad step]"))
     return P, res, n_iter
 
 # ── gamma grid [0.2, 5], 20 log points ───────────────────────────────────────
