@@ -158,7 +158,7 @@ def _solve_tangent(
 # RK4 predictor
 # ─────────────────────────────────────────────────────────────────────────────
 
-def _rk4_predict(
+def _rk_predict(
     phi_factory: Callable,
     P: np.ndarray,
     gamma: float,
@@ -168,12 +168,18 @@ def _rk4_predict(
     gmres_restart: int,
     gmres_maxiter: int,
     verbose: bool,
+    order: int = 4,
 ) -> tuple[np.ndarray, float]:
     """
-    Advance P from gamma to gamma_next with a single RK4 step.
+    Advance P from gamma to gamma_next with a single RK step of the tangent ODE.
 
-    Four GMRES solves (one per stage).  Returns (P_pred, res_pred) where
-    res_pred is ‖φ(P_pred, γ_next) − P_pred‖∞ — the manifold drift.
+    order in {1, 2, 4}:
+        1 = explicit Euler    (1 GMRES solve)
+        2 = explicit midpoint (2 GMRES solves)
+        4 = classic RK4       (4 GMRES solves)
+
+    Returns (P_pred, res_pred) where res_pred is ‖φ(P_pred, γ_next) − P_pred‖∞ —
+    the manifold drift of the predictor.
     """
     h = gamma_next - gamma
 
@@ -187,13 +193,25 @@ def _rk4_predict(
                   flush=True)
         return v
 
-    k1 = tangent(P,                                           gamma)
-    k2 = tangent(np.clip(P + 0.5*h*k1, 1e-12, 1.0-1e-12),  gamma + 0.5*h)
-    k3 = tangent(np.clip(P + 0.5*h*k2, 1e-12, 1.0-1e-12),  gamma + 0.5*h)
-    k4 = tangent(np.clip(P + h*k3,     1e-12, 1.0-1e-12),   gamma_next)
+    clip = lambda X: np.clip(X, 1e-12, 1.0 - 1e-12)
 
-    P_pred = P + (h / 6.0) * (k1 + 2.0*k2 + 2.0*k3 + k4)
-    P_pred = np.clip(P_pred, 1e-12, 1.0 - 1e-12)
+    if order == 1:
+        k1 = tangent(P, gamma)
+        P_pred = P + h * k1
+    elif order == 2:
+        k1 = tangent(P, gamma)
+        k2 = tangent(clip(P + 0.5*h*k1), gamma + 0.5*h)
+        P_pred = P + h * k2
+    elif order == 4:
+        k1 = tangent(P,                       gamma)
+        k2 = tangent(clip(P + 0.5*h*k1),      gamma + 0.5*h)
+        k3 = tangent(clip(P + 0.5*h*k2),      gamma + 0.5*h)
+        k4 = tangent(clip(P + h*k3),          gamma_next)
+        P_pred = P + (h / 6.0) * (k1 + 2.0*k2 + 2.0*k3 + k4)
+    else:
+        raise ValueError(f"order must be 1, 2, or 4 (got {order})")
+
+    P_pred = clip(P_pred)
 
     # Measure drift off the manifold
     phi_check = phi_factory(gamma_next)
@@ -216,7 +234,8 @@ def solve_sweep_rk4(
     inner_hi: int,
     mp_dps: int,
     target_eps,
-    # RK4 / GMRES
+    # RK / GMRES
+    order: int = 4,
     eps_gamma: float = 1e-5,
     gmres_tol: float = 1e-5,
     gmres_restart: int = 50,
@@ -288,20 +307,20 @@ def solve_sweep_rk4(
             if verbose:
                 print(f"\n  {direction} γ={gamma:.4f} (idx={idx})", flush=True)
 
-            # ── 1. RK4 predictor ────────────────────────────────────────────────────
+            # ── 1. RK predictor (order 1/2/4) ───────────────────────────────────────
             res_pred = float("nan")
             try:
-                P_pred, res_pred = _rk4_predict(
+                P_pred, res_pred = _rk_predict(
                     phi_f64_fn, P_prev, g_prev, gamma,
                     eps_gamma, gmres_tol, gmres_restart, gmres_maxiter,
-                    verbose,
+                    verbose, order=order,
                 )
                 if verbose:
-                    print(f"    RK4 pred   ‖F‖={res_pred:.3e}  "
+                    print(f"    RK{order} pred   ‖F‖={res_pred:.3e}  "
                           f"t={time.time()-t0:.0f}s", flush=True)
             except Exception as exc:
                 if verbose:
-                    print(f"    RK4 failed ({exc}), using P_prev", flush=True)
+                    print(f"    RK{order} failed ({exc}), using P_prev", flush=True)
                 P_pred = P_prev.copy()
 
             # ── 2. Anderson corrector (skip when corrector_max_iter=0) ──────────────
