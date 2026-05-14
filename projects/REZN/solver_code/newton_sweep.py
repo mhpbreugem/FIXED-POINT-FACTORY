@@ -73,7 +73,7 @@ def phi_factory(g):
 
 # ── JFNK Newton solver — line-search globalised, no Anderson ─────────────────
 def newton_solve(phi_fn, P0, tol=1e-12, max_iter=60,
-                 lgmres_tol=1e-8, lgmres_maxiter=60, lgmres_inner_m=30,
+                 lgmres_tol=1e-4, lgmres_maxiter=40, lgmres_inner_m=25,
                  tag=""):
     """Jacobian-free Newton-Krylov with Armijo backtracking line search.
 
