@@ -83,7 +83,7 @@ def phi_mp_factory(gamma_scalar):
     return phi_mp_fn
 
 # ── Run RK4 sweep ───────────────────────────────────────────────────────────────────────
-log("=== RK4 sweep: dps=50 target=1e-40 ===")
+log("=== RK4 sweep: f64-only, target=1e-12 ===")
 mp.dps = 50
 t0 = time.time()
 sweep = solve_sweep_rk4(
@@ -101,10 +101,10 @@ sweep = solve_sweep_rk4(
     gmres_tol         = 1e-4,
     gmres_restart     = 30,
     gmres_maxiter     = 5,
-    f64_tol           = 5e-7,
-    corrector_max_iter= 150,
+    f64_tol           = 1e-12,   # near machine precision, no mp needed
+    corrector_max_iter= 400,
     anderson_m        = 5,
-    mp_max_iter       = 20,
+    mp_max_iter       = 0,       # skip mp polish — f64 is enough for 1-R²
     verbose           = True,
 )
 log(f"RK4 sweep done in {time.time()-t0:.0f}s")

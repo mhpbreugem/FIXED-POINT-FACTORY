@@ -44,7 +44,10 @@ acceleration (max_iter=80 by default) snaps P back to a tight fixed point.
 The corrector starts from P_pred rather than P_prev, so it needs far fewer
 iterations than a cold-start solve.
 
-mpmath polish is applied last, same as in ode_sweep.py.
+Setting mp_max_iter=0 skips the mpmath polish entirely.  This is appropriate
+when RK4 continuation is used: the smooth branch tracking means there is no
+risk of jumping to a different solution, and float64 machine precision
+(~1e-14) is sufficient for quantities like 1-R².
 
 PUBLIC API
 ==========
@@ -222,12 +225,17 @@ def solve_sweep_rk4(
     f64_tol: float = 5e-7,
     corrector_max_iter: int = 80,
     anderson_m: int = 5,
-    # mpmath polish
+    # mpmath polish — set mp_max_iter=0 to skip (f64-only mode)
     mp_max_iter: int = 20,
     verbose: bool = True,
 ) -> dict:
     """
     Sweep gamma_grid using RK4 ODE predictor + JFNK + Anderson corrector.
+
+    Set mp_max_iter=0 to skip mpmath polish entirely and run in float64-only
+    mode.  This is appropriate for RK4 continuation sweeps where the smooth
+    branch tracking removes the risk of solution-jumping, and machine
+    precision (~1e-14) is sufficient for 1-R² and similar diagnostics.
 
     Parameters
     ----------
@@ -247,7 +255,7 @@ def solve_sweep_rk4(
     corrector_max_iter  Anderson corrector max iterations       (default 80)
     anderson_m          Anderson history depth                  (default 5)
     f64_tol             corrector convergence target            (default 5e-7)
-    mp_max_iter         mpmath Picard max iterations            (default 20)
+    mp_max_iter         mpmath Picard iterations; 0 = skip      (default 20)
     verbose             print progress                          (default True)
 
     Returns
@@ -280,7 +288,7 @@ def solve_sweep_rk4(
             if verbose:
                 print(f"\n  {direction} γ={gamma:.4f} (idx={idx})", flush=True)
 
-            # ── 1. RK4 predictor ─────────────────────────────────────────────────────
+            # ── 1. RK4 predictor ────────────────────────────────────────────────────
             try:
                 P_pred, res_pred = _rk4_predict(
                     phi_f64_fn, P_prev, g_prev, gamma,
@@ -309,19 +317,22 @@ def solve_sweep_rk4(
                 print(f"    corrector  ‖F‖={res_f64:.3e}  "
                       f"t={time.time()-t0:.0f}s", flush=True)
 
-            # ── 3. mpmath polish ─────────────────────────────────────────────────────
-            phi_mp = phi_mp_fn_factory(gamma)
-            P_out, res_mp = mp_newton_solve(
-                mp, phi_mp, P_corr,
-                inner_lo, inner_hi,
-                target_eps=target_eps,
-                max_iter=mp_max_iter,
-                verbose=verbose,
-            )
-            F_mp_out[idx] = res_mp
-            if verbose:
-                print(f"    mp polish  ‖F‖={res_mp:.3e}  "
-                      f"t={time.time()-t0:.0f}s", flush=True)
+            # ── 3. mpmath polish (skipped when mp_max_iter=0) ───────────────────────
+            if mp_max_iter > 0:
+                phi_mp = phi_mp_fn_factory(gamma)
+                P_out, res_mp = mp_newton_solve(
+                    mp, phi_mp, P_corr,
+                    inner_lo, inner_hi,
+                    target_eps=target_eps,
+                    max_iter=mp_max_iter,
+                    verbose=verbose,
+                )
+                F_mp_out[idx] = res_mp
+                if verbose:
+                    print(f"    mp polish  ‖F‖={res_mp:.3e}  "
+                          f"t={time.time()-t0:.0f}s", flush=True)
+            else:
+                P_out = P_corr
 
             P_outputs[idx] = P_out
             P_prev = P_out
