@@ -21,12 +21,7 @@
     color: var(--fg);
   }
 
-  #brand {
-    font-size: 9.5px; font-weight: 900; color: #fff;
-    letter-spacing: 0.5px; flex-shrink: 0; padding-right: 2px;
-  }
-
-  /* ── single bar ── */
+  /* ── top bar ── */
   #bar {
     position: sticky; top:0; z-index:20;
     background: #1a1a1a; border-bottom: 1px solid #333;
@@ -34,7 +29,7 @@
     display: flex; flex-wrap: nowrap; gap: 2px; align-items: center;
     overflow: hidden; max-width: 100vw;
   }
-  #pills { display:flex; flex-wrap:nowrap; gap:2px; align-items:center; flex-shrink:0; }
+  #brand { font-size: 9.5px; font-weight: 900; color: #fff; letter-spacing: 0.5px; flex-shrink:0; }
   .btn {
     font-family: inherit; font-size: 9.5px; font-weight: 700;
     border: none; border-radius: 2px; padding: 3px 0;
@@ -50,18 +45,26 @@
     border-radius: 2px; padding: 1px 3px;
     width: min(80px,20vw); min-width:0; flex-shrink:1;
   }
-  #meta-right {
-    margin-left: auto;
-    font-size: 7px; color: var(--muted);
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    flex-shrink: 1; min-width: 0;
-  }
+  #meta-right { margin-left:auto; font-size:7px; color:var(--muted); white-space:nowrap; flex-shrink:1; min-width:0; }
   #status-msg { font-size:8.5px; color:var(--claimed); white-space:nowrap; flex-shrink:0; }
 
+  /* ── collapsible sections ── */
+  .sec-hdr {
+    display: flex; align-items: center; gap: 3px;
+    padding: 2px 3px; cursor: pointer;
+    background: #161616; border-bottom: 1px solid #222;
+    user-select: none;
+  }
+  .sec-hdr:hover { background: #1c1c1c; }
+  .chev { font-size: 7px; color: #555; width: 8px; flex-shrink:0; line-height:1; }
+  .sec-label { font-size: 8px; font-weight: 700; color: #777; flex-shrink:0; margin-right:2px; }
+  .sec-body.collapsed { display: none; }
+
   /* ── summary pills ── */
+  #pills { display:flex; flex-wrap:nowrap; gap:2px; align-items:center; flex:1; min-width:0; overflow:hidden; }
   .pill {
-    font-size:8.5px; font-weight:700; padding:2px 7px;
-    border-radius:2px; cursor:pointer; color:#fff; white-space:nowrap;
+    font-size:8px; font-weight:700; padding:1px 5px;
+    border-radius:2px; cursor:pointer; color:#fff; white-space:nowrap; flex-shrink:0;
   }
   .pill.done    { background:var(--done); }
   .pill.ready   { background:var(--ready); }
@@ -69,11 +72,11 @@
   .pill.blocked { background:var(--blocked); }
   .pill.bailed  { background:var(--bailed); }
   .pill.skip    { background:var(--skip); }
-  .pill.total   { background:#333; padding:2px 4px; }
+  .pill.total   { background:#2a2a2a; padding:1px 3px; }
 
-  /* ── filter ── */
+  /* ── filter bar ── */
   #filterbar {
-    padding: 2px 3px; border-bottom:1px solid #1e1e1e;
+    padding: 2px 3px; border-bottom:1px solid #1a1a1a;
     display:flex; gap:2px; align-items:center;
   }
   #filter {
@@ -82,19 +85,8 @@
     border-radius:2px; padding:1px 3px; flex:1; min-width:0;
   }
 
-  /* ── tab toggle ── */
-  .tab-btn {
-    font-family:inherit; font-size:9px; font-weight:700;
-    border:none; border-radius:2px; padding:2px 5px;
-    cursor:pointer; color:#aaa; background:#222; white-space:nowrap; flex-shrink:0;
-  }
-  .tab-btn.active { color:#fff; background:#3a8ef7; }
-  #tab-sweep { display:none; padding:4px 3px; }
-  #tab-sweep.active { display:block; }
-  #tab-tasks.active { display:block; }
-
-  /* sweep table */
-  #sweep-meta { font-size:8px; color:#666; padding:2px 0 4px; }
+  /* ── sweep section ── */
+  #sweep-meta { font-size:7.5px; color:#555; padding:2px 3px 3px; }
   .sw-tbl { width:100%; border-collapse:collapse; }
   .sw-tbl th, .sw-tbl td { font-size:8px; padding:1px 4px; text-align:right; }
   .sw-tbl th { color:#666; font-weight:400; border-bottom:1px solid #2a2a2a; }
@@ -103,74 +95,39 @@
   .sw-r2-good { color:var(--done); }
   .sw-r2-mid  { color:var(--claimed); }
   .sw-r2-high { color:var(--bailed); }
+  #sweep-body { padding: 0 3px 4px; }
 
   /* ── footer ── */
-  #footer {
-    font-size:7px; color:#444; text-align:center;
-    padding: 6px 0 4px; border-top:1px solid #1e1e1e; margin-top:4px;
-  }
+  #footer { font-size:7px; color:#444; text-align:center; padding:6px 0 4px; border-top:1px solid #1e1e1e; margin-top:4px; }
 
-  /* ── THE TABLE — fixed layout, no horizontal scroll ── */
-  table {
-    border-collapse: collapse;
-    table-layout: fixed;
-    width: 100%;
-    max-width: 100%;
-    font-size: 7.6px;
-  }
+  /* ── tasks table ── */
+  table { border-collapse:collapse; table-layout:fixed; width:100%; max-width:100%; font-size:7.6px; }
   colgroup col { overflow:hidden; }
-  th, td {
-    padding: 0 2px;
-    border-bottom: 1px solid var(--border);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 1.3;
-    min-width: 0;
-  }
-  th {
-    background: var(--hdr);
-    font-weight: 700;
-    font-size: 5.3px;
-    color: #888;
-    cursor: pointer;
-    text-align: left;
-    height: 9px;
-  }
+  th, td { padding:0 2px; border-bottom:1px solid var(--border); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3; min-width:0; }
+  th { background:var(--hdr); font-weight:700; font-size:5.3px; color:#888; cursor:pointer; text-align:left; height:9px; }
   th:hover { background:#2a2a2a; }
-  tr:nth-child(even) td { background: var(--rowalt); }
-  tr.row-claimed td { background:#1c1500 !important; }
-
-  td { height: 12px; }
-
-  /* status colours */
+  tr:nth-child(even) td { background:var(--rowalt); }
+  td { height:12px; }
   .st-done    { color:var(--done);    font-weight:700; }
   .st-ready   { color:var(--ready);   font-weight:700; }
   .st-claimed { color:var(--claimed); font-weight:700; }
   .st-blocked { color:var(--blocked); }
   .st-bailed  { color:var(--bailed);  font-weight:700; }
   .st-skip    { color:var(--skip); }
-
-  .enorm   { color:var(--done); }
-  .live    { color:var(--claimed); }
-  .muted   { color:var(--muted); }
-  .err     { color:var(--bailed); }
-  .dim     { color:#888; }
+  .enorm  { color:var(--done); }
+  .muted  { color:var(--muted); }
+  .err    { color:var(--bailed); }
+  .dim    { color:#888; }
   .stage-a { color:#b08000; font-weight:700; }
   .stage-n { color:#2a7adf; font-weight:700; }
-
   tr.row-claimed td { background:#1a1200 !important; }
-  tr:hover td       { filter:brightness(1.25); }
-
+  tr:hover td { filter:brightness(1.25); }
 </style>
 </head>
 <body>
 
 <div id="bar">
   <span id="brand">REZN</span>
-  <button class="tab-btn active" id="tbtn-tasks" onclick="showTab('tasks')">tasks</button>
-  <button class="tab-btn"        id="tbtn-sweep" onclick="showTab('sweep')">sweep</button>
-  <div id="pills"></div>
   <button class="btn b-go"   onclick="launchOne()">+1</button>
   <button class="btn b-kill" onclick="killAll()">&#x2715;&#x2715;</button>
   <button class="btn"        onclick="resetBailed()">&#x21BA;</button>
@@ -180,37 +137,42 @@
   <span id="status-msg"></span>
 </div>
 
-<!-- TASKS -->
-<div id="tab-tasks" class="active">
+<!-- ── TASKS section ── -->
+<div class="sec-hdr" onclick="toggleSection('tasks')">
+  <span class="chev" id="chev-tasks">&#x25BE;</span>
+  <span class="sec-label">tasks</span>
+  <div id="pills"></div>
+  <input type="password" id="pat-input" placeholder="PAT" oninput="savePat()" onclick="event.stopPropagation()">
+</div>
+<div class="sec-body" id="sec-tasks">
   <div id="filterbar">
     <input type="text" id="filter" placeholder="filter…" oninput="renderTasks()">
-    <input type="password" id="pat-input" placeholder="PAT" oninput="savePat()">
   </div>
   <table>
     <colgroup>
-      <col style="width:8%"> <!-- id -->
-      <col style="width:8%"> <!-- st -->
-      <col style="width:7%"> <!-- K·G -->
-      <col style="width:7%"> <!-- γ -->
-      <col style="width:7%"> <!-- τ -->
-      <col style="width:9%"> <!-- F -->
-      <col style="width:8%"> <!-- F₋₁ -->
-      <col style="width:8%"> <!-- 1-R² -->
-      <col style="width:10%"> <!-- Vi -->
-      <col style="width:7%"> <!-- TV -->
-      <col style="width:7%"> <!-- stage -->
-      <col style="width:9%"> <!-- time -->
-      <col style="width:5%"> <!-- last -->
+      <col style="width:8%">
+      <col style="width:8%">
+      <col style="width:7%">
+      <col style="width:7%">
+      <col style="width:7%">
+      <col style="width:9%">
+      <col style="width:8%">
+      <col style="width:8%">
+      <col style="width:10%">
+      <col style="width:7%">
+      <col style="width:7%">
+      <col style="width:9%">
+      <col style="width:5%">
     </colgroup>
     <thead><tr>
       <th onclick="sortBy('id')">id</th>
       <th onclick="sortBy('status')">st</th>
-      <th class="dim">K·G</th>
-      <th class="dim" onclick="sortBy('gamma')">γ</th>
-      <th class="dim" onclick="sortBy('tau')">τ</th>
+      <th class="dim">K&#xB7;G</th>
+      <th class="dim" onclick="sortBy('gamma')">&#x3B3;</th>
+      <th class="dim" onclick="sortBy('tau')">&#x3C4;</th>
       <th onclick="sortBy('F_max')">F@50</th>
-      <th>F₋₁</th>
-      <th>1-R²</th><th>Vi</th><th>TV</th>
+      <th>F&#x208B;&#x2081;</th>
+      <th>1-R&#xB2;</th><th>Vi</th><th>TV</th>
       <th>stg</th>
       <th onclick="sortBy('completed_at')">time</th>
       <th>last</th>
@@ -219,9 +181,13 @@
   </table>
 </div>
 
-<!-- SWEEP TAB -->
-<div id="tab-sweep">
-  <div id="sweep-meta">Loading sweep results…</div>
+<!-- ── SWEEP section ── -->
+<div class="sec-hdr" onclick="toggleSection('sweep')">
+  <span class="chev" id="chev-sweep">&#x25BE;</span>
+  <span class="sec-label">sweep</span>
+  <span id="sweep-meta"></span>
+</div>
+<div class="sec-body" id="sec-sweep">
   <div id="sweep-body"></div>
 </div>
 
@@ -229,7 +195,7 @@
   const OWNER="mhpbreugem", REPO="fixed-point-factory", BRANCH="main", PROJECT="REZN";
   let taskData=null, progressData={};
   let sortCol="id", sortAsc=true;
-  let taskMap=new Map(); // rebuilt on each taskData load → O(1) lookups
+  let taskMap=new Map();
 
   function getPat(){return localStorage.getItem('fpf_pat')||'';}
   function savePat(){const v=document.getElementById('pat-input').value.trim();v?localStorage.setItem('fpf_pat',v):localStorage.removeItem('fpf_pat');}
@@ -237,6 +203,29 @@
 
   function setMsg(t,ms=0){const e=document.getElementById('status-msg');e.textContent=t;if(ms)setTimeout(()=>e.textContent='',ms);}
 
+  // ── section toggle ────────────────────────────────────────────────────────
+  const _open={tasks:true,sweep:true};
+  (()=>{try{Object.assign(_open,JSON.parse(localStorage.getItem('fpf_sec')||'{}'));}catch{}})();
+
+  function toggleSection(name){
+    _open[name]=!_open[name];
+    document.getElementById('sec-'+name).classList.toggle('collapsed',!_open[name]);
+    document.getElementById('chev-'+name).innerHTML=_open[name]?'&#x25BE;':'&#x25B8;';
+    if(name==='sweep'&&_open[name]&&!_sweepLoaded){loadSweep();_sweepLoaded=true;}
+    try{localStorage.setItem('fpf_sec',JSON.stringify(_open));}catch{}
+  }
+
+  // apply persisted state on load
+  window.addEventListener('DOMContentLoaded',()=>{
+    ['tasks','sweep'].forEach(name=>{
+      if(!_open[name]){
+        document.getElementById('sec-'+name).classList.add('collapsed');
+        document.getElementById('chev-'+name).innerHTML='&#x25B8;';
+      }
+    });
+  });
+
+  // ── action buttons ────────────────────────────────────────────────────────
   async function launchOne(){
     const pat=getPat();if(!pat){setMsg('PAT required',3000);return;}
     setMsg('…');
@@ -283,17 +272,16 @@
     }catch(e){setMsg(`✗ ${e.message}`,5000);}
   }
 
-
-  // URL / fetch helpers
+  // ── fetch helpers ─────────────────────────────────────────────────────────
   function rawUrl(p){return`https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${p}`;}
   function apiUrl(p){return`https://api.github.com/repos/${OWNER}/${REPO}/contents/${p}?ref=${BRANCH}`;}
   function authH(){const p=getPat();return p?{Authorization:`token ${p}`}:{};}
   async function fj(url){const r=await fetch(url,{cache:"no-store",headers:authH()});if(!r.ok)throw new Error(r.status);return r.json();}
   async function apiContent(path){const m=await fj(apiUrl(path));if(m.content)return JSON.parse(atob(m.content.replace(/\n/g,"")));return fj(rawUrl(path));}
 
-function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 
-  // Formatting helpers — defined once, reused everywhere
+  // ── formatting helpers ────────────────────────────────────────────────────
   const _sidCache=new Map();
   function shortId(id){
     if(_sidCache.has(id))return _sidCache.get(id);
@@ -305,42 +293,30 @@ function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").repl
   function fmtF(v){if(v==null)return"—";return Number(v).toExponential(0);}
   function fmtR2(v){if(v==null)return"—";return Number(v).toFixed(4).replace(/^0/,"");}
   function fmtSig3(v){const n=sig3(v);return n!=null?String(n):"—";}
-  function fmtSig4(v){const n=sig4(v);return n!=null?String(n):"—";}
-  function fmtSig5(v){return v!=null?String(parseFloat(Number(v).toPrecision(5))):"—";}
   function fmtDate(iso){const d=new Date(iso);return`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;}
 
-  // Stage label: Axxx (Anderson) or Nxxx (Newton/mp)
   function stageStr(pr){
     if(!pr)return'';
-    const ex=pr.extra||{};
-    const p=ex.phase||null;
-    const it=pr.iter??'';
+    const p=(pr.extra||{}).phase||null, it=pr.iter??'';
     if(p==="mp_newton"||p==="newton") return`<span class="stage-n">N${it}</span>`;
     if(p==="anderson")                return`<span class="stage-a">A${it}</span>`;
     if(p==="picard")                  return`<span class="stage-a">P${it}</span>`;
-    if(it!=='')                       return`i${it}`;
-    return'';
+    return it!==''?`i${it}`:'';
   }
 
-  // K·G combined dim label
   function fmtKG(t){
     if(!t)return'';
     const K=t.K??t.solver_params?.K??3;
     const G=t.G??t.solver_params?.G??t.solver_params?.G_inner??16;
-    const Gs=typeof G==='number'?String(G).padStart(2,'0'):String(G);
-    return`<span class="dim">${K}·${Gs}</span>`;
+    return`<span class="dim">${K}&#xB7;${typeof G==='number'?String(G).padStart(2,'0'):G}</span>`;
   }
 
-  // Last-update relative time
   function fmtLast(iso){
     if(!iso)return'';
     const s=(Date.now()-new Date(iso).getTime())/1000;
-    if(s<60) return`${Math.floor(s)}s`;
-    if(s<3600) return`${Math.floor(s/60)}m`;
-    return`${(s/3600).toFixed(1)}h`;
+    return s<60?`${Math.floor(s)}s`:s<3600?`${Math.floor(s/60)}m`:`${(s/3600).toFixed(1)}h`;
   }
 
-  // Elapsed since claimed/started for active, completed date for done
   function fmtTime(t,pr){
     if(t.completed_at)return fmtDate(t.completed_at);
     const iso=t.claimed_at||pr?.started_at;
@@ -348,7 +324,7 @@ function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").repl
     return'';
   }
 
-  // Task loading
+  // ── task loading ──────────────────────────────────────────────────────────
   let _qSha=null;
   async function loadTasks(){
     if(getPat()){
@@ -362,8 +338,6 @@ function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").repl
     taskMap=new Map((taskData.tasks||[]).map(t=>[t.id,t]));
     renderTasks();
     loadProgress().catch(()=>{});
-    const u=(taskData.updated_at||'?').replace('T',' ').slice(0,16);
-    document.getElementById("meta").textContent=`upd:${u}`;
     const sm=document.getElementById("site-mod");
     if(sm&&taskData.updated_at){
       const d=new Date(taskData.updated_at);
@@ -384,8 +358,6 @@ function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").repl
     if(!taskData)return;
     const tasks=taskData.tasks||[];
     const fv=(document.getElementById("filter")?.value||"").toLowerCase();
-
-    // Precompute display-status once per task (used for pills, filter, and row colour)
     const dsMap=new Map(tasks.map(t=>[t.id,getDS(t)]));
 
     const counts={};
@@ -394,12 +366,12 @@ function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").repl
     document.getElementById("pills").innerHTML=
       order.filter(s=>counts[s]).map(s=>{
         const sel=fv===s?' style="outline:2px solid #fff"':'';
-        return`<span class="pill ${s}" onclick="(function(){var f=document.getElementById('filter');f.value=f.value.toLowerCase()==='${s}'?'':'${s}';renderTasks();})("${sel}>${s[0]}:${counts[s]}</span>`;
+        return`<span class="pill ${s}"${sel} onclick="(function(){var f=document.getElementById('filter');f.value=f.value.toLowerCase()==='${s}'?'':'${s}';renderTasks();})(">${s[0]}:${counts[s]}</span>`;
       }).join("")+`<span class="pill total">#${tasks.length}</span>`;
 
     const filtered=tasks.filter(t=>{
       const ds=dsMap.get(t.id);
-      if(ds==="blocked"&&!fv)return false; // hide blocked by default; any filter reveals
+      if(ds==="blocked"&&!fv)return false;
       if(!fv)return true;
       return t.id.toLowerCase().includes(fv)||ds.toLowerCase().includes(fv)||
              String(t.gamma||"").includes(fv)||String(t.tau||"").includes(fv);
@@ -416,7 +388,7 @@ function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").repl
       const ds=dsMap.get(t.id);
       const isCl=ds==="claimed";
       const r=t.result||{};
-      const fmaxDone=r.F_max!=null?fmtF(r.F_max):r.F_max_bound!=null?`<${fmtF(r.F_max_bound)}`:""
+      const fmaxDone=r.F_max!=null?fmtF(r.F_max):r.F_max_bound!=null?`&lt;${fmtF(r.F_max_bound)}`:""
       const fStr=isCl?(pr?.ftol!=null?fmtF(pr.ftol):""):fmaxDone;
       const rc=isCl?' class="row-claimed"':'';
       const hist=pr?.ftol_history||[];
@@ -445,36 +417,26 @@ function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").repl
   async function loadProgress(){
     if(!taskData)return;
     const claimed=taskData.tasks.filter(t=>t.status==="claimed");
-    // Remove stale entries for tasks no longer claimed
     const claimedIds=new Set(claimed.map(t=>t.id));
     for(const id of Object.keys(progressData)){if(!claimedIds.has(id))delete progressData[id];}
-    // Fetch each claimed task's progress file directly — no directory listing needed
     await Promise.all(claimed.map(async t=>{
       const path=`projects/${PROJECT}/progress/${t.id}.json`;
       try{
         const d=getPat()?await apiContent(path):await fj(rawUrl(path));
         if(progressData[t.id]?.ftol!=null)_prevFtol[t.id]=progressData[t.id].ftol;
         progressData[t.id]=d;
-      }catch(e){
-        if(String(e.message)==='404')delete progressData[t.id];
-      }
+      }catch(e){if(String(e.message)==='404')delete progressData[t.id];}
     }));
     renderTasks();
   }
 
   function taskById(id){return taskMap.get(id)||null;}
 
-  // Actions
   async function downloadAll(){
     if(!taskData){alert('Load tasks first');return;}
-
-    // Only tasks: done, non-test, F_max < 1e-100
     const eligible=(taskData.tasks||[]).filter(t=>
-      t.status==="done" && !t.test && t.checkpoint &&
-      Number(t.result?.F_max) < 1e-50
-    );
+      t.status==="done"&&!t.test&&t.checkpoint&&Number(t.result?.F_max)<1e-50);
     if(!eligible.length){setMsg('No emin100 solutions yet',3000);return;}
-
     setMsg('Loading JSZip…');
     if(!window.JSZip){
       await new Promise((res,rej)=>{
@@ -485,52 +447,36 @@ function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").repl
       });
     }
     const zip=new JSZip();
-
     zip.file('metadata.json',JSON.stringify(eligible.map(t=>({
       id:t.id,gamma:t.gamma,tau:t.tau,G:t.G,K:t.K,
       result:t.result,completed_at:t.completed_at,checkpoint:t.checkpoint
     })),null,2));
-
     let n=0;
     setMsg(`Fetching 0/${eligible.length}…`);
     await Promise.all(eligible.map(async t=>{
       try{
-        const r=await fetch(
-          `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${t.checkpoint}`,
-          {headers:authH()});
+        const r=await fetch(`https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${t.checkpoint}`,{headers:authH()});
         if(!r.ok)return;
-        const buf=await r.arrayBuffer();
-        zip.file(t.checkpoint.split('/').pop(),buf);
+        zip.file(t.checkpoint.split('/').pop(),await r.arrayBuffer());
         setMsg(`Fetching ${++n}/${eligible.length}…`);
       }catch{}
     }));
-
     setMsg('Zipping…');
     const blob=await zip.generateAsync({type:'blob',compression:'STORE'});
     const a=document.createElement('a');
     a.href=URL.createObjectURL(blob);
     a.download=`REZN_emin100_${new Date().toISOString().slice(0,10)}.zip`;
-    a.click();
-    URL.revokeObjectURL(a.href);
+    a.click();URL.revokeObjectURL(a.href);
     setMsg(`✓ ${n}/${eligible.length} files + metadata.json`,5000);
   }
 
-  // Poll loops — pause when page is hidden
+  // ── poll loops ────────────────────────────────────────────────────────────
   const POLL_MS=120000, PROGRESS_MS=60000;
   let _lp=null,_lq=null,_initTime=Date.now();
-  function _fmtTime(ms){const d=new Date(ms);return`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;}
-  function tick(){
-    const el=document.getElementById("ticker");if(!el)return;
-    el.textContent=`${_lp?`w:${_fmtTime(_lp)}`:'w:—'} ${_lq?`q:${_fmtTime(_lq)}`:'q:—'}`;
-  }
-  async function pollProgress(){
-    try{await loadProgress();_lp=Date.now();}catch{}
-    tick();
-  }
+  async function pollProgress(){try{await loadProgress();_lp=Date.now();}catch{}}
   async function pollQueue(){
     try{await loadTasks();_lq=Date.now();}
-    catch(e){document.getElementById("meta").textContent=`err:${e.message}`;}
-    tick();
+    catch(e){setMsg(`err:${e.message}`,5000);}
   }
   async function loadAll(){await Promise.all([pollProgress(),pollQueue()]);}
 
@@ -541,77 +487,73 @@ function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").repl
     if(document.hidden)return;
     const now=Date.now();
     if(now-_initTime<30000)return;
-    const stale=(!_lp||now-_lp>90000)&&(!_lq||now-_lq>90000);
-    if(stale)loadAll();
+    if((!_lp||now-_lp>90000)&&(!_lq||now-_lq>90000))loadAll();
   });
 
-  // ── Tab switching ──────────────────────────────────────────────────────────────────────────
+  // ── sweep section ─────────────────────────────────────────────────────────
   let _sweepLoaded=false;
-  function showTab(name){
-    ['tasks','sweep'].forEach(t=>{
-      document.getElementById('tab-'+t).classList.toggle('active',t===name);
-      document.getElementById('tbtn-'+t).classList.toggle('active',t===name);
-    });
-    if(name==='sweep'&&!_sweepLoaded){loadSweep();_sweepLoaded=true;}
-  }
 
-  // ── Sweep tab ──────────────────────────────────────────────────────────────────────────
   function r2cls(v){return v<0.1?'sw-r2-good':v<0.5?'sw-r2-mid':'sw-r2-high';}
 
   async function loadSweep(){
-    const meta=document.getElementById('sweep-meta');
+    const metaEl=document.getElementById('sweep-meta');
     const body=document.getElementById('sweep-body');
-    meta.textContent='Loading…';
+    metaEl.textContent='loading…';
     try{
       const data=await fj(rawUrl('projects/REZN/overnight/deficits.json'));
-      const gen=data.generated_at?data.generated_at.replace('T',' ').slice(0,16):'?';
-      meta.textContent=`τ=${data.tau??'?'}  anchor γ=${data.anchor_gamma??'?'}  generated ${gen}`;
+      if(!data.generated_at){
+        metaEl.textContent='no results yet — run ODE Sweep workflow';
+        body.innerHTML='';
+        return;
+      }
+      const gen=data.generated_at.replace('T',' ').slice(0,16);
+      metaEl.textContent=`τ=${data.tau}  γ₀=${data.anchor_gamma}  ${gen}`;
 
       const passes=data.passes||{};
       const pnames=Object.keys(passes).sort();
-      if(!pnames.length){body.innerHTML='<div class="muted" style="padding:8px">No results yet. Trigger the <em>ODE Sweep</em> workflow on GitHub Actions.</div>';return;}
+      if(!pnames.length){body.innerHTML='<div class="muted" style="padding:4px">No pass data.</div>';return;}
 
-      body.innerHTML=pnames.map(pname=>{
+      // sparkline SVG for best pass
+      const best=passes[pnames[pnames.length-1]]||[];
+      const pts=best.filter(r=>r.one_minus_R2!=null);
+      let svg='';
+      if(pts.length>1){
+        const W=Math.min(window.innerWidth-8,500),H=50;
+        const xs=pts.map(r=>r.gamma),ys=pts.map(r=>r.one_minus_R2);
+        const xlo=Math.min(...xs),xhi=Math.max(...xs),ylo=Math.min(...ys),yhi=Math.max(...ys);
+        const px=x=>((Math.log10(x)-Math.log10(xlo))/(Math.log10(xhi)-Math.log10(xlo)))*(W-8)+4;
+        const py=y=>H-4-((y-ylo)/(yhi-ylo||1))*(H-8);
+        svg=`<svg width="${W}" height="${H}" style="display:block;margin:3px 0;background:#151515;border-radius:2px">
+          <polyline points="${pts.map(r=>`${px(r.gamma).toFixed(1)},${py(r.one_minus_R2).toFixed(1)}`).join(' ')}" fill="none" stroke="#3a8ef7" stroke-width="1.2"/>
+          <text x="4" y="9" fill="#444" font-size="6" font-family="monospace">1-R² vs γ  pass ${esc(pnames[pnames.length-1])}</text>
+        </svg>`;
+      }
+
+      body.innerHTML=svg+pnames.map(pname=>{
         const rows=passes[pname]||[];
         const ok=rows.filter(r=>r.one_minus_R2!=null);
-        return`<div style="margin-bottom:8px">
-          <div style="font-size:8.5px;font-weight:700;color:#aaa;padding:2px 0">Pass ${esc(pname)} — ${ok.length}/${rows.length} points</div>
+        return`<div style="margin-top:6px">
+          <div style="font-size:7.5px;font-weight:700;color:#666;padding:1px 0">pass ${esc(pname)} &nbsp;${ok.length}/${rows.length}</div>
           <table class="sw-tbl">
             <thead><tr><th>γ</th><th>1-R²</th><th>F_mp</th><th>F_f64</th></tr></thead>
             <tbody>${rows.map(r=>{
               if(r.error)return`<tr><td>${r.gamma?.toFixed(4)??'?'}</td><td colspan="3" class="err">${esc(r.error)}</td></tr>`;
               const v=r.one_minus_R2;
-              return`<tr>
-                <td>${r.gamma.toFixed(4)}</td>
-                <td class="${r2cls(v)}">${v.toFixed(5)}</td>
-                <td class="muted">${r.F_mp!=null?Number(r.F_mp).toExponential(1):'—'}</td>
-                <td class="muted">${r.F_f64!=null?Number(r.F_f64).toExponential(1):'—'}</td>
-              </tr>`;
+              return`<tr><td>${r.gamma.toFixed(4)}</td><td class="${r2cls(v)}">${v.toFixed(5)}</td><td class="muted">${r.F_mp!=null?Number(r.F_mp).toExponential(1):'—'}</td><td class="muted">${r.F_f64!=null?Number(r.F_f64).toExponential(1):'—'}</td></tr>`;
             }).join('')}</tbody>
           </table>
         </div>`;
       }).join('');
-
-      // inline SVG sparkline for best pass
-      const best=passes[pnames[pnames.length-1]]||[];
-      const pts=best.filter(r=>r.one_minus_R2!=null);
-      if(pts.length>1){
-        const W=window.innerWidth-8,H=60;
-        const xs=pts.map(r=>r.gamma),ys=pts.map(r=>r.one_minus_R2);
-        const xlo=Math.min(...xs),xhi=Math.max(...xs),ylo=Math.min(...ys),yhi=Math.max(...ys);
-        const px=x=>((Math.log10(x)-Math.log10(xlo))/(Math.log10(xhi)-Math.log10(xlo)))*(W-6)+3;
-        const py=y=>H-3-((y-ylo)/(yhi-ylo||1))*(H-6);
-        body.insertAdjacentHTML('afterbegin',
-          `<svg width="${W}" height="${H}" style="display:block;margin-bottom:4px;background:#151515;border-radius:2px">
-            <polyline points="${pts.map(r=>`${px(r.gamma).toFixed(1)},${py(r.one_minus_R2).toFixed(1)}`).join(' ')}" fill="none" stroke="#3a8ef7" stroke-width="1.2"/>
-            <text x="3" y="10" fill="#555" font-size="7">1-R² vs γ (log x, pass ${esc(pnames[pnames.length-1])})</text>
-          </svg>`);
-      }
     }catch(e){
-      meta.textContent='No sweep results yet.';
-      body.innerHTML=`<div style="padding:8px;font-size:8px;color:#666">Run the <strong>ODE Sweep</strong> workflow on GitHub Actions to generate data.<br><br>Error: ${esc(String(e))}</div>`;
+      metaEl.textContent='error loading sweep data';
+      body.innerHTML=`<div style="padding:4px;font-size:8px;color:#555">${esc(String(e))}</div>`;
     }
   }
+
+  // load sweep on page start if section is open
+  window.addEventListener('DOMContentLoaded',()=>{
+    if(_open.sweep){loadSweep();_sweepLoaded=true;}
+  });
 </script>
 <div id="footer">(c) Matthijs Breugem</div>
 </body>
