@@ -96,16 +96,25 @@ def newton_solve(phi_fn, P0, tol=1e-12, max_iter=10, tag=""):
         log(f"    {tag} it={it:2d}  ||F||={res:.3e}  t={time.time()-t0:.0f}s")
     return P, res, max_iter
 
-# ── Linear extrapolation predictor from last 2 solved points ─────────────────
+# ── Quadratic (3rd-order) extrapolation predictor from last 3 solved points ───
 def predict(g_next, solved_gammas, solved_P):
-    """P_pred = P_{k-1} + (dg/dg_prev) * (P_{k-1} - P_{k-2})"""
-    if len(solved_gammas) < 2:
+    """Lagrange quadratic extrapolation using last 3 (or fewer) solved points."""
+    n = len(solved_gammas)
+    if n == 1:
         return solved_P[-1].copy()
-    g0, g1 = solved_gammas[-2], solved_gammas[-1]
-    P0, P1 = solved_P[-2],      solved_P[-1]
-    dg_prev = g1 - g0           # negative (decreasing gamma)
-    dg      = g_next - g1
-    P_pred = P1 + (dg / dg_prev) * (P1 - P0)
+    if n == 2:                  # fall back to linear
+        g0, g1 = solved_gammas[-2], solved_gammas[-1]
+        P0, P1 = solved_P[-2],      solved_P[-1]
+        t = (g_next - g1) / (g1 - g0)
+        P_pred = P1 + t * (P1 - P0)
+    else:                       # quadratic Lagrange interpolation
+        g0, g1, g2 = solved_gammas[-3], solved_gammas[-2], solved_gammas[-1]
+        P0, P1, P2 = solved_P[-3],      solved_P[-2],      solved_P[-1]
+        g = g_next
+        l0 = (g - g1) * (g - g2) / ((g0 - g1) * (g0 - g2))
+        l1 = (g - g0) * (g - g2) / ((g1 - g0) * (g1 - g2))
+        l2 = (g - g0) * (g - g1) / ((g2 - g0) * (g2 - g1))
+        P_pred = l0 * P0 + l1 * P1 + l2 * P2
     return np.clip(P_pred, 1e-12, 1.0 - 1e-12)
 
 # ── Adaptive continuation ─────────────────────────────────────────────────────
