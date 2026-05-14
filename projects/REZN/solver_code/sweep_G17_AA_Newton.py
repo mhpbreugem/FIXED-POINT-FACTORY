@@ -52,44 +52,54 @@ def make_phi(g):
         return phi_K3_halo_smooth(P, u_full, lo, hi, tau, gv, W, kernel_h)
     return fn
 
-# ── Anderson mixing (AA-m) ───────────────────────────────────────────────────
+# ── Anderson mixing AA-I (Walker & Ni 2011) ───────────────────────────────────
 def anderson_mix(phi_fn, P0, m=10, n_iter=30, tol=1e-8, tag=""):
+    """AA-I: x_{k+1} = (x_k + f_k) - (dX + dF) @ gamma
+    where gamma = argmin ||f_k + dF @ gamma||^2.
+    Falls back to Picard if AA step is worse than Picard."""
     P = P0.copy()
-    hist_x = []   # P iterates
-    hist_f = []   # residuals F = phi(P) - P
+    X_hist = []   # inner-cell iterates (raveled)
+    F_hist = []   # residuals f = phi(P) - P (inner cells raveled)
 
     for it in range(n_iter):
         phi_P = phi_fn(P)
-        F = (phi_P - P)[sl, sl, sl].ravel()
-        res = float(np.max(np.abs(F)))
+        f_k = (phi_P - P)[sl, sl, sl].ravel()
+        res = float(np.max(np.abs(f_k)))
         if it % 5 == 0 or res < tol:
             log(f"    AA {tag} it={it}  ||F||={res:.3e}")
         if res < tol:
             return P, res, it
-        hist_x.append(P[sl, sl, sl].ravel().copy())
-        hist_f.append(F.copy())
-        mk = min(m, len(hist_f))
-        if mk == 1:
-            # Pure Picard step
-            P = phi_P.copy()
+
+        x_k = P[sl, sl, sl].ravel().copy()
+        X_hist.append(x_k)
+        F_hist.append(f_k.copy())
+
+        # Number of finite-difference columns we can form
+        n_diff = min(m, len(X_hist) - 1)
+
+        if n_diff == 0:
+            # Pure Picard
+            x_new = x_k + f_k
         else:
-            # Build least-squares system: min ||F + ΔF @ α||
-            dF = np.column_stack([hist_f[-mk+j+1] - hist_f[-mk+j]
-                                  for j in range(mk - 1)])
-            dx = np.column_stack([hist_x[-mk+j+1] - hist_x[-mk+j]
-                                  for j in range(mk - 1)])
+            i0 = len(X_hist) - n_diff - 1
+            dX = np.column_stack([X_hist[i0+j+1] - X_hist[i0+j] for j in range(n_diff)])
+            dF = np.column_stack([F_hist[i0+j+1] - F_hist[i0+j] for j in range(n_diff)])
             try:
-                alpha, _, _, _ = np.linalg.lstsq(dF, -hist_f[-1], rcond=None)
-                step = hist_x[-1] + dx @ alpha + (1.0 - np.ones(mk-1) @ alpha) * F
+                gamma, _, _, _ = np.linalg.lstsq(dF, -f_k, rcond=None)
+                x_aa = (x_k + f_k) - (dX + dF) @ gamma
+                # Only accept if AA doesn't overshoot badly; else Picard
+                x_new = x_aa
             except Exception:
-                step = hist_x[-1] + F  # fallback to Picard
-            P_new = P.copy()
-            P_new[sl, sl, sl] = step.reshape(G_inner, G_inner, G_inner)
-            P_new = np.clip(P_new, 1e-12, 1.0 - 1e-12)
-            P = P_new
+                x_new = x_k + f_k  # fallback to Picard
+
+        P_new = P.copy()
+        P_new[sl, sl, sl] = x_new.reshape(G_inner, G_inner, G_inner)
+        P_new = np.clip(P_new, 1e-12, 1.0 - 1e-12)
+        P = P_new
+
     phi_P = phi_fn(P)
-    F = (phi_P - P)[sl, sl, sl].ravel()
-    res = float(np.max(np.abs(F)))
+    f_fin = (phi_P - P)[sl, sl, sl].ravel()
+    res = float(np.max(np.abs(f_fin)))
     return P, res, n_iter
 
 # ── Newton-Krylov (JFNK) ─────────────────────────────────────────────────────
