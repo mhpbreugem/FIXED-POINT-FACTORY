@@ -143,34 +143,42 @@ anchor_idx = int(np.argmin([abs(g - anchor_gamma) for g in gamma_grid]))
 log(f"Grid: 20 points {gamma_grid[0]:.4f}..{gamma_grid[-1]:.4f}  "
     f"anchor_idx={anchor_idx} (gamma~{gamma_grid[anchor_idx]:.4f})")
 
-# ── Sweep: Newton continuation outward from the anchor ───────────────────────
+# ── Sweep: left first (anchor → small γ), then right (anchor → large γ) ──────
+# Key: the "→" sweep starts from P_anchor (γ=1.0), NOT from P*(anchor_idx),
+# because P_anchor is closer in γ to the first rightward point than P*(0.9188) is.
 results = [None] * 20
 P_store = [None] * 20
 P_store[anchor_idx] = P_anchor.copy()
 
+def solve_point(idx, P_prev, direction):
+    g = gamma_grid[idx]
+    t0 = time.time()
+    log(f"  {direction} gamma={g:.4f} (idx={idx})  [Newton from neighbour]")
+    phi = phi_factory(g)
+    P, res, nit = newton_solve(phi, P_prev, tag=f"g={g:.3f}")
+    F_check = float(np.max(np.abs((phi(P) - P)[sl, sl, sl])))
+    r2 = revelation_deficit(P[sl, sl, sl], u_inner, np.full(3, tau_fixed), 3)
+    dt = time.time() - t0
+    results[idx] = {"gamma": float(g), "one_minus_R2": float(r2),
+                    "F_reinsert": F_check, "newton_iters": nit, "wall_s": dt}
+    P_store[idx] = P
+    log(f"  {direction} gamma={g:.4f}  1-R2={r2:.6e}  "
+        f"||F||_reinsert={F_check:.3e}  iters={nit}  t={dt:.0f}s")
+    return P
+
 t_sweep = time.time()
-for direction, idxs in [("→", range(anchor_idx, 20)),
-                        ("←", range(anchor_idx - 1, -1, -1))]:
-    P_prev = P_anchor.copy()
-    for idx in idxs:
-        if results[idx] is not None:
-            P_prev = P_store[idx]
-            continue
-        g = gamma_grid[idx]
-        t0 = time.time()
-        log(f"  {direction} gamma={g:.4f} (idx={idx})  [Newton from neighbour]")
-        phi = phi_factory(g)
-        P, res, nit = newton_solve(phi, P_prev, tag=f"g={g:.3f}")
-        # residual check: re-insert into the fixed-point map
-        F_check = float(np.max(np.abs((phi(P) - P)[sl, sl, sl])))
-        r2 = revelation_deficit(P[sl, sl, sl], u_inner, np.full(3, tau_fixed), 3)
-        dt = time.time() - t0
-        results[idx] = {"gamma": float(g), "one_minus_R2": float(r2),
-                        "F_reinsert": F_check, "newton_iters": nit, "wall_s": dt}
-        P_store[idx] = P
-        P_prev = P
-        log(f"  {direction} gamma={g:.4f}  1-R2={r2:.6e}  "
-            f"||F||_reinsert={F_check:.3e}  iters={nit}  t={dt:.0f}s")
+
+# ← left sweep: anchor_idx down to 0 (decreasing gamma), start from P_anchor
+log("── Left sweep (γ decreasing) ──────────────────────────────────────────────")
+P_prev = P_anchor.copy()
+for idx in range(anchor_idx, -1, -1):
+    P_prev = solve_point(idx, P_prev, "←")
+
+# → right sweep: anchor_idx+1 up to 19 (increasing gamma), start from P_anchor
+log("── Right sweep (γ increasing) ─────────────────────────────────────────────")
+P_prev = P_anchor.copy()
+for idx in range(anchor_idx + 1, 20):
+    P_prev = solve_point(idx, P_prev, "→")
 
 log(f"sweep done in {time.time()-t_sweep:.0f}s")
 
