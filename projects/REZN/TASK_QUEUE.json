@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-14T02:13:58.745652Z",
+  "updated_at": "2026-05-14T02:20:11.571759Z",
   "params": {
     "G": 21,
     "UMAX": 5.0,
@@ -4360,7 +4360,7 @@
       "completed_at": null,
       "checkpoint": null,
       "result": null,
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "note": "Auto-requeued (attempt 1): noise perturbation noise_level=0.002.",
       "solver_params": {
         "mp_dps": 70,
         "mp_tol": "1e-50",
@@ -4368,8 +4368,11 @@
         "presmooth": 0,
         "tol": 5e-07,
         "G_inner": 21,
-        "u_inner_max": 5.0
-      }
+        "u_inner_max": 5.0,
+        "noise_level": 0.002,
+        "presmooth_alpha": 0.02
+      },
+      "requeue_count": 1
     },
     {
       "id": "g100_t0300",
