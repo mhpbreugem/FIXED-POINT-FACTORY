@@ -289,11 +289,23 @@ while (g_cur > g_lim + 1e-9) if DIRECTION == "left" else (g_cur < g_lim - 1e-9):
     P_pred = quad_predict(history, g_next)
 
     log(f"--- gamma={g_next:.6f}  step={step:.5f} ---")
-    P_aa, _, aa_it = anderson_mix(phi, P_pred, lo, hi, G_inner,
-                                   m=10, n_iter=30, tol=1e-7,
-                                   tag=f"g={g_next:.5f}")
-    P_new, res, nk_it = newton_krylov(phi, P_aa, lo, hi, G_inner,
-                                       tol=TOL, max_iter=10,
+    # Check predictor quality; only run AA if starting residual is small enough
+    phi_pred = phi(P_pred)
+    res_pred = float(np.max(np.abs((phi_pred - P_pred)[sl, sl, sl])))
+    if res_pred < 0.1:
+        P_aa, _, aa_it = anderson_mix(phi, P_pred, lo, hi, G_inner,
+                                       m=10, n_iter=30, tol=1e-7,
+                                       tag=f"g={g_next:.5f}")
+        # If AA made things worse, revert to predictor
+        phi_aa = phi(P_aa)
+        res_aa = float(np.max(np.abs((phi_aa - P_aa)[sl, sl, sl])))
+        P_for_nk = P_aa if res_aa < res_pred else P_pred
+    else:
+        log(f"    predictor ||F||={res_pred:.2e} — skipping AA, using P_prev")
+        P_for_nk = P_cur   # last converged P is safer than bad predictor
+        aa_it = 0
+    P_new, res, nk_it = newton_krylov(phi, P_for_nk, lo, hi, G_inner,
+                                       tol=TOL, max_iter=15,
                                        tag=f"g={g_next:.5f}")
 
     if res < TOL:
