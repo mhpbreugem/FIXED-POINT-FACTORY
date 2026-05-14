@@ -102,7 +102,7 @@ def newton_solve(phi_fn, P0, tol=1e-12, max_iter=30, damping=0.7, tag=""):
     return P, res_inf, n_iter
 
 # ── Grid: linear 1.0 → 0.20 step 0.01 ───────────────────────────────────────
-STEP = 0.01
+STEP = 0.005
 gamma_grid = [round(anchor_gamma - i * STEP, 6)
               for i in range(int(round((anchor_gamma - 0.20) / STEP)) + 1)]
 n_pts = len(gamma_grid)
