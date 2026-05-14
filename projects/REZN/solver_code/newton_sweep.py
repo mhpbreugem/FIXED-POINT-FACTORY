@@ -1,17 +1,11 @@
 #!/usr/bin/env python3
-"""Phase 1 — plain Newton (JFNK, no Anderson) continuation sweep.
+"""Phase 1 — Newton (JFNK, no Anderson) continuation sweep.
 
 Anchor : g100_t0300_G21.npz  (G_inner=21, pad=4, gamma=1.0, tau=3.0)
-Operator: phi_K3_halo_smooth  kernel_h=0.025  (the operator the anchor is a
-          ~1e-15 fixed point of; built for Newton's quadratic convergence)
-Grid   : gamma in [0.2, 5], 20 log-spaced points
-Solver : Jacobian-free Newton-Krylov.  Each Newton step solves
-             (I - J) delta = F,   F = phi(P) - P
-         with GMRES + finite-difference (I-J)*w products.  NO Anderson.
-Mode   : machine precision (float64)
-
-For every converged gamma the residual is re-checked by inserting the
-solution back into the fixed-point map: ||phi(P) - P||_inf.
+Operator: phi_K3_halo_smooth  kernel_h=0.025
+Grid   : gamma 1.0 → 0.20, linear step 0.01 (left sweep only)
+Predictor: Euler tangent  (I-J)v = dφ/dγ  →  P + Δγ·v
+Newton : JFNK with fixed damping 0.7 (no Armijo), no Anderson
 """
 import sys, json, time
 from pathlib import Path
@@ -51,7 +45,6 @@ u_inner = u_full[lo:hi]
 n_inner = G_inner ** 3
 sl = slice(lo, hi)
 
-# high-precision anchor inner values for the best float64 start
 import mpmath as mp
 mp.mp.dps = 50
 if "P_inner_mp_str" in d.files:
@@ -64,171 +57,122 @@ if "P_inner_mp_str" in d.files:
 log(f"Anchor {ANCHOR.name}: G_inner={G_inner} pad={pad} gamma={anchor_gamma} "
     f"tau={tau_fixed} kernel_h={kernel_h:.4f}  inner u[{u_inner.min():.1f},{u_inner.max():.1f}]")
 
-# ── phi operator (smooth, fixed kernel_h) ────────────────────────────────────
+# ── phi operator ──────────────────────────────────────────────────────────────
 def phi_factory(g):
     gv = np.full(3, g)
     def fn(P):
         return phi_K3_halo_smooth(P, u_full, lo, hi, tau, gv, W, kernel_h)
     return fn
 
-# ── ODE tangent predictor ─────────────────────────────────────────────────────
-def tangent_predict(phi_prev, phi_next, P, g_prev, g_next):
-    """Euler step along solution branch: solve (I-J)v = dφ/dγ, return P + Δγ·v."""
-    dg = g_next - g_prev
-    phi_P = phi_prev(P)
-    dphi_dg = (phi_next(P) - phi_P) / dg          # FD in γ
-    rhs = dphi_dg[sl, sl, sl].ravel()
+# ── LGMRES helper shared by predictor and Newton ──────────────────────────────
+def _lgmres(A, b, tol=1e-4):
+    try:
+        x, info = lgmres(A, b, rtol=tol, maxiter=40, inner_m=25)
+    except TypeError:
+        x, info = lgmres(A, b, tol=tol, maxiter=40, inner_m=25)
+    return x, info
+
+def _jac_op(phi_fn, P, phi_P):
+    """Return (I-J) as LinearOperator, finite-diff Jacobian-vector product."""
     normP = np.linalg.norm(P[sl, sl, sl])
     phi_P_in = phi_P[sl, sl, sl].ravel()
     def mv(w):
         wn = np.linalg.norm(w)
         if wn == 0.0: return w
         dlt = 1.5e-8 * (1.0 + normP) / wn
-        Pp = P.copy(); Pp[sl, sl, sl] += dlt * w.reshape(G_inner, G_inner, G_inner)
-        return w - (phi_prev(Pp)[sl, sl, sl].ravel() - phi_P_in) / dlt
-    A = LinearOperator((n_inner, n_inner), matvec=mv, dtype=np.float64)
-    try:
-        v, _ = lgmres(A, rhs, rtol=1e-4, maxiter=40, inner_m=25)
-    except TypeError:
-        v, _ = lgmres(A, rhs, tol=1e-4, maxiter=40, inner_m=25)
+        Pp = P.copy()
+        Pp[sl, sl, sl] += dlt * w.reshape(G_inner, G_inner, G_inner)
+        return w - (phi_fn(Pp)[sl, sl, sl].ravel() - phi_P_in) / dlt
+    return LinearOperator((n_inner, n_inner), matvec=mv, dtype=np.float64)
+
+# ── Euler tangent predictor ───────────────────────────────────────────────────
+def tangent_predict(phi_prev, phi_next, P, g_prev, g_next):
+    """Solve (I-J)v = dφ/dγ, return P + Δγ·v."""
+    dg = g_next - g_prev
+    phi_P = phi_prev(P)
+    dphi_dg = (phi_next(P) - phi_P) / dg
+    A = _jac_op(phi_prev, P, phi_P)
+    v, _ = _lgmres(A, dphi_dg[sl, sl, sl].ravel())
     P_pred = P.copy()
     P_pred[sl, sl, sl] += dg * v.reshape(G_inner, G_inner, G_inner)
     return np.clip(P_pred, 1e-12, 1.0 - 1e-12)
 
-# ── JFNK Newton solver — line-search globalised, no Anderson ─────────────────
-def newton_solve(phi_fn, P0, tol=1e-12, max_iter=60,
-                 lgmres_tol=1e-4, lgmres_maxiter=40, lgmres_inner_m=25,
-                 tag=""):
-    """Jacobian-free Newton-Krylov with Armijo backtracking line search.
-
-    Each step: solve (I-J) d = F with LGMRES, then take P += lam*d with lam
-    backtracked so ||F|| decreases monotonically.  No Anderson, no Picard
-    mixing — just globalised Newton.
-    """
+# ── JFNK Newton — fixed damping, no Anderson ─────────────────────────────────
+def newton_solve(phi_fn, P0, tol=1e-12, max_iter=30, damping=0.7, tag=""):
+    """JFNK with fixed step damping. Each step: P += damping * (I-J)^{-1} F."""
     P = P0.copy()
     phi_P = phi_fn(P)
     F_in = (phi_P - P)[sl, sl, sl].ravel()
     res_inf = float(np.max(np.abs(F_in)))
-    res2    = float(np.linalg.norm(F_in))
     n_iter = 0
     for it in range(max_iter):
         n_iter = it
         if res_inf < tol:
-            log(f"    {tag} newton it={it:2d}  ||F||inf={res_inf:.4e}  [converged]")
+            log(f"    {tag} newton it={it:2d}  ||F||={res_inf:.4e}  [converged]")
             break
-        normP = np.linalg.norm(P[sl, sl, sl])
-        phi_P_in = phi_P[sl, sl, sl].ravel()
-
-        def matvec(w):
-            wn = np.linalg.norm(w)
-            if wn == 0.0:
-                return w
-            dlt = 1.5e-8 * (1.0 + normP) / wn
-            P_pert = P.copy()
-            P_pert[sl, sl, sl] += dlt * w.reshape(G_inner, G_inner, G_inner)
-            Jw = (phi_fn(P_pert)[sl, sl, sl].ravel() - phi_P_in) / dlt
-            return w - Jw
-
-        A = LinearOperator((n_inner, n_inner), matvec=matvec, dtype=np.float64)
         t_g = time.time()
-        try:
-            d, info = lgmres(A, F_in, rtol=lgmres_tol,
-                             maxiter=lgmres_maxiter, inner_m=lgmres_inner_m)
-        except TypeError:
-            d, info = lgmres(A, F_in, tol=lgmres_tol,
-                             maxiter=lgmres_maxiter, inner_m=lgmres_inner_m)
-        d3 = d.reshape(G_inner, G_inner, G_inner)
-
-        # Armijo backtracking line search on ||F||_2 (smooth, consistent with LGMRES)
-        lam = 1.0
-        accepted = False
-        for _ls in range(16):
-            P_try = P.copy()
-            P_try[sl, sl, sl] += lam * d3
-            P_try = np.clip(P_try, 1e-12, 1.0 - 1e-12)
-            phi_try = phi_fn(P_try)
-            F_try = (phi_try - P_try)[sl, sl, sl].ravel()
-            res_try2   = float(np.linalg.norm(F_try))
-            res_try_inf = float(np.max(np.abs(F_try)))
-            if res_try2 < (1.0 - 1e-4 * lam) * res2:
-                accepted = True
-                break
-            lam *= 0.5
-        P, phi_P, F_in = P_try, phi_try, F_try
-        res_inf, res2 = res_try_inf, res_try2
-        log(f"    {tag} newton it={it:2d}  ||F||inf={res_inf:.4e}  ||F||2={res2:.4e}  "
-            f"lam={lam:.4f}  lgmres_info={info}  t={time.time()-t_g:.0f}s"
-            + ("" if accepted else "  [LS failed — least-bad step]"))
+        A = _jac_op(phi_fn, P, phi_P)
+        d_vec, info = _lgmres(A, F_in)
+        P[sl, sl, sl] += damping * d_vec.reshape(G_inner, G_inner, G_inner)
+        P = np.clip(P, 1e-12, 1.0 - 1e-12)
+        phi_P = phi_fn(P)
+        F_in = (phi_P - P)[sl, sl, sl].ravel()
+        res_inf = float(np.max(np.abs(F_in)))
+        log(f"    {tag} newton it={it:2d}  ||F||={res_inf:.4e}  "
+            f"lgmres_info={info}  t={time.time()-t_g:.0f}s")
     return P, res_inf, n_iter
 
-# ── gamma grid [0.2, 5], 20 log points ───────────────────────────────────────
-gamma_grid = [float(10**x) for x in np.linspace(np.log10(0.2), np.log10(5.0), 20)]
-anchor_idx = int(np.argmin([abs(g - anchor_gamma) for g in gamma_grid]))
-log(f"Grid: 20 points {gamma_grid[0]:.4f}..{gamma_grid[-1]:.4f}  "
-    f"anchor_idx={anchor_idx} (gamma~{gamma_grid[anchor_idx]:.4f})")
+# ── Grid: linear 1.0 → 0.20 step 0.01 ───────────────────────────────────────
+STEP = 0.01
+gamma_grid = [round(anchor_gamma - i * STEP, 6)
+              for i in range(int(round((anchor_gamma - 0.20) / STEP)) + 1)]
+n_pts = len(gamma_grid)
+log(f"Grid: {n_pts} points {gamma_grid[0]:.4f} → {gamma_grid[-1]:.4f}  step={STEP}")
 
-# ── Sweep: left first (anchor → small γ), then right (anchor → large γ) ──────
-# Key: the "→" sweep starts from P_anchor (γ=1.0), NOT from P*(anchor_idx),
-# because P_anchor is closer in γ to the first rightward point than P*(0.9188) is.
-results = [None] * 20
-P_store = [None] * 20
-P_store[anchor_idx] = P_anchor.copy()
+# ── Left sweep only (γ decreasing from 1.0 to 0.20) ──────────────────────────
+results = []
 
-def solve_point(idx, P_prev, g_prev, direction):
-    g = gamma_grid[idx]
+def solve_point(g, P_prev, g_prev):
     t0 = time.time()
-    # Tangent predictor: reduces initial residual from O(Δγ) to O(Δγ²)
     P_pred = tangent_predict(phi_factory(g_prev), phi_factory(g), P_prev, g_prev, g)
     F0 = float(np.max(np.abs((phi_factory(g)(P_pred) - P_pred)[sl, sl, sl])))
-    log(f"  {direction} gamma={g:.4f} (idx={idx})  [predictor ||F||={F0:.3e}]")
+    log(f"  ← gamma={g:.4f}  [predictor ||F||={F0:.3e}]")
     phi = phi_factory(g)
-    P, res, nit = newton_solve(phi, P_pred, tag=f"g={g:.3f}")
+    P, res, nit = newton_solve(phi, P_pred, damping=0.7, tag=f"g={g:.3f}")
     F_check = float(np.max(np.abs((phi(P) - P)[sl, sl, sl])))
     r2 = revelation_deficit(P[sl, sl, sl], u_inner, np.full(3, tau_fixed), 3)
     dt = time.time() - t0
-    results[idx] = {"gamma": float(g), "one_minus_R2": float(r2),
-                    "F_reinsert": F_check, "newton_iters": nit, "wall_s": dt}
-    P_store[idx] = P
-    log(f"  {direction} gamma={g:.4f}  1-R2={r2:.6e}  "
+    results.append({"gamma": float(g), "one_minus_R2": float(r2),
+                    "F_reinsert": F_check, "newton_iters": nit, "wall_s": dt})
+    log(f"  ← gamma={g:.4f}  1-R2={r2:.6e}  "
         f"||F||_reinsert={F_check:.3e}  iters={nit}  t={dt:.0f}s")
     return P
 
 t_sweep = time.time()
-
-# ← left sweep: anchor_idx down to 0 (decreasing gamma), start from P_anchor
-log("── Left sweep (γ decreasing) ──────────────────────────────────────────────")
-P_prev = P_anchor.copy()
-g_prev = anchor_gamma          # true anchor γ=1.0 (not grid point)
-for idx in range(anchor_idx, -1, -1):
-    P_prev = solve_point(idx, P_prev, g_prev, "←")
-    g_prev = gamma_grid[idx]
-
-# → right sweep: anchor_idx+1 up to 19 (increasing gamma), start from P_anchor
-log("── Right sweep (γ increasing) ─────────────────────────────────────────────")
 P_prev = P_anchor.copy()
 g_prev = anchor_gamma
-for idx in range(anchor_idx + 1, 20):
-    P_prev = solve_point(idx, P_prev, g_prev, "→")
-    g_prev = gamma_grid[idx]
+for g in gamma_grid:
+    P_prev = solve_point(g, P_prev, g_prev)
+    g_prev = g
 
 log(f"sweep done in {time.time()-t_sweep:.0f}s")
 
-# ── Results table ────────────────────────────────────────────────────────────
-log("=" * 72)
-log(f"{'gamma':>10} | {'1-R^2':>14} | {'||F|| reinsert':>16} | {'iters':>6} | {'t(s)':>6}")
-log("-" * 72)
+# ── Results table ─────────────────────────────────────────────────────────────
+log("=" * 70)
+log(f"{'gamma':>8} | {'1-R^2':>14} | {'||F|| reinsert':>16} | {'iters':>5} | {'t(s)':>5}")
+log("-" * 70)
 for r in results:
-    log(f"{r['gamma']:>10.4f} | {r['one_minus_R2']:>14.6e} | "
-        f"{r['F_reinsert']:>16.3e} | {r['newton_iters']:>6d} | {r['wall_s']:>6.0f}")
-log("=" * 72)
+    log(f"{r['gamma']:>8.4f} | {r['one_minus_R2']:>14.6e} | "
+        f"{r['F_reinsert']:>16.3e} | {r['newton_iters']:>5d} | {r['wall_s']:>5.0f}")
+log("=" * 70)
 
-# ── Write JSON ───────────────────────────────────────────────────────────────
+# ── Write JSON ────────────────────────────────────────────────────────────────
 meta = {
     "generated_at": datetime.now().isoformat(),
-    "phase": "1 — plain Newton (JFNK) continuation, no Anderson",
+    "phase": "1 — Newton JFNK, damping=0.7, step=0.01, left sweep only",
     "anchor_file": ANCHOR.name,
     "operator": f"phi_K3_halo_smooth kernel_h={kernel_h}",
-    "grid": f"G_inner={G_inner} pad={pad} gamma[0.2,5] 20pts",
+    "grid": f"G_inner={G_inner} pad={pad} gamma[1.0→0.20] step=0.01",
     "tau": tau_fixed,
     "rows": results,
 }
