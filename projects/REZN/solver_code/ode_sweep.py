@@ -37,7 +37,7 @@ def _anderson_step(F_hist: list, P_hist: list, m: int) -> np.ndarray:
 
     mk = min(k, m)
     # Least-squares: min ||sum theta_i F_i|| s.t. sum theta_i = 1
-    F_mat = np.column_stack([F_hist[-mk:]])   # n × mk
+    F_mat = np.column_stack(F_hist[-mk:])   # n × mk
     # Normal equations via QR
     ones = np.ones(mk)
     try:
@@ -47,7 +47,7 @@ def _anderson_step(F_hist: list, P_hist: list, m: int) -> np.ndarray:
         c = c / c.sum() if abs(c.sum()) > 1e-12 else ones / mk
     except Exception:
         c = ones / mk
-    P_stack = np.column_stack([P_hist[-mk:]])
+    P_stack = np.column_stack(P_hist[-mk:])
     return (P_stack + F_mat) @ c
 
 
