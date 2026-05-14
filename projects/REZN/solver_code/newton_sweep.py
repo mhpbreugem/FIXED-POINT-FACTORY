@@ -71,6 +71,30 @@ def phi_factory(g):
         return phi_K3_halo_smooth(P, u_full, lo, hi, tau, gv, W, kernel_h)
     return fn
 
+# ── ODE tangent predictor ─────────────────────────────────────────────────────
+def tangent_predict(phi_prev, phi_next, P, g_prev, g_next):
+    """Euler step along solution branch: solve (I-J)v = dφ/dγ, return P + Δγ·v."""
+    dg = g_next - g_prev
+    phi_P = phi_prev(P)
+    dphi_dg = (phi_next(P) - phi_P) / dg          # FD in γ
+    rhs = dphi_dg[sl, sl, sl].ravel()
+    normP = np.linalg.norm(P[sl, sl, sl])
+    phi_P_in = phi_P[sl, sl, sl].ravel()
+    def mv(w):
+        wn = np.linalg.norm(w)
+        if wn == 0.0: return w
+        dlt = 1.5e-8 * (1.0 + normP) / wn
+        Pp = P.copy(); Pp[sl, sl, sl] += dlt * w.reshape(G_inner, G_inner, G_inner)
+        return w - (phi_prev(Pp)[sl, sl, sl].ravel() - phi_P_in) / dlt
+    A = LinearOperator((n_inner, n_inner), matvec=mv, dtype=np.float64)
+    try:
+        v, _ = lgmres(A, rhs, rtol=1e-4, maxiter=40, inner_m=25)
+    except TypeError:
+        v, _ = lgmres(A, rhs, tol=1e-4, maxiter=40, inner_m=25)
+    P_pred = P.copy()
+    P_pred[sl, sl, sl] += dg * v.reshape(G_inner, G_inner, G_inner)
+    return np.clip(P_pred, 1e-12, 1.0 - 1e-12)
+
 # ── JFNK Newton solver — line-search globalised, no Anderson ─────────────────
 def newton_solve(phi_fn, P0, tol=1e-12, max_iter=60,
                  lgmres_tol=1e-4, lgmres_maxiter=40, lgmres_inner_m=25,
@@ -150,12 +174,15 @@ results = [None] * 20
 P_store = [None] * 20
 P_store[anchor_idx] = P_anchor.copy()
 
-def solve_point(idx, P_prev, direction):
+def solve_point(idx, P_prev, g_prev, direction):
     g = gamma_grid[idx]
     t0 = time.time()
-    log(f"  {direction} gamma={g:.4f} (idx={idx})  [Newton from neighbour]")
+    # Tangent predictor: reduces initial residual from O(Δγ) to O(Δγ²)
+    P_pred = tangent_predict(phi_factory(g_prev), phi_factory(g), P_prev, g_prev, g)
+    F0 = float(np.max(np.abs((phi_factory(g)(P_pred) - P_pred)[sl, sl, sl])))
+    log(f"  {direction} gamma={g:.4f} (idx={idx})  [predictor ||F||={F0:.3e}]")
     phi = phi_factory(g)
-    P, res, nit = newton_solve(phi, P_prev, tag=f"g={g:.3f}")
+    P, res, nit = newton_solve(phi, P_pred, tag=f"g={g:.3f}")
     F_check = float(np.max(np.abs((phi(P) - P)[sl, sl, sl])))
     r2 = revelation_deficit(P[sl, sl, sl], u_inner, np.full(3, tau_fixed), 3)
     dt = time.time() - t0
@@ -171,14 +198,18 @@ t_sweep = time.time()
 # ← left sweep: anchor_idx down to 0 (decreasing gamma), start from P_anchor
 log("── Left sweep (γ decreasing) ──────────────────────────────────────────────")
 P_prev = P_anchor.copy()
+g_prev = anchor_gamma          # true anchor γ=1.0 (not grid point)
 for idx in range(anchor_idx, -1, -1):
-    P_prev = solve_point(idx, P_prev, "←")
+    P_prev = solve_point(idx, P_prev, g_prev, "←")
+    g_prev = gamma_grid[idx]
 
 # → right sweep: anchor_idx+1 up to 19 (increasing gamma), start from P_anchor
 log("── Right sweep (γ increasing) ─────────────────────────────────────────────")
 P_prev = P_anchor.copy()
+g_prev = anchor_gamma
 for idx in range(anchor_idx + 1, 20):
-    P_prev = solve_point(idx, P_prev, "→")
+    P_prev = solve_point(idx, P_prev, g_prev, "→")
+    g_prev = gamma_grid[idx]
 
 log(f"sweep done in {time.time()-t_sweep:.0f}s")
 
