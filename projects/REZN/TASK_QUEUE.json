@@ -593,7 +593,7 @@
       "depends_on": [
         "g100_t0300"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "solver_params": {
         "mp_dps": 70,
@@ -608,7 +608,9 @@
       "G": 21,
       "result": null,
       "completed_at": null,
-      "deps_satisfy": "any"
+      "deps_satisfy": "any",
+      "claimed_by": "gha-25851022688-g100_t0400",
+      "claimed_at": "2026-05-14T08:50:57Z"
     },
     {
       "id": "g100_t0590",
