@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-13T23:52:50.468051Z",
+  "updated_at": "2026-05-14T02:13:58.745652Z",
   "params": {
     "G": 21,
     "UMAX": 5.0,
@@ -4690,6 +4690,19 @@
       }
     },
     {
+      "id": "g140_t0300",
+      "gamma": 1.4,
+      "tau": 3.0,
+      "depends_on": [
+        "g100_t0300"
+      ],
+      "deps_satisfy": "any",
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "note": "\u03b3-ladder between g100_t0300 (\u03b3=1.0) and g200_t0300 (\u03b3=2.0) at \u03c4=3.0."
+    },
+    {
       "id": "g200_t0300",
       "kind": "ree",
       "gamma": 2,
@@ -4697,14 +4710,14 @@
       "G": 21,
       "K": 3,
       "depends_on": [
-        "g100_t0300"
+        "g140_t0300"
       ],
       "deps_satisfy": "any",
       "status": "ready",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "note": "Auto-requeued (attempt 1): via new ladder g140_t0300. \u03b3-ladder at \u03b3=1.4",
       "solver_params": {
         "mp_dps": 70,
         "mp_tol": "1e-50",
@@ -4713,7 +4726,8 @@
         "tol": 5e-07,
         "G_inner": 21,
         "u_inner_max": 5.0
-      }
+      },
+      "requeue_count": 1
     },
     {
       "id": "g200_t0500",
@@ -4847,11 +4861,11 @@
     }
   ],
   "summary": {
-    "total": 202,
+    "total": 203,
     "done": 1,
-    "ready": 0,
+    "ready": 5,
     "claimed": 0,
-    "blocked": 201,
+    "blocked": 197,
     "bailed": 0,
     "skip": 0
   },
