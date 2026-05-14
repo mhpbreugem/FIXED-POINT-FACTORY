@@ -1,262 +1,331 @@
 #!/usr/bin/env python3
 """
-Adaptive machine-precision gamma sweep for G17/umax4 (tau=2.5).
+Self-contained gamma sweep for G17/umax4 (K=3 agents, tau=2.5, CRRA).
 
-Algorithm at each gamma step
-─────────────────────────────
-1. Quadratic Lagrange predictor from the last three converged points.
-2. Anderson mixing (AA-I, depth m=10) to reduce ||F||_inf below AA_TOL.
-3. Jacobian-free Newton-Krylov (LGMRES) to reach machine precision (1e-12).
+Economic model
+──────────────
+Three agents observe binary state v ∈ {0,1} via Gaussian signals s ~ N(±½, 1/tau).
+At equilibrium each agent's posterior mu_k = P(v=1 | own signal, observed price p).
+Market-clearing price p* satisfies sum_k x_k(mu_k, p*, gamma) = 0 where
+  x_k = W_k * (R_k - 1) / ((1-p) + R_k*p),  R_k = exp((logit mu_k - logit p) / gamma).
 
-Step adaptation (based on Newton iterations only, not AA count)
-────────────────────────────────────────────────────────────────
-  NK ≤ 4 iters  →  grow   step × 1.5  (easy region)
-  NK ≥ 8 iters  →  shrink step × 0.5  (stiff region)
-  failure        →  shrink step × 0.5; advance past stiff point at STEP_MIN
+Fixed-point operator phi(P)[i,j,l] computes the clearing price when each agent
+updates beliefs using a Gaussian kernel over the 2-D price slice through their
+own signal coordinate, then clears the CRRA market.
 
-Usage
-─────
-  python sweep_G17.py left     # gamma 1.0 → 0.01
-  python sweep_G17.py right    # gamma 1.0 → 5.0
+Sweep algorithm
+────────────────
+For each gamma step:
+  1. Quadratic Lagrange predictor from last three converged points.
+  2. Anderson mixing (AA-I) warm-up — skipped if it diverges.
+  3. Jacobian-free Newton-Krylov (LGMRES) to machine precision (< 1e-12).
+Step size adapts on Newton iteration count; advances past stiff points.
+
+Usage:  python sweep_G17.py left     # gamma 1.0 → 0.01
+        python sweep_G17.py right    # gamma 1.0 → 5.0
 """
 import sys, time, json
 from pathlib import Path
 from datetime import datetime
-
 import numpy as np
+from numba import njit, prange
 from scipy.sparse.linalg import lgmres, LinearOperator
 
-# ── Paths ────────────────────────────────────────────────────────────────────
-REPO   = Path("/home/user/FIXED-POINT-FACTORY")
-CKPT   = REPO / "projects/REZN/checkpoints"
-OUT    = REPO / "projects/REZN/overnight"
+# ── Paths ─────────────────────────────────────────────────────────────────────
+REPO = Path("/home/user/FIXED-POINT-FACTORY")
+CKPT = REPO / "projects/REZN/checkpoints"
+OUT  = REPO / "projects/REZN/overnight"
 OUT.mkdir(parents=True, exist_ok=True)
-sys.path.insert(0, str(REPO / "projects/REZN/solver_code"))
-sys.path.insert(0, "/home/user/rezn-src")
 
-from code.contour_K3_halo import phi_K3_halo_smooth
-from code.metrics import revelation_deficit
-
-# ── Direction from command line ───────────────────────────────────────────────
-DIRECTION = sys.argv[1].lower() if len(sys.argv) > 1 else "left"
+DIRECTION = (sys.argv[1].lower() if len(sys.argv) > 1 else "left")
 assert DIRECTION in ("left", "right"), "Usage: sweep_G17.py left|right"
 
 def log(msg):
     print(f"[{datetime.now().isoformat(timespec='seconds')}] {msg}", flush=True)
 
-# ── Load G17 anchor (gamma=1.0, tau=2.5) ─────────────────────────────────────
-d        = np.load(CKPT / "g100_t0250_G17.npz", allow_pickle=True)
-G_inner  = int(d["G_inner"])     # 17
-pad      = int(d["pad"])          # 4
-lo, hi   = pad, pad + G_inner    # inner-grid slice bounds
-u_full   = d["u_full"].astype(np.float64)
-tau      = d["tau_vec"].astype(np.float64)
-W        = d["W_vec"].astype(np.float64)
-P_anchor = d["P_full"].astype(np.float64)
-kernel_h = max(0.005, 0.05 * float(u_full[1] - u_full[0]))  # Gaussian bandwidth
-n_inner  = G_inner ** 3
-sl       = slice(lo, hi)
+# ══════════════════════════════════════════════════════════════════════════════
+# Economic model primitives  (Numba JIT — compiled once, cached)
+# ══════════════════════════════════════════════════════════════════════════════
 
-log(f"G17  tau={tau[0]}  kernel_h={kernel_h:.4f}  n_inner={n_inner}  dir={DIRECTION}")
+EPS = 1e-12  # price floor / ceiling
 
-# ── Phi factory ──────────────────────────────────────────────────────────────
-def make_phi(g):
-    """Return phi(P) = phi_K3_halo_smooth(P, gamma=g)."""
-    gv = np.full(3, g)
-    return lambda P: phi_K3_halo_smooth(P, u_full, lo, hi, tau, gv, W, kernel_h)
+@njit(cache=True)
+def f_signal(u, v, tau):
+    """Gaussian signal density: sqrt(tau/2pi) * exp(-tau/2 * (u - mean)^2)."""
+    mean = 0.5 if v == 1 else -0.5
+    d = u - mean
+    return (tau / (2.0 * 3.141592653589793)) ** 0.5 * np.exp(-0.5 * tau * d * d)
 
-# ── Anderson mixing (AA-I) ────────────────────────────────────────────────────
-def anderson_mix(phi_fn, P0, m=10, n_iter=30, tol=1e-7, tag=""):
+@njit(cache=True)
+def x_crra(mu, p, gamma, W):
+    """CRRA demand: W*(R-1)/((1-p)+R*p), R = exp((logit mu - logit p)/gamma)."""
+    z = (np.log(mu) - np.log(1.0 - mu) - np.log(p) + np.log(1.0 - p)) / gamma
+    if z >= 0.0:
+        e = np.exp(-z)
+        return W * (1.0 - e) / ((1.0 - p) * e + p)
+    e = np.exp(z)
+    return W * (e - 1.0) / ((1.0 - p) + p * e)
+
+@njit(cache=True)
+def clear_crra(mu0, mu1, mu2, gamma, W):
+    """Bisection: find p in (EPS, 1-EPS) with x_crra(mu0)+x_crra(mu1)+x_crra(mu2)=0."""
+    a, b = EPS, 1.0 - EPS
+    fa = x_crra(mu0, a, gamma, W) + x_crra(mu1, a, gamma, W) + x_crra(mu2, a, gamma, W)
+    if fa <= 0.0: return a
+    if x_crra(mu0, b, gamma, W) + x_crra(mu1, b, gamma, W) + x_crra(mu2, b, gamma, W) >= 0.0:
+        return b
+    for _ in range(60):
+        c  = 0.5 * (a + b)
+        fc = x_crra(mu0, c, gamma, W) + x_crra(mu1, c, gamma, W) + x_crra(mu2, c, gamma, W)
+        if fc >= 0.0: a = c
+        else:         b = c
+    return 0.5 * (a + b)
+
+@njit(cache=True, parallel=True)
+def phi_K3(P, u, lo, hi, tau, gamma, W, h):
     """
-    AA-I fixed-point iteration (Walker & Ni 2011).
-    Update rule: x_{k+1} = (x_k + f_k) − (dX + dF) @ gamma_k
-    where gamma_k = argmin ||f_k + dF @ gamma||^2.
-    Falls back to Picard when history is empty.
+    Fixed-point operator phi for K=3 symmetric agents.
+
+    For each inner cell (i,j,l):
+      Agent k uses the 2-D price slice perpendicular to their own signal axis.
+      Evidence: A_v = sum_{a,b} K_h(P[slice] - p) * f_v(u_a) * f_v(u_b)
+      Posterior: mu_k = f_1(u_k) * A_1 / (f_0(u_k)*A_0 + f_1(u_k)*A_1)
+      New price:  phi(P)[i,j,l] = clear_crra(mu0, mu1, mu2, gamma, W)
+
+    Gaussian kernel K_h(d) = exp(-d^2 / (2h^2)); h = kernel bandwidth.
     """
-    P = P0.copy()
+    G     = u.size
+    inv2h2 = 1.0 / (2.0 * h * h)
+    P_new  = P.copy()
+
+    for i in prange(lo, hi):
+        for j in range(lo, hi):
+            for l in range(lo, hi):
+                p = P[i, j, l]
+
+                # Agent 0 — slice P[i,:,:], observers have tau[1], tau[2]
+                A0 = A1 = 0.0
+                for a in range(G):
+                    f0a = f_signal(u[a], 0, tau[1]); f1a = f_signal(u[a], 1, tau[1])
+                    for b in range(G):
+                        w = np.exp(-(P[i, a, b] - p)**2 * inv2h2)
+                        A0 += w * f0a * f_signal(u[b], 0, tau[2])
+                        A1 += w * f1a * f_signal(u[b], 1, tau[2])
+                n = f_signal(u[i], 1, tau[0]) * A1
+                d = f_signal(u[i], 0, tau[0]) * A0 + n
+                mu0 = max(EPS, min(1.0 - EPS, n / d)) if d > 0.0 else 0.5
+
+                # Agent 1 — slice P[:,j,:], observers have tau[0], tau[2]
+                A0 = A1 = 0.0
+                for a in range(G):
+                    f0a = f_signal(u[a], 0, tau[0]); f1a = f_signal(u[a], 1, tau[0])
+                    for b in range(G):
+                        w = np.exp(-(P[a, j, b] - p)**2 * inv2h2)
+                        A0 += w * f0a * f_signal(u[b], 0, tau[2])
+                        A1 += w * f1a * f_signal(u[b], 1, tau[2])
+                n = f_signal(u[j], 1, tau[1]) * A1
+                d = f_signal(u[j], 0, tau[1]) * A0 + n
+                mu1 = max(EPS, min(1.0 - EPS, n / d)) if d > 0.0 else 0.5
+
+                # Agent 2 — slice P[:,:,l], observers have tau[0], tau[1]
+                A0 = A1 = 0.0
+                for a in range(G):
+                    f0a = f_signal(u[a], 0, tau[0]); f1a = f_signal(u[a], 1, tau[0])
+                    for b in range(G):
+                        w = np.exp(-(P[a, b, l] - p)**2 * inv2h2)
+                        A0 += w * f0a * f_signal(u[b], 0, tau[1])
+                        A1 += w * f1a * f_signal(u[b], 1, tau[1])
+                n = f_signal(u[l], 1, tau[2]) * A1
+                d = f_signal(u[l], 0, tau[2]) * A0 + n
+                mu2 = max(EPS, min(1.0 - EPS, n / d)) if d > 0.0 else 0.5
+
+                P_new[i, j, l] = clear_crra(mu0, mu1, mu2, gamma, W)
+    return P_new
+
+def revelation_deficit(P_inner, u_inner, tau):
+    """
+    1 - R² where R² is the squared correlation of logit(P) with T* = sum_k tau_k * u_k.
+    Measures information revelation: 0 = full revelation, 1 = no revelation.
+    """
+    T   = sum(tau[k] * u_inner for k in range(3))  # T* signal
+    # Flat signal-density weight: w ∝ prod f_1 + prod f_0 (symmetric prior)
+    f1  = np.array([np.exp(-0.5 * tau[0] * (u_inner - 0.5)**2) for _ in [0]])[0]
+    f0  = np.array([np.exp(-0.5 * tau[0] * (u_inner + 0.5)**2) for _ in [0]])[0]
+    # For 3-D cube, weight = outer product
+    w1  = np.einsum('i,j,k', f1, f1, f1) + np.einsum('i,j,k', f0, f0, f0)
+    w   = np.where((P_inner > 1e-4) & (P_inner < 1.0 - 1e-4), w1, 0.0)
+    Ws  = w.sum()
+    if Ws <= 0.0: return float("nan")
+    L   = np.log(P_inner / (1.0 - P_inner))  # logit
+    T3  = T[:, None, None] + T[None, :, None] + T[None, None, :]
+    Lm  = (w * L).sum() / Ws;  Tm = (w * T3).sum() / Ws
+    vL  = (w * (L - Lm)**2).sum() / Ws
+    vT  = (w * (T3 - Tm)**2).sum() / Ws
+    cov = (w * (L - Lm) * (T3 - Tm)).sum() / Ws
+    return float(1.0 - cov**2 / (vL * vT)) if vL > 0 and vT > 0 else float("nan")
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Solver
+# ══════════════════════════════════════════════════════════════════════════════
+
+def anderson_mix(phi_fn, P0, lo, hi, G, m=10, n_iter=30, tol=1e-7, tag=""):
+    """
+    AA-I warm-up. Skips to returning P0 if diverging (spectral radius > 1).
+    x_{k+1} = (x_k + f_k) − (dX + dF) @ argmin ||f_k + dF @ gamma||²
+    """
+    sl = slice(lo, hi); P = P0.copy()
     X_hist, F_hist = [], []
-
+    res0 = None
     for it in range(n_iter):
         phi_P = phi_fn(P)
         f_k   = (phi_P - P)[sl, sl, sl].ravel()
         res   = float(np.max(np.abs(f_k)))
+        if res0 is None: res0 = res
         if it % 10 == 0 or res < tol:
             log(f"    AA {tag} it={it}  ||F||={res:.3e}")
         if res < tol:
             return P, res, it
-
+        # Abort if residual has grown ×10 — Picard spectral radius > 1
+        if res > 10.0 * res0:
+            log(f"    AA {tag} diverged at it={it} — skipping to Newton")
+            return P0, res0, 0
         x_k = P[sl, sl, sl].ravel().copy()
-        X_hist.append(x_k)
-        F_hist.append(f_k.copy())
-
-        n_diff = min(m, len(X_hist) - 1)   # number of history columns
+        X_hist.append(x_k); F_hist.append(f_k.copy())
+        n_diff = min(m, len(X_hist) - 1)
         if n_diff == 0:
-            x_new = x_k + f_k               # Picard step (first iteration)
+            x_new = x_k + f_k
         else:
             i0 = len(X_hist) - n_diff - 1
             dX = np.column_stack([X_hist[i0+j+1] - X_hist[i0+j] for j in range(n_diff)])
             dF = np.column_stack([F_hist[i0+j+1] - F_hist[i0+j] for j in range(n_diff)])
             try:
-                gamma, _, _, _ = np.linalg.lstsq(dF, -f_k, rcond=None)
-                x_new = (x_k + f_k) - (dX + dF) @ gamma
+                gam, _, _, _ = np.linalg.lstsq(dF, -f_k, rcond=None)
+                x_new = (x_k + f_k) - (dX + dF) @ gam
             except Exception:
-                x_new = x_k + f_k           # lstsq failed → Picard fallback
-
-        P_new = P.copy()
-        P_new[sl, sl, sl] = x_new.reshape(G_inner, G_inner, G_inner)
-        P = np.clip(P_new, 1e-12, 1.0 - 1e-12)
-
-    # Return whatever we have after n_iter steps
+                x_new = x_k + f_k
+        P_new = P.copy(); P_new[sl, sl, sl] = x_new.reshape(hi-lo, hi-lo, hi-lo)
+        P = np.clip(P_new, EPS, 1.0 - EPS)
     phi_P = phi_fn(P)
     res   = float(np.max(np.abs((phi_P - P)[sl, sl, sl])))
     return P, res, n_iter
 
-# ── Jacobian-free Newton-Krylov ───────────────────────────────────────────────
-def newton_krylov(phi_fn, P0, tol=1e-12, max_iter=10, tag=""):
-    """
-    JFNK: solve (I − J_phi) delta = F via LGMRES with finite-difference matvec.
-    Finite-difference step: delta = 1.5e-8 * (1 + ||P||) / ||w||  (Knoll & Keyes).
-    """
+def newton_krylov(phi_fn, P0, lo, hi, G, tol=1e-12, max_iter=10, tag=""):
+    """JFNK via LGMRES. Finite-diff step eps = 1.5e-8*(1+||P||)/||w||."""
+    sl = slice(lo, hi); ni = (hi - lo) ** 3
     P     = P0.copy()
     phi_P = phi_fn(P)
-    F_in  = (phi_P - P)[sl, sl, sl].ravel()
-    res   = float(np.max(np.abs(F_in)))
-
+    F     = (phi_P - P)[sl, sl, sl].ravel()
+    res   = float(np.max(np.abs(F)))
     for it in range(max_iter):
         if res < tol:
-            log(f"    NK {tag} it={it}  ||F||={res:.3e}  [converged]")
-            return P, res, it
-
-        normP = np.linalg.norm(P[sl, sl, sl])
-        fp_in = phi_P[sl, sl, sl].ravel()
-
-        def mv(w, _n=normP, _fp=fp_in, _P=P):
+            log(f"    NK {tag} it={it}  ||F||={res:.3e}  [converged]"); return P, res, it
+        nP = np.linalg.norm(P[sl, sl, sl]); fp = phi_P[sl, sl, sl].ravel()
+        def mv(w, _n=nP, _fp=fp, _P=P):
             wn = np.linalg.norm(w)
             if wn == 0.0: return w
             eps = 1.5e-8 * (1.0 + _n) / wn
-            Pp  = _P.copy()
-            Pp[sl, sl, sl] += eps * w.reshape(G_inner, G_inner, G_inner)
+            Pp  = _P.copy(); Pp[sl, sl, sl] += eps * w.reshape(hi-lo, hi-lo, hi-lo)
             return w - (phi_fn(Pp)[sl, sl, sl].ravel() - _fp) / eps
-
-        A = LinearOperator((n_inner, n_inner), matvec=mv, dtype=np.float64)
+        A = LinearOperator((ni, ni), matvec=mv, dtype=np.float64)
         t0 = time.time()
-        try:
-            dv, _ = lgmres(A, F_in, rtol=1e-4, maxiter=40, inner_m=25)
-        except TypeError:
-            dv, _ = lgmres(A, F_in, tol=1e-4, maxiter=40, inner_m=25)
-
-        P[sl, sl, sl] += dv.reshape(G_inner, G_inner, G_inner)
-        P     = np.clip(P, 1e-12, 1.0 - 1e-12)
-        phi_P = phi_fn(P)
-        F_in  = (phi_P - P)[sl, sl, sl].ravel()
-        res   = float(np.max(np.abs(F_in)))
+        try:    dv, _ = lgmres(A, F, rtol=1e-4, maxiter=40, inner_m=25)
+        except TypeError: dv, _ = lgmres(A, F, tol=1e-4, maxiter=40, inner_m=25)
+        P[sl, sl, sl] += dv.reshape(hi-lo, hi-lo, hi-lo)
+        P     = np.clip(P, EPS, 1.0 - EPS)
+        phi_P = phi_fn(P); F = (phi_P - P)[sl, sl, sl].ravel()
+        res   = float(np.max(np.abs(F)))
         log(f"    NK {tag} it={it}  ||F||={res:.3e}  t={time.time()-t0:.0f}s")
-
     return P, res, max_iter
 
-# ── Quadratic Lagrange predictor ──────────────────────────────────────────────
-def predict(history, g_next):
-    """O(Δg³) predictor using the last three converged (gamma, P) pairs."""
-    if len(history) < 3:
-        return history[-1][1].copy()
-    (g0, P0), (g1, P1), (g2, P2) = history[-3], history[-2], history[-1]
-    d01 = g1 - g0;  d02 = g2 - g0;  d12 = g2 - g1
-    if abs(d01) < 1e-12 or abs(d12) < 1e-12:
-        return P2.copy()
+def quad_predict(history, g_next):
+    """Quadratic Lagrange extrapolation from last 3 converged (gamma, P) pairs."""
+    if len(history) < 3: return history[-1][1].copy()
+    (g0,P0),(g1,P1),(g2,P2) = history[-3], history[-2], history[-1]
+    d01,d02,d12 = g1-g0, g2-g0, g2-g1
+    if abs(d01) < 1e-12 or abs(d12) < 1e-12: return P2.copy()
     t  = g_next
-    L0 = (t-g1)*(t-g2) / ( d01 * d02)
-    L1 = (t-g0)*(t-g2) / (-d01 * d12)
-    L2 = (t-g0)*(t-g1) / ( d02 *-d12)
-    return np.clip(L0*P0 + L1*P1 + L2*P2, 1e-12, 1.0 - 1e-12)
+    L0 = (t-g1)*(t-g2)/(d01*d02)
+    L1 = (t-g0)*(t-g2)/(-d01*d12)
+    L2 = (t-g0)*(t-g1)/(d02*-d12)
+    return np.clip(L0*P0 + L1*P1 + L2*P2, EPS, 1.0 - EPS)
 
-# ── Sweep parameters ─────────────────────────────────────────────────────────
-GAMMA_START = 1.0
-GAMMA_MIN   = 0.01
-GAMMA_MAX   = 5.0
-TOL         = 1e-12
-STEP_INIT   = 0.005
-STEP_MIN    = 1e-5
-STEP_MAX    = 0.05
-GROW        = 1.5    # step multiplier when NK ≤ 4 iters
-SHRINK      = 0.5    # step multiplier when NK ≥ 8 iters or failure
+# ══════════════════════════════════════════════════════════════════════════════
+# Main sweep
+# ══════════════════════════════════════════════════════════════════════════════
+d        = np.load(CKPT / "g100_t0250_G17.npz", allow_pickle=True)
+G_inner  = int(d["G_inner"]); pad = int(d["pad"])
+lo, hi   = pad, pad + G_inner
+u_full   = d["u_full"].astype(np.float64)
+tau      = d["tau_vec"].astype(np.float64)
+W        = float(d["W_vec"][0])
+P_anchor = d["P_full"].astype(np.float64)
+h        = max(0.005, 0.05 * float(u_full[1] - u_full[0]))
+sl       = slice(lo, hi)
 
-# ── JIT warm-up ──────────────────────────────────────────────────────────────
-log("Warming up Numba JIT...")
+log(f"G17  tau={tau[0]}  h={h:.4f}  dir={DIRECTION}")
+
+def make_phi(g):
+    gv = np.full(3, g)
+    return lambda P: phi_K3(P, u_full, lo, hi, tau, g, W, h)
+
+# JIT warm-up (compiles phi_K3 on first call)
+log("Compiling Numba kernel...")
 _ = make_phi(1.0)(P_anchor)
-log("JIT ready.")
+log("Done.  Starting sweep.")
 log("=" * 60)
 
-# ── Main continuation loop ────────────────────────────────────────────────────
-history = [(GAMMA_START, P_anchor.copy())]
-g_cur   = GAMMA_START
-P_cur   = P_anchor.copy()
-step    = STEP_INIT
-results = []
-n_steps = 0
+# Sweep parameters
+STEP_INIT = 0.005; STEP_MIN = 1e-5; STEP_MAX = 0.05
+GROW = 1.5; SHRINK = 0.5; TOL = 1e-12
+g_lim = 0.01 if DIRECTION == "left" else 5.0
 
-is_left = (DIRECTION == "left")
-gamma_limit = GAMMA_MIN if is_left else GAMMA_MAX
+history = [(1.0, P_anchor.copy())]
+g_cur, P_cur, step = 1.0, P_anchor.copy(), STEP_INIT
+results, n_ok = [], 0
 
-while (g_cur > gamma_limit + 1e-9) if is_left else (g_cur < gamma_limit - 1e-9):
-    g_next = max(g_cur - step, gamma_limit) if is_left else min(g_cur + step, gamma_limit)
+while (g_cur > g_lim + 1e-9) if DIRECTION == "left" else (g_cur < g_lim - 1e-9):
+    g_next = max(g_cur - step, g_lim) if DIRECTION == "left" else min(g_cur + step, g_lim)
     phi    = make_phi(g_next)
-    P_pred = predict(history, g_next)
+    P_pred = quad_predict(history, g_next)
 
     log(f"--- gamma={g_next:.6f}  step={step:.5f} ---")
-
-    # Step 1: Anderson mixing to get close to the fixed point
-    P_aa, _, aa_it = anderson_mix(phi, P_pred, m=10, n_iter=30, tol=1e-7,
+    P_aa, _, aa_it = anderson_mix(phi, P_pred, lo, hi, G_inner,
+                                   m=10, n_iter=30, tol=1e-7,
                                    tag=f"g={g_next:.5f}")
+    P_new, res, nk_it = newton_krylov(phi, P_aa, lo, hi, G_inner,
+                                       tol=TOL, max_iter=10,
+                                       tag=f"g={g_next:.5f}")
 
-    # Step 2: Newton-Krylov to reach machine precision
-    P_new, res_nk, nk_it = newton_krylov(phi, P_aa, tol=TOL, max_iter=10,
-                                           tag=f"g={g_next:.5f}")
-    converged = res_nk < TOL
-
-    if converged:
-        deficit = float(revelation_deficit(P_new[lo:hi,lo:hi,lo:hi],
-                                           u_full[lo:hi], tau, 3))
-        log(f"  ✓ gamma={g_next:.6f}  ||F||={res_nk:.2e}  "
-            f"1-R²={deficit*100:.4f}%  AA:{aa_it}+NK:{nk_it}")
-
+    if res < TOL:
+        def1 = revelation_deficit(P_new[sl, sl, sl], u_full[lo:hi], tau)
+        log(f"  ✓ gamma={g_next:.6f}  ||F||={res:.2e}  1-R²={def1*100:.4f}%"
+            f"  AA:{aa_it}+NK:{nk_it}")
         history.append((g_next, P_new.copy()))
         if len(history) > 4: history.pop(0)
-        g_cur = g_next
-        P_cur = P_new.copy()
-        results.append({"gamma": g_next, "F_inf": res_nk,
-                        "deficit": deficit, "aa_iters": aa_it, "nk_iters": nk_it})
-        n_steps += 1
-
-        # Adapt step size based on Newton difficulty
-        if nk_it <= 4:
-            step = min(step * GROW, STEP_MAX)
-        elif nk_it >= 8:
-            step = max(step * SHRINK, STEP_MIN)
-
-        # Save checkpoint every 5 converged points
-        if n_steps % 5 == 0:
-            tag_s = (f"g{int(round(g_next*1000)):04d}"
-                     f"_t{int(round(tau[0]*100)):04d}_G{G_inner}_{DIRECTION}")
+        g_cur, P_cur = g_next, P_new.copy()
+        results.append({"gamma": g_next, "F_inf": res, "deficit": def1,
+                        "aa": aa_it, "nk": nk_it})
+        n_ok += 1
+        step = min(step * GROW, STEP_MAX) if nk_it <= 4 else (
+               max(step * SHRINK, STEP_MIN) if nk_it >= 8 else step)
+        if n_ok % 5 == 0:
+            tag_s = f"g{int(round(g_next*1000)):04d}_t{int(round(tau[0]*100)):04d}_G{G_inner}_{DIRECTION}"
             np.savez_compressed(CKPT / f"{tag_s}.npz",
-                                P_inner=P_new[lo:hi,lo:hi,lo:hi], P_full=P_new,
-                                u_full=u_full, u_grid_inner=u_full[lo:hi],
-                                gamma_vec=np.full(3, g_next),
-                                tau_vec=tau, W_vec=W, G_inner=G_inner, pad=pad, K=3,
-                                stage_F_inf=res_nk, stage_deficit=deficit)
+                P_full=P_new, P_inner=P_new[sl,sl,sl],
+                u_full=u_full, u_grid_inner=u_full[lo:hi],
+                gamma_vec=np.full(3, g_next), tau_vec=tau,
+                W_vec=np.full(3, W), G_inner=G_inner, pad=pad, K=3,
+                stage_F_inf=res, stage_deficit=def1)
             log(f"  checkpoint: {tag_s}.npz")
     else:
-        log(f"  ✗ gamma={g_next:.6f}  ||F||={res_nk:.2e}  AA:{aa_it}+NK:{nk_it}")
+        log(f"  ✗ gamma={g_next:.6f}  ||F||={res:.2e}  AA:{aa_it}+NK:{nk_it}")
         step = max(step * SHRINK, STEP_MIN)
         if step <= STEP_MIN * 1.5:
-            # Advance past the stiff point rather than halting
-            log(f"  step at minimum — advancing past stiff point")
+            log("  step at minimum — advancing")
             g_cur = g_next
 
-    # Flush results after every step
-    out_file = OUT / f"sweep_G17_{DIRECTION}.json"
-    with open(out_file, "w") as fh:
+    with open(OUT / f"sweep_G17_{DIRECTION}.json", "w") as fh:
         json.dump(results, fh, indent=2)
 
 log("=" * 60)
-log(f"Sweep done ({DIRECTION}): {n_steps} converged points, "
-    f"last gamma={g_cur:.6f}")
+log(f"Done ({DIRECTION}): {n_ok} points, last gamma={g_cur:.6f}")
