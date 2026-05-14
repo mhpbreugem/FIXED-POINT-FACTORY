@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-14T02:20:11.571759Z",
+  "updated_at": "2026-05-14T02:21:08.271415Z",
   "params": {
     "G": 21,
     "UMAX": 5.0,
@@ -4112,6 +4112,19 @@
       "claimed_at": null
     },
     {
+      "id": "g050_t0300",
+      "gamma": 0.5,
+      "tau": 3.0,
+      "depends_on": [
+        "g100_t0300"
+      ],
+      "deps_satisfy": "any",
+      "status": "ready",
+      "checkpoint": null,
+      "result": null,
+      "note": "\u03b3-ladder between g100_t0300 (\u03b3=1.0) and g025_t0300 (\u03b3=0.25) at \u03c4=3.0."
+    },
+    {
       "id": "g025_t0300",
       "kind": "ree",
       "gamma": 0.25,
@@ -4119,14 +4132,14 @@
       "G": 21,
       "K": 3,
       "depends_on": [
-        "g100_t0300"
+        "g050_t0300"
       ],
       "deps_satisfy": "any",
       "status": "ready",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
-      "note": "Added from on-disk checkpoint (orphan: no prior queue entry).",
+      "note": "Auto-requeued (attempt 1): via new ladder g050_t0300. \u03b3-ladder at \u03b3=0.5",
       "solver_params": {
         "mp_dps": 70,
         "mp_tol": "1e-50",
@@ -4135,7 +4148,8 @@
         "tol": 5e-07,
         "G_inner": 21,
         "u_inner_max": 5.0
-      }
+      },
+      "requeue_count": 1
     },
     {
       "id": "g035_t0200",
@@ -4864,9 +4878,9 @@
     }
   ],
   "summary": {
-    "total": 203,
+    "total": 204,
     "done": 1,
-    "ready": 5,
+    "ready": 6,
     "claimed": 0,
     "blocked": 197,
     "bailed": 0,
