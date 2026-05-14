@@ -366,7 +366,7 @@
     document.getElementById("pills").innerHTML=
       order.filter(s=>counts[s]).map(s=>{
         const sel=fv===s?' style="outline:2px solid #fff"':'';
-        return`<span class="pill ${s}"${sel} onclick="(function(){var f=document.getElementById('filter');f.value=f.value.toLowerCase()==='${s}'?'':'${s}';renderTasks();})(">${s[0]}:${counts[s]}</span>`;
+        return`<span class="pill ${s}"${sel} onclick="(function(){var f=document.getElementById('filter');f.value=f.value.toLowerCase()==='${s}'?'':'${s}';renderTasks();})()">${s[0]}:${counts[s]}</span>`;
       }).join("")+`<span class="pill total">#${tasks.length}</span>`;
 
     const filtered=tasks.filter(t=>{
@@ -388,7 +388,7 @@
       const ds=dsMap.get(t.id);
       const isCl=ds==="claimed";
       const r=t.result||{};
-      const fmaxDone=r.F_max!=null?fmtF(r.F_max):r.F_max_bound!=null?`&lt;${fmtF(r.F_max_bound)}`:""
+      const fmaxDone=r.F_max!=null?fmtF(r.F_max):r.F_max_bound!=null?`&lt;${fmtF(r.F_max_bound)}`:"";
       const fStr=isCl?(pr?.ftol!=null?fmtF(pr.ftol):""):fmaxDone;
       const rc=isCl?' class="row-claimed"':'';
       const hist=pr?.ftol_history||[];
@@ -500,7 +500,7 @@
     const body=document.getElementById('sweep-body');
     metaEl.textContent='loading…';
     try{
-      const data=await fj(rawUrl('projects/REZN/overnight/deficits.json'));
+      const data=getPat()?await apiContent('projects/REZN/overnight/deficits.json'):await fj(rawUrl('projects/REZN/overnight/deficits.json'));
       if(!data.generated_at){
         metaEl.textContent='no results yet — run ODE Sweep workflow';
         body.innerHTML='';
