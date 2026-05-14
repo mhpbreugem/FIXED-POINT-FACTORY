@@ -103,17 +103,21 @@ log("Step 1: float64 Newton sweep to gamma=0.6889")
 
 gammas_to_reach = [0.9, 0.8, 0.75, 0.72, 0.71, 0.70, 0.695, 0.690, 0.6889]
 P_cur = P_anchor.copy()
+P_last_good = P_anchor.copy()
 g_cur = 1.0
 
 for g_next in gammas_to_reach:
     phi = phi64_factory(g_next)
-    P_cur, res, nit = newton64(phi, P_cur, tol=1e-12, max_iter=12,
+    P_try, res, nit = newton64(phi, P_cur, tol=1e-12, max_iter=12,
                                tag=f"f64 g={g_next:.4f}")
     if res < 1e-12:
         log(f"  -> converged at gamma={g_next:.4f}  ||F||={res:.2e}  iters={nit}")
+        P_last_good = P_try.copy()
+        P_cur = P_try
         g_cur = g_next
     else:
-        log(f"  -> FAILED at gamma={g_next:.4f}  ||F||={res:.2e} — using last good P")
+        log(f"  -> FAILED at gamma={g_next:.4f}  ||F||={res:.2e} — reverting to last good P")
+        P_cur = P_last_good  # don't advance P_cur past a failed Newton step
         break
 
 log(f"Float64 reference point: gamma={g_cur:.5f}")
