@@ -390,6 +390,23 @@ def project_monotone_2d(mu_vals, max_passes=4, atol=1e-13):
     return mu
 
 
+def symmetrize_mu(mu_vals):
+    """Enforce the 0↔1 fundamental symmetry of the REE problem at prior ½:
+
+        μ(−ξ, 1 − p) = 1 − μ(ξ, p)
+
+    With a symmetric p-grid (which `initial_mu_field_ragged` produces by
+    construction), this is implemented as:
+
+        μ_sym[i, j] = ½ · ( μ[i, j] + (1 − μ[G−1−i, Gp−1−j]) )
+
+    Soft enforcement (averaging) applied after each Newton step removes the
+    asymmetric noise without changing the symmetric component.
+    """
+    flipped = 1.0 - mu_vals[::-1, ::-1]
+    return 0.5 * (mu_vals + flipped)
+
+
 # =============================================================================
 # §5a. Analytic IFT Jacobian — derivatives of demand, contour, and Bayes
 # =============================================================================
@@ -596,6 +613,8 @@ def newton_polish_analytic(mu_field, gamma, tau,
                 trial = np.clip(mu_old + alpha * delta, 1e-12, 1 - 1e-12)
                 if project_monotone:
                     trial = project_monotone_2d(trial)
+                if symmetrize:
+                    trial = symmetrize_mu(trial)
                 mu_field.mu_vals = trial
                 mu_field._rebuild_row_interp()
                 F_try_inf = 0.0
@@ -618,6 +637,8 @@ def newton_polish_analytic(mu_field, gamma, tau,
             new_mu = np.clip(mu_field.mu_vals + delta, 1e-12, 1 - 1e-12)
             if project_monotone:
                 new_mu = project_monotone_2d(new_mu)
+            if symmetrize:
+                new_mu = symmetrize_mu(new_mu)
             mu_field.mu_vals = new_mu
             mu_field._rebuild_row_interp()
 
@@ -811,10 +832,16 @@ def phi_cell_with_jac_ragged(mu_field, i, j, gamma, tau, basis_funcs, row_basis)
 def newton_polish_analytic_ragged(mu_field, gamma, tau,
                                    max_iter=15, tol=1e-12,
                                    line_search=True, project_monotone=False,
+                                   symmetrize=False,
                                    verbose=True):
     """Newton with full (n × n) analytic Jacobian for ragged p-grids.
 
     n = G · Gp. For G=50, Gp=15 that's a 750×750 dense solve per step.
+
+    If `symmetrize=True`, applies the 0↔1 symmetry projection after every
+    accepted Newton step. Requires the p-grid to satisfy
+    `p_grids[G−1−i, Gp−1−j] = 1 − p_grids[i, j]` (which the default
+    construction produces by construction).
     """
     G, Gp = mu_field.G, mu_field.Gp
     n = G * Gp
@@ -867,6 +894,8 @@ def newton_polish_analytic_ragged(mu_field, gamma, tau,
                 trial = np.clip(mu_old + alpha * delta, 1e-12, 1 - 1e-12)
                 if project_monotone:
                     trial = project_monotone_2d(trial)
+                if symmetrize:
+                    trial = symmetrize_mu(trial)
                 mu_field.mu_vals = trial
                 mu_field._rebuild_row_interp()
                 F_try_inf = 0.0
@@ -889,6 +918,8 @@ def newton_polish_analytic_ragged(mu_field, gamma, tau,
             new_mu = np.clip(mu_field.mu_vals + delta, 1e-12, 1 - 1e-12)
             if project_monotone:
                 new_mu = project_monotone_2d(new_mu)
+            if symmetrize:
+                new_mu = symmetrize_mu(new_mu)
             mu_field.mu_vals = new_mu
             mu_field._rebuild_row_interp()
 
