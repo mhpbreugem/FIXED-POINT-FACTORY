@@ -191,7 +191,7 @@ def phi_cell(mu_field, i, j, gamma, tau):
 
         try:
             xi_3 = brentq(lambda x: demand(x) - target,
-                          -1 + eps, 1 - eps, xtol=1e-8)
+                          -1 + eps, 1 - eps, xtol=1e-14, rtol=1e-14)
         except ValueError:
             continue
         u_3 = u_of_xi(xi_3, tau)
@@ -286,7 +286,7 @@ def iterate_phi(mu_field, gamma, tau, max_iter=60, alpha=0.15,
         else:
             dF = np.column_stack([f_hist[k+1] - f_hist[k] for k in range(m)])
             try:
-                gamma_a, *_ = np.linalg.lstsq(dF, f, rcond=1e-10)
+                gamma_a, *_ = np.linalg.lstsq(dF, f, rcond=1e-14)
                 dX = np.column_stack([x_hist[k+1] - x_hist[k] for k in range(m)])
                 x_new = gx - (dX + dF) @ gamma_a
                 x = (1 - alpha) * x + alpha * x_new
