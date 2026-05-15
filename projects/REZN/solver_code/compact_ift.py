@@ -112,7 +112,10 @@ class MuField:
                                        extrapolate=False) for i in range(self.G)]
 
     def col_at_p(self, p):
-        """μ(ξ_i, p) for every i, using row-PCHIP inside [p_lo, p_hi], else flat."""
+        """μ(ξ_i, p) for every i — row-PCHIP inside [p_lo, p_hi], else flat
+        (grid-edge value). The flat fallback is biased near the boundary but
+        much safer than CARA-asymptote extrapolation (μ → p), which makes
+        all demands vanish and breaks the REE-price reconstruction."""
         col = np.empty(self.G)
         for i in range(self.G):
             p_lo, p_hi = self.p_grids[i, 0], self.p_grids[i, -1]
@@ -577,6 +580,247 @@ def newton_polish_analytic(mu_field, gamma, tau,
                     accepted = True
                     if verbose and alpha < 1.0:
                         print(f"             line-search α={alpha:.3g}", flush=True)
+                    break
+                alpha *= 0.5
+            if not accepted:
+                mu_field.mu_vals = mu_old
+                mu_field._rebuild_row_interp()
+        if not accepted:
+            new_mu = np.clip(mu_field.mu_vals + delta, 1e-12, 1 - 1e-12)
+            if project_monotone:
+                new_mu = project_monotone_2d(new_mu)
+            mu_field.mu_vals = new_mu
+            mu_field._rebuild_row_interp()
+
+    return mu_field, history
+
+
+# =============================================================================
+# §5c. Ragged (per-row) p-grid — full analytic Jacobian, no block-diagonal
+# =============================================================================
+
+def _build_row_basis(p_grids):
+    """For each row l and each price-grid node q, build the PCHIP basis function
+    B^(l)_q(p) — the spline that's 1 at p_grids[l, q] and 0 at every other node
+    of row l's grid. Returns a list of lists."""
+    G, Gp = p_grids.shape
+    row_basis = []
+    for l in range(G):
+        bases = []
+        for q in range(Gp):
+            e = np.zeros(Gp); e[q] = 1.0
+            bases.append(PchipInterpolator(p_grids[l], e, extrapolate=False))
+        row_basis.append(bases)
+    return row_basis
+
+
+def initial_mu_field_ragged(G, Gp, tau, gamma, xi_max=0.88,
+                             init_kind="no_learning", alpha_tilt=1.0, beta_tilt=1.0,
+                             pad_factor=1.5):
+    """Per-row p-grids: each row covers its own no-learning price range.
+
+    Eliminates the degenerate-cell issue from a shared p-grid: every (i, j)
+    cell has a meaningful contour because p_grids[i, :] only covers prices
+    achievable for own-signal u_i."""
+    xi_grid = np.linspace(-xi_max, xi_max, G)
+    u_grid = u_of_xi(xi_grid, tau)
+    mu_NL = mu_no_learning(u_grid, tau)
+
+    p_grids = np.empty((G, Gp))
+    mu_vals = np.empty((G, Gp))
+    for i in range(G):
+        prices = np.empty(G * G); idx = 0
+        for j_ in range(G):
+            for k_ in range(G):
+                prices[idx] = clear_K3(mu_NL[i], mu_NL[j_], mu_NL[k_], gamma); idx += 1
+        # logit-uniform p-grid covering the no-learning range with padding
+        lp_lo = logit(max(prices.min(), 1e-5)) - 0.4
+        lp_hi = logit(min(prices.max(), 1 - 1e-5)) + 0.4
+        lp_row = np.linspace(lp_lo, lp_hi, Gp)
+        p_grids[i] = sigmoid(lp_row)
+
+        if init_kind == "no_learning":
+            mu_vals[i, :] = mu_NL[i]
+        elif init_kind == "cara_tilted":
+            atanh_xi_i = np.arctanh(np.clip(xi_grid[i], -1 + 1e-15, 1 - 1e-15))
+            L = alpha_tilt * atanh_xi_i + beta_tilt * lp_row
+            mu_vals[i, :] = np.clip(1.0 / (1.0 + np.exp(-L)), 1e-9, 1 - 1e-9)
+        else:
+            raise ValueError(f"unknown init_kind: {init_kind!r}")
+
+    return MuField(xi_grid, p_grids, mu_vals, tau)
+
+
+def phi_cell_with_jac_ragged(mu_field, i, j, gamma, tau, basis_funcs, row_basis):
+    """Compute Φ[i, j] AND the full (G, Gp) Jacobian ∂Φ[i, j]/∂μ[l, q].
+
+    With ragged p-grids, p_j = p_grids[i, j] is NOT generally at row l's
+    grid node for l ≠ i. So the basis function B^(l)_q(p_j) is non-trivial.
+    """
+    G, Gp = mu_field.G, mu_field.Gp
+    xi_grid = mu_field.xi_grid
+    xi_i = xi_grid[i]
+    p_j = mu_field.p_grids[i, j]
+    u_i = u_of_xi(xi_i, tau)
+
+    mu_xi = mu_field.mu_curve_at_p(p_j)
+    mu_xi_d = mu_xi.derivative()
+
+    def mu_at(xi):
+        return float(np.clip(mu_xi(xi), 1e-12, 1 - 1e-12))
+    def mu_prime_at(xi):
+        return float(mu_xi_d(xi))
+
+    mu_i = mu_at(xi_i)
+    d_own = x_crra(mu_i, p_j, gamma)
+    xmu_i = x_crra_mu(mu_i, p_j, gamma)
+
+    dxi = xi_grid[1] - xi_grid[0]
+    w_trap = np.full(G, dxi); w_trap[0] *= 0.5; w_trap[-1] *= 0.5
+
+    eps = 1e-4
+    d_lo = x_crra(mu_at(-1 + eps), p_j, gamma)
+    d_hi = x_crra(mu_at( 1 - eps), p_j, gamma)
+
+    # B^(l)_q(p_j) for each (l, q). Row i is exactly diagonal at q = j.
+    p_basis = np.zeros((G, Gp))
+    p_basis[i, j] = 1.0
+    for l in range(G):
+        if l == i:
+            continue
+        for q in range(Gp):
+            p_basis[l, q] = float(row_basis[l][q](p_j))
+
+    A0 = 0.0; A1 = 0.0
+    dA0 = np.zeros((G, Gp))
+    dA1 = np.zeros((G, Gp))
+
+    for ip in range(G):
+        xi_2 = xi_grid[ip]
+        u_2 = u_of_xi(xi_2, tau)
+        mu_2 = mu_at(xi_2)
+        d_2 = x_crra(mu_2, p_j, gamma)
+        xmu_2 = x_crra_mu(mu_2, p_j, gamma)
+
+        target = -d_own - d_2
+        if target < d_lo or target > d_hi:
+            continue
+        try:
+            xi_3 = brentq(lambda x: x_crra(mu_at(x), p_j, gamma) - target,
+                          -1 + eps, 1 - eps, xtol=1e-14, rtol=1e-14)
+        except ValueError:
+            continue
+
+        u_3 = u_of_xi(xi_3, tau)
+        mu_3 = mu_at(xi_3)
+        xmu_3 = x_crra_mu(mu_3, p_j, gamma)
+        mu3_prime = mu_prime_at(xi_3)
+        dd_dxi_3 = xmu_3 * mu3_prime
+        if abs(dd_dxi_3) < 1e-300:
+            continue
+
+        J_2 = dudxi(xi_2, tau)
+        f0_u2 = f_signal(u_2, 0, tau); f1_u2 = f_signal(u_2, 1, tau)
+        f0_u3 = f_signal(u_3, 0, tau); f1_u3 = f_signal(u_3, 1, tau)
+        weight = w_trap[ip] * J_2
+        A0 += weight * f0_u2 * f0_u3
+        A1 += weight * f1_u2 * f1_u3
+
+        f0p_u3 = f_signal_prime(u_3, 0, tau)
+        f1p_u3 = f_signal_prime(u_3, 1, tau)
+        du3_dxi3 = dudxi(xi_3, tau)
+
+        # ξ-basis B_l(xi_2), B_l(xi_3). Both are exactly e_ip-like at the grid
+        # nodes for xi_2 (since xi_2 = xi_grid[ip]) and general at xi_3.
+        B2_xi = np.array([float(basis_funcs[l](xi_2)) for l in range(G)])
+        B3_xi = np.array([float(basis_funcs[l](xi_3)) for l in range(G)])
+
+        # IFT: ∂ξ_3/∂μ[l, q] = -coef[l, q]
+        #   coef[l, q] = ( (xmu_3 · B3_xi[l] + xmu_2 · B2_xi[l]) · p_basis[l, q]
+        #                + xmu_i · δ_{l=i} · δ_{q=j} ) / dd_dxi_3
+        coef = ((xmu_3 * B3_xi[:, None] + xmu_2 * B2_xi[:, None]) * p_basis) / dd_dxi_3
+        coef[i, j] += xmu_i / dd_dxi_3
+
+        # ∂A_v/∂μ[l, q] += weight · f_v(u_2) · f_v'(u_3) · du3_dxi3 · (-coef[l, q])
+        factor0 = weight * f0_u2 * f0p_u3 * du3_dxi3
+        factor1 = weight * f1_u2 * f1p_u3 * du3_dxi3
+        dA0 -= factor0 * coef
+        dA1 -= factor1 * coef
+
+    f0_i = f_signal(u_i, 0, tau)
+    f1_i = f_signal(u_i, 1, tau)
+    D = f0_i * A0 + f1_i * A1
+    if D <= 0:
+        return mu_no_learning(u_i, tau), np.zeros((G, Gp))
+    phi_new = f1_i * A1 / D
+    jac = (f0_i * f1_i) / (D * D) * (A0 * dA1 - A1 * dA0)
+    return phi_new, jac
+
+
+def newton_polish_analytic_ragged(mu_field, gamma, tau,
+                                   max_iter=15, tol=1e-12,
+                                   line_search=True, project_monotone=False,
+                                   verbose=True):
+    """Newton with full (n × n) analytic Jacobian for ragged p-grids.
+
+    n = G · Gp. For G=50, Gp=15 that's a 750×750 dense solve per step.
+    """
+    G, Gp = mu_field.G, mu_field.Gp
+    n = G * Gp
+    xi_anchor = 0.99
+    xi_full = np.concatenate([[-xi_anchor], mu_field.xi_grid, [xi_anchor]])
+    basis_funcs = _build_basis_funcs(xi_full)
+    row_basis = _build_row_basis(mu_field.p_grids)
+
+    history = []
+    for it in range(max_iter):
+        F = np.zeros((G, Gp))
+        J4 = np.zeros((G, Gp, G, Gp))
+        for j in range(Gp):
+            for i in range(G):
+                phi_ij, jac_ij = phi_cell_with_jac_ragged(
+                    mu_field, i, j, gamma, tau, basis_funcs, row_basis,
+                )
+                F[i, j] = phi_ij - mu_field.mu_vals[i, j]
+                J4[i, j] = jac_ij
+
+        F_inf = float(np.max(np.abs(F)))
+        history.append(F_inf)
+        if verbose:
+            print(f"  ana-newton-rag {it+1:3d}  ||F||_∞ = {F_inf:.3e}", flush=True)
+        if F_inf < tol:
+            break
+
+        J_mat = J4.reshape(n, n)
+        A = np.eye(n) - J_mat
+        try:
+            delta_flat = np.linalg.solve(A, F.ravel())
+        except np.linalg.LinAlgError:
+            delta_flat = F.ravel()
+        delta = delta_flat.reshape(G, Gp)
+
+        accepted = False
+        if line_search:
+            alpha = 1.0
+            mu_old = mu_field.mu_vals.copy()
+            for _ in range(8):
+                trial = np.clip(mu_old + alpha * delta, 1e-12, 1 - 1e-12)
+                if project_monotone:
+                    trial = project_monotone_2d(trial)
+                mu_field.mu_vals = trial
+                mu_field._rebuild_row_interp()
+                # Quick re-eval of F (without Jacobian)
+                F_try_inf = 0.0
+                for j in range(Gp):
+                    for i in range(G):
+                        phi_ij, _ = phi_cell_with_jac_ragged(
+                            mu_field, i, j, gamma, tau, basis_funcs, row_basis)
+                        d = abs(phi_ij - mu_field.mu_vals[i, j])
+                        if d > F_try_inf: F_try_inf = d
+                if F_try_inf < F_inf * (1 - 1e-4 * alpha):
+                    accepted = True
+                    if verbose and alpha < 1.0:
+                        print(f"               line-search α={alpha:.3g}", flush=True)
                     break
                 alpha *= 0.5
             if not accepted:
