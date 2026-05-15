@@ -4141,10 +4141,12 @@
         "g100_t0300"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
-      "note": "\u03b3-ladder between g100_t0300 (\u03b3=1.0) and g025_t0300 (\u03b3=0.25) at \u03c4=3.0."
+      "note": "\u03b3-ladder between g100_t0300 (\u03b3=1.0) and g025_t0300 (\u03b3=0.25) at \u03c4=3.0.",
+      "claimed_by": "gha-25894186857-g050_t0300",
+      "claimed_at": "2026-05-15T00:53:36Z"
     },
     {
       "id": "g025_t0300",
