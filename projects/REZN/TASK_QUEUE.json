@@ -4128,9 +4128,11 @@
       "tau": 2,
       "G": 21,
       "K": 3,
-      "depends_on": [],
+      "depends_on": [
+        "g025_t0300"
+      ],
       "deps_satisfy": "any",
-      "status": "blocked",
+      "status": "ready",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4208,10 +4210,18 @@
         "g050_t0300"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
-      "completed_at": null,
-      "checkpoint": null,
-      "result": null,
+      "status": "done",
+      "completed_at": "2026-05-15T03:48:34.953405Z",
+      "checkpoint": "projects/REZN/checkpoints/g025_t0300.npz",
+      "result": {
+        "1-R2": 0.10283945,
+        "F_max": 4.648e-53,
+        "TV": 3.044469,
+        "Vi": 0.0,
+        "n_stages": 1,
+        "phi_calls": 966,
+        "wall_s": 10048.3
+      },
       "note": "Auto-requeued (attempt 1): via new ladder g050_t0300. \u03b3-ladder at \u03b3=0.5",
       "solver_params": {
         "mp_dps": 70,
@@ -4956,10 +4966,10 @@
   ],
   "summary": {
     "total": 207,
-    "done": 2,
+    "done": 3,
     "ready": 15,
     "claimed": 2,
-    "blocked": 188,
+    "blocked": 187,
     "bailed": 0,
     "skip": 0
   },
