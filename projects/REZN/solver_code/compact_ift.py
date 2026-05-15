@@ -300,6 +300,87 @@ def iterate_phi(mu_field, gamma, tau, max_iter=60, alpha=0.15,
 
 
 # =============================================================================
+# §5b. Newton–Krylov polish — finite-difference Jacobian, LGMRES linear solve
+# =============================================================================
+
+def _residual_flat(mu_field, x_flat, gamma, tau):
+    """F(x) = Φ(x) − x as a flat vector. Mutates mu_field in place."""
+    G, Gp = mu_field.G, mu_field.Gp
+    mu_field.mu_vals = np.clip(x_flat.reshape(G, Gp), 1e-12, 1 - 1e-12)
+    mu_field._rebuild_row_interp()
+    phi = np.empty((G, Gp))
+    for i in range(G):
+        for j in range(Gp):
+            phi[i, j] = phi_cell(mu_field, i, j, gamma, tau)
+    return phi.ravel() - x_flat
+
+
+def newton_polish(mu_field, gamma, tau,
+                  max_iter=10, tol=1e-12,
+                  lgmres_tol=1e-10, lgmres_inner_m=15, lgmres_outer=2,
+                  eps_fd=1e-7, line_search=True, verbose=True):
+    """Inexact Newton–Krylov for Φ(μ) − μ = 0.
+
+    Step k: build the (I − DΦ) operator via finite differences and solve
+    (I − DΦ)·δ = −F by LGMRES (scaled so LGMRES sees O(1) entries). Take
+    x − δ as the next iterate. Optional Armijo damping if the full step
+    doesn't reduce ||F||_∞.
+
+    Cost per outer step ≈ (1 + lgmres_inner_m · lgmres_outer) Φ-evaluations.
+    """
+    from scipy.sparse.linalg import LinearOperator, lgmres
+
+    G, Gp = mu_field.G, mu_field.Gp
+    n = G * Gp
+    x = mu_field.mu_vals.ravel().copy()
+    history = []
+
+    for it in range(max_iter):
+        f = _residual_flat(mu_field, x, gamma, tau)
+        F_inf = float(np.max(np.abs(f)))
+        history.append(F_inf)
+        if verbose:
+            print(f"  newton {it+1:3d}  ||F||_∞ = {F_inf:.3e}")
+        if F_inf < tol:
+            break
+
+        F_scale = max(F_inf, 1e-300)
+        f_scaled = f / F_scale
+
+        def matvec(v):
+            xp = np.clip(x + eps_fd * v, 1e-12, 1 - 1e-12)
+            fp = _residual_flat(mu_field, xp, gamma, tau)
+            return (fp - f) / (eps_fd * F_scale)
+
+        Jop = LinearOperator((n, n), matvec=matvec, dtype=np.float64)
+        delta_s, info = lgmres(Jop, f_scaled,
+                               atol=lgmres_tol, rtol=lgmres_tol,
+                               maxiter=lgmres_outer, inner_m=lgmres_inner_m)
+        delta = F_scale * delta_s
+
+        # Armijo-light line search
+        accepted = False
+        if line_search:
+            alpha = 1.0
+            for _ in range(6):
+                x_try = np.clip(x - alpha * delta, 1e-12, 1 - 1e-12)
+                f_try = _residual_flat(mu_field, x_try, gamma, tau)
+                if np.max(np.abs(f_try)) < F_inf * (1 - 1e-4 * alpha):
+                    x = x_try
+                    accepted = True
+                    if verbose and alpha < 1.0:
+                        print(f"          line-search α={alpha:.3g}")
+                    break
+                alpha *= 0.5
+        if not accepted:
+            x = np.clip(x - delta, 1e-12, 1 - 1e-12)
+
+    mu_field.mu_vals = x.reshape(G, Gp)
+    mu_field._rebuild_row_interp()
+    return mu_field, history
+
+
+# =============================================================================
 # §6.  Convergence metric — weighted 1-R² (matches EQUATIONS.md §7)
 # =============================================================================
 
