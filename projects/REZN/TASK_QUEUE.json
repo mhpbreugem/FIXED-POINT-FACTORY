@@ -594,7 +594,7 @@
         "g100_t0300"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 1): noise perturbation noise_level=0.002.",
@@ -603,7 +603,9 @@
         "presmooth": 100,
         "presmooth_alpha": 0.02
       },
-      "requeue_count": 1
+      "requeue_count": 1,
+      "claimed_by": "gha-25894192202-g100_t0350",
+      "claimed_at": "2026-05-15T00:53:47Z"
     },
     {
       "id": "g100_t0400",
