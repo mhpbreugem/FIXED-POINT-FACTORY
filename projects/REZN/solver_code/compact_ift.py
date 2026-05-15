@@ -842,7 +842,6 @@ def newton_polish_analytic_ragged(mu_field, gamma, tau,
                     trial = project_monotone_2d(trial)
                 mu_field.mu_vals = trial
                 mu_field._rebuild_row_interp()
-                # Quick re-eval of F (without Jacobian)
                 F_try_inf = 0.0
                 for j in range(Gp):
                     for i in range(G):

@@ -202,14 +202,15 @@ def _pchip_coeffs(x, y):
 @nb.njit(cache=True, fastmath=True, parallel=False)
 def assemble_F_and_J(
     xi_grid, p_grids, mu_vals, tau, gamma,
-    xi_full_inner, row_coeffs, row_basis_coeffs,
+    xi_full, row_coeffs, row_basis_coeffs,
+    xi_basis_coeffs, anchor_vals, n_anchor_left,
 ):
     """
     xi_grid       (G,)        ξ-grid for the unknowns
     p_grids       (G, Gp)     per-row price grids
     mu_vals       (G, Gp)     μ values at the grid nodes
     tau, gamma    scalars
-    xi_full_inner (G,)        same as xi_grid (when no anchors); used as PCHIP knots
+    xi_full (G,)        same as xi_grid (when no anchors); used as PCHIP knots
     row_coeffs    (G, 4, Gp-1) PCHIP coeffs of μ(p) for each row
     row_basis_coeffs (G, Gp, 4, Gp-1)  basis-spline coeffs: per row l, per node q
 
@@ -263,12 +264,21 @@ def assemble_F_and_J(
                     for q in range(Gp):
                         p_basis[l, q] = _pchip_eval(p_j, p_grids[l], row_basis_coeffs[l, q])
 
-            # ----- Build μ_xi PCHIP coefficients (over xi_full_inner) -----
-            # Using col + boundary handling already baked into col_at_p above.
-            mu_coeffs = _pchip_coeffs(xi_full_inner, col)
+            # ----- Build μ_xi PCHIP coefficients (over xi_full incl. anchors) -----
+            nf = xi_full.shape[0]
+            col_ext = np.empty(nf)
+            if n_anchor_left == 1:
+                col_ext[0] = anchor_vals[0]
+                for k_ in range(G):
+                    col_ext[1 + k_] = col[k_]
+                col_ext[nf - 1] = anchor_vals[1]
+            else:
+                for k_ in range(G):
+                    col_ext[k_] = col[k_]
+            mu_coeffs = _pchip_coeffs(xi_full, col_ext)
 
             # μ_xi and its derivative at any ξ — via the cubic coefficients
-            mu_i = _pchip_eval_clip(xi_i, xi_full_inner, mu_coeffs, 1e-12, 1.0 - 1e-12)
+            mu_i = _pchip_eval_clip(xi_i, xi_full, mu_coeffs, 1e-12, 1.0 - 1e-12)
             # μ'_xi at xi_i: derivative of the cubic at the right segment
             # find segment containing xi_i (which is itself a node, so use right segment)
             # PCHIP derivative at a node is m[i]; we recompute below from coeffs at midpoint
@@ -281,9 +291,9 @@ def assemble_F_and_J(
             # Simpler: use cell midpoint widths
             # For now: w_trap[ip] = 0.5*(xi_grid[ip+1] - xi_grid[ip-1])  (and half at endpoints)
 
-            d_lo = _x_crra(_pchip_eval_clip(-1.0 + eps, xi_full_inner, mu_coeffs, 1e-12, 1.0 - 1e-12),
+            d_lo = _x_crra(_pchip_eval_clip(-1.0 + eps, xi_full, mu_coeffs, 1e-12, 1.0 - 1e-12),
                            p_j, gamma)
-            d_hi = _x_crra(_pchip_eval_clip( 1.0 - eps, xi_full_inner, mu_coeffs, 1e-12, 1.0 - 1e-12),
+            d_hi = _x_crra(_pchip_eval_clip( 1.0 - eps, xi_full, mu_coeffs, 1e-12, 1.0 - 1e-12),
                            p_j, gamma)
             if d_lo > d_hi:
                 d_lo, d_hi = d_hi, d_lo
@@ -299,7 +309,7 @@ def assemble_F_and_J(
             for ip in range(G):
                 xi_2 = xi_grid[ip]
                 u_2 = _u_of_xi(xi_2, tau)
-                mu_2 = _pchip_eval_clip(xi_2, xi_full_inner, mu_coeffs, 1e-12, 1.0 - 1e-12)
+                mu_2 = _pchip_eval_clip(xi_2, xi_full, mu_coeffs, 1e-12, 1.0 - 1e-12)
                 d_2 = _x_crra(mu_2, p_j, gamma)
                 xmu_2 = _x_crra_mu(mu_2, p_j, gamma)
 
@@ -307,13 +317,13 @@ def assemble_F_and_J(
                 if target < d_lo or target > d_hi:
                     continue
 
-                xi_3 = _bisect_xi3(target, p_j, gamma, xi_full_inner, mu_coeffs,
+                xi_3 = _bisect_xi3(target, p_j, gamma, xi_full, mu_coeffs,
                                     eps, 60, 1e-14)
                 if not np.isfinite(xi_3):
                     continue
 
                 u_3 = _u_of_xi(xi_3, tau)
-                mu_3 = _pchip_eval_clip(xi_3, xi_full_inner, mu_coeffs, 1e-12, 1.0 - 1e-12)
+                mu_3 = _pchip_eval_clip(xi_3, xi_full, mu_coeffs, 1e-12, 1.0 - 1e-12)
                 xmu_3 = _x_crra_mu(mu_3, p_j, gamma)
 
                 # μ'(ξ_3): derivative of the cubic segment containing xi_3
@@ -321,11 +331,11 @@ def assemble_F_and_J(
                 lo_k = 0; hi_k = G - 1
                 while hi_k - lo_k > 1:
                     mid_k = (lo_k + hi_k) // 2
-                    if xi_full_inner[mid_k] > xi_3:
+                    if xi_full[mid_k] > xi_3:
                         hi_k = mid_k
                     else:
                         lo_k = mid_k
-                dx3 = xi_3 - xi_full_inner[lo_k]
+                dx3 = xi_3 - xi_full[lo_k]
                 # derivative of c0*dx^3 + c1*dx^2 + c2*dx + c3 is 3c0*dx^2 + 2c1*dx + c2
                 mu3_prime = (3.0 * mu_coeffs[0, lo_k] * dx3 + 2.0 * mu_coeffs[1, lo_k]) * dx3 + mu_coeffs[2, lo_k]
 
@@ -354,7 +364,7 @@ def assemble_F_and_J(
                 # segment xi_3 falls in: only the two surrounding nodes contribute meaningfully.
                 # Use linear approximation for the basis (consistent up to O(h²)).
                 # For the Jacobian we need analytic chain — use exact PCHIP basis via small system:
-                # B3_l(xi_3) = PCHIP through (xi_full_inner, e_l) evaluated at xi_3.
+                # B3_l(xi_3) = PCHIP through (xi_full, e_l) evaluated at xi_3.
                 # We compute this on the fly by building a tiny spline per l.
                 f0p_u3 = _f_signal_prime(u_3, 0, tau)
                 f1p_u3 = _f_signal_prime(u_3, 1, tau)
@@ -362,15 +372,10 @@ def assemble_F_and_J(
                 factor0 = weight * f0_u2 * f0p_u3 * du3_dxi3
                 factor1 = weight * f1_u2 * f1p_u3 * du3_dxi3
 
-                # For B_l(xi_3): linear basis approximation (sparse, only adjacent nodes nonzero)
-                # k0 = lo_k (left node of segment containing xi_3), k1 = lo_k + 1
-                # Locally B_{k0}(xi_3) ≈ 1 - t, B_{k1}(xi_3) ≈ t,  where t = (xi_3 - xi[k0])/h
-                k0 = lo_k; k1 = lo_k + 1
-                h_seg = xi_full_inner[k1] - xi_full_inner[k0]
-                t_seg = (xi_3 - xi_full_inner[k0]) / h_seg
-                B3 = np.zeros(G)
-                B3[k0] = 1.0 - t_seg
-                B3[k1] = t_seg
+                # Full PCHIP basis B_l(xi_3) — evaluate each precomputed basis spline
+                B3 = np.empty(G)
+                for l in range(G):
+                    B3[l] = _pchip_eval(xi_3, xi_full, xi_basis_coeffs[l])
 
                 # B_l(xi_2) = delta (since xi_2 is a grid node)
                 # B_l(xi_i) = delta (xi_i grid node)
@@ -419,38 +424,66 @@ def assemble_F_and_J(
 # =============================================================================
 
 def build_pchip_pack(mu_field):
-    """Build PCHIP coefficient arrays needed by assemble_F_and_J."""
+    """Build PCHIP coefficient arrays needed by assemble_F_and_J.
+
+    The ξ-direction PCHIP uses anchors at ±0.99 (with no-learning μ-values)
+    when the grid doesn't already reach the boundary — matches mu_curve_at_p
+    in compact_ift.py."""
     G, Gp = mu_field.G, mu_field.Gp
+    tau = mu_field.tau
     p_grids = mu_field.p_grids
     mu_vals = mu_field.mu_vals
+    xi_grid = mu_field.xi_grid
+
+    # Row PCHIPs of μ(p)
     row_coeffs = np.empty((G, 4, Gp - 1))
     for l in range(G):
-        p_row = p_grids[l]
-        spl = PchipInterpolator(p_row, mu_vals[l], extrapolate=False)
+        spl = PchipInterpolator(p_grids[l], mu_vals[l], extrapolate=False)
         row_coeffs[l] = spl.c
-    # Basis splines: e_q at column q for row l
+
+    # Per-row p-basis: e_q at row l
     row_basis_coeffs = np.empty((G, Gp, 4, Gp - 1))
     for l in range(G):
-        p_row = p_grids[l]
         for q in range(Gp):
             e = np.zeros(Gp); e[q] = 1.0
-            spl = PchipInterpolator(p_row, e, extrapolate=False)
+            spl = PchipInterpolator(p_grids[l], e, extrapolate=False)
             row_basis_coeffs[l, q] = spl.c
-    return row_coeffs, row_basis_coeffs
+
+    # ξ-direction setup with optional anchors
+    xi_anchor = 0.99
+    if xi_grid[-1] < xi_anchor and xi_grid[0] > -xi_anchor:
+        u_anchor = (2.0 / tau) * np.arctanh(xi_anchor)
+        mu_anchor_lo = 1.0 / (1.0 + np.exp(tau * u_anchor))
+        mu_anchor_hi = 1.0 / (1.0 + np.exp(-tau * u_anchor))
+        xi_full = np.concatenate([[-xi_anchor], xi_grid, [xi_anchor]])
+        anchor_vals = np.array([mu_anchor_lo, mu_anchor_hi])
+    else:
+        xi_full = xi_grid.copy()
+        anchor_vals = np.array([])
+
+    nf = xi_full.shape[0]
+    # ξ-basis: only the INTERIOR nodes get a basis function (the anchors are fixed)
+    n_anchor_left = 1 if xi_grid[0] > -xi_anchor and xi_grid[-1] < xi_anchor else 0
+    xi_basis_coeffs = np.empty((G, 4, nf - 1))
+    for l in range(G):
+        e = np.zeros(nf); e[n_anchor_left + l] = 1.0
+        spl = PchipInterpolator(xi_full, e, extrapolate=True)
+        xi_basis_coeffs[l] = spl.c
+
+    return row_coeffs, row_basis_coeffs, xi_basis_coeffs, xi_full, anchor_vals, n_anchor_left
 
 
 def newton_polish_nb(mu_field, gamma, tau, max_iter=30, tol=1e-12,
                      line_search=True, verbose=True):
     G, Gp = mu_field.G, mu_field.Gp
     n = G * Gp
-    xi_full_inner = mu_field.xi_grid.copy()   # no anchors here — Chebyshev/wide cases
-
     history = []
     for it in range(max_iter):
-        row_coeffs, row_basis_coeffs = build_pchip_pack(mu_field)
+        row_coeffs, row_basis_coeffs, xi_basis_coeffs, xi_full, anchor_vals, n_anchor_left = build_pchip_pack(mu_field)
         F, J4 = assemble_F_and_J(
             mu_field.xi_grid, mu_field.p_grids, mu_field.mu_vals,
-            tau, gamma, xi_full_inner, row_coeffs, row_basis_coeffs,
+            tau, gamma, xi_full, row_coeffs, row_basis_coeffs,
+            xi_basis_coeffs, anchor_vals, n_anchor_left,
         )
         F_inf = float(np.max(np.abs(F)))
         history.append(F_inf)
@@ -474,10 +507,10 @@ def newton_polish_nb(mu_field, gamma, tau, max_iter=30, tol=1e-12,
                 trial = np.clip(mu_old + alpha * delta, 1e-12, 1 - 1e-12)
                 mu_field.mu_vals = trial
                 mu_field._rebuild_row_interp()
-                rc, rbc = build_pchip_pack(mu_field)
+                rc, rbc, xbc, xf, av, nal = build_pchip_pack(mu_field)
                 F_try, _ = assemble_F_and_J(
                     mu_field.xi_grid, mu_field.p_grids, mu_field.mu_vals,
-                    tau, gamma, xi_full_inner, rc, rbc,
+                    tau, gamma, xf, rc, rbc, xbc, av, nal,
                 )
                 F_try_inf = float(np.max(np.abs(F_try)))
                 if F_try_inf < F_inf * (1 - 1e-4 * alpha):
