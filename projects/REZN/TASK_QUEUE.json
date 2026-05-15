@@ -608,7 +608,7 @@
       "depends_on": [
         "g100_t0350"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "solver_params": {
         "mp_dps": 70,
@@ -624,7 +624,9 @@
       "result": null,
       "completed_at": null,
       "deps_satisfy": "any",
-      "requeue_count": 1
+      "requeue_count": 1,
+      "claimed_by": "gha-25894174930-g100_t0400",
+      "claimed_at": "2026-05-15T00:53:15Z"
     },
     {
       "id": "g100_t0590",
