@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-15T05:56:07.825296Z",
+  "updated_at": "2026-05-15T06:30:26.428000Z",
   "params": {
     "G": 21,
     "UMAX": 5.0,
@@ -215,7 +215,7 @@
       "id": "g050_t0200",
       "gamma": 0.5,
       "tau": 2,
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
@@ -229,8 +229,6 @@
         "u_inner_max": 5.0
       },
       "G": 21,
-      "claimed_by": "gha-25898208350-g050_t0200",
-      "claimed_at": "2026-05-15T03:14:29Z",
       "depends_on": [
         "g050_t0300"
       ],
