@@ -885,12 +885,13 @@ def newton_polish_analytic_ragged(mu_field, gamma, tau,
         F = np.zeros((G, Gp))
         J4 = np.zeros((G, Gp, G, Gp))
         if exploit_sym:
-            # Compute Φ + Jacobian only for primary cells; mirror the rest
+            # Compute Φ + Jacobian only for primary cells; mirror the rest.
+            # symmetric_contour is DISABLED — the dropped |du₃/du₂| Jacobian
+            # in the integrand breaks the u₂↔u₃ symmetry of A_v.
             for idx in range(n_primary):
                 i, j = idx // Gp, idx % Gp
                 phi_ij, jac_ij = phi_cell_with_jac_ragged(
                     mu_field, i, j, gamma, tau, basis_funcs, row_basis,
-                    symmetric_contour=True,
                 )
                 F[i, j] = phi_ij - mu_field.mu_vals[i, j]
                 J4[i, j] = jac_ij
@@ -939,8 +940,7 @@ def newton_polish_analytic_ragged(mu_field, gamma, tau,
                     for idx in range(n_primary):
                         i, j = idx // Gp, idx % Gp
                         phi_ij, _ = phi_cell_with_jac_ragged(
-                            mu_field, i, j, gamma, tau, basis_funcs, row_basis,
-                            symmetric_contour=True)
+                            mu_field, i, j, gamma, tau, basis_funcs, row_basis)
                         d = abs(phi_ij - mu_field.mu_vals[i, j])
                         if d > F_try_inf: F_try_inf = d
                         i_m, j_m = G - 1 - i, Gp - 1 - j
