@@ -300,6 +300,228 @@ def iterate_phi(mu_field, gamma, tau, max_iter=60, alpha=0.15,
 
 
 # =============================================================================
+# §5a. Analytic IFT Jacobian — derivatives of demand, contour, and Bayes
+# =============================================================================
+
+def x_crra_mu(mu, p, gamma, W=1.0):
+    """∂x_crra/∂μ at fixed (p, γ, W). Derivation:
+       R = exp((logit μ − logit p)/γ)
+       x = W (R−1)/((1−p) + R p)
+       dx/dR = W / ((1−p) + R p)²
+       dR/dμ = R / (γ μ (1−μ))
+    """
+    L_mu = np.log(mu / (1 - mu))
+    L_p = np.log(p / (1 - p))
+    R = np.exp((L_mu - L_p) / gamma)
+    D = (1 - p) + R * p
+    return (W / (D * D)) * (R / (gamma * mu * (1 - mu)))
+
+
+def f_signal_prime(u, v, tau):
+    """∂f_v(u)/∂u = −τ(u − (v−½)) f_v(u)."""
+    mean = 0.5 if v == 1 else -0.5
+    return -tau * (u - mean) * f_signal(u, v, tau)
+
+
+def _build_basis_funcs(xi_full):
+    """For each interior node l (i.e. indices 1..G in xi_full which includes
+    the two anchors), return the PCHIP basis function B_l(ξ): the spline that
+    is 1 at xi_full[1+l] and 0 at every other node of xi_full."""
+    n = len(xi_full)
+    G_int = n - 2
+    basis = []
+    for l in range(G_int):
+        e = np.zeros(n)
+        e[1 + l] = 1.0
+        basis.append(PchipInterpolator(xi_full, e, extrapolate=True))
+    return basis
+
+
+def phi_cell_with_jac(mu_field, i, j, gamma, tau, basis_funcs):
+    """Evaluate Φ[i,j] AND the i-th row of the j-th Jacobian block:
+
+        J^(j)[i, l] = ∂Φ[i, j] / ∂μ[l, j]   for l = 0, …, G−1
+
+    Returns (phi_new, jac_row) where jac_row is a length-G vector.
+
+    The Jacobian is block-diagonal in j because mu_curve_at_p(p_shared[j]) only
+    depends on the j-th column of μ (PCHIP passes through nodes at grid prices).
+    """
+    G = mu_field.G
+    xi_grid = mu_field.xi_grid
+    xi_i = xi_grid[i]
+    p_j = mu_field.p_grids[i, j]
+    u_i = u_of_xi(xi_i, tau)
+
+    mu_xi = mu_field.mu_curve_at_p(p_j)
+    mu_xi_d = mu_xi.derivative()        # PCHIP derivative is analytic
+
+    # Cached evaluations
+    def mu_at(xi):  return float(np.clip(mu_xi(xi), 1e-12, 1 - 1e-12))
+    def mu_prime_at(xi): return float(mu_xi_d(xi))
+
+    mu_i = mu_at(xi_i)
+    d_own = x_crra(mu_i, p_j, gamma)
+    xmu_i = x_crra_mu(mu_i, p_j, gamma)
+
+    dxi = xi_grid[1] - xi_grid[0]
+    w_trap = np.full(G, dxi); w_trap[0] *= 0.5; w_trap[-1] *= 0.5
+
+    eps = 1e-4
+    d_lo = x_crra(mu_at(-1 + eps), p_j, gamma)
+    d_hi = x_crra(mu_at( 1 - eps), p_j, gamma)
+
+    A0 = 0.0; A1 = 0.0
+    dA0 = np.zeros(G)
+    dA1 = np.zeros(G)
+
+    # Precompute B_l(ξ_i) for every l — cell-independent across sweep
+    B_i = np.array([float(basis_funcs[l](xi_i)) for l in range(G)])
+
+    for ip in range(G):
+        xi_2 = xi_grid[ip]
+        u_2 = u_of_xi(xi_2, tau)
+        mu_2 = mu_at(xi_2)
+        d_2  = x_crra(mu_2, p_j, gamma)
+        xmu_2 = x_crra_mu(mu_2, p_j, gamma)
+
+        target = -d_own - d_2
+        if target < d_lo or target > d_hi:
+            continue
+        try:
+            xi_3 = brentq(lambda x: x_crra(mu_at(x), p_j, gamma) - target,
+                          -1 + eps, 1 - eps, xtol=1e-14, rtol=1e-14)
+        except ValueError:
+            continue
+
+        u_3 = u_of_xi(xi_3, tau)
+        mu_3 = mu_at(xi_3)
+        xmu_3 = x_crra_mu(mu_3, p_j, gamma)
+        mu3_prime = mu_prime_at(xi_3)
+
+        # IFT denominator: ∂d/∂ξ at ξ_3
+        dd_dxi_3 = xmu_3 * mu3_prime
+        if abs(dd_dxi_3) < 1e-300:
+            continue
+
+        # Φ-evaluation contribution to A_v
+        J_2 = dudxi(xi_2, tau)
+        f0_u2 = f_signal(u_2, 0, tau); f1_u2 = f_signal(u_2, 1, tau)
+        f0_u3 = f_signal(u_3, 0, tau); f1_u3 = f_signal(u_3, 1, tau)
+        weight = w_trap[ip] * J_2
+
+        A0 += weight * f0_u2 * f0_u3
+        A1 += weight * f1_u2 * f1_u3
+
+        # Jacobian contribution: ∂(f_v(u_3))/∂μ[l, j] for each l
+        f0p_u3 = f_signal_prime(u_3, 0, tau)
+        f1p_u3 = f_signal_prime(u_3, 1, tau)
+        du3_dxi3 = dudxi(xi_3, tau)
+
+        # B_l at ξ_2 and ξ_3 — vectorise over l
+        B2 = np.array([float(basis_funcs[l](xi_2)) for l in range(G)])
+        B3 = np.array([float(basis_funcs[l](xi_3)) for l in range(G)])
+
+        # IFT chain: ∂ξ_3/∂μ[l, j]
+        dxi3_dmu = -(xmu_3 * B3 + xmu_i * B_i + xmu_2 * B2) / dd_dxi_3
+        du3_dmu = du3_dxi3 * dxi3_dmu
+
+        dA0 += weight * f0_u2 * f0p_u3 * du3_dmu
+        dA1 += weight * f1_u2 * f1p_u3 * du3_dmu
+
+    f0_i = f_signal(u_i, 0, tau)
+    f1_i = f_signal(u_i, 1, tau)
+    D = f0_i * A0 + f1_i * A1
+    if D <= 0:
+        # Contour is empty at this (u_i, p_j) — the cell is informationally
+        # undefined. Pin it to the no-learning posterior so it can still serve
+        # as an interpolation node for neighbouring cells. ∂Φ/∂μ = 0 in this
+        # branch (Φ is a constant in μ).
+        return mu_no_learning(u_i, tau), np.zeros(G)
+    phi_new = f1_i * A1 / D
+    # Bayes ratio derivative: ∂(f1·A1/D)/∂μ = f0·f1/D² · (A0·∂A1 − A1·∂A0)
+    jac_row = (f0_i * f1_i) / (D * D) * (A0 * dA1 - A1 * dA0)
+    return phi_new, jac_row
+
+
+def newton_polish_analytic(mu_field, gamma, tau,
+                            max_iter=10, tol=1e-12,
+                            line_search=True, verbose=True):
+    """Newton iteration using the analytic IFT Jacobian.
+
+    The Jacobian is block-diagonal in the price index j (rigorously, because
+    PCHIP-in-p passes through every grid node and p_j is a grid node). Each
+    G×G block is built analytically and solved by np.linalg.solve. No
+    finite differences, no Krylov, no eps_fd tuning.
+    """
+    G, Gp = mu_field.G, mu_field.Gp
+    # Build basis funcs once (depends only on xi_grid + anchors)
+    xi_anchor = 0.99
+    xi_full = np.concatenate([[-xi_anchor], mu_field.xi_grid, [xi_anchor]])
+    basis_funcs = _build_basis_funcs(xi_full)
+
+    history = []
+    for it in range(max_iter):
+        # Build full Φ-output and Jacobian blocks in one pass
+        F = np.zeros((G, Gp))
+        J_blocks = np.zeros((Gp, G, G))
+        for j in range(Gp):
+            for i in range(G):
+                phi_ij, jac_row = phi_cell_with_jac(mu_field, i, j, gamma, tau, basis_funcs)
+                F[i, j] = phi_ij - mu_field.mu_vals[i, j]
+                J_blocks[j, i, :] = jac_row
+
+        F_inf = float(np.max(np.abs(F)))
+        history.append(F_inf)
+        if verbose:
+            print(f"  ana-newton {it+1:3d}  ||F||_∞ = {F_inf:.3e}", flush=True)
+        if F_inf < tol:
+            break
+
+        # Solve  (I − J_Φ^(j)) · δ^(j) = F^(j)   per block.
+        # Newton convention:  F = Φ − μ,   ∂F/∂μ = J_Φ − I,
+        # so the Newton step is  μ_new = μ + δ  where  δ = (I − J_Φ)^{−1} F.
+        delta = np.zeros_like(F)
+        I_G = np.eye(G)
+        for j in range(Gp):
+            A = I_G - J_blocks[j]
+            try:
+                delta[:, j] = np.linalg.solve(A, F[:, j])
+            except np.linalg.LinAlgError:
+                delta[:, j] = F[:, j]  # fallback = pure Picard step
+
+        accepted = False
+        if line_search:
+            alpha = 1.0
+            mu_old = mu_field.mu_vals.copy()
+            for _ in range(8):
+                trial = np.clip(mu_old + alpha * delta, 1e-12, 1 - 1e-12)
+                mu_field.mu_vals = trial
+                mu_field._rebuild_row_interp()
+                F_try_inf = 0.0
+                for j in range(Gp):
+                    for i in range(G):
+                        phi_ij, _ = phi_cell_with_jac(mu_field, i, j, gamma, tau, basis_funcs)
+                        diff = abs(phi_ij - mu_field.mu_vals[i, j])
+                        if diff > F_try_inf:
+                            F_try_inf = diff
+                if F_try_inf < F_inf * (1 - 1e-4 * alpha):
+                    accepted = True
+                    if verbose and alpha < 1.0:
+                        print(f"             line-search α={alpha:.3g}", flush=True)
+                    break
+                alpha *= 0.5
+            if not accepted:
+                mu_field.mu_vals = mu_old
+                mu_field._rebuild_row_interp()
+        if not accepted:
+            mu_field.mu_vals = np.clip(mu_field.mu_vals + delta, 1e-12, 1 - 1e-12)
+            mu_field._rebuild_row_interp()
+
+    return mu_field, history
+
+
+# =============================================================================
 # §5b. Newton–Krylov polish — finite-difference Jacobian, LGMRES linear solve
 # =============================================================================
 
