@@ -616,13 +616,26 @@ def _build_row_basis(p_grids):
 
 def initial_mu_field_ragged(G, Gp, tau, gamma, xi_max=0.88,
                              init_kind="no_learning", alpha_tilt=1.0, beta_tilt=1.0,
-                             pad_factor=1.5):
+                             pad_factor=1.5, grid_kind="uniform"):
     """Per-row p-grids: each row covers its own no-learning price range.
 
     Eliminates the degenerate-cell issue from a shared p-grid: every (i, j)
     cell has a meaningful contour because p_grids[i, :] only covers prices
-    achievable for own-signal u_i."""
-    xi_grid = np.linspace(-xi_max, xi_max, G)
+    achievable for own-signal u_i.
+
+    grid_kind:
+      "uniform" — equispaced ξ in [-xi_max, +xi_max] (default).
+      "chebyshev" — Chebyshev nodes of the first kind, clustered toward the
+                    boundary ±xi_max. With xi_max → 1 this puts dense
+                    resolution where the no-learning posterior saturates.
+    """
+    if grid_kind == "uniform":
+        xi_grid = np.linspace(-xi_max, xi_max, G)
+    elif grid_kind == "chebyshev":
+        k = np.arange(1, G + 1)
+        xi_grid = xi_max * np.cos((2*k - 1) * np.pi / (2 * G))[::-1]
+    else:
+        raise ValueError(f"unknown grid_kind: {grid_kind!r}")
     u_grid = u_of_xi(xi_grid, tau)
     mu_NL = mu_no_learning(u_grid, tau)
 
