@@ -127,6 +127,33 @@ class MuField:
                 col[i] = float(self._row[i](p))
         return col
 
+    def col_at_p_smooth(self, p):
+        """μ(ξ_i, p) with LOGIT-LINEAR extrapolation outside each row's
+        p-range. Inside the grid: row-PCHIP. Outside: extend with unit slope
+        in (logit p) — i.e.,  logit μ = logit μ_edge + (logit p − logit p_edge).
+        This matches the CARA asymptote at extreme p but avoids the
+        all-demands-vanish degeneracy (slope ≠ 0). Used for the VISUALIZATION
+        path; doesn't change the solved fixed point."""
+        col = np.empty(self.G)
+        L_p = np.log(p / (1.0 - p))
+        for i in range(self.G):
+            p_lo, p_hi = self.p_grids[i, 0], self.p_grids[i, -1]
+            if p_lo <= p <= p_hi:
+                col[i] = float(self._row[i](p))
+                continue
+            if p < p_lo:
+                mu_edge = self.mu_vals[i, 0]
+                p_edge = p_lo
+            else:
+                mu_edge = self.mu_vals[i, -1]
+                p_edge = p_hi
+            mu_edge = float(np.clip(mu_edge, 1e-12, 1 - 1e-12))
+            L_mu_edge = np.log(mu_edge / (1.0 - mu_edge))
+            L_p_edge = np.log(p_edge / (1.0 - p_edge))
+            L_mu = L_mu_edge + (L_p - L_p_edge)
+            col[i] = 1.0 / (1.0 + np.exp(-L_mu))
+        return col
+
     def mu_curve_at_p(self, p):
         """Return a callable μ(ξ) for the given p, smooth on (−1, 1).
 
