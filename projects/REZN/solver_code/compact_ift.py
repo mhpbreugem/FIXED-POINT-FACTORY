@@ -714,11 +714,15 @@ def initial_mu_field_ragged(G, Gp, tau, gamma, xi_max=0.88,
     return MuField(xi_grid, p_grids, mu_vals, tau)
 
 
-def phi_cell_with_jac_ragged(mu_field, i, j, gamma, tau, basis_funcs, row_basis):
+def phi_cell_with_jac_ragged(mu_field, i, j, gamma, tau, basis_funcs, row_basis,
+                              symmetric_contour=False):
     """Compute Φ[i, j] AND the full (G, Gp) Jacobian ∂Φ[i, j]/∂μ[l, q].
 
     With ragged p-grids, p_j = p_grids[i, j] is NOT generally at row l's
     grid node for l ≠ i. So the basis function B^(l)_q(p_j) is non-trivial.
+
+    If `symmetric_contour=True`, exploit u₂↔u₃ symmetry of the contour by
+    only summing over sweep nodes where ξ₂ ≤ ξ₃*, weighted ×2.
     """
     G, Gp = mu_field.G, mu_field.Gp
     xi_grid = mu_field.xi_grid
@@ -791,10 +795,19 @@ def phi_cell_with_jac_ragged(mu_field, i, j, gamma, tau, basis_funcs, row_basis)
         if abs(dd_dxi_3) < 1e-300:
             continue
 
+        # u₂↔u₃ symmetry: skip half the contour, double-count the rest.
+        # Cells with ξ₂ > ξ₃* are the mirror of cells with ξ₂ < ξ₃*.
+        if symmetric_contour:
+            if xi_2 > xi_3:
+                continue
+            sym_factor = 1.0 if abs(xi_2 - xi_3) < 1e-9 else 2.0
+        else:
+            sym_factor = 1.0
+
         J_2 = dudxi(xi_2, tau)
         f0_u2 = f_signal(u_2, 0, tau); f1_u2 = f_signal(u_2, 1, tau)
         f0_u3 = f_signal(u_3, 0, tau); f1_u3 = f_signal(u_3, 1, tau)
-        weight = w_trap[ip] * J_2
+        weight = sym_factor * w_trap[ip] * J_2
         A0 += weight * f0_u2 * f0_u3
         A1 += weight * f1_u2 * f1_u3
 
@@ -832,7 +845,7 @@ def phi_cell_with_jac_ragged(mu_field, i, j, gamma, tau, basis_funcs, row_basis)
 def newton_polish_analytic_ragged(mu_field, gamma, tau,
                                    max_iter=15, tol=1e-12,
                                    line_search=True, project_monotone=False,
-                                   symmetrize=False,
+                                   symmetrize=False, exploit_sym=False,
                                    verbose=True):
     """Newton with full (n × n) analytic Jacobian for ragged p-grids.
 
@@ -840,8 +853,14 @@ def newton_polish_analytic_ragged(mu_field, gamma, tau,
 
     If `symmetrize=True`, applies the 0↔1 symmetry projection after every
     accepted Newton step. Requires the p-grid to satisfy
-    `p_grids[G−1−i, Gp−1−j] = 1 − p_grids[i, j]` (which the default
-    construction produces by construction).
+    `p_grids[G−1−i, Gp−1−j] = 1 − p_grids[i, j]` (the default construction
+    produces this).
+
+    If `exploit_sym=True` (RECOMMENDED), compute Φ and the Jacobian only for
+    "primary half" cells (first half of the linear index) and mirror the
+    rest via 0↔1 + u₂↔u₃ symmetries. Cuts Φ-evaluations to ~25% with
+    no loss of precision. Also enables `symmetric_contour` inside each
+    Φ-evaluation.
     """
     G, Gp = mu_field.G, mu_field.Gp
     n = G * Gp
@@ -860,16 +879,33 @@ def newton_polish_analytic_ragged(mu_field, gamma, tau,
     row_basis = _build_row_basis(mu_field.p_grids)
 
     history = []
+    n_total = G * Gp
+    n_primary = (n_total + 1) // 2  # 0..n_primary-1 are "primary"; the rest are mirrors
     for it in range(max_iter):
         F = np.zeros((G, Gp))
         J4 = np.zeros((G, Gp, G, Gp))
-        for j in range(Gp):
-            for i in range(G):
+        if exploit_sym:
+            # Compute Φ + Jacobian only for primary cells; mirror the rest
+            for idx in range(n_primary):
+                i, j = idx // Gp, idx % Gp
                 phi_ij, jac_ij = phi_cell_with_jac_ragged(
                     mu_field, i, j, gamma, tau, basis_funcs, row_basis,
+                    symmetric_contour=True,
                 )
                 F[i, j] = phi_ij - mu_field.mu_vals[i, j]
                 J4[i, j] = jac_ij
+                i_m, j_m = G - 1 - i, Gp - 1 - j
+                if (i_m, j_m) != (i, j):
+                    F[i_m, j_m] = (1.0 - phi_ij) - mu_field.mu_vals[i_m, j_m]
+                    J4[i_m, j_m] = jac_ij[::-1, ::-1]
+        else:
+            for j in range(Gp):
+                for i in range(G):
+                    phi_ij, jac_ij = phi_cell_with_jac_ragged(
+                        mu_field, i, j, gamma, tau, basis_funcs, row_basis,
+                    )
+                    F[i, j] = phi_ij - mu_field.mu_vals[i, j]
+                    J4[i, j] = jac_ij
 
         F_inf = float(np.max(np.abs(F)))
         history.append(F_inf)
@@ -899,12 +935,25 @@ def newton_polish_analytic_ragged(mu_field, gamma, tau,
                 mu_field.mu_vals = trial
                 mu_field._rebuild_row_interp()
                 F_try_inf = 0.0
-                for j in range(Gp):
-                    for i in range(G):
+                if exploit_sym:
+                    for idx in range(n_primary):
+                        i, j = idx // Gp, idx % Gp
                         phi_ij, _ = phi_cell_with_jac_ragged(
-                            mu_field, i, j, gamma, tau, basis_funcs, row_basis)
+                            mu_field, i, j, gamma, tau, basis_funcs, row_basis,
+                            symmetric_contour=True)
                         d = abs(phi_ij - mu_field.mu_vals[i, j])
                         if d > F_try_inf: F_try_inf = d
+                        i_m, j_m = G - 1 - i, Gp - 1 - j
+                        if (i_m, j_m) != (i, j):
+                            d_m = abs((1.0 - phi_ij) - mu_field.mu_vals[i_m, j_m])
+                            if d_m > F_try_inf: F_try_inf = d_m
+                else:
+                    for j in range(Gp):
+                        for i in range(G):
+                            phi_ij, _ = phi_cell_with_jac_ragged(
+                                mu_field, i, j, gamma, tau, basis_funcs, row_basis)
+                            d = abs(phi_ij - mu_field.mu_vals[i, j])
+                            if d > F_try_inf: F_try_inf = d
                 if F_try_inf < F_inf * (1 - 1e-4 * alpha):
                     accepted = True
                     if verbose and alpha < 1.0:
