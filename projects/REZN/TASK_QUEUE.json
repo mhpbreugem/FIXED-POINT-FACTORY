@@ -215,7 +215,7 @@
       "id": "g050_t0200",
       "gamma": 0.5,
       "tau": 2,
-      "status": "blocked",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
@@ -231,7 +231,9 @@
       "G": 21,
       "claimed_by": null,
       "claimed_at": null,
-      "depends_on": [],
+      "depends_on": [
+        "g050_t0300"
+      ],
       "deps_satisfy": "any"
     },
     {
@@ -3668,9 +3670,11 @@
       "tau": 2,
       "G": 21,
       "symmetric": true,
-      "depends_on": [],
+      "depends_on": [
+        "g050_t0300"
+      ],
       "deps_satisfy": "any",
-      "status": "blocked",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 1): warm-start from seed_g050_t0200_3d (log-dist=0.00).",
@@ -3695,9 +3699,11 @@
       "tau": 2,
       "G": 21,
       "symmetric": true,
-      "depends_on": [],
+      "depends_on": [
+        "g050_t0300"
+      ],
       "deps_satisfy": "any",
-      "status": "blocked",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "note": "Symmetric K=4; warm-starts from K=3.",
@@ -3722,9 +3728,11 @@
       "tau": 2,
       "G": 21,
       "symmetric": true,
-      "depends_on": [],
+      "depends_on": [
+        "g050_t0300"
+      ],
       "deps_satisfy": "any",
-      "status": "blocked",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "note": "Symmetric K=5; warm-starts from K=4.",
@@ -3749,9 +3757,11 @@
       "tau": 2,
       "G": 21,
       "symmetric": true,
-      "depends_on": [],
+      "depends_on": [
+        "g050_t0300"
+      ],
       "deps_satisfy": "any",
-      "status": "blocked",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "note": "Symmetric K=6; warm-starts from K=5.",
@@ -3776,9 +3786,11 @@
       "tau": 2,
       "G": 21,
       "symmetric": true,
-      "depends_on": [],
+      "depends_on": [
+        "g050_t0300"
+      ],
       "deps_satisfy": "any",
-      "status": "blocked",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "note": "Symmetric K=7; warm-starts from K=6.",
@@ -3803,9 +3815,11 @@
       "tau": 2,
       "G": 21,
       "symmetric": true,
-      "depends_on": [],
+      "depends_on": [
+        "g050_t0300"
+      ],
       "deps_satisfy": "any",
-      "status": "blocked",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "note": "Symmetric K=8; warm-starts from K=7.",
@@ -4170,13 +4184,20 @@
         "g071_t0300"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
-      "checkpoint": null,
-      "result": null,
+      "status": "done",
+      "checkpoint": "projects/REZN/checkpoints/g050_t0300.npz",
+      "result": {
+        "1-R2": 0.10858525,
+        "F_max": 1.9791e-53,
+        "TV": 1.40945,
+        "Vi": 0.002595,
+        "n_stages": 1,
+        "phi_calls": 604,
+        "wall_s": 1957.7
+      },
       "note": "Auto-requeued (attempt 1): via new ladder g071_t0300. \u03b3-ladder at \u03b3=0.71",
       "requeue_count": 1,
-      "claimed_by": "gha-25894404731-g050_t0300",
-      "claimed_at": "2026-05-15T01:00:42Z"
+      "completed_at": "2026-05-15T01:33:41.608405Z"
     },
     {
       "id": "g025_t0300",
@@ -4240,9 +4261,11 @@
       "tau": 4,
       "G": 21,
       "K": 3,
-      "depends_on": [],
+      "depends_on": [
+        "g050_t0300"
+      ],
       "deps_satisfy": "any",
-      "status": "blocked",
+      "status": "ready",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4919,9 +4942,11 @@
       "tau": 2,
       "G": 21,
       "K": 3,
-      "depends_on": [],
+      "depends_on": [
+        "g050_t0300"
+      ],
       "deps_satisfy": "any",
-      "status": "blocked",
+      "status": "ready",
       "claimed_by": null,
       "claimed_at": null,
       "completed_at": null,
@@ -4941,10 +4966,10 @@
   ],
   "summary": {
     "total": 207,
-    "done": 1,
-    "ready": 5,
-    "claimed": 4,
-    "blocked": 197,
+    "done": 2,
+    "ready": 11,
+    "claimed": 6,
+    "blocked": 188,
     "bailed": 0,
     "skip": 0
   },
