@@ -215,7 +215,7 @@
       "id": "g050_t0200",
       "gamma": 0.5,
       "tau": 2,
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "completed_at": null,
@@ -229,8 +229,8 @@
         "u_inner_max": 5.0
       },
       "G": 21,
-      "claimed_by": null,
-      "claimed_at": null,
+      "claimed_by": "gha-25898208350-g050_t0200",
+      "claimed_at": "2026-05-15T03:14:29Z",
       "depends_on": [
         "g050_t0300"
       ],
@@ -596,7 +596,7 @@
         "g100_t0300"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 1): noise perturbation noise_level=0.002.",
@@ -605,7 +605,9 @@
         "presmooth": 100,
         "presmooth_alpha": 0.02
       },
-      "requeue_count": 1
+      "requeue_count": 1,
+      "claimed_by": "gha-25898208350-g100_t0350",
+      "claimed_at": "2026-05-15T03:14:29Z"
     },
     {
       "id": "g100_t0400",
@@ -614,7 +616,7 @@
       "depends_on": [
         "g100_t0350"
       ],
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "solver_params": {
         "mp_dps": 70,
@@ -630,7 +632,9 @@
       "result": null,
       "completed_at": null,
       "deps_satisfy": "any",
-      "requeue_count": 1
+      "requeue_count": 1,
+      "claimed_by": "gha-25898208350-g100_t0400",
+      "claimed_at": "2026-05-15T03:14:29Z"
     },
     {
       "id": "g100_t0590",
