@@ -1,6 +1,6 @@
 {
   "queue_version": 1,
-  "updated_at": "2026-05-15T01:01:13.390029Z",
+  "updated_at": "2026-05-15T02:44:36.290195Z",
   "params": {
     "G": 21,
     "UMAX": 5.0,
@@ -596,7 +596,7 @@
         "g100_t0300"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 1): noise perturbation noise_level=0.002.",
@@ -605,9 +605,7 @@
         "presmooth": 100,
         "presmooth_alpha": 0.02
       },
-      "requeue_count": 1,
-      "claimed_by": "gha-25894192202-g100_t0350",
-      "claimed_at": "2026-05-15T00:53:47Z"
+      "requeue_count": 1
     },
     {
       "id": "g100_t0400",
@@ -616,7 +614,7 @@
       "depends_on": [
         "g100_t0350"
       ],
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "solver_params": {
         "mp_dps": 70,
@@ -632,9 +630,7 @@
       "result": null,
       "completed_at": null,
       "deps_satisfy": "any",
-      "requeue_count": 1,
-      "claimed_by": "gha-25894174930-g100_t0400",
-      "claimed_at": "2026-05-15T00:53:15Z"
+      "requeue_count": 1
     },
     {
       "id": "g100_t0590",
@@ -4210,7 +4206,7 @@
         "g050_t0300"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4224,9 +4220,7 @@
         "G_inner": 21,
         "u_inner_max": 5.0
       },
-      "requeue_count": 1,
-      "claimed_by": "gha-25894404731-g025_t0300",
-      "claimed_at": "2026-05-15T01:00:42Z"
+      "requeue_count": 1
     },
     {
       "id": "g035_t0200",
@@ -4449,7 +4443,7 @@
         "g100_t0300"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4465,9 +4459,7 @@
         "noise_level": 0.002,
         "presmooth_alpha": 0.02
       },
-      "requeue_count": 1,
-      "claimed_by": "gha-25894415097-g100_t0250",
-      "claimed_at": "2026-05-15T01:01:02Z"
+      "requeue_count": 1
     },
     {
       "id": "g100_t0300",
@@ -4795,12 +4787,10 @@
         "g100_t0300"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "checkpoint": null,
       "result": null,
-      "note": "\u03b3-ladder between g100_t0300 (\u03b3=1.0) and g200_t0300 (\u03b3=2.0) at \u03c4=3.0.",
-      "claimed_by": "gha-25894415097-g140_t0300",
-      "claimed_at": "2026-05-15T01:01:02Z"
+      "note": "\u03b3-ladder between g100_t0300 (\u03b3=1.0) and g200_t0300 (\u03b3=2.0) at \u03c4=3.0."
     },
     {
       "id": "g200_t0300",
@@ -4813,7 +4803,7 @@
         "g140_t0300"
       ],
       "deps_satisfy": "any",
-      "status": "claimed",
+      "status": "ready",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4827,9 +4817,7 @@
         "G_inner": 21,
         "u_inner_max": 5.0
       },
-      "requeue_count": 1,
-      "claimed_by": "gha-25894415097-g200_t0300",
-      "claimed_at": "2026-05-15T01:01:02Z"
+      "requeue_count": 1
     },
     {
       "id": "g200_t0500",
