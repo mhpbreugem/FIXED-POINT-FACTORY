@@ -4143,10 +4143,12 @@
         "g100_t0300"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
-      "note": "\u03b3-ladder between g100_t0300 (\u03b3=1.0) and g050_t0300 (\u03b3=0.5) at \u03c4=3.0."
+      "note": "\u03b3-ladder between g100_t0300 (\u03b3=1.0) and g050_t0300 (\u03b3=0.5) at \u03c4=3.0.",
+      "claimed_by": "gha-25894404731-g071_t0300",
+      "claimed_at": "2026-05-15T01:00:42Z"
     },
     {
       "id": "g050_t0300",
@@ -4156,11 +4158,13 @@
         "g071_t0300"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "checkpoint": null,
       "result": null,
       "note": "Auto-requeued (attempt 1): via new ladder g071_t0300. \u03b3-ladder at \u03b3=0.71",
-      "requeue_count": 1
+      "requeue_count": 1,
+      "claimed_by": "gha-25894404731-g050_t0300",
+      "claimed_at": "2026-05-15T01:00:42Z"
     },
     {
       "id": "g025_t0300",
@@ -4173,7 +4177,7 @@
         "g050_t0300"
       ],
       "deps_satisfy": "any",
-      "status": "ready",
+      "status": "claimed",
       "completed_at": null,
       "checkpoint": null,
       "result": null,
@@ -4187,7 +4191,9 @@
         "G_inner": 21,
         "u_inner_max": 5.0
       },
-      "requeue_count": 1
+      "requeue_count": 1,
+      "claimed_by": "gha-25894404731-g025_t0300",
+      "claimed_at": "2026-05-15T01:00:42Z"
     },
     {
       "id": "g035_t0200",
