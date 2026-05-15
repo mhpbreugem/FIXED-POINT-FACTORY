@@ -101,8 +101,11 @@ def make_res_fn(gamma, evals=None, best=None, tag=""):
         return F
     return fn
 
-def solve_point(P_init, gamma, tag="", aa_tol=1e-5, aa_max=500, nk_tol=1e-12):
-    """Anderson(M=5, armijo) → newton_krylov.  Returns (P_sol, F_final, converged)."""
+def solve_point(P_init, gamma, tag="", aa_tol=1e-5, aa_max=500, nk_tol=1e-9):
+    """Anderson(M=5, armijo) → newton_krylov.  Returns (P_sol, F_final, converged).
+
+    nk_tol=1e-9 matches the contour-integral finite-difference noise floor.
+    """
     evals = [0]; best = [float("inf"), P_init.copy()]
 
     # Anderson phase
@@ -119,25 +122,28 @@ def solve_point(P_init, gamma, tag="", aa_tol=1e-5, aa_max=500, nk_tol=1e-12):
         P_aa = best[1]; F_aa = best[0]
     log(f"  AA {tag} done ||F||={F_aa:.3e}  evals={evals[0]}")
 
-    # Newton-Krylov phase
-    nk_evals = [0]
+    # Newton-Krylov phase — noise floor ~2e-9, so tol=1e-9 is achievable
+    nk_evals = [0]; nk_best = [float("inf"), P_aa.copy()]
     def nk_fn(Pf):
         pp = sym_phi(Pf, sg, u_grid, TAU, gamma, W)
         F  = pp - Pf
         nk_evals[0] += 1
         r = float(np.max(np.abs(F)))
+        if r < nk_best[0]:
+            nk_best[0] = r; nk_best[1] = Pf.copy()
         if nk_evals[0] % 5 == 1:
-            log(f"  NK {tag} eval={nk_evals[0]}  ||F||={r:.3e}")
+            log(f"  NK {tag} eval={nk_evals[0]}  ||F||={r:.3e}  best={nk_best[0]:.3e}")
         return F
 
     t0 = time.time()
     try:
-        P_sol = newton_krylov(nk_fn, P_aa, f_tol=nk_tol, maxiter=50,
-                               method="lgmres", inner_m=50, verbose=False)
+        P_sol = newton_krylov(nk_fn, P_aa, f_tol=nk_tol, maxiter=200,
+                               method="lgmres", inner_m=30, outer_k=10,
+                               verbose=False)
         P_sol = np.asarray(P_sol)
     except Exception as ex:
-        log(f"  NK {tag} error: {ex} — using AA result")
-        P_sol = P_aa
+        log(f"  NK {tag} stopped: {ex} — using NK best")
+        P_sol = nk_best[1]
 
     F_final = float(np.max(np.abs(sym_phi(P_sol, sg, u_grid, TAU, gamma, W) - P_sol)))
     log(f"  NK {tag} done ||F||={F_final:.3e}  t={time.time()-t0:.1f}s  NK_evals={nk_evals[0]}")
@@ -189,7 +195,7 @@ def quad_predict(hist, g_next):
 def sweep(P_start, g_start, g_end, label, results_all):
     is_right = g_end > g_start
     STEP_INIT = 0.05; STEP_MIN = 1e-4; STEP_MAX = 0.5
-    GROW = 1.5; SHRINK = 0.5; TOL = 1e-11
+    GROW = 1.5; SHRINK = 0.5; TOL = 1e-9
     hist = [(g_start, P_start.copy())]
     g, P, step = g_start, P_start.copy(), STEP_INIT
     n_ok = 0
@@ -204,7 +210,7 @@ def sweep(P_start, g_start, g_end, label, results_all):
         log(f"--- gamma={g_next:.5f}  step={step:.5f} ---")
         P_new, F_new, ok = solve_point(P0, g_next, tag=f"g={g_next:.4f}",
                                         aa_tol=1e-5, aa_max=300, nk_tol=TOL)
-        if ok or F_new < 1e-10:
+        if ok or F_new < 5e-9:
             metrics = sym_weighted_R2(P_new, sg, u_grid, TAU)
             d1 = metrics["1-R2"]
             log(f"  ✓ gamma={g_next:.5f}  ||F||={F_new:.2e}  1-R²={d1*100:.4f}%")
@@ -213,8 +219,8 @@ def sweep(P_start, g_start, g_end, label, results_all):
             g, P = g_next, P_new.copy()
             n_ok += 1
             # Adapt step on quality of convergence
-            if F_new < 1e-12: step = min(step * GROW, STEP_MAX)
-            elif F_new > 1e-10: step = max(step * SHRINK, STEP_MIN)
+            if F_new < 1e-9: step = min(step * GROW, STEP_MAX)
+            elif F_new > 5e-9: step = max(step * SHRINK, STEP_MIN)
             results_all.append({"gamma": g_next, "F_inf": F_new,
                                  "deficit": d1, "dir": label,
                                  "slope": metrics["slope"]})
