@@ -213,18 +213,22 @@ def phi_cell(mu_field, i, j, gamma, tau):
 # §5.  Fixed-point iteration: damped Picard with monotonicity projection
 # =============================================================================
 
-def initial_mu_field(G, Gp, tau, gamma, xi_max=0.88):
-    """No-learning initialisation with a SHARED p-grid across all rows.
+def initial_mu_field(G, Gp, tau, gamma, xi_max=0.88, init_kind="no_learning",
+                     alpha_tilt=1.0, beta_tilt=1.0):
+    """Initialise μ on a shared p-grid.
 
-    A row-specific p-grid (the production convention) requires more bookkeeping
-    and creates a lot of out-of-range cells during early iterations. A shared
-    p-grid in logit-uniform space, wide enough to cover all rows, is much more
-    stable for Picard and costs nothing once converged."""
+    init_kind:
+      "no_learning"   — μ(ξ, p) = μ_NL(ξ) (constant in p). Default.
+      "cara_tilted"   — μ(ξ, p) = σ(α·atanh(ξ) + β·logit p). Parallel-line
+                        contours with negative slope (the CRRA REE shape).
+                        Pure CARA (α=0, β=1) is singular for this solver
+                        because all demands vanish; tilted CARA breaks the
+                        degeneracy with a finite α and converges nicely.
+    """
     xi_grid = np.linspace(-xi_max, xi_max, G)
     u_grid = u_of_xi(xi_grid, tau)
     mu_NL = mu_no_learning(u_grid, tau)
 
-    # Pre-compute the global no-learning price range
     pmin, pmax = 1.0, 0.0
     for i in range(G):
         for j in range(G):
@@ -235,10 +239,20 @@ def initial_mu_field(G, Gp, tau, gamma, xi_max=0.88):
     pmax = min(pmax * 2.0, 1 - 1e-4)
     lp_grid = np.linspace(logit(pmin), logit(pmax), Gp)
     p_shared = sigmoid(lp_grid)
-
     p_grids = np.tile(p_shared, (G, 1))
-    # Initial μ: at no-learning the posterior is constant in p, equal to μ_NL(ξ_i)
-    mu_vals = np.tile(mu_NL[:, None], (1, Gp))
+
+    if init_kind == "no_learning":
+        mu_vals = np.tile(mu_NL[:, None], (1, Gp))
+    elif init_kind == "cara_tilted":
+        # logit μ = α·atanh(ξ) + β·logit(p)
+        atanh_xi = np.arctanh(np.clip(xi_grid, -1+1e-15, 1-1e-15))
+        lp = np.log(p_shared / (1 - p_shared))
+        # Outer combination, axes (ξ, p)
+        L = alpha_tilt * atanh_xi[:, None] + beta_tilt * lp[None, :]
+        mu_vals = 1.0 / (1.0 + np.exp(-L))
+        mu_vals = np.clip(mu_vals, 1e-9, 1 - 1e-9)
+    else:
+        raise ValueError(f"unknown init_kind: {init_kind!r}")
 
     return MuField(xi_grid, p_grids, mu_vals, tau)
 
@@ -297,6 +311,51 @@ def iterate_phi(mu_field, gamma, tau, max_iter=60, alpha=0.15,
     mu_field.mu_vals = unflat(x)
     mu_field._rebuild_row_interp()
     return mu_field, history
+
+
+# =============================================================================
+# §4b. PAVA isotonic projection — enforce μ monotone in both u and p
+# =============================================================================
+
+def _pava_1d(y):
+    """Pool-adjacent-violators: monotone non-decreasing isotonic regression."""
+    y = np.asarray(y, dtype=float)
+    n = len(y)
+    means = list(y); lens = [1] * n; starts = list(range(n))
+    i = 1
+    while i < len(means):
+        if means[i-1] > means[i]:
+            new_len = lens[i-1] + lens[i]
+            new_mean = (means[i-1]*lens[i-1] + means[i]*lens[i]) / new_len
+            means.pop(i); lens.pop(i); starts.pop(i)
+            means[i-1] = new_mean; lens[i-1] = new_len
+            if i > 1:
+                i -= 1
+        else:
+            i += 1
+    out = np.empty(n)
+    for k in range(len(means)):
+        end = starts[k+1] if k+1 < len(starts) else n
+        out[starts[k]:end] = means[k]
+    return out
+
+
+def project_monotone_2d(mu_vals, max_passes=4, atol=1e-13):
+    """Project μ-array onto the cone of bivariate-monotone (non-decreasing)
+    matrices: μ[i, j] non-decreasing in both i and j. Alternates PAVA in each
+    axis until stable. The true REE μ(u, p) is bivariate-monotone (Bayes +
+    market clearing), so this projection keeps the iterate on the physical
+    manifold and rules out spurious non-monotone fixed points."""
+    mu = mu_vals.copy()
+    for _ in range(max_passes):
+        old = mu.copy()
+        for j in range(mu.shape[1]):
+            mu[:, j] = _pava_1d(mu[:, j])
+        for i in range(mu.shape[0]):
+            mu[i, :] = _pava_1d(mu[i, :])
+        if np.max(np.abs(mu - old)) < atol:
+            break
+    return mu
 
 
 # =============================================================================
@@ -446,13 +505,20 @@ def phi_cell_with_jac(mu_field, i, j, gamma, tau, basis_funcs):
 
 def newton_polish_analytic(mu_field, gamma, tau,
                             max_iter=10, tol=1e-12,
-                            line_search=True, verbose=True):
+                            line_search=True, project_monotone=False,
+                            verbose=True):
     """Newton iteration using the analytic IFT Jacobian.
 
     The Jacobian is block-diagonal in the price index j (rigorously, because
     PCHIP-in-p passes through every grid node and p_j is a grid node). Each
     G×G block is built analytically and solved by np.linalg.solve. No
     finite differences, no Krylov, no eps_fd tuning.
+
+    If `project_monotone=True`, projects each iterate onto the bivariate-
+    monotone cone via PAVA after each accepted step. This rules out the
+    spurious non-monotone fixed points reachable from degenerate-cell
+    fallbacks and matches the PAVA invariants enforced by the production
+    halo solver (see projects/REZN/CHECKPOINT_FORMAT.md §3.4–5).
     """
     G, Gp = mu_field.G, mu_field.Gp
     # Build basis funcs once (depends only on xi_grid + anchors)
@@ -496,6 +562,8 @@ def newton_polish_analytic(mu_field, gamma, tau,
             mu_old = mu_field.mu_vals.copy()
             for _ in range(8):
                 trial = np.clip(mu_old + alpha * delta, 1e-12, 1 - 1e-12)
+                if project_monotone:
+                    trial = project_monotone_2d(trial)
                 mu_field.mu_vals = trial
                 mu_field._rebuild_row_interp()
                 F_try_inf = 0.0
@@ -515,7 +583,10 @@ def newton_polish_analytic(mu_field, gamma, tau,
                 mu_field.mu_vals = mu_old
                 mu_field._rebuild_row_interp()
         if not accepted:
-            mu_field.mu_vals = np.clip(mu_field.mu_vals + delta, 1e-12, 1 - 1e-12)
+            new_mu = np.clip(mu_field.mu_vals + delta, 1e-12, 1 - 1e-12)
+            if project_monotone:
+                new_mu = project_monotone_2d(new_mu)
+            mu_field.mu_vals = new_mu
             mu_field._rebuild_row_interp()
 
     return mu_field, history
