@@ -130,21 +130,23 @@ class MuField:
     def mu_curve_at_p(self, p):
         """Return a callable μ(ξ) for the given p, smooth on (−1, 1).
 
-        Boundary extension: rather than pinning μ to (0, 1) at ξ=±1 (which causes
-        strong PCHIP curvature against a flat interior), we add two anchor points
-        at ξ = ±0.99 set to the no-learning values for those signals. PCHIP then
-        extrapolates linearly past those anchors. The integrand vanishes well
-        before ξ = ±1 anyway because of the Gaussian factor."""
+        Boundary extension: if the grid doesn't already reach the boundary
+        (|xi_max| < 0.99), add anchor points at ξ = ±0.99 set to the
+        no-learning values. If the grid does extend close to ±1 (e.g.,
+        Chebyshev with xi_max → 1), skip the anchors entirely."""
         col = self.col_at_p(p)
         xi_anchor = 0.99
-        u_anchor = u_of_xi(xi_anchor, self.tau)
-        mu_anchor_lo = mu_no_learning(-u_anchor, self.tau)
-        mu_anchor_hi = mu_no_learning(+u_anchor, self.tau)
-        xi_ext = np.concatenate([[-xi_anchor], self.xi_grid, [xi_anchor]])
-        col_ext = np.concatenate([[mu_anchor_lo], col, [mu_anchor_hi]])
-        # Sort just in case the inner grid extends past the anchors
-        order = np.argsort(xi_ext)
-        return PchipInterpolator(xi_ext[order], col_ext[order], extrapolate=True)
+        if self.xi_grid[-1] < xi_anchor and self.xi_grid[0] > -xi_anchor:
+            u_anchor = u_of_xi(xi_anchor, self.tau)
+            xi_ext = np.concatenate([[-xi_anchor], self.xi_grid, [xi_anchor]])
+            col_ext = np.concatenate([
+                [mu_no_learning(-u_anchor, self.tau)], col,
+                [mu_no_learning( u_anchor, self.tau)],
+            ])
+        else:
+            xi_ext = self.xi_grid
+            col_ext = col
+        return PchipInterpolator(xi_ext, col_ext, extrapolate=True)
 
 
 # =============================================================================
@@ -789,9 +791,18 @@ def newton_polish_analytic_ragged(mu_field, gamma, tau,
     """
     G, Gp = mu_field.G, mu_field.Gp
     n = G * Gp
+    # Match mu_curve_at_p's anchor logic exactly
     xi_anchor = 0.99
-    xi_full = np.concatenate([[-xi_anchor], mu_field.xi_grid, [xi_anchor]])
-    basis_funcs = _build_basis_funcs(xi_full)
+    if mu_field.xi_grid[-1] < xi_anchor and mu_field.xi_grid[0] > -xi_anchor:
+        xi_full = np.concatenate([[-xi_anchor], mu_field.xi_grid, [xi_anchor]])
+        basis_funcs = _build_basis_funcs(xi_full)
+    else:
+        # Grid already reaches boundary — no anchors; one basis function per interior node
+        xi_full = mu_field.xi_grid.copy()
+        basis_funcs = []
+        for l in range(G):
+            e = np.zeros(G); e[l] = 1.0
+            basis_funcs.append(PchipInterpolator(xi_full, e, extrapolate=True))
     row_basis = _build_row_basis(mu_field.p_grids)
 
     history = []
