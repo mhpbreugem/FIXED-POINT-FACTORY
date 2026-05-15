@@ -2,8 +2,8 @@
   "task_id": "g100_t0400",
   "worker_id": "gha-25898208350-g100_t0400",
   "started_at": "2026-05-15T03:14:50Z",
-  "last_update": "2026-05-15T03:17:52Z",
-  "iter": 825,
+  "last_update": "2026-05-15T03:27:04Z",
+  "iter": 1,
   "ftol": "9.804044e-05",
   "ftol_history": [
     "3.621417e-04",
@@ -16,7 +16,8 @@
     "9.804044e-05"
   ],
   "extra": {
-    "phase": "anderson",
-    "n_fun": 823
+    "phase": "mp_newton",
+    "n_fun": 1,
+    "n_jac": 0
   }
 }
