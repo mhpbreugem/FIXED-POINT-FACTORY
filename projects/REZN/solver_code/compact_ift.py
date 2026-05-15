@@ -683,13 +683,22 @@ def phi_cell_with_jac_ragged(mu_field, i, j, gamma, tau, basis_funcs, row_basis)
     d_hi = x_crra(mu_at( 1 - eps), p_j, gamma)
 
     # B^(l)_q(p_j) for each (l, q). Row i is exactly diagonal at q = j.
+    # For l ≠ i with p_j inside row l's range: full PCHIP basis at p_j.
+    # For l ≠ i with p_j outside row l's range: col_at_p falls back to the
+    # grid-edge value µ[l, 0] or µ[l, −1], so the basis is δ_{q=0} or δ_{q=Gp−1}.
     p_basis = np.zeros((G, Gp))
     p_basis[i, j] = 1.0
     for l in range(G):
         if l == i:
             continue
-        for q in range(Gp):
-            p_basis[l, q] = float(row_basis[l][q](p_j))
+        p_lo_l, p_hi_l = mu_field.p_grids[l, 0], mu_field.p_grids[l, -1]
+        if p_j <= p_lo_l:
+            p_basis[l, 0] = 1.0
+        elif p_j >= p_hi_l:
+            p_basis[l, -1] = 1.0
+        else:
+            for q in range(Gp):
+                p_basis[l, q] = float(row_basis[l][q](p_j))
 
     A0 = 0.0; A1 = 0.0
     dA0 = np.zeros((G, Gp))
