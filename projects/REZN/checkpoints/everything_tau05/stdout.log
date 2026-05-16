@@ -12,3 +12,22 @@
 [14:28:19]   Gp1/half/krylov                         F=nan  n=   0  wall=  0.0s
 [14:28:19]   Gp1/half/broyden1                       F=nan  n=   0  wall=  0.0s
 [14:28:19]   Gp1/half/anderson                       F=nan  n=   0  wall=  0.0s
+[claude/study-fixed-point-economics-y12PB 51c1999] everything τ=0.5: 12/112 trials
+ 4 files changed, 144 insertions(+)
+ create mode 100644 projects/REZN/checkpoints/everything_tau05/log.txt
+ create mode 100644 projects/REZN/checkpoints/everything_tau05/results.json
+ create mode 100644 projects/REZN/checkpoints/everything_tau05/stdout.log
+ create mode 100644 projects/REZN/checkpoints/everything_tau05/summary.md
+[14:28:20]   committed + pushed: everything τ=0.5: 12/112 trials
+[14:28:20]   Gp1/half/df-sane                        F=nan  n=   0  wall=  0.0s
+[14:28:20]   Gp1/half/long-picard                    F=nan  n=   0  wall=  0.0s
+[14:28:20]   Gp1/half_bias/lm-newton                 F=nan  n=   0  wall=  0.0s
+[14:28:20]   Gp1/half_bias/trf                       F=nan  n=   0  wall=  0.0s
+[14:28:20]   Gp1/half_bias/krylov                    F=nan  n=   0  wall=  0.0s
+[14:28:20]   Gp1/half_bias/broyden1                  F=nan  n=   0  wall=  0.0s
+[14:28:20]   Gp1/half_bias/anderson                  F=nan  n=   0  wall=  0.0s
+[14:28:20]   Gp1/half_bias/df-sane                   F=nan  n=   0  wall=  0.0s
+[14:28:20]   Gp1/half_bias/long-picard               F=nan  n=   0  wall=  0.0s
+[14:28:20]   Gp1/cara_half/lm-newton                 F=nan  n=   0  wall=  0.0s
+[14:28:20]   Gp1/cara_half/trf                       F=nan  n=   0  wall=  0.0s
+[14:28:20]   Gp1/cara_half/krylov                    F=nan  n=   0  wall=  0.0s
