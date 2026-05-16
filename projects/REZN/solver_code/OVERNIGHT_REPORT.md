@@ -144,16 +144,34 @@ bifurcation pattern is happening in the Gp direction.
    to F < 10⁻⁵⁰. The numba solver's F=1e-12 at G=10 Gp=3 is enough
    to seed this.
 
-## Bottom line
+## Update: tested LM + continuation (option 1 + 2 above)
 
-The compactified-IFT formulation and the analytic Jacobian both
-work correctly (verified to machine precision against pure-Python).
-What doesn't work is the **globalisation** of Newton at fine p-grids:
-the discrete Φ map develops a second fixed point that's closer to
-the warm-start than the true REE one, and Newton snaps to it.
+Added `newton_polish_nb_LM` (Levenberg–Marquardt damping, λ ∈ [10⁻¹², 10⁴])
+and `newton_polish_nb_continuation` (homotopy in λ_φ from 0 → 1 over
+Φ_λ = (1−λ)·μ_NL + λ·Φ_IFT). Tested both at G=10 Gp=5 (the smallest
+failing case).
 
-For γ=0.5, τ=2 at low resolution (G=10 Gp=3), the converged
-1−R² = 0.058 is **below** the production anchor 0.085 — consistent
-with the truncation-bias direction I'd expect from a too-coarse
-p-grid. Higher p-resolution should push it up toward the anchor —
-but we can't get there without fixing the Gp basin issue.
+**Both stalled at F ≈ 10⁻²**, same plateau as plain Newton:
+
+| method | iters | wall | F_final |
+|---|---:|---:|---:|
+| LM-Newton | 50 (cap) | 7.7s | 1.06×10⁻² |
+| λ-continuation | 180 (10 λ-steps × 18 iters) | 7.6s | 1.02×10⁻² |
+
+The conclusion: the plateau **isn't a globalisation problem**. It's
+that `(I − J)` becomes effectively rank-deficient at the iterate
+where F ≈ 10⁻². LM up to λ=10⁴ doesn't break through because once the
+system is singular, adding a multiple of I doesn't change the
+solution direction enough.
+
+So the *real* remaining fix is structural — either:
+- replace per-row PCHIP-in-p with a globally-smooth 2-D
+  representation that doesn't admit the rank-deficient direction, or
+- abandon the IFT contour integration in favor of the production
+  halo's kernel-smoothed integral, which was specifically designed
+  to keep DΦ smooth and full-rank at all iterates.
+
+The compactified-IFT formulation is mathematically clean but its
+discrete Jacobian has a structural ill-conditioning issue at Gp ≥ 4
+that no amount of outer-loop globalisation fixes.
+

@@ -551,6 +551,134 @@ def newton_polish_nb_adaptive(mu_field, gamma, tau, max_iter=40, tol=1e-12,
     return mu_field, history
 
 
+def newton_polish_nb_LM(mu_field, gamma, tau, max_iter=50, tol=1e-12,
+                          lam_init=1e-3, lam_min=1e-12, lam_max=1e4,
+                          symmetrize_step=True, verbose=True):
+    """Levenberg-Marquardt damped Newton. Solves (I − J + λ·I) δ = F.
+    Adaptive λ:
+      - step accepted (F decreases) → λ *= 0.3   (lean toward Newton)
+      - step rejected (F increases) → λ *= 7     (lean toward gradient)
+    Much more robust at higher Gp than pure Newton.
+    """
+    G, Gp = mu_field.G, mu_field.Gp
+    n = G * Gp
+    history = []
+    lam = lam_init
+
+    for it in range(max_iter):
+        row_coeffs, row_basis_coeffs, xi_basis_coeffs, xi_full, anchor_vals, n_anchor_left = build_pchip_pack(mu_field)
+        F, J4 = assemble_F_and_J(
+            mu_field.xi_grid, mu_field.p_grids, mu_field.mu_vals,
+            tau, gamma, xi_full, row_coeffs, row_basis_coeffs,
+            xi_basis_coeffs, anchor_vals, n_anchor_left,
+        )
+        F_inf = float(np.max(np.abs(F)))
+        history.append(F_inf)
+        if verbose:
+            print(f"  LM-newton {it+1:3d}  ||F||_∞ = {F_inf:.3e}  λ={lam:.2e}", flush=True)
+        if F_inf < tol:
+            break
+
+        # LM equation: (I - J + λ I) δ = F
+        A = (1.0 + lam) * np.eye(n) - J4.reshape(n, n)
+        try:
+            delta = np.linalg.solve(A, F.ravel()).reshape(G, Gp)
+        except np.linalg.LinAlgError:
+            delta = F.copy()
+
+        mu_old = mu_field.mu_vals.copy()
+        trial = np.clip(mu_old + delta, 1e-12, 1 - 1e-12)
+        if symmetrize_step:
+            from compact_ift import symmetrize_mu as _sym
+            trial = _sym(trial)
+        mu_field.mu_vals = trial
+        mu_field._rebuild_row_interp()
+        rc, rbc, xbc, xf, av, nal = build_pchip_pack(mu_field)
+        F_try, _ = assemble_F_and_J(
+            mu_field.xi_grid, mu_field.p_grids, mu_field.mu_vals,
+            tau, gamma, xf, rc, rbc, xbc, av, nal,
+        )
+        F_try_inf = float(np.max(np.abs(F_try)))
+        if F_try_inf < F_inf:
+            lam = max(lam_min, lam * 0.3)
+        else:
+            # Reject and grow λ
+            mu_field.mu_vals = mu_old
+            mu_field._rebuild_row_interp()
+            lam = min(lam_max, lam * 7.0)
+    return mu_field, history
+
+
+def newton_polish_nb_continuation(mu_field, gamma, tau, max_iter=50, tol=1e-12,
+                                   lam_steps=None, symmetrize_step=True, verbose=True):
+    """Continuation in λ_φ ∈ [0, 1] over the homotopy
+        Φ_λ(μ) = (1−λ)·μ_NL(ξ) + λ·Φ_IFT(μ).
+    At each λ-step, run LM-Newton to convergence using the warm-start from
+    the previous λ. λ ramps from 0 → 1 in small steps to keep the iterate
+    in the basin of attraction.
+    """
+    from compact_ift import mu_no_learning, u_of_xi
+    G, Gp = mu_field.G, mu_field.Gp
+    n = G * Gp
+    history_all = []
+    if lam_steps is None:
+        lam_steps = list(np.linspace(0.1, 1.0, 10))
+
+    # Build the μ_NL field (matches the no-learning init)
+    u_grid = u_of_xi(mu_field.xi_grid, tau)
+    mu_NL_per_row = mu_no_learning(u_grid, tau)
+    mu_NL_field = np.tile(mu_NL_per_row[:, None], (1, Gp))
+
+    for lam in lam_steps:
+        if verbose:
+            print(f"\n--- λ = {lam:.3f} ---", flush=True)
+        lam_local = 1e-3
+        for it in range(max_iter):
+            row_coeffs, row_basis_coeffs, xi_basis_coeffs, xi_full, anchor_vals, n_anchor_left = build_pchip_pack(mu_field)
+            F_phi, J_phi = assemble_F_and_J(
+                mu_field.xi_grid, mu_field.p_grids, mu_field.mu_vals,
+                tau, gamma, xi_full, row_coeffs, row_basis_coeffs,
+                xi_basis_coeffs, anchor_vals, n_anchor_left,
+            )
+            # F_λ = (1-λ)·(μ_NL − μ) + λ·F_phi, where F_phi = Φ − μ
+            F_lam = (1.0 - lam) * (mu_NL_field - mu_field.mu_vals) + lam * F_phi
+            # J_F_lam = λ·J_phi − I  (since J_F_phi = J_phi − I and J_F_NL = −I)
+            F_inf = float(np.max(np.abs(F_lam)))
+            history_all.append(F_inf)
+            if verbose and it % 5 == 0:
+                print(f"  λ={lam:.3f} it {it:3d}  ||F_λ||_∞ = {F_inf:.3e}", flush=True)
+            if F_inf < tol:
+                break
+            # Newton step: (I - λ·J_phi + lam_local·I) δ = F_lam
+            A = (1.0 + lam_local) * np.eye(n) - lam * J_phi.reshape(n, n)
+            try:
+                delta = np.linalg.solve(A, F_lam.ravel()).reshape(G, Gp)
+            except np.linalg.LinAlgError:
+                delta = F_lam.copy()
+            mu_old = mu_field.mu_vals.copy()
+            trial = np.clip(mu_old + delta, 1e-12, 1 - 1e-12)
+            if symmetrize_step:
+                from compact_ift import symmetrize_mu as _sym
+                trial = _sym(trial)
+            mu_field.mu_vals = trial
+            mu_field._rebuild_row_interp()
+            # Adaptive LM update
+            rc, rbc, xbc, xf, av, nal = build_pchip_pack(mu_field)
+            F_phi_try, _ = assemble_F_and_J(
+                mu_field.xi_grid, mu_field.p_grids, mu_field.mu_vals,
+                tau, gamma, xf, rc, rbc, xbc, av, nal,
+            )
+            F_lam_try = (1.0 - lam) * (mu_NL_field - mu_field.mu_vals) + lam * F_phi_try
+            F_lam_try_inf = float(np.max(np.abs(F_lam_try)))
+            if F_lam_try_inf < F_inf:
+                lam_local = max(1e-12, lam_local * 0.3)
+            else:
+                mu_field.mu_vals = mu_old
+                mu_field._rebuild_row_interp()
+                lam_local = min(1e4, lam_local * 7.0)
+    return mu_field, history_all
+
+
 def newton_polish_nb(mu_field, gamma, tau, max_iter=30, tol=1e-12,
                      line_search=True, verbose=True):
     G, Gp = mu_field.G, mu_field.Gp
