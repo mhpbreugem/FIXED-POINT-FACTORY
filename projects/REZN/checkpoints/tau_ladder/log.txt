@@ -105,3 +105,15 @@
 [12:57:05]   τ=0.51: F=7.92e-03, iters=1, 1-R²=—, slope=nan, wall=1.2s
 [12:57:09]   τ=0.50: F=8.00e-03, iters=5, 1-R²=—, slope=nan, wall=3.8s
 [12:57:09]   ladder elapsed: 474s
+[12:57:11]   committed + pushed: τ-ladder p357 done
+[12:57:11] 
+=== τ-ladder: p258, p=[0.25, 0.5, 0.75] ===
+[12:57:11]   Anchor solve τ=2.0
+[12:57:15]   Anchor: F=8.434e-13, iters=20
+[12:57:21]   Walking τ from 2.0 to 0.5 in 150 steps of 0.01
+[12:57:30]   τ=1.99: F=3.76e-13, iters=15, 1-R²=0.2454, slope=0.383, wall=2.7s
+[12:57:39]   τ=1.98: F=7.88e-13, iters=15, 1-R²=0.2457, slope=0.384, wall=2.7s
+[12:57:49]   τ=1.97: F=5.34e-13, iters=16, 1-R²=0.2460, slope=0.384, wall=3.1s
+[12:57:59]   τ=1.96: F=4.27e-13, iters=17, 1-R²=0.2464, slope=0.384, wall=3.1s
+[12:58:08]   τ=1.95: F=4.48e-13, iters=18, 1-R²=0.2467, slope=0.384, wall=3.3s
+[12:58:39]   τ=1.89: F=2.57e-11, iters=20, 1-R²=0.2485, slope=0.385, wall=4.0s
