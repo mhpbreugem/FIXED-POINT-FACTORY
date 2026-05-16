@@ -135,3 +135,69 @@
 [14:10:24]       Newton end: F=1.952e-03, iters=41
 [14:10:24] 
 >>> cara_half FINAL: F=1.952e-03
+[14:10:26]   committed + pushed: cold τ=0.5 v2 init=cara_half: F=1.95e-03
+[14:10:26] 
+============================================================
+[14:10:26] INIT = NL
+[14:10:26] ============================================================
+[14:10:26] --- PHASE 1: Picard (α=0.05) ---
+[14:10:26]       Picard it=0 F=6.418e-01 α=0.05
+[14:10:43]       Picard it=200 F=1.077e-01 α=0.05
+[14:11:01]       Picard it=400 F=3.023e-01 α=0.05
+[14:11:19]       Picard it=600 F=2.919e-02 α=0.05
+[14:11:36]       Picard it=800 F=2.162e-01 α=0.05
+[14:11:54]       Picard it=1000 F=1.365e-02 α=0.05
+[14:12:11]       Picard it=1200 F=1.357e-02 α=0.05
+[14:12:29]       Picard it=1400 F=2.651e-02 α=0.05
+[14:12:46]       Picard it=1600 F=1.945e-01 α=0.05
+[14:13:04]       Picard it=1800 F=1.032e-01 α=0.05
+[14:13:21]       Picard end: F=1.951e-02, iters=2000
+[14:13:21] --- PHASE 2: Anderson (M=10, β=0.7) ---
+[14:13:21]       Anderson start: F=4.007e-02
+[14:13:21]       Anderson it=1 F=4.925e-01
+[14:13:26]       Anderson it=51 F=2.200e-02
+[14:13:31]       Anderson it=101 F=8.540e-03
+[14:13:35]       Anderson it=151 F=2.048e-02
+[14:13:40]       Anderson it=201 F=5.005e-01
+[14:13:44]       Anderson it=251 F=7.495e-02
+[14:13:49]       Anderson it=301 F=3.676e-01
+[14:13:53]       Anderson it=351 F=2.349e-02
+[14:13:58]       Anderson it=401 F=2.022e-01
+[14:14:02]       Anderson it=451 F=2.740e-02
+[14:14:07]       Anderson it=501 F=7.201e-02
+[14:14:12]       Anderson it=551 F=3.054e-02
+[14:14:16]       Anderson it=601 F=5.627e-01
+[14:14:20]       Anderson it=651 F=1.149e-01
+[14:14:25]       Anderson it=701 F=2.444e-01
+[14:14:29]       Anderson it=751 F=4.968e-02
+[14:14:34]       Anderson it=801 F=1.361e-02
+[14:14:38]       Anderson it=851 F=1.196e-02
+[14:14:43]       Anderson it=901 F=4.962e-01
+[14:14:48]       Anderson it=951 F=4.980e-01
+[14:14:52]       Anderson it=1001 F=4.178e-02
+[14:14:57]       Anderson it=1051 F=2.513e-02
+[14:15:01]       Anderson it=1101 F=3.352e-01
+[14:15:06]       Anderson it=1151 F=9.308e-02
+[14:15:10]       Anderson it=1201 F=1.547e-02
+[14:15:14]       Anderson it=1251 F=4.795e-01
+[14:15:19]       Anderson it=1301 F=4.421e-03
+[14:15:23]       Anderson it=1351 F=4.285e-02
+[14:15:28]       Anderson it=1401 F=1.528e-01
+[14:15:33]       Anderson it=1451 F=5.018e-01
+[14:15:37]       Anderson it=1501 F=5.203e-01
+[14:15:42]       Anderson it=1551 F=3.666e-03
+[14:15:46]       Anderson it=1601 F=3.014e-02
+[14:15:51]       Anderson it=1651 F=2.371e-01
+[14:15:55]       Anderson it=1701 F=4.985e-01
+[14:16:00]       Anderson it=1751 F=3.422e-01
+[14:16:04]       Anderson it=1801 F=2.368e-02
+[14:16:09]       Anderson it=1851 F=3.703e-03
+[14:16:14]       Anderson it=1901 F=4.191e-03
+[14:16:18]       Anderson it=1951 F=2.055e-03
+[14:16:23]       Anderson end: F=1.562e-02, iters=2001
+[14:16:23] --- PHASE 3: LM-Newton ---
+[14:16:23]       Newton it=1 F=1.562e-02 λ=1.0e-10
+[14:16:45]       Newton λ saturated, breaking
+[14:16:45]       Newton end: F=2.208e-03, iters=20
+[14:16:45] 
+>>> NL FINAL: F=2.208e-03
