@@ -503,6 +503,11 @@ def newton_polish_nb(mu_field, gamma, tau, max_iter=30, tol=1e-12,
         if line_search:
             alpha = 1.0
             mu_old = mu_field.mu_vals.copy()
+            # Non-monotone Armijo: allow F to RISE up to 1.5x the recent reference
+            # (Grippo–Lampariello–Lucidi style). Keeps the iteration moving through
+            # mildly-non-convex F-landscapes where strict descent stalls.
+            best_F_recent = getattr(newton_polish_nb, "_best_F_recent", F_inf)
+            F_ref = max(F_inf, 0.7 * best_F_recent)  # gentle drift up allowed
             for _ in range(8):
                 trial = np.clip(mu_old + alpha * delta, 1e-12, 1 - 1e-12)
                 mu_field.mu_vals = trial
@@ -513,15 +518,17 @@ def newton_polish_nb(mu_field, gamma, tau, max_iter=30, tol=1e-12,
                     tau, gamma, xf, rc, rbc, xbc, av, nal,
                 )
                 F_try_inf = float(np.max(np.abs(F_try)))
-                if F_try_inf < F_inf * (1 - 1e-4 * alpha):
+                # Acceptance: either Armijo descent OR allow up to 1.5*F_ref
+                if (F_try_inf < F_inf * (1 - 1e-4 * alpha)
+                        or F_try_inf < 1.5 * F_ref):
                     accepted = True
                     if verbose and alpha < 1.0:
-                        print(f"            line-search α={alpha:.3g}", flush=True)
+                        tag = "↓" if F_try_inf < F_inf else "↑"
+                        print(f"            line-search α={alpha:.3g} ({tag})", flush=True)
                     break
                 alpha *= 0.5
             if not accepted:
-                # Watchdog: if Armijo failed, take a tiny safe step instead of
-                # falling through to the full Newton step (which can blow up F).
+                # Fall back to a small safe step
                 alpha_safe = 1e-3
                 trial = np.clip(mu_old + alpha_safe * delta, 1e-12, 1 - 1e-12)
                 mu_field.mu_vals = trial
@@ -529,6 +536,8 @@ def newton_polish_nb(mu_field, gamma, tau, max_iter=30, tol=1e-12,
                 if verbose:
                     print(f"            line-search FAILED → tiny step α={alpha_safe:.0e}",
                           flush=True)
+            # Update sliding "recent best" for next iter
+            newton_polish_nb._best_F_recent = min(F_inf, best_F_recent)
         else:
             mu_field.mu_vals = np.clip(mu_field.mu_vals + delta, 1e-12, 1 - 1e-12)
             mu_field._rebuild_row_interp()
