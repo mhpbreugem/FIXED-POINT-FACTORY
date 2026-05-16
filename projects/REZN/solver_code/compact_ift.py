@@ -157,11 +157,15 @@ class MuField:
     def mu_curve_at_p(self, p):
         """Return a callable μ(ξ) for the given p, smooth on (−1, 1).
 
-        Boundary extension: if the grid doesn't already reach the boundary
+        Uses LOGIT-LINEAR extrapolation in p outside each row's grid range
+        (slope 1 in logit-p / logit-μ space, matching the CARA asymptote
+        μ → p at extreme prices). This replaces the earlier flat extrapolation
+        that produced vertical contour lines beyond the p-grid.
+
+        ξ-extension: if the grid doesn't already reach the boundary
         (|xi_max| < 0.99), add anchor points at ξ = ±0.99 set to the
-        no-learning values. If the grid does extend close to ±1 (e.g.,
-        Chebyshev with xi_max → 1), skip the anchors entirely."""
-        col = self.col_at_p(p)
+        no-learning values. If the grid does extend close to ±1, skip the anchors."""
+        col = self.col_at_p_smooth(p)
         xi_anchor = 0.99
         if self.xi_grid[-1] < xi_anchor and self.xi_grid[0] > -xi_anchor:
             u_anchor = u_of_xi(xi_anchor, self.tau)
