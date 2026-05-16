@@ -199,3 +199,15 @@
 [13:03:38]   τ=0.62: F=3.14e-03, iters=4, 1-R²=—, slope=nan, wall=2.4s
 [13:03:38]   τ=0.61: F=3.22e-03, iters=1, 1-R²=—, slope=nan, wall=0.9s
 [13:03:39]   τ=0.60: F=3.46e-03, iters=1, 1-R²=—, slope=nan, wall=1.0s
+[13:03:41]   committed + pushed: τ-ladder p258: τ→0.60
+[13:03:42]   τ=0.59: F=3.69e-03, iters=1, 1-R²=—, slope=nan, wall=0.9s
+[13:03:43]   τ=0.58: F=3.91e-03, iters=1, 1-R²=—, slope=nan, wall=0.9s
+[13:03:44]   τ=0.57: F=4.11e-03, iters=1, 1-R²=—, slope=nan, wall=0.9s
+[13:03:45]   τ=0.56: F=4.35e-03, iters=2, 1-R²=—, slope=nan, wall=1.4s
+[13:03:49]   τ=0.55: F=4.66e-03, iters=6, 1-R²=—, slope=nan, wall=3.8s
+[13:03:52]   τ=0.54: F=5.02e-03, iters=4, 1-R²=—, slope=nan, wall=2.3s
+[13:03:56]   τ=0.53: F=5.22e-03, iters=6, 1-R²=—, slope=nan, wall=4.4s
+[13:04:01]   τ=0.52: F=5.48e-03, iters=7, 1-R²=—, slope=nan, wall=4.6s
+[13:04:04]   τ=0.51: F=5.65e-03, iters=6, 1-R²=—, slope=nan, wall=3.6s
+[13:04:09]   τ=0.50: F=5.79e-03, iters=8, 1-R²=—, slope=nan, wall=5.4s
+[13:04:09]   ladder elapsed: 408s
