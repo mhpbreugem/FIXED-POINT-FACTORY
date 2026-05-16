@@ -598,12 +598,11 @@ def newton_polish_nb(mu_field, gamma, tau, max_iter=30, tol=1e-12,
                     break
                 alpha *= 0.5
             if not accepted:
-                mu_field.mu_vals = mu_old
+                # All line-search trials failed — take the full step anyway
+                mu_field.mu_vals = np.clip(mu_old + delta, 1e-12, 1 - 1e-12)
                 mu_field._rebuild_row_interp()
-        if not accepted:
-            mu_field.mu_vals = np.clip(mu_field.mu_vals + delta, 1e-12, 1 - 1e-12)
-            mu_field._rebuild_row_interp()
         else:
+            # No line search: just take the full step
             mu_field.mu_vals = np.clip(mu_field.mu_vals + delta, 1e-12, 1 - 1e-12)
             mu_field._rebuild_row_interp()
 
