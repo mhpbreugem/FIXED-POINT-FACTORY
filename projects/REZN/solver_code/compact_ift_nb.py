@@ -124,66 +124,28 @@ def _f_demand(xi, target, p, gamma, xi_full, mu_coeffs):
 
 @nb.njit(cache=True, fastmath=True)
 def _bisect_xi3(target, p, gamma, xi_full, mu_coeffs, eps, max_iter, xtol):
-    """Brent's root-finding method. Returns NaN if no sign change in bracket.
-
-    Parameters
-    ----------
-    target  : value of x_crra(mu, p) we want to match
-    eps     : interior bracket clearance from ±1
-    max_iter, xtol : stopping criteria
-    """
-    a = -1.0 + eps
-    b =  1.0 - eps
-    fa = _f_demand(a, target, p, gamma, xi_full, mu_coeffs)
-    fb = _f_demand(b, target, p, gamma, xi_full, mu_coeffs)
-    if fa * fb > 0.0:
+    """Simple bisection. Brent's method broke convergence at small-G test cases
+    because of the underlying PCHIP non-strict-monotonicity. Plain bisection
+    always converges to the same root that the original (pure-Python) code
+    finds via scipy.brentq's internal bisection fallback."""
+    lo = -1.0 + eps
+    hi =  1.0 - eps
+    f_lo = _f_demand(lo, target, p, gamma, xi_full, mu_coeffs)
+    f_hi = _f_demand(hi, target, p, gamma, xi_full, mu_coeffs)
+    if f_lo * f_hi > 0.0:
         return np.nan
-    if abs(fa) < abs(fb):
-        a, b = b, a
-        fa, fb = fb, fa
-    c = a; fc = fa
-    d = b - a
-    e = d
-    EPS = 2.220446049250313e-16   # float64 machine eps
     for _ in range(max_iter):
-        if (fb > 0.0 and fc > 0.0) or (fb < 0.0 and fc < 0.0):
-            c = a; fc = fa
-            d = b - a; e = d
-        if abs(fc) < abs(fb):
-            a = b; b = c; c = a
-            fa = fb; fb = fc; fc = fa
-        tol1 = 2.0 * EPS * abs(b) + 0.5 * xtol
-        xm = 0.5 * (c - b)
-        if abs(xm) <= tol1 or fb == 0.0:
-            return b
-        if abs(e) >= tol1 and abs(fa) > abs(fb):
-            s = fb / fa
-            if a == c:
-                p_ = 2.0 * xm * s
-                q_ = 1.0 - s
-            else:
-                q_ = fa / fc
-                r_ = fb / fc
-                p_ = s * (2.0 * xm * q_ * (q_ - r_) - (b - a) * (r_ - 1.0))
-                q_ = (q_ - 1.0) * (r_ - 1.0) * (s - 1.0)
-            if p_ > 0.0:
-                q_ = -q_
-            p_ = abs(p_)
-            min1 = 3.0 * xm * q_ - abs(tol1 * q_)
-            min2 = abs(e * q_)
-            if 2.0 * p_ < (min1 if min1 < min2 else min2):
-                e = d; d = p_ / q_
-            else:
-                d = xm; e = d
+        mid = 0.5 * (lo + hi)
+        f_mid = _f_demand(mid, target, p, gamma, xi_full, mu_coeffs)
+        if abs(f_mid) < xtol:
+            return mid
+        if f_lo * f_mid < 0.0:
+            hi = mid; f_hi = f_mid
         else:
-            d = xm; e = d
-        a = b; fa = fb
-        if abs(d) > tol1:
-            b += d
-        else:
-            b += tol1 if xm > 0.0 else -tol1
-        fb = _f_demand(b, target, p, gamma, xi_full, mu_coeffs)
-    return b
+            lo = mid; f_lo = f_mid
+        if hi - lo < xtol:
+            return 0.5 * (lo + hi)
+    return 0.5 * (lo + hi)
 
 
 # =============================================================================
