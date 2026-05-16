@@ -81,3 +81,21 @@
 [12:54:38]   committed + pushed: τ-ladder p357: τ→1.20
 [12:54:45]   τ=1.19: F=9.19e-04, iters=2, 1-R²=0.7813, slope=0.062, wall=1.5s
 [12:55:07]   τ=1.09: F=3.04e-04, iters=2, 1-R²=0.8272, slope=0.050, wall=1.5s
+[claude/study-fixed-point-economics-y12PB bfebdde] τ-ladder p357: τ→1.00
+ 8 files changed, 211 insertions(+), 1 deletion(-)
+ create mode 100644 projects/REZN/checkpoints/tau_ladder/mu_p357_tau1.09.npz
+ create mode 100644 projects/REZN/checkpoints/tau_ladder/mu_p357_tau1.19.npz
+[12:55:23]   committed + pushed: τ-ladder p357: τ→1.00
+[12:55:30]   τ=0.99: F=4.42e-04, iters=2, 1-R²=0.8682, slope=0.038, wall=1.5s
+[12:55:42]   τ=0.91: F=1.09e-03, iters=2, 1-R²=—, slope=nan, wall=1.5s
+[12:55:44]   τ=0.90: F=1.10e-03, iters=1, 1-R²=—, slope=nan, wall=1.2s
+[12:55:46]   τ=0.89: F=1.11e-03, iters=2, 1-R²=—, slope=nan, wall=2.2s
+[12:55:47]   τ=0.88: F=1.35e-03, iters=2, 1-R²=—, slope=nan, wall=1.5s
+[12:55:49]   τ=0.87: F=1.35e-03, iters=1, 1-R²=—, slope=nan, wall=1.2s
+[12:55:50]   τ=0.86: F=1.36e-03, iters=1, 1-R²=—, slope=nan, wall=1.2s
+[12:55:51]   τ=0.85: F=1.54e-03, iters=2, 1-R²=—, slope=nan, wall=1.5s
+[12:55:53]   τ=0.84: F=1.54e-03, iters=1, 1-R²=—, slope=nan, wall=1.3s
+[12:55:54]   τ=0.83: F=1.95e-03, iters=2, 1-R²=—, slope=nan, wall=1.5s
+[12:55:55]   τ=0.82: F=1.95e-03, iters=1, 1-R²=—, slope=nan, wall=1.2s
+[12:55:56]   τ=0.81: F=1.96e-03, iters=1, 1-R²=—, slope=nan, wall=1.2s
+[12:55:58]   τ=0.80: F=1.96e-03, iters=1, 1-R²=—, slope=nan, wall=1.4s
