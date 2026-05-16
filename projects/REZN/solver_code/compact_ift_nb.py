@@ -551,6 +551,66 @@ def newton_polish_nb_adaptive(mu_field, gamma, tau, max_iter=40, tol=1e-12,
     return mu_field, history
 
 
+def newton_polish_nb_symJ(mu_field, gamma, tau, max_iter=50, tol=1e-12,
+                            lam_init=1e-4, lam_min=1e-12, lam_max=1e4,
+                            symmetrize_step=True, verbose=True):
+    """Levenberg-Marquardt Newton with the Jacobian SYMMETRIZED under
+    transposition: J ← (J + J^T)/2 before the linear solve. The true
+    continuous Jacobian is self-adjoint in the ex-ante density weight;
+    the discrete J's antisymmetric part is quadrature noise. Killing it
+    may remove a null mode that's blocking convergence at Gp ≥ 4.
+    """
+    G, Gp = mu_field.G, mu_field.Gp
+    n = G * Gp
+    history = []
+    lam = lam_init
+
+    for it in range(max_iter):
+        row_coeffs, row_basis_coeffs, xi_basis_coeffs, xi_full, anchor_vals, n_anchor_left = build_pchip_pack(mu_field)
+        F, J4 = assemble_F_and_J(
+            mu_field.xi_grid, mu_field.p_grids, mu_field.mu_vals,
+            tau, gamma, xi_full, row_coeffs, row_basis_coeffs,
+            xi_basis_coeffs, anchor_vals, n_anchor_left,
+        )
+        F_inf = float(np.max(np.abs(F)))
+        history.append(F_inf)
+        if verbose:
+            print(f"  symJ-newton {it+1:3d}  ||F||_∞ = {F_inf:.3e}  λ={lam:.2e}", flush=True)
+        if F_inf < tol:
+            break
+
+        # Symmetrize Jacobian under transposition
+        J_mat = J4.reshape(n, n)
+        J_sym = 0.5 * (J_mat + J_mat.T)
+        # LM equation: (I − J_sym + λI) δ = F
+        A = (1.0 + lam) * np.eye(n) - J_sym
+        try:
+            delta = np.linalg.solve(A, F.ravel()).reshape(G, Gp)
+        except np.linalg.LinAlgError:
+            delta = F.copy()
+
+        mu_old = mu_field.mu_vals.copy()
+        trial = np.clip(mu_old + delta, 1e-12, 1 - 1e-12)
+        if symmetrize_step:
+            from compact_ift import symmetrize_mu as _sym
+            trial = _sym(trial)
+        mu_field.mu_vals = trial
+        mu_field._rebuild_row_interp()
+        rc, rbc, xbc, xf, av, nal = build_pchip_pack(mu_field)
+        F_try, _ = assemble_F_and_J(
+            mu_field.xi_grid, mu_field.p_grids, mu_field.mu_vals,
+            tau, gamma, xf, rc, rbc, xbc, av, nal,
+        )
+        F_try_inf = float(np.max(np.abs(F_try)))
+        if F_try_inf < F_inf:
+            lam = max(lam_min, lam * 0.3)
+        else:
+            mu_field.mu_vals = mu_old
+            mu_field._rebuild_row_interp()
+            lam = min(lam_max, lam * 7.0)
+    return mu_field, history
+
+
 def newton_polish_nb_LM(mu_field, gamma, tau, max_iter=50, tol=1e-12,
                           lam_init=1e-3, lam_min=1e-12, lam_max=1e4,
                           symmetrize_step=True, verbose=True):
