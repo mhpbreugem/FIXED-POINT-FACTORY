@@ -1,9 +1,9 @@
-[13:19:24] === τ-ladder v3 (adaptive LM) started — γ=0.5, G=10 ===
-[13:19:24]   dτ ∈ [1e-07, 0.01], target F<1e-12, τ:2.0→0.5
-[13:19:24] 
-=== ADAPTIVE τ-ladder: p456, p=[0.4, 0.5, 0.6] ===
-[13:19:24]   Anchor solve τ=2.0, target F<1e-12
-[13:19:32]   Anchor: F=4.441e-13, iters=25, λ=1.0e-13
-[13:19:39]   Walking τ from 2.0 to 0.5, dτ_init=0.005, target F<1e-12/step
-[13:20:57]   τ=1.90820 dτ=1.0e-02 F=7.60e-13 iters=23 λ=1.0e-13 attempts=1 1-R²=— slope=nan wall=7.6s
-[13:23:37]   τ=1.83100 dτ=1.6e-03 F=9.61e-13 iters=40 λ=1.0e-13 attempts=1 1-R²=— slope=nan wall=14.3s
+[13:28:52] === τ-ladder v3 (adaptive LM) started — γ=0.5, G=10 ===
+[13:28:52]   dτ ∈ [1e-07, 0.01], target F<1e-12, τ:2.0→0.5
+[13:28:52] 
+=== ADAPTIVE τ-ladder: p357, p=[0.3, 0.5, 0.7] ===
+[13:28:52]   Anchor solve τ=2.0, target F<1e-12
+[13:28:56]   Anchor: F=3.416e-13, iters=21, λ=1.0e-13
+[13:29:03]   Walking τ from 2.0 to 0.5, dτ_init=0.005, target F<1e-12/step
+[13:29:55]   τ=1.90820 dτ=1.0e-02 F=4.28e-13 iters=22 λ=1.0e-13 attempts=1 1-R²=— slope=nan wall=5.1s
+[13:31:42]   τ=1.80820 dτ=1.0e-02 F=9.51e-13 iters=79 λ=1.0e-13 attempts=1 1-R²=— slope=nan wall=19.9s
