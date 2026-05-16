@@ -520,9 +520,16 @@ def newton_polish_nb(mu_field, gamma, tau, max_iter=30, tol=1e-12,
                     break
                 alpha *= 0.5
             if not accepted:
-                mu_field.mu_vals = mu_old
+                # Watchdog: if Armijo failed, take a tiny safe step instead of
+                # falling through to the full Newton step (which can blow up F).
+                alpha_safe = 1e-3
+                trial = np.clip(mu_old + alpha_safe * delta, 1e-12, 1 - 1e-12)
+                mu_field.mu_vals = trial
                 mu_field._rebuild_row_interp()
-        if not accepted:
+                if verbose:
+                    print(f"            line-search FAILED → tiny step α={alpha_safe:.0e}",
+                          flush=True)
+        else:
             mu_field.mu_vals = np.clip(mu_field.mu_vals + delta, 1e-12, 1 - 1e-12)
             mu_field._rebuild_row_interp()
 
