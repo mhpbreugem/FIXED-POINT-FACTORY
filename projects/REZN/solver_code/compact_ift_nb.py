@@ -110,35 +110,80 @@ def _pchip_eval_clip(xq, x, c, lo_bound, hi_bound):
 
 
 # =============================================================================
-# Bisection on (-1, 1) for the contour
+# Root finding on (-1, 1) for the contour — Brent's method
 # =============================================================================
+# Inverse-quadratic + bisection hybrid (van Wijngaarden–Dekker–Brent).
+# Matches scipy.brentq's iteration trajectory to floating-point precision,
+# so the numba and pure-Python Newton iterates agree.
+
+@nb.njit(cache=True, fastmath=True)
+def _f_demand(xi, target, p, gamma, xi_full, mu_coeffs):
+    mu = _pchip_eval_clip(xi, xi_full, mu_coeffs, 1e-12, 1.0 - 1e-12)
+    return _x_crra(mu, p, gamma) - target
+
 
 @nb.njit(cache=True, fastmath=True)
 def _bisect_xi3(target, p, gamma, xi_full, mu_coeffs, eps, max_iter, xtol):
-    """Find ξ ∈ (-1+eps, 1-eps) such that x_crra(mu_pchip(ξ), p) == target."""
-    lo = -1.0 + eps
-    hi =  1.0 - eps
-    mu_lo = _pchip_eval_clip(lo, xi_full, mu_coeffs, 1e-12, 1.0 - 1e-12)
-    mu_hi = _pchip_eval_clip(hi, xi_full, mu_coeffs, 1e-12, 1.0 - 1e-12)
-    f_lo = _x_crra(mu_lo, p, gamma) - target
-    f_hi = _x_crra(mu_hi, p, gamma) - target
-    if f_lo * f_hi > 0.0:
+    """Brent's root-finding method. Returns NaN if no sign change in bracket.
+
+    Parameters
+    ----------
+    target  : value of x_crra(mu, p) we want to match
+    eps     : interior bracket clearance from ±1
+    max_iter, xtol : stopping criteria
+    """
+    a = -1.0 + eps
+    b =  1.0 - eps
+    fa = _f_demand(a, target, p, gamma, xi_full, mu_coeffs)
+    fb = _f_demand(b, target, p, gamma, xi_full, mu_coeffs)
+    if fa * fb > 0.0:
         return np.nan
+    if abs(fa) < abs(fb):
+        a, b = b, a
+        fa, fb = fb, fa
+    c = a; fc = fa
+    d = b - a
+    e = d
+    EPS = 2.220446049250313e-16   # float64 machine eps
     for _ in range(max_iter):
-        mid = 0.5 * (lo + hi)
-        mu_mid = _pchip_eval_clip(mid, xi_full, mu_coeffs, 1e-12, 1.0 - 1e-12)
-        f_mid = _x_crra(mu_mid, p, gamma) - target
-        if abs(f_mid) < xtol:
-            return mid
-        if f_lo * f_mid < 0.0:
-            hi = mid
-            f_hi = f_mid
+        if (fb > 0.0 and fc > 0.0) or (fb < 0.0 and fc < 0.0):
+            c = a; fc = fa
+            d = b - a; e = d
+        if abs(fc) < abs(fb):
+            a = b; b = c; c = a
+            fa = fb; fb = fc; fc = fa
+        tol1 = 2.0 * EPS * abs(b) + 0.5 * xtol
+        xm = 0.5 * (c - b)
+        if abs(xm) <= tol1 or fb == 0.0:
+            return b
+        if abs(e) >= tol1 and abs(fa) > abs(fb):
+            s = fb / fa
+            if a == c:
+                p_ = 2.0 * xm * s
+                q_ = 1.0 - s
+            else:
+                q_ = fa / fc
+                r_ = fb / fc
+                p_ = s * (2.0 * xm * q_ * (q_ - r_) - (b - a) * (r_ - 1.0))
+                q_ = (q_ - 1.0) * (r_ - 1.0) * (s - 1.0)
+            if p_ > 0.0:
+                q_ = -q_
+            p_ = abs(p_)
+            min1 = 3.0 * xm * q_ - abs(tol1 * q_)
+            min2 = abs(e * q_)
+            if 2.0 * p_ < (min1 if min1 < min2 else min2):
+                e = d; d = p_ / q_
+            else:
+                d = xm; e = d
         else:
-            lo = mid
-            f_lo = f_mid
-        if hi - lo < xtol:
-            return 0.5 * (lo + hi)
-    return 0.5 * (lo + hi)
+            d = xm; e = d
+        a = b; fa = fb
+        if abs(d) > tol1:
+            b += d
+        else:
+            b += tol1 if xm > 0.0 else -tol1
+        fb = _f_demand(b, target, p, gamma, xi_full, mu_coeffs)
+    return b
 
 
 # =============================================================================
@@ -471,6 +516,77 @@ def build_pchip_pack(mu_field):
         xi_basis_coeffs[l] = spl.c
 
     return row_coeffs, row_basis_coeffs, xi_basis_coeffs, xi_full, anchor_vals, n_anchor_left
+
+
+def newton_polish_nb_adaptive(mu_field, gamma, tau, max_iter=40, tol=1e-12,
+                               alpha_init=0.5, alpha_min=1e-3, alpha_max=1.0,
+                               symmetrize_step=True, verbose=True):
+    """Damped Newton with ADAPTIVE step size:
+      - α starts at alpha_init (default 0.5)
+      - On accepted descent step: α *= 1.4 (capped at alpha_max)
+      - On step that increases F: α *= 0.5, retry the same direction
+      - On too-many failed shrinks: take the smallest α anyway and continue
+    Combined with the analytic IFT Jacobian + 0↔1 symmetry projection.
+    """
+    G, Gp = mu_field.G, mu_field.Gp
+    n = G * Gp
+    history = []
+    alpha = alpha_init
+
+    for it in range(max_iter):
+        row_coeffs, row_basis_coeffs, xi_basis_coeffs, xi_full, anchor_vals, n_anchor_left = build_pchip_pack(mu_field)
+        F, J4 = assemble_F_and_J(
+            mu_field.xi_grid, mu_field.p_grids, mu_field.mu_vals,
+            tau, gamma, xi_full, row_coeffs, row_basis_coeffs,
+            xi_basis_coeffs, anchor_vals, n_anchor_left,
+        )
+        F_inf = float(np.max(np.abs(F)))
+        history.append(F_inf)
+        if verbose:
+            print(f"  ada-newton {it+1:3d}  ||F||_∞ = {F_inf:.3e}  α={alpha:.3g}", flush=True)
+        if F_inf < tol:
+            break
+
+        A = np.eye(n) - J4.reshape(n, n)
+        try:
+            delta = np.linalg.solve(A, F.ravel()).reshape(G, Gp)
+        except np.linalg.LinAlgError:
+            delta = F.copy()
+
+        # Try damped step with adaptive shrink
+        mu_old = mu_field.mu_vals.copy()
+        accepted = False
+        for shrink in range(8):
+            trial = np.clip(mu_old + alpha * delta, 1e-12, 1 - 1e-12)
+            if symmetrize_step:
+                from compact_ift import symmetrize_mu as _sym
+                trial = _sym(trial)
+            mu_field.mu_vals = trial
+            mu_field._rebuild_row_interp()
+            rc, rbc, xbc, xf, av, nal = build_pchip_pack(mu_field)
+            F_try, _ = assemble_F_and_J(
+                mu_field.xi_grid, mu_field.p_grids, mu_field.mu_vals,
+                tau, gamma, xf, rc, rbc, xbc, av, nal,
+            )
+            F_try_inf = float(np.max(np.abs(F_try)))
+            if F_try_inf < F_inf:                  # any descent is fine
+                accepted = True
+                # On success, gently grow α back up
+                alpha = min(alpha_max, alpha * 1.4)
+                break
+            # Shrink α and retry
+            alpha = max(alpha_min, alpha * 0.5)
+            if alpha == alpha_min:
+                # Last resort: take the smallest step even if F goes up
+                trial = np.clip(mu_old + alpha_min * delta, 1e-12, 1 - 1e-12)
+                if symmetrize_step:
+                    from compact_ift import symmetrize_mu as _sym
+                    trial = _sym(trial)
+                mu_field.mu_vals = trial
+                mu_field._rebuild_row_interp()
+                accepted = True
+                break
+    return mu_field, history
 
 
 def newton_polish_nb(mu_field, gamma, tau, max_iter=30, tol=1e-12,
