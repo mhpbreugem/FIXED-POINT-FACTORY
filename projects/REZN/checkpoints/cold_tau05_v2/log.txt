@@ -268,3 +268,6 @@
 [14:23:16]       Newton end: F=1.130e-03, iters=29
 [14:23:16] 
 >>> half FINAL: F=1.130e-03
+[14:23:18]   committed + pushed: cold τ=0.5 v2 init=half: F=1.13e-03
+[14:23:18] 
+=== ALL DONE ===

@@ -290,3 +290,12 @@
 [14:23:16]       Newton end: F=1.130e-03, iters=29
 [14:23:16] 
 >>> half FINAL: F=1.130e-03
+[claude/study-fixed-point-economics-y12PB 09c546e] cold τ=0.5 v2 init=half: F=1.13e-03
+ 8 files changed, 4178 insertions(+)
+ create mode 100644 projects/REZN/checkpoints/cold_tau05_v2/history_half.json
+ create mode 100644 projects/REZN/checkpoints/cold_tau05_v2/mu_half_after_anderson.npz
+ create mode 100644 projects/REZN/checkpoints/cold_tau05_v2/mu_half_after_newton.npz
+ create mode 100644 projects/REZN/checkpoints/cold_tau05_v2/mu_half_after_picard.npz
+[14:23:18]   committed + pushed: cold τ=0.5 v2 init=half: F=1.13e-03
+[14:23:18] 
+=== ALL DONE ===
