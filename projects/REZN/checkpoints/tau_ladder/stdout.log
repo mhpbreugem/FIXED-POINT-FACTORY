@@ -280,3 +280,11 @@
 [13:04:04]   τ=0.51: F=5.65e-03, iters=6, 1-R²=—, slope=nan, wall=3.6s
 [13:04:09]   τ=0.50: F=5.79e-03, iters=8, 1-R²=—, slope=nan, wall=5.4s
 [13:04:09]   ladder elapsed: 408s
+[claude/study-fixed-point-economics-y12PB 8c2b225] τ-ladder p258 done
+ 9 files changed, 1639 insertions(+), 1 deletion(-)
+ create mode 100644 projects/REZN/checkpoints/tau_ladder/mu_p258_tau0.50.npz
+ create mode 100644 projects/REZN/checkpoints/tau_ladder/mu_p258_tau0.51.npz
+ create mode 100644 projects/REZN/checkpoints/tau_ladder/mu_p258_tau0.59.npz
+[13:04:11]   committed + pushed: τ-ladder p258 done
+[13:04:11] 
+=== ALL DONE ===
