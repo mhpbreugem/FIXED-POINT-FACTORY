@@ -167,3 +167,14 @@
 [13:01:56]   committed + pushed: τ-ladder p258: τ→1.20
 [13:01:58]   τ=1.19: F=1.06e-03, iters=2, 1-R²=—, slope=nan, wall=1.4s
 [13:02:18]   τ=1.09: F=3.92e-04, iters=2, 1-R²=0.3100, slope=0.379, wall=1.2s
+[13:02:32]   committed + pushed: τ-ladder p258: τ→1.00
+[13:02:40]   τ=0.99: F=3.10e-04, iters=3, 1-R²=0.3705, slope=0.351, wall=1.6s
+[13:02:59]   τ=0.89: F=9.19e-04, iters=2, 1-R²=0.3840, slope=0.347, wall=1.2s
+[13:03:01]   τ=0.87: F=1.04e-03, iters=2, 1-R²=—, slope=nan, wall=1.2s
+[13:03:02]   τ=0.86: F=1.04e-03, iters=1, 1-R²=—, slope=nan, wall=1.1s
+[13:03:03]   τ=0.85: F=1.18e-03, iters=2, 1-R²=—, slope=nan, wall=1.2s
+[13:03:04]   τ=0.84: F=1.18e-03, iters=1, 1-R²=—, slope=nan, wall=1.0s
+[13:03:06]   τ=0.83: F=1.23e-03, iters=2, 1-R²=—, slope=nan, wall=1.5s
+[13:03:07]   τ=0.82: F=1.41e-03, iters=2, 1-R²=—, slope=nan, wall=1.2s
+[13:03:08]   τ=0.81: F=1.42e-03, iters=1, 1-R²=—, slope=nan, wall=1.1s
+[13:03:09]   τ=0.80: F=1.42e-03, iters=1, 1-R²=—, slope=nan, wall=1.1s
