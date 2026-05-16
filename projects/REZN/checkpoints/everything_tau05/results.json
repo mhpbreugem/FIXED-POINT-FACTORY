@@ -1,0 +1,110 @@
+[
+ {
+  "p_grid": "Gp1",
+  "init": "NL",
+  "solver": "lm-newton",
+  "F": NaN,
+  "iters": 0,
+  "wall": 0.000224574000640132,
+  "is_best": false
+ },
+ {
+  "p_grid": "Gp1",
+  "init": "NL",
+  "solver": "trf",
+  "F": NaN,
+  "iters": 0,
+  "wall": 5.927399979555048e-05,
+  "is_best": false
+ },
+ {
+  "p_grid": "Gp1",
+  "init": "NL",
+  "solver": "krylov",
+  "F": NaN,
+  "iters": 0,
+  "wall": 5.264100036583841e-05,
+  "is_best": false
+ },
+ {
+  "p_grid": "Gp1",
+  "init": "NL",
+  "solver": "broyden1",
+  "F": NaN,
+  "iters": 0,
+  "wall": 4.146999981458066e-05,
+  "is_best": false
+ },
+ {
+  "p_grid": "Gp1",
+  "init": "NL",
+  "solver": "anderson",
+  "F": NaN,
+  "iters": 0,
+  "wall": 3.716099945449969e-05,
+  "is_best": false
+ },
+ {
+  "p_grid": "Gp1",
+  "init": "NL",
+  "solver": "df-sane",
+  "F": NaN,
+  "iters": 0,
+  "wall": 3.802499941230053e-05,
+  "is_best": false
+ },
+ {
+  "p_grid": "Gp1",
+  "init": "NL",
+  "solver": "long-picard",
+  "F": NaN,
+  "iters": 0,
+  "wall": 3.485300021566218e-05,
+  "is_best": false
+ },
+ {
+  "p_grid": "Gp1",
+  "init": "half",
+  "solver": "lm-newton",
+  "F": NaN,
+  "iters": 0,
+  "wall": 6.258799930947134e-05,
+  "is_best": false
+ },
+ {
+  "p_grid": "Gp1",
+  "init": "half",
+  "solver": "trf",
+  "F": NaN,
+  "iters": 0,
+  "wall": 3.9863999518274795e-05,
+  "is_best": false
+ },
+ {
+  "p_grid": "Gp1",
+  "init": "half",
+  "solver": "krylov",
+  "F": NaN,
+  "iters": 0,
+  "wall": 2.980699991894653e-05,
+  "is_best": false
+ },
+ {
+  "p_grid": "Gp1",
+  "init": "half",
+  "solver": "broyden1",
+  "F": NaN,
+  "iters": 0,
+  "wall": 2.3440000404661987e-05,
+  "is_best": false
+ },
+ {
+  "p_grid": "Gp1",
+  "init": "half",
+  "solver": "anderson",
+  "F": NaN,
+  "iters": 0,
+  "wall": 2.3886999770184048e-05,
+  "is_best": false
+ }
+]
