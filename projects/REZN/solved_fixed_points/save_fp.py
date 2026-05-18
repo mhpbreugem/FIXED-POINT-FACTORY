@@ -28,11 +28,13 @@ def save_fixed_point(mu_vals, xi_grid, p_grid, *,
                       gamma, tau, A_logit, F_final, newton_iters,
                       tol=1e-12, solver_interp="logit_logit_pchip",
                       wall_seconds=None, script="", note="",
-                      filename=None):
+                      filename=None, subdir=None):
     G, Gp = mu_vals.shape
     if filename is None:
         filename = f"g{gamma:.1f}_t{tau:.4f}_A{A_logit:.2f}_G{G}_Gp{Gp}.npz"
-    out_path = os.path.join(THIS_DIR, filename)
+    base = THIS_DIR if subdir is None else os.path.join(THIS_DIR, subdir)
+    os.makedirs(base, exist_ok=True)
+    out_path = os.path.join(base, filename)
     np.savez(
         out_path,
         mu_vals=mu_vals.astype(np.float64),
