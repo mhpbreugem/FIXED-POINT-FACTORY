@@ -1,0 +1,301 @@
+[13:52:53] === Cold-start direct τ=0.5, γ=0.5, G=10, Gp=3 ===
+[13:52:53]     p_grid=[np.float64(0.3), np.float64(0.5), np.float64(0.7)], target F<1e-12
+[13:52:53] 
+============================================================
+[13:52:53] INIT = cara
+[13:52:53] ============================================================
+[13:52:53] --- PHASE 1: Picard (α=0.05) ---
+[13:52:53]       Picard it=0 F=6.096e-01 α=0.05
+[13:53:17]       Picard it=200 F=1.372e-01 α=0.05
+[13:53:41]       Picard it=400 F=3.083e-01 α=0.05
+[13:54:05]       Picard it=600 F=1.538e-01 α=0.05
+[13:54:29]       Picard it=800 F=2.851e-01 α=0.05
+[13:54:53]       Picard it=1000 F=3.370e-01 α=0.05
+[13:55:18]       Picard it=1200 F=1.270e-01 α=0.05
+[13:55:42]       Picard it=1400 F=2.179e-01 α=0.05
+[13:56:06]       Picard it=1600 F=2.094e-01 α=0.05
+[13:56:30]       Picard it=1800 F=1.489e-01 α=0.05
+[13:56:54]       Picard end: F=2.892e-01, iters=2000
+[13:56:54] --- PHASE 2: Anderson (M=10, β=0.7) ---
+[13:56:54]       Anderson start: F=1.429e-01
+[13:56:55]       Anderson it=1 F=3.548e-01
+[13:57:01]       Anderson it=51 F=5.135e-01
+[13:57:07]       Anderson it=101 F=4.089e-01
+[13:57:13]       Anderson it=151 F=1.374e-01
+[13:57:19]       Anderson it=201 F=2.523e-01
+[13:57:25]       Anderson it=251 F=1.503e-01
+[13:57:32]       Anderson it=301 F=2.813e-01
+[13:57:38]       Anderson it=351 F=1.526e-01
+[13:57:44]       Anderson it=401 F=1.586e-01
+[13:57:50]       Anderson it=451 F=1.757e-01
+[13:57:56]       Anderson it=501 F=3.276e-01
+[13:58:03]       Anderson it=551 F=1.140e-01
+[13:58:09]       Anderson it=601 F=3.529e-01
+[13:58:16]       Anderson it=651 F=1.826e-01
+[13:58:22]       Anderson it=701 F=8.914e-02
+[13:58:28]       Anderson it=751 F=1.291e-01
+[13:58:34]       Anderson it=801 F=5.051e-01
+[13:58:40]       Anderson it=851 F=1.094e-01
+[13:58:46]       Anderson it=901 F=9.649e-02
+[13:58:53]       Anderson it=951 F=2.607e-01
+[13:58:59]       Anderson it=1001 F=4.722e-01
+[13:59:05]       Anderson it=1051 F=1.189e-01
+[13:59:11]       Anderson it=1101 F=3.687e-01
+[13:59:17]       Anderson it=1151 F=1.196e-01
+[13:59:23]       Anderson it=1201 F=1.650e-01
+[13:59:29]       Anderson it=1251 F=1.929e-01
+[13:59:36]       Anderson it=1301 F=5.620e-02
+[13:59:42]       Anderson it=1351 F=7.777e-02
+[13:59:48]       Anderson it=1401 F=6.838e-02
+[13:59:54]       Anderson it=1451 F=1.447e-01
+[14:00:00]       Anderson it=1501 F=1.998e-01
+[14:00:07]       Anderson it=1551 F=7.836e-02
+[14:00:13]       Anderson it=1601 F=1.575e-01
+[14:00:19]       Anderson it=1651 F=1.997e-01
+[14:00:25]       Anderson it=1701 F=2.164e-01
+[14:00:31]       Anderson it=1751 F=2.982e-01
+[14:00:38]       Anderson it=1801 F=1.752e-01
+[14:00:44]       Anderson it=1851 F=1.109e-01
+[14:00:50]       Anderson it=1901 F=1.058e-01
+[14:00:56]       Anderson it=1951 F=1.507e-01
+[14:01:03]       Anderson end: F=8.811e-02, iters=2001
+[14:01:03] --- PHASE 3: LM-Newton ---
+[14:01:03]       Newton it=1 F=8.811e-02 λ=1.0e-10
+[14:01:26]       Newton it=21 F=1.485e-02 λ=1.6e-03
+[14:01:46]       Newton it=41 F=4.507e-03 λ=1.9e+01
+[14:02:04]       Newton λ saturated, breaking
+[14:02:04]       Newton end: F=4.504e-03, iters=50
+[14:02:04] 
+>>> cara FINAL: F=4.504e-03
+[claude/study-fixed-point-economics-y12PB d63d60f] cold τ=0.5 v2 init=cara: F=4.50e-03
+ 8 files changed, 4197 insertions(+)
+ create mode 100644 projects/REZN/checkpoints/cold_tau05_v2/cold_tau05_v2.pdf
+ create mode 100644 projects/REZN/checkpoints/cold_tau05_v2/cold_tau05_v2.png
+ create mode 100644 projects/REZN/checkpoints/cold_tau05_v2/history_cara.json
+ create mode 100644 projects/REZN/checkpoints/cold_tau05_v2/log.txt
+ create mode 100644 projects/REZN/checkpoints/cold_tau05_v2/mu_cara_after_anderson.npz
+ create mode 100644 projects/REZN/checkpoints/cold_tau05_v2/mu_cara_after_newton.npz
+ create mode 100644 projects/REZN/checkpoints/cold_tau05_v2/mu_cara_after_picard.npz
+ create mode 100644 projects/REZN/checkpoints/cold_tau05_v2/stdout.log
+[14:02:06]   committed + pushed: cold τ=0.5 v2 init=cara: F=4.50e-03
+[14:02:06] 
+============================================================
+[14:02:06] INIT = cara_half
+[14:02:06] ============================================================
+[14:02:06] --- PHASE 1: Picard (α=0.05) ---
+[14:02:06]       Picard it=0 F=4.966e-01 α=0.05
+[14:02:28]       Picard it=200 F=2.336e-01 α=0.05
+[14:02:50]       Picard it=400 F=2.336e-01 α=0.05
+[14:03:12]       Picard it=600 F=2.336e-01 α=0.05
+[14:03:35]       Picard it=800 F=2.336e-01 α=0.05
+[14:03:57]       Picard it=1000 F=2.336e-01 α=0.05
+[14:04:19]       Picard it=1200 F=2.336e-01 α=0.05
+[14:04:41]       Picard it=1400 F=2.336e-01 α=0.05
+[14:05:04]       Picard it=1600 F=3.683e-01 α=0.05
+[14:05:26]       Picard it=1800 F=2.336e-01 α=0.05
+[14:05:49]       Picard end: F=2.336e-01, iters=2000
+[14:05:49] --- PHASE 2: Anderson (M=10, β=0.7) ---
+[14:05:49]       Anderson start: F=2.336e-01
+[14:05:49]       Anderson it=1 F=7.763e-01
+[14:05:55]       Anderson it=51 F=1.027e-01
+[14:06:00]       Anderson it=101 F=1.083e-01
+[14:06:06]       Anderson it=151 F=3.691e-02
+[14:06:12]       Anderson it=201 F=5.474e-01
+[14:06:18]       Anderson it=251 F=1.087e-01
+[14:06:23]       Anderson it=301 F=2.017e-01
+[14:06:29]       Anderson it=351 F=1.124e-01
+[14:06:34]       Anderson it=401 F=3.603e-01
+[14:06:40]       Anderson it=451 F=2.969e-01
+[14:06:46]       Anderson it=501 F=5.543e-02
+[14:06:52]       Anderson it=551 F=1.412e-01
+[14:06:57]       Anderson it=601 F=2.371e-01
+[14:07:03]       Anderson it=651 F=1.473e-01
+[14:07:09]       Anderson it=701 F=2.013e-01
+[14:07:15]       Anderson it=751 F=1.208e-01
+[14:07:20]       Anderson it=801 F=6.764e-02
+[14:07:26]       Anderson it=851 F=4.803e-01
+[14:07:32]       Anderson it=901 F=1.830e-01
+[14:07:38]       Anderson it=951 F=3.493e-01
+[14:07:44]       Anderson it=1001 F=1.274e-01
+[14:07:49]       Anderson it=1051 F=1.005e-01
+[14:07:55]       Anderson it=1101 F=1.172e-01
+[14:08:01]       Anderson it=1151 F=2.827e-01
+[14:08:07]       Anderson it=1201 F=1.152e-01
+[14:08:13]       Anderson it=1251 F=1.468e-01
+[14:08:18]       Anderson it=1301 F=1.592e-01
+[14:08:24]       Anderson it=1351 F=3.231e-01
+[14:08:30]       Anderson it=1401 F=5.252e-02
+[14:08:35]       Anderson it=1451 F=7.771e-02
+[14:08:41]       Anderson it=1501 F=7.475e-02
+[14:08:46]       Anderson it=1551 F=5.351e-02
+[14:08:52]       Anderson it=1601 F=3.021e-01
+[14:08:58]       Anderson it=1651 F=1.962e-01
+[14:09:03]       Anderson it=1701 F=8.224e-02
+[14:09:09]       Anderson it=1751 F=1.785e-01
+[14:09:15]       Anderson it=1801 F=6.026e-02
+[14:09:21]       Anderson it=1851 F=5.039e-02
+[14:09:26]       Anderson it=1901 F=1.361e-01
+[14:09:32]       Anderson it=1951 F=2.902e-01
+[14:09:38]       Anderson end: F=1.457e-01, iters=2001
+[14:09:38] --- PHASE 3: LM-Newton ---
+[14:09:38]       Newton it=1 F=1.457e-01 λ=1.0e-10
+[14:10:00]       Newton it=21 F=2.883e-03 λ=2.0e-01
+[14:10:22]       Newton it=41 F=1.952e-03 λ=2.4e+02
+[14:10:24]       Newton λ saturated, breaking
+[14:10:24]       Newton end: F=1.952e-03, iters=41
+[14:10:24] 
+>>> cara_half FINAL: F=1.952e-03
+[claude/study-fixed-point-economics-y12PB 1fecf51] cold τ=0.5 v2 init=cara_half: F=1.95e-03
+ 8 files changed, 4196 insertions(+)
+ create mode 100644 projects/REZN/checkpoints/cold_tau05_v2/history_cara_half.json
+ create mode 100644 projects/REZN/checkpoints/cold_tau05_v2/mu_cara_half_after_anderson.npz
+ create mode 100644 projects/REZN/checkpoints/cold_tau05_v2/mu_cara_half_after_newton.npz
+ create mode 100644 projects/REZN/checkpoints/cold_tau05_v2/mu_cara_half_after_picard.npz
+[14:10:26]   committed + pushed: cold τ=0.5 v2 init=cara_half: F=1.95e-03
+[14:10:26] 
+============================================================
+[14:10:26] INIT = NL
+[14:10:26] ============================================================
+[14:10:26] --- PHASE 1: Picard (α=0.05) ---
+[14:10:26]       Picard it=0 F=6.418e-01 α=0.05
+[14:10:43]       Picard it=200 F=1.077e-01 α=0.05
+[14:11:01]       Picard it=400 F=3.023e-01 α=0.05
+[14:11:19]       Picard it=600 F=2.919e-02 α=0.05
+[14:11:36]       Picard it=800 F=2.162e-01 α=0.05
+[14:11:54]       Picard it=1000 F=1.365e-02 α=0.05
+[14:12:11]       Picard it=1200 F=1.357e-02 α=0.05
+[14:12:29]       Picard it=1400 F=2.651e-02 α=0.05
+[14:12:46]       Picard it=1600 F=1.945e-01 α=0.05
+[14:13:04]       Picard it=1800 F=1.032e-01 α=0.05
+[14:13:21]       Picard end: F=1.951e-02, iters=2000
+[14:13:21] --- PHASE 2: Anderson (M=10, β=0.7) ---
+[14:13:21]       Anderson start: F=4.007e-02
+[14:13:21]       Anderson it=1 F=4.925e-01
+[14:13:26]       Anderson it=51 F=2.200e-02
+[14:13:31]       Anderson it=101 F=8.540e-03
+[14:13:35]       Anderson it=151 F=2.048e-02
+[14:13:40]       Anderson it=201 F=5.005e-01
+[14:13:44]       Anderson it=251 F=7.495e-02
+[14:13:49]       Anderson it=301 F=3.676e-01
+[14:13:53]       Anderson it=351 F=2.349e-02
+[14:13:58]       Anderson it=401 F=2.022e-01
+[14:14:02]       Anderson it=451 F=2.740e-02
+[14:14:07]       Anderson it=501 F=7.201e-02
+[14:14:12]       Anderson it=551 F=3.054e-02
+[14:14:16]       Anderson it=601 F=5.627e-01
+[14:14:20]       Anderson it=651 F=1.149e-01
+[14:14:25]       Anderson it=701 F=2.444e-01
+[14:14:29]       Anderson it=751 F=4.968e-02
+[14:14:34]       Anderson it=801 F=1.361e-02
+[14:14:38]       Anderson it=851 F=1.196e-02
+[14:14:43]       Anderson it=901 F=4.962e-01
+[14:14:48]       Anderson it=951 F=4.980e-01
+[14:14:52]       Anderson it=1001 F=4.178e-02
+[14:14:57]       Anderson it=1051 F=2.513e-02
+[14:15:01]       Anderson it=1101 F=3.352e-01
+[14:15:06]       Anderson it=1151 F=9.308e-02
+[14:15:10]       Anderson it=1201 F=1.547e-02
+[14:15:14]       Anderson it=1251 F=4.795e-01
+[14:15:19]       Anderson it=1301 F=4.421e-03
+[14:15:23]       Anderson it=1351 F=4.285e-02
+[14:15:28]       Anderson it=1401 F=1.528e-01
+[14:15:33]       Anderson it=1451 F=5.018e-01
+[14:15:37]       Anderson it=1501 F=5.203e-01
+[14:15:42]       Anderson it=1551 F=3.666e-03
+[14:15:46]       Anderson it=1601 F=3.014e-02
+[14:15:51]       Anderson it=1651 F=2.371e-01
+[14:15:55]       Anderson it=1701 F=4.985e-01
+[14:16:00]       Anderson it=1751 F=3.422e-01
+[14:16:04]       Anderson it=1801 F=2.368e-02
+[14:16:09]       Anderson it=1851 F=3.703e-03
+[14:16:14]       Anderson it=1901 F=4.191e-03
+[14:16:18]       Anderson it=1951 F=2.055e-03
+[14:16:23]       Anderson end: F=1.562e-02, iters=2001
+[14:16:23] --- PHASE 3: LM-Newton ---
+[14:16:23]       Newton it=1 F=1.562e-02 λ=1.0e-10
+[14:16:45]       Newton λ saturated, breaking
+[14:16:45]       Newton end: F=2.208e-03, iters=20
+[14:16:45] 
+>>> NL FINAL: F=2.208e-03
+[claude/study-fixed-point-economics-y12PB 6817764] cold τ=0.5 v2 init=NL: F=2.21e-03
+ 8 files changed, 4167 insertions(+)
+ create mode 100644 projects/REZN/checkpoints/cold_tau05_v2/history_NL.json
+ create mode 100644 projects/REZN/checkpoints/cold_tau05_v2/mu_NL_after_anderson.npz
+ create mode 100644 projects/REZN/checkpoints/cold_tau05_v2/mu_NL_after_newton.npz
+ create mode 100644 projects/REZN/checkpoints/cold_tau05_v2/mu_NL_after_picard.npz
+[14:16:47]   committed + pushed: cold τ=0.5 v2 init=NL: F=2.21e-03
+[14:16:47] 
+============================================================
+[14:16:47] INIT = half
+[14:16:47] ============================================================
+[14:16:47] --- PHASE 1: Picard (α=0.05) ---
+[14:16:47]       Picard it=0 F=4.400e-01 α=0.05
+[14:17:04]       Picard it=200 F=8.426e-02 α=0.05
+[14:17:22]       Picard it=400 F=2.308e-02 α=0.05
+[14:17:39]       Picard it=600 F=2.144e-02 α=0.05
+[14:17:57]       Picard it=800 F=1.575e-02 α=0.05
+[14:18:15]       Picard it=1000 F=1.478e-02 α=0.05
+[14:18:33]       Picard it=1200 F=2.268e-02 α=0.05
+[14:18:50]       Picard it=1400 F=2.319e-02 α=0.05
+[14:19:09]       Picard it=1600 F=2.377e-02 α=0.05
+[14:19:27]       Picard it=1800 F=1.053e-01 α=0.05
+[14:19:45]       Picard end: F=2.101e-02, iters=2000
+[14:19:45] --- PHASE 2: Anderson (M=10, β=0.7) ---
+[14:19:45]       Anderson start: F=3.283e-02
+[14:19:45]       Anderson it=1 F=4.423e-01
+[14:19:49]       Anderson it=51 F=4.498e-01
+[14:19:53]       Anderson it=101 F=2.728e-01
+[14:19:57]       Anderson it=151 F=2.366e-01
+[14:20:02]       Anderson it=201 F=1.429e-02
+[14:20:06]       Anderson it=251 F=4.767e-02
+[14:20:11]       Anderson it=301 F=1.573e-02
+[14:20:16]       Anderson it=351 F=1.222e-02
+[14:20:20]       Anderson it=401 F=8.368e-04
+[14:20:25]       Anderson it=451 F=3.307e-03
+[14:20:30]       Anderson it=501 F=3.821e-02
+[14:20:34]       Anderson it=551 F=3.060e-01
+[14:20:39]       Anderson it=601 F=3.383e-02
+[14:20:43]       Anderson it=651 F=1.459e-02
+[14:20:48]       Anderson it=701 F=5.092e-02
+[14:20:53]       Anderson it=751 F=4.966e-01
+[14:20:58]       Anderson it=801 F=1.050e-01
+[14:21:02]       Anderson it=851 F=6.963e-03
+[14:21:07]       Anderson it=901 F=1.926e-01
+[14:21:11]       Anderson it=951 F=2.023e-02
+[14:21:16]       Anderson it=1001 F=1.069e-02
+[14:21:21]       Anderson it=1051 F=1.641e-03
+[14:21:25]       Anderson it=1101 F=4.984e-01
+[14:21:30]       Anderson it=1151 F=1.183e-02
+[14:21:35]       Anderson it=1201 F=7.693e-02
+[14:21:39]       Anderson it=1251 F=1.231e-01
+[14:21:44]       Anderson it=1301 F=2.627e-03
+[14:21:48]       Anderson it=1351 F=4.986e-01
+[14:21:53]       Anderson it=1401 F=5.115e-01
+[14:21:57]       Anderson it=1451 F=2.927e-03
+[14:22:02]       Anderson it=1501 F=2.869e-03
+[14:22:07]       Anderson it=1551 F=8.102e-02
+[14:22:11]       Anderson it=1601 F=1.691e-02
+[14:22:16]       Anderson it=1651 F=3.946e-03
+[14:22:20]       Anderson it=1701 F=5.230e-02
+[14:22:25]       Anderson it=1751 F=5.817e-03
+[14:22:30]       Anderson it=1801 F=3.970e-03
+[14:22:35]       Anderson it=1851 F=7.956e-03
+[14:22:39]       Anderson it=1901 F=1.467e-01
+[14:22:44]       Anderson it=1951 F=2.733e-02
+[14:22:48]       Anderson end: F=9.426e-02, iters=2001
+[14:22:48] --- PHASE 3: LM-Newton ---
+[14:22:48]       Newton it=1 F=9.426e-02 λ=1.0e-10
+[14:23:08]       Newton it=21 F=2.576e-03 λ=6.1e+00
+[14:23:16]       Newton λ saturated, breaking
+[14:23:16]       Newton end: F=1.130e-03, iters=29
+[14:23:16] 
+>>> half FINAL: F=1.130e-03
+[claude/study-fixed-point-economics-y12PB 09c546e] cold τ=0.5 v2 init=half: F=1.13e-03
+ 8 files changed, 4178 insertions(+)
+ create mode 100644 projects/REZN/checkpoints/cold_tau05_v2/history_half.json
+ create mode 100644 projects/REZN/checkpoints/cold_tau05_v2/mu_half_after_anderson.npz
+ create mode 100644 projects/REZN/checkpoints/cold_tau05_v2/mu_half_after_newton.npz
+ create mode 100644 projects/REZN/checkpoints/cold_tau05_v2/mu_half_after_picard.npz
+[14:23:18]   committed + pushed: cold τ=0.5 v2 init=half: F=1.13e-03
+[14:23:18] 
+=== ALL DONE ===
