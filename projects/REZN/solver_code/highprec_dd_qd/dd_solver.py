@@ -15,7 +15,7 @@ from numba import njit, prange
 from scipy.interpolate import PchipInterpolator
 import dd_ops as D
 from dd_ops import (dd_add, dd_mul, dd_div, dd_exp, dd_log, dd_sqrt,
-                    dd_atanh, dd_sigmoid, dd_logit)
+                    dd_atanh, dd_sigmoid, dd_logit, two_sum)
 
 CACHE = "/tmp/fp_cache"
 HP_DIR = "/home/user/FIXED-POINT-FACTORY/projects/REZN/solved_fixed_points/highprec_dd"
@@ -37,36 +37,48 @@ w_trap_f = np.full(G, dxi); w_trap_f[0] *= 0.5; w_trap_f[-1] *= 0.5
 
 
 @njit
-def _pchip_slopes(xh, yh, yl, dh, dl):
-    n = xh.shape[0]
+def _pchip_slopes(xhh, xhl, yh, yl, dh, dl):
+    n = xhh.shape[0]
     for k in range(1, n-1):
-        h0 = xh[k]-xh[k-1]; h1 = xh[k+1]-xh[k]
+        h0h, h0l = dd_add(xhh[k], xhl[k], -xhh[k-1], -xhl[k-1])     # DD knot spacing
+        h1h, h1l = dd_add(xhh[k+1], xhl[k+1], -xhh[k], -xhl[k])
         a_h, a_l = dd_add(yh[k], yl[k], -yh[k-1], -yl[k-1])
-        d0h, d0l = dd_div(a_h, a_l, h0, 0.0)
+        d0h, d0l = dd_div(a_h, a_l, h0h, h0l)
         b_h, b_l = dd_add(yh[k+1], yl[k+1], -yh[k], -yl[k])
-        d1h, d1l = dd_div(b_h, b_l, h1, 0.0)
+        d1h, d1l = dd_div(b_h, b_l, h1h, h1l)
         if (d0h == 0.0 and d0l == 0.0) or (d1h == 0.0 and d1l == 0.0) \
            or ((d0h > 0.0) != (d1h > 0.0)):
             dh[k] = 0.0; dl[k] = 0.0
         else:
-            w1 = 2*h1 + h0; w2 = h1 + 2*h0
-            t1h, t1l = dd_div(w1, 0.0, d0h, d0l)
-            t2h, t2l = dd_div(w2, 0.0, d1h, d1l)
+            th1h, th1l = dd_mul(2.0, 0.0, h1h, h1l)
+            w1h, w1l = dd_add(th1h, th1l, h0h, h0l)   # 2*h1 + h0 in DD
+            th0h, th0l = dd_mul(2.0, 0.0, h0h, h0l)
+            w2h, w2l = dd_add(th0h, th0l, h1h, h1l)   # 2*h0 + h1 in DD
+            t1h, t1l = dd_div(w1h, w1l, d0h, d0l)
+            t2h, t2l = dd_div(w2h, w2l, d1h, d1l)
             sh, sl = dd_add(t1h, t1l, t2h, t2l)
-            dh[k], dl[k] = dd_div(w1+w2, 0.0, sh, sl)
+            wsh, wsl = dd_add(w1h, w1l, w2h, w2l)
+            dh[k], dl[k] = dd_div(wsh, wsl, sh, sl)
     for which in range(2):
         if which == 0:
-            k = 0; h0 = xh[1]-xh[0]; h1 = xh[2]-xh[1]
-            p_h, p_l = dd_add(yh[1], yl[1], -yh[0], -yl[0]); m0h, m0l = dd_div(p_h, p_l, h0, 0.0)
-            q_h, q_l = dd_add(yh[2], yl[2], -yh[1], -yl[1]); m1h, m1l = dd_div(q_h, q_l, h1, 0.0)
+            k = 0
+            h0h, h0l = dd_add(xhh[1], xhl[1], -xhh[0], -xhl[0])
+            h1h, h1l = dd_add(xhh[2], xhl[2], -xhh[1], -xhl[1])
+            p_h, p_l = dd_add(yh[1], yl[1], -yh[0], -yl[0]); m0h, m0l = dd_div(p_h, p_l, h0h, h0l)
+            q_h, q_l = dd_add(yh[2], yl[2], -yh[1], -yl[1]); m1h, m1l = dd_div(q_h, q_l, h1h, h1l)
         else:
-            k = n-1; h0 = xh[n-1]-xh[n-2]; h1 = xh[n-2]-xh[n-3]
-            p_h, p_l = dd_add(yh[n-1], yl[n-1], -yh[n-2], -yl[n-2]); m0h, m0l = dd_div(p_h, p_l, h0, 0.0)
-            q_h, q_l = dd_add(yh[n-2], yl[n-2], -yh[n-3], -yl[n-3]); m1h, m1l = dd_div(q_h, q_l, h1, 0.0)
-        t_h, t_l = dd_mul(2*h0+h1, 0.0, m0h, m0l)
-        t2_h, t2_l = dd_mul(h0, 0.0, m1h, m1l)
+            k = n-1
+            h0h, h0l = dd_add(xhh[n-1], xhl[n-1], -xhh[n-2], -xhl[n-2])
+            h1h, h1l = dd_add(xhh[n-2], xhl[n-2], -xhh[n-3], -xhl[n-3])
+            p_h, p_l = dd_add(yh[n-1], yl[n-1], -yh[n-2], -yl[n-2]); m0h, m0l = dd_div(p_h, p_l, h0h, h0l)
+            q_h, q_l = dd_add(yh[n-2], yl[n-2], -yh[n-3], -yl[n-3]); m1h, m1l = dd_div(q_h, q_l, h1h, h1l)
+        th0h, th0l = dd_mul(2.0, 0.0, h0h, h0l)
+        aw_h, aw_l = dd_add(th0h, th0l, h1h, h1l)    # 2*h0 + h1 in DD
+        t_h, t_l = dd_mul(aw_h, aw_l, m0h, m0l)
+        t2_h, t2_l = dd_mul(h0h, h0l, m1h, m1l)
         ddh, ddl = dd_add(t_h, t_l, -t2_h, -t2_l)
-        ddh, ddl = dd_div(ddh, ddl, h0+h1, 0.0)
+        hsh, hsl = dd_add(h0h, h0l, h1h, h1l)        # h0 + h1 in DD
+        ddh, ddl = dd_div(ddh, ddl, hsh, hsl)
         if (ddh > 0.0) != (m0h > 0.0):
             dh[k] = 0.0; dl[k] = 0.0
         elif ((m0h > 0.0) != (m1h > 0.0)) and (abs(ddh) > 3*abs(m0h)):
@@ -76,20 +88,20 @@ def _pchip_slopes(xh, yh, yl, dh, dl):
 
 
 @njit
-def _pchip_eval(xh, yh, yl, dh, dl, qh, ql):
-    n = xh.shape[0]
-    if qh <= xh[0]:
+def _pchip_eval(xhh, xhl, yh, yl, dh, dl, qh, ql):
+    n = xhh.shape[0]
+    if qh <= xhh[0]:
         k = 0
-    elif qh >= xh[n-1]:
+    elif qh >= xhh[n-1]:
         k = n-2
     else:
         k = 0
         for kk in range(n-1):
-            if xh[kk] <= qh and qh <= xh[kk+1]:
+            if xhh[kk] <= qh and qh <= xhh[kk+1]:
                 k = kk; break
-    hk = xh[k+1]-xh[k]
-    qmh, qml = dd_add(qh, ql, -xh[k], 0.0)
-    th, tl = dd_div(qmh, qml, hk, 0.0)
+    hkh, hkl = dd_add(xhh[k+1], xhl[k+1], -xhh[k], -xhl[k])    # DD interval width
+    qmh, qml = dd_add(qh, ql, -xhh[k], -xhl[k])                # DD query offset (knot has lo word)
+    th, tl = dd_div(qmh, qml, hkh, hkl)
     omt_h, omt_l = dd_add(1.0, 0.0, -th, -tl)
     omt2_h, omt2_l = dd_mul(omt_h, omt_l, omt_h, omt_l)
     t2_h, t2_l = dd_mul(th, tl, th, tl)
@@ -103,12 +115,12 @@ def _pchip_eval(xh, yh, yl, dh, dl, qh, ql):
     c_h, c_l = dd_add(th, tl, -1.0, 0.0)
     h11_h, h11_l = dd_mul(t2_h, t2_l, c_h, c_l)
     r_h, r_l = dd_mul(h00_h, h00_l, yh[k], yl[k])
-    hd_h, hd_l = dd_mul(hk, 0.0, dh[k], dl[k])
+    hd_h, hd_l = dd_mul(hkh, hkl, dh[k], dl[k])
     tmp_h, tmp_l = dd_mul(h10_h, h10_l, hd_h, hd_l)
     r_h, r_l = dd_add(r_h, r_l, tmp_h, tmp_l)
     tmp_h, tmp_l = dd_mul(h01_h, h01_l, yh[k+1], yl[k+1])
     r_h, r_l = dd_add(r_h, r_l, tmp_h, tmp_l)
-    hd_h, hd_l = dd_mul(hk, 0.0, dh[k+1], dl[k+1])
+    hd_h, hd_l = dd_mul(hkh, hkl, dh[k+1], dl[k+1])
     tmp_h, tmp_l = dd_mul(h11_h, h11_l, hd_h, hd_l)
     r_h, r_l = dd_add(r_h, r_l, tmp_h, tmp_l)
     return r_h, r_l
@@ -136,8 +148,8 @@ def _clip_mu(mh, ml):
 
 
 @njit
-def _demand(xq_h, xq_l, exh, yh, yl, dh, dl, ph, pl, gh, gl):
-    mh, ml = _pchip_eval(exh, yh, yl, dh, dl, xq_h, xq_l)
+def _demand(xq_h, xq_l, exhh, exhl, yh, yl, dh, dl, ph, pl, gh, gl):
+    mh, ml = _pchip_eval(exhh, exhl, yh, yl, dh, dl, xq_h, xq_l)
     mh, ml = _clip_mu(mh, ml)
     return _x_crra(mh, ml, ph, pl, gh, gl)
 
@@ -160,9 +172,9 @@ def _fsig(uh, ul, mean, th, tl, coef_h, coef_l):
 
 
 @njit(parallel=True)
-def phi_all(MUH, MUL, exh, p_h, p_l, xig_h, xig_l, g_h, g_l,
+def phi_all(MUH, MUL, exhh, exhl, p_h, p_l, xig_h, xig_l, g_h, g_l,
             tau_h, tau_l, nl_h, nl_l, wtrap, PHIH, PHIL):
-    n = exh.shape[0]
+    n = exhh.shape[0]
     for j in prange(Gp):
         ph = p_h[j]; pl = p_l[j]
         yh = np.empty(n); yl = np.empty(n)
@@ -171,12 +183,12 @@ def phi_all(MUH, MUL, exh, p_h, p_l, xig_h, xig_l, g_h, g_l,
         for i in range(G):
             yh[i+1] = MUH[i, j]; yl[i+1] = MUL[i, j]
         dh = np.empty(n); dl = np.empty(n)
-        _pchip_slopes(exh, yh, yl, dh, dl)
+        _pchip_slopes(exhh, exhl, yh, yl, dh, dl)
         dgh = np.empty(G); dgl = np.empty(G)
         for i in range(G):
-            dgh[i], dgl[i] = _demand(xig_h[i], xig_l[i], exh, yh, yl, dh, dl, ph, pl, g_h, g_l)
-        dlo_h, dlo_l = _demand(-1.0+EPSB, 0.0, exh, yh, yl, dh, dl, ph, pl, g_h, g_l)
-        dhi_h, dhi_l = _demand(1.0-EPSB, 0.0, exh, yh, yl, dh, dl, ph, pl, g_h, g_l)
+            dgh[i], dgl[i] = _demand(xig_h[i], xig_l[i], exhh, exhl, yh, yl, dh, dl, ph, pl, g_h, g_l)
+        dlo_h, dlo_l = _demand(-1.0+EPSB, 0.0, exhh, exhl, yh, yl, dh, dl, ph, pl, g_h, g_l)
+        dhi_h, dhi_l = _demand(1.0-EPSB, 0.0, exhh, exhl, yh, yl, dh, dl, ph, pl, g_h, g_l)
         tot_h, tot_l = dd_div(2.0, 0.0, tau_h, tau_l)
         tp_h, tp_l = dd_mul(2.0, 0.0, D.PIH, D.PIL)
         ct_h, ct_l = dd_div(tau_h, tau_l, tp_h, tp_l)
@@ -204,7 +216,7 @@ def phi_all(MUH, MUL, exh, p_h, p_l, xig_h, xig_l, g_h, g_l,
                 for _ in range(52):
                     sh_, sl_ = dd_add(ah, al, bh, bl)
                     mh_, ml_ = dd_mul(sh_, sl_, 0.5, 0.0)
-                    qh, ql = _demand(mh_, ml_, exh, yh, yl, dh, dl, ph, pl, g_h, g_l)
+                    qh, ql = _demand(mh_, ml_, exhh, exhl, yh, yl, dh, dl, ph, pl, g_h, g_l)
                     fmh, fml = dd_add(qh, ql, -th_, -tl_)
                     if fmh > 0.0: bh = mh_; bl = ml_
                     else: ah = mh_; al = ml_
@@ -212,9 +224,9 @@ def phi_all(MUH, MUL, exh, p_h, p_l, xig_h, xig_l, g_h, g_l,
                 # secant refine in FULL double-double (track x0,x1 as DD pairs so
                 # xi_3 reaches DD precision, not float64)
                 x0h = ah; x0l = al; x1h = bh; x1l = bl
-                q0h, q0l = _demand(x0h, x0l, exh, yh, yl, dh, dl, ph, pl, g_h, g_l)
+                q0h, q0l = _demand(x0h, x0l, exhh, exhl, yh, yl, dh, dl, ph, pl, g_h, g_l)
                 f0h, f0l = dd_add(q0h, q0l, -th_, -tl_)
-                q1h, q1l = _demand(x1h, x1l, exh, yh, yl, dh, dl, ph, pl, g_h, g_l)
+                q1h, q1l = _demand(x1h, x1l, exhh, exhl, yh, yl, dh, dl, ph, pl, g_h, g_l)
                 f1h, f1l = dd_add(q1h, q1l, -th_, -tl_)
                 x3h = x1h; x3l = x1l
                 for _ in range(9):
@@ -225,7 +237,7 @@ def phi_all(MUH, MUL, exh, p_h, p_l, xig_h, xig_l, g_h, g_l,
                     sh, sl = dd_div(ph_, pl_, dfh, dfl)
                     nx_h, nx_l = dd_add(x1h, x1l, -sh, -sl)
                     if nx_h < a or nx_h > b: nx_h = 0.5*(a+b); nx_l = 0.0
-                    q2h, q2l = _demand(nx_h, nx_l, exh, yh, yl, dh, dl, ph, pl, g_h, g_l)
+                    q2h, q2l = _demand(nx_h, nx_l, exhh, exhl, yh, yl, dh, dl, ph, pl, g_h, g_l)
                     f2h, f2l = dd_add(q2h, q2l, -th_, -tl_)
                     x0h, x0l = x1h, x1l; f0h, f0l = f1h, f1l
                     x1h, x1l = nx_h, nx_l; f1h, f1l = f2h, f2l
@@ -247,7 +259,7 @@ def phi_all(MUH, MUL, exh, p_h, p_l, xig_h, xig_l, g_h, g_l,
             t1h, t1l = dd_mul(f1ih, f1il, A1h, A1l)
             denh, denl = dd_add(t0h, t0l, t1h, t1l)
             if denh <= 0.0:
-                PHIH[i, j], PHIL[i, j] = _pchip_eval(exh, yh, yl, dh, dl, xig_h[i], xig_l[i])
+                PHIH[i, j], PHIL[i, j] = _pchip_eval(exhh, exhl, yh, yl, dh, dl, xig_h[i], xig_l[i])
             else:
                 PHIH[i, j], PHIL[i, j] = dd_div(t1h, t1l, denh, denl)
 
@@ -266,7 +278,7 @@ def _arr_split(vals):
 _xi = [mp.mpf('-0.88') + mp.mpf('1.76')*k/(G-1) for k in range(G)]
 _xiext = [mp.mpf('-0.99')] + _xi + [mp.mpf('0.99')]
 xig_h, xig_l = _arr_split(_xi)
-exh = np.array([float(v) for v in _xiext])
+exh_h, exh_l = _arr_split(_xiext)   # extended PCHIP knots as DOUBLE-DOUBLE (was float64-only)
 _plp = [mp.mpf(-A) + 2*mp.mpf(A)*k/(Gp-1) for k in range(Gp)]
 _parr = [1/(1+mp.e**(-l)) for l in _plp]
 p_h, p_l = _arr_split(_parr)
@@ -305,7 +317,7 @@ def _symmetrize(MUH, MUL):
 def F_full(MUH, MUL, tc):
     th, tl, nl_h, nl_l = tc
     PHIH = np.empty((G, Gp)); PHIL = np.empty((G, Gp))
-    phi_all(MUH, MUL, exh, p_h, p_l, xig_h, xig_l, g_h, g_l, th, tl, nl_h, nl_l, wtrap, PHIH, PHIL)
+    phi_all(MUH, MUL, exh_h, exh_l, p_h, p_l, xig_h, xig_l, g_h, g_l, th, tl, nl_h, nl_l, wtrap, PHIH, PHIL)
     return _residual(PHIH, PHIL, MUH, MUL)
 
 from compact_ift import MuField, phi_cell_with_jac, _build_basis_funcs
