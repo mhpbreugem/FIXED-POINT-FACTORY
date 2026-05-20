@@ -345,6 +345,32 @@ def float_jac(mu_f, tau_f):
         except Exception: inv.append(I.copy())
     return np.array(inv)   # (Gp, G, G)
 
+def ddfd_jacobian(MUH, MUL, tc, hfd=1e-7):
+    # Accurate (I-J)^{-1} from the DD operator ITSELF (not float64 compact_ift).
+    # Block-diagonal in p, so the full Jacobian costs only G operator evals
+    # (perturb a whole row at once -> column k of every block). Used as the
+    # fallback when the cheap float64 Jacobian stalls near a fold.
+    rh, rl, _ = F_full(MUH, MUL, tc)
+    P0 = np.empty((G, Gp))
+    for i in range(G):
+        for j in range(Gp):
+            a, b = dd_add(rh[i, j], rl[i, j], MUH[i, j], MUL[i, j]); P0[i, j] = a + b
+    Jb = [np.zeros((G, G)) for _ in range(Gp)]
+    for k in range(G):
+        H = MUH.copy(); L = MUL.copy()
+        for j in range(Gp):
+            nh, nl = dd_add(MUH[k, j], MUL[k, j], hfd, 0.0); H[k, j] = nh; L[k, j] = nl
+        rh, rl, _ = F_full(H, L, tc)
+        for j in range(Gp):
+            for i in range(G):
+                a, b = dd_add(rh[i, j], rl[i, j], H[i, j], L[i, j])
+                Jb[j][i, k] = ((a + b) - P0[i, j]) / hfd
+    inv = []; I = np.eye(G)
+    for j in range(Gp):
+        try: inv.append(np.linalg.inv(I - Jb[j]))
+        except Exception: inv.append(I.copy())
+    return np.array(inv)
+
 @njit
 def _dd_matstep(MUH, MUL, RH, RL, INV, omega):
     # DD Newton step: dj = INV @ R (matvec + mu-update done in double-double, so
@@ -405,7 +431,10 @@ def solve(tau_f, warm_f, tag=""):
                 # already deep and stalling -> stop (no futile refresh grind)
                 if Finf < 1e-25:
                     break
-                INV = float_jac(MUH.copy(), tau_f); omega = _est_omega(MUH, MUL, RH, RL, INV, tc, Finf)
+                # stalling above DD precision -> the float64 compact_ift Jacobian is
+                # too poor a model (esp. near folds); refresh with the accurate
+                # DD-operator Jacobian to break through to ~1e-28.
+                INV = ddfd_jacobian(MUH, MUL, tc); omega = _est_omega(MUH, MUL, RH, RL, INV, tc, Finf)
         hist.append(Finf)
         # early-stop: F floored (improved <2x over last 4 iters) and already deep
         if it >= 6 and Finf < 1e-25 and hist[-5] < 2.0*Finf:
