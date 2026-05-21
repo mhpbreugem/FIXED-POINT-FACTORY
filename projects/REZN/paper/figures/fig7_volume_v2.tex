@@ -1,0 +1,31 @@
+\documentclass[12pt,border=2mm]{standalone}
+\usepackage{pgfplots}
+\usepgfplotslibrary{groupplots}
+\pgfplotsset{compat=1.18}
+\definecolor{BCred}{rgb}{0.7, 0.11, 0.11}
+\definecolor{BCblue}{rgb}{0.0, 0.20, 0.42}
+\definecolor{BCgreen}{rgb}{0.11, 0.35, 0.02}
+\pgfplotsset{every axis/.append style={
+  width=7.5cm, height=7.5cm, scale only axis,
+  ticklabel style={font=\small, /pgf/number format/fixed, /pgf/number format/precision=2}, yticklabel style={text width=10mm, align=right}, ylabel style={text width=10mm, align=center},
+  label style={font=\normalsize},
+  title style={font=\normalsize},
+  legend style={draw=none, font=\small}}}
+\begin{document}
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size=1 by 1}]
+\nextgroupplot[
+  ymin=-0.001, ymax=0.25, ylabel={$E[|x_k|]$},
+  xmin=0.08, xmax=50, xmode=log,
+  xlabel={$\gamma$},
+  xtick={0.1,0.5,1,2,5,10,50},
+  xticklabels={0.1,0.5,1,2,5,10,50},
+  legend pos=north east,
+  axis background/.style={fill=black!8}]
+\addplot[very thick,color=BCred,smooth,mark=*,mark size=1.5pt] coordinates {
+  (0.1,0.22)(0.25,0.18)(0.5,0.14)(1,0.10)(2,0.065)(5,0.025)(10,0.008)(50,0.001)};
+\addplot[ultra thick,color=black,dashdotted] coordinates {(0.08,0)(50,0)};
+\legend{CRRA (REE), CARA}
+\end{groupplot}
+\end{tikzpicture}
+\end{document}

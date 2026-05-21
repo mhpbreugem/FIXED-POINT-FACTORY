@@ -1,0 +1,561 @@
+\section{Proofs}\label{app:proofs}
+
+\begin{proof}[Proof of Lemma~\ref{lem:cara-demand}]
+The agent with posterior $\mu$ and wealth $W$ facing price $p$ chooses
+$x$ to maximise
+\[
+   V(x) \;=\; \mu\,U\bigl(W+x(1-p)\bigr) + (1-\mu)\,U\bigl(W-xp\bigr).
+\]
+Setting $V'(x)=0$:
+\begin{equation}
+   \mu(1-p)\,U'\bigl(W+x(1-p)\bigr) \;=\; (1-\mu)\,p\,U'\bigl(W-xp\bigr).
+\label{eq:app-foc}
+\end{equation}
+Under CARA, $U(W)=-e^{-\alpha W}/\alpha$ and $U'(W)=e^{-\alpha W}$.
+Substituting:
+\[
+   \mu(1-p)\,e^{-\alpha[W+x(1-p)]} \;=\; (1-\mu)\,p\,e^{-\alpha[W-xp]}.
+\]
+The factor $e^{-\alpha W}$ appears on both sides and cancels (this
+cancellation is the defining property of CARA---no wealth effects):
+\[
+   \mu(1-p)\,e^{-\alpha x(1-p)} \;=\; (1-\mu)\,p\,e^{\alpha xp}.
+\]
+Dividing both sides by $(1-\mu)\,p$ and collecting the exponentials on the
+right:
+\[
+   \frac{\mu(1-p)}{(1-\mu)\,p}
+   \;=\; e^{\alpha x(1-p)+\alpha xp}
+   \;=\; e^{\alpha x}.
+\]
+The left-hand side equals $e^{\logit\mu-\logit p}$ by definition of the
+logit function $\logit(q)=\ln\tfrac{q}{1-q}$. Taking logarithms:
+$\alpha x = \logit\mu-\logit p$, giving
+$x = [\logit\mu-\logit p]/\alpha$.
+\end{proof}
+
+\begin{proof}[Proof of Lemma~\ref{lem:crra-demand}]
+The first-order condition \eqref{eq:app-foc} with CRRA utility
+$U(W)=W^{1-\gamma}/(1-\gamma)$ and marginal utility $U'(W)=W^{-\gamma}$
+becomes
+\[
+   \mu(1-p)\,\bigl(W+(1-p)x\bigr)^{-\gamma}
+   \;=\; (1-\mu)\,p\,\bigl(W-px\bigr)^{-\gamma}.
+\]
+Rearranging the ratio of marginal utilities:
+\[
+   \left(\frac{W+(1-p)x}{W-px}\right)^{-\gamma}
+   \;=\; \frac{(1-\mu)\,p}{\mu\,(1-p)}
+   \;=\; e^{\logit p - \logit\mu}.
+\]
+Raising both sides to the power $-1/\gamma$:
+\[
+   \frac{W+(1-p)x}{W-px}
+   \;=\; \exp\!\left(\frac{\logit\mu-\logit p}{\gamma}\right) \;\equiv\; R.
+\]
+Cross-multiplying: $W+(1-p)x = R\,(W-px)$, so
+$W + (1-p)x = RW - Rpx$, giving
+$x\bigl[(1-p)+Rp\bigr] = W(R-1)$, which yields
+\eqref{eq:crra-demand}.
+\end{proof}
+
+\begin{proof}[Proof of Lemma~\ref{lem:cara-limit}]
+Let $z\equiv\logit(\mu_{k})-\logit(p)$ and $\delta\equiv z/\gamma$, so
+$R_{k}=e^{\delta}$. For each fixed $(\mu_{k},p)\in(0,1)^{2}$, the
+quantity $z$ is fixed and $\delta\to 0$ as $\gamma\to\infty$.
+Taylor-expanding the exponential:
+\[
+   R_{k}-1 \;=\; e^{\delta}-1
+   \;=\; \delta+\tfrac{\delta^{2}}{2}+O(\delta^{3}).
+\]
+Similarly, $(1-p)+R_{k}\,p = (1-p)+p\,e^{\delta}
+= 1 + p\,\delta + O(\delta^{2})$. Hence the CRRA demand becomes
+\[
+   x_{k}^{\mathrm{CRRA}}
+   \;=\; \frac{W_{k}\,(R_{k}-1)}{(1-p)+R_{k}\,p}
+   \;=\; \frac{W_{k}\,[\delta+O(\delta^{2})]}{1+p\,\delta+O(\delta^{2})}
+   \;=\; W_{k}\,\delta\bigl[1+O(\delta)\bigr].
+\]
+Multiplying both sides by $\gamma$ and substituting
+$\gamma\delta=z=\logit(\mu_{k})-\logit(p)$:
+\[
+   \gamma\,x_{k}^{\mathrm{CRRA}}
+   \;=\; W_{k}\,[\logit(\mu_{k})-\logit(p)]\,\bigl[1+O(1/\gamma)\bigr]
+   \;\xrightarrow{\gamma\to\infty}\;
+   W_{k}\,[\logit(\mu_{k})-\logit(p)],
+\]
+which is the CARA demand \eqref{eq:cara-demand} with risk-aversion
+parameter $\alpha_{k}=\gamma/W_{k}$. The convergence is uniform on
+compact subsets of $(0,1)^{2}$ because $\delta=z/\gamma\to 0$ uniformly
+when $z$ is bounded.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:cara-unique}]
+The first-order condition for the binary-asset problem is
+\[
+   \mu(1-p)\,U'\!\bigl(W+(1-p)x\bigr) \;=\; (1-\mu)\,p\,U'\!\bigl(W-px\bigr).
+\]
+Taking logarithms and using $\logit(q)=\ln\tfrac{q}{1-q}$, this
+becomes
+\begin{equation}
+   \ln U'\!\bigl(W+(1-p)x\bigr) - \ln U'\!\bigl(W-px\bigr)
+   \;=\; \logit p - \logit\mu
+   \;=\; -z,
+\label{eq:thm-foc-v2}
+\end{equation}
+where $z\equiv\logit\mu-\logit p$.
+
+Define $h(W)\equiv\ln U'(W)$, which is well defined and three times
+continuously differentiable on $\mathcal{D}$ since $U'>0$.
+Now suppose the optimal demand admits the representation
+\eqref{eq:linear-demand-rep}, i.e.\ $x^{\star}=z/\alpha(p,W)$ for some
+positive function $\alpha$.  Substituting into \eqref{eq:thm-foc-v2}:
+\begin{equation}
+   h\!\bigl(W+(1-p)z/\alpha\bigr) - h\!\bigl(W-pz/\alpha\bigr) \;=\; -z,
+\label{eq:thm-h-v2}
+\end{equation}
+which must hold for all admissible $(W,p,z)$ with $z\in\R$ ranging freely
+as $\mu$ varies in $(0,1)$ at fixed $p$.
+
+\emph{Step 1: First derivative in $z$.} Differentiate
+\eqref{eq:thm-h-v2} with respect to $z$ at $z=0$ (where both arguments of
+$h$ equal $W$). By the chain rule:
+\begin{align*}
+   &h'(W)\cdot\frac{1-p}{\alpha(p,W)}
+   \;+\; h'(W)\cdot\frac{p}{\alpha(p,W)} \\
+   &\quad=\; \frac{h'(W)}{\alpha(p,W)}
+   \;\stackrel{!}{=}\; -1.
+\end{align*}
+(The second term gets a factor $p/\alpha$ rather than $-p/\alpha$
+because the derivative of $W-pz/\alpha$ with respect to $z$ is
+$-p/\alpha$, and the overall minus sign in front of the second $h$-term
+in \eqref{eq:thm-h-v2} produces another sign flip.)
+Hence $\alpha(p,W)=-h'(W)$ for all $(p,W)$.
+Since $\alpha>0$ by assumption, $h'(W)<0$ for all $W\in\mathcal{D}$.
+Crucially, $\alpha$ depends \emph{only on~$W$}, not on~$p$.
+
+\emph{Step 2: Second derivative in $z$.} Differentiate
+\eqref{eq:thm-h-v2} a second time in $z$ at $z=0$. The second
+derivative of the left-hand side involves $h''(W)$ applied to the
+squares of the respective chain-rule factors:
+\[
+   h''(W)\cdot\!\left[\!\left(\frac{1-p}{\alpha(W)}\right)^{\!2}
+   - \left(\frac{p}{\alpha(W)}\right)^{\!2}\right]
+   \;=\; h''(W)\cdot\frac{(1-p)^{2}-p^{2}}{\alpha(W)^{2}}
+   \;=\; h''(W)\cdot\frac{1-2p}{\alpha(W)^{2}}.
+\]
+The right-hand side of \eqref{eq:thm-h-v2} is $-z$, which is linear in
+$z$; its second derivative is zero. Therefore
+\[
+   h''(W)\cdot\frac{1-2p}{\alpha(W)^{2}} \;=\; 0
+   \qquad \text{for all } p\in(0,1).
+\]
+Choosing any $p\neq\tfrac12$ forces $h''(W)=0$ for every
+$W\in\mathcal{D}$.
+
+\emph{Step 3: Integration.} Since $h''=0$ on $\mathcal{D}$, the function
+$h$ is affine: $h(W)=-\alpha_{0}W+C$ for constants $\alpha_{0}>0$ (from
+$\alpha=-h'>0$) and $C\in\R$.
+Hence $U'(W)=e^{h(W)}=e^{C}\exp(-\alpha_{0}W)$. Integrating:
+\[
+   U(W) \;=\; -\frac{e^{C}}{\alpha_{0}}\,\exp(-\alpha_{0}W) + D
+   \;=\; a - b\exp(-\alpha_{0}W),
+\]
+with $a\equiv D\in\R$ and $b\equiv e^{C}/\alpha_{0}>0$. This is the CARA
+utility function, and $\alpha(p,W)\equiv\alpha_{0}$ is constant.
+
+\emph{Step 4: Converse.} Set $U(W)=a-b\exp(-\alpha_{0}W)$ in
+\eqref{eq:thm-foc-v2}. Then
+$U'(W)=b\alpha_{0}\exp(-\alpha_{0}W)$, and the FOC ratio reduces to
+\[
+   \ln\frac{U'(W+(1-p)x)}{U'(W-px)}
+   \;=\; -\alpha_{0}\bigl[(W+(1-p)x)-(W-px)\bigr]
+   \;=\; -\alpha_{0}x,
+\]
+so $-\alpha_{0}x = -z$, giving $x=z/\alpha_{0}$, which is
+\eqref{eq:linear-demand-rep} with $\alpha\equiv\alpha_{0}$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:cara}]
+Substituting the CARA demand $x_{k}=[\logit\mu_{k}-\logit p]/\alpha_{k}$
+into the market-clearing condition $\sum_{k=1}^{K}x_{k}=0$:
+\[
+   \sum_{k=1}^{K} \frac{\logit\mu_{k}-\logit p}{\alpha_{k}} \;=\; 0.
+\]
+Solving for $\logit p$:
+\[
+   \logit p \cdot \sum_{k}\alpha_{k}^{-1}
+   \;=\; \sum_{k}\alpha_{k}^{-1}\logit\mu_{k},
+\]
+hence $\logit p=\sum_{k}w_{k}\logit\mu_{k}$ with
+$w_{k}=\alpha_{k}^{-1}/\sum_{j}\alpha_{j}^{-1}$.
+By \eqref{eq:posterior}, $\logit\mu_{k}=\tau_{k}u_{k}$, so
+\[
+   \logit p \;=\; \sum_{k}w_{k}\tau_{k}u_{k}.
+\]
+This is a weighted linear combination of the signals. When
+$\alpha_{k}\equiv\alpha$ for all $k$, $w_{k}=1/K$ and this reduces to
+$\logit p = \Tstar/K$ where $\Tstar=\sum_{k}\tau_{k}u_{k}$. The price is
+then informationally equivalent to $\Tstar$: any agent observing $p$
+can infer $\Tstar$ by inverting $\Lam(\cdot/K)$. Since $\Tstar$ is
+sufficient for $v$, the equilibrium is fully revealing.
+
+With heterogeneous $\alpha_{k}$, the no-learning price reveals
+$\sum_{k}w_{k}\tau_{k}u_{k}$, which for $K\geq 3$ is generically not
+informationally equivalent to $\Tstar$ (different linear combinations
+of $K\geq 3$ variables are linearly independent). However, the price
+function $p=\Lam(\Tstar/K)$ is still a valid REE: at this price every
+agent's posterior equals $\Lam(\Tstar/K)=p$, demands are zero
+identically, and the market clears with zero supply. This is an REE
+for any $(\alpha_{k})$.
+
+The exponential-family extension replaces $\tau_{k}u_{k}$ by the
+natural-parameter log-likelihood ratio of the chosen family; the
+identical linear-aggregation argument applies.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:non-cara}]
+Under log utility ($\gamma=1$), the demand simplifies to
+$x_{k}=W(\mu_{k}-p)/[p(1-p)]$ (set $R=e^{z}$ in \eqref{eq:crra-demand};
+for $\gamma=1$, $R-1=e^{z}-1$ and the denominator is
+$(1-p)+e^{z}p$; direct computation yields the stated form).
+Substituting into $\sum_{k}x_{k}=0$ with homogeneous $W$:
+\[
+   \sum_{k=1}^{K}\frac{\mu_{k}-p}{p(1-p)} \;=\; 0
+   \qquad\Longrightarrow\qquad
+   p \;=\; \bar\mu \;\equiv\; \frac{1}{K}\sum_{k}\mu_{k}
+   \;=\; \frac{1}{K}\sum_{k}\Lam(\tau u_{k}).
+\]
+To show this is not a function of $\Tstar$ alone, fix $\Tstar=0$ and
+consider two signal realisations with $K=3$:
+\begin{itemize}[topsep=2pt,itemsep=2pt]
+\item Realisation~A: $(u_{1},u_{2},u_{3})=(0,0,0)$. Then
+$p_{A}=\Lam(0)=\tfrac12$.
+\item Realisation~B: $(u_{1},u_{2},u_{3})=(\delta,-\delta,0)$ for any
+$\delta\neq 0$. Then
+$p_{B}=\tfrac13[\Lam(\tau\delta)+\Lam(-\tau\delta)+\Lam(0)]$.
+\end{itemize}
+Both have $\Tstar=\tau(0+0+0)=0=\tau(\delta-\delta+0)$, but $p_{A}\neq
+p_{B}$ because
+\[
+   \tfrac12\bigl[\Lam(\tau\delta)+\Lam(-\tau\delta)\bigr]
+   \;\neq\; \Lam(0) = \tfrac12
+\]
+by Jensen's inequality applied to the strictly concave--convex logistic
+function: $\Lam$ is strictly concave on $(0,\infty)$ and strictly convex
+on $(-\infty,0)$, so $\Lam(\tau\delta)+\Lam(-\tau\delta)<2\Lam(0)$ for
+$\delta\neq 0$. Hence $p_{B}<p_{A}$, and $p$ depends on the empirical
+distribution of $u_{k}$, not just on $\Tstar$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:jensen}]
+Taylor-expand the logistic function around zero to fifth order. Using
+$\Lam'(0)=\tfrac14$, $\Lam''(0)=0$, $\Lam'''(0)=-\tfrac18$:
+\[
+   \Lam(x) \;=\; \tfrac12+\tfrac14 x - \tfrac{1}{48}x^{3}+O(x^{5}).
+\]
+Substituting $x=\tau u_{k}$ and averaging over $k=1,\ldots,K$:
+\[
+   p \;=\; \frac{1}{K}\sum_{k}\Lam(\tau u_{k})
+   \;=\; \tfrac12+\tfrac{\tau}{4}\bar u
+         -\frac{\tau^{3}}{48K}\sum_{k}u_{k}^{3}+O(\tau^{5}),
+\]
+where $\bar u=\tfrac{1}{K}\sum_{k}u_{k}$.
+The CARA price at the same $\Tstar=\tau K\bar u$ is
+\[
+   p^{\mathrm{CARA}}
+   \;=\; \Lam\!\left(\frac{\Tstar}{K}\right)
+   \;=\; \Lam(\tau\bar u)
+   \;=\; \tfrac12+\tfrac{\tau}{4}\bar u - \tfrac{\tau^{3}}{48}\bar u^{3}
+         +O(\tau^{5}).
+\]
+Subtracting:
+\[
+   \Delta p \;=\; p - p^{\mathrm{CARA}}
+   \;=\; -\frac{\tau^{3}}{48}\left[
+         \frac{1}{K}\sum_{k}u_{k}^{3} - \bar u^{3}\right]
+   +O(\tau^{5}).
+\]
+Using $\bar u=U_{1}/K$ where $U_{1}=\sum_{k}u_{k}$ and
+$U_{3}=\sum_{k}u_{k}^{3}$, we obtain $\bar u^{3}=U_{1}^{3}/K^{3}$ and
+$\tfrac{1}{K}\sum u_{k}^{3}=U_{3}/K$, giving
+\eqref{eq:jensen}.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:smooth}]
+\emph{Continuity.} For each $\gamma\in(0,\infty]$ the no-learning
+equilibrium price $p_{\gamma}(u_{1},\ldots,u_{K})$ is the unique solution
+of the market-clearing equation
+$\sum_{k}x_{k}^{\gamma}(\Lam(\tau u_{k}),p)=0$, where $x_{k}^{\gamma}$
+denotes the CRRA demand of \eqref{eq:crra-demand} at parameter $\gamma$.
+
+For any fixed $(u_{1},\ldots,u_{K})$ and $p\in(0,1)$, the demand
+$x_{k}^{\gamma}(\mu_{k},p)$ is jointly continuous in $(\gamma,p)$ on
+$(0,\infty]\times(0,1)$. Moreover, $x_{k}^{\gamma}$ is strictly
+decreasing in $p$ (buying less when the asset is more expensive). By the
+implicit function theorem applied to the market-clearing equation
+$G(\gamma,p)=\sum_{k}x_{k}^{\gamma}(\mu_{k},p)=0$, with
+$\partial G/\partial p<0$, the solution $p_{\gamma}$ is a continuous
+function of $\gamma$ on $(0,\infty]$ uniformly over compact subsets of
+the signal support.
+
+The CARA limit follows from Lemma~\ref{lem:cara-limit}:
+$\lim_{\gamma\to\infty}x_{k}^{\gamma}/\gamma
+=[\logit\Lam(\tau u_{k})-\logit p]/W_{k}$, so the normalised demands
+converge to CARA demands and the normalised price converges to the CARA
+price.
+
+The continuity of $1-R^{2}(\Tstar;p_{\gamma})$ in $\gamma$ on
+$(0,\infty]$ follows by dominated convergence: the random variables
+$(\Tstar, \logit p_{\gamma})$ converge jointly in distribution as
+$\gamma\to\infty$, and their second moments are uniformly bounded on a
+compact signal support. The $\gamma=\infty$ value is $0$ by
+Proposition~\ref{prop:cara}.
+
+\emph{Strict positivity.} By Proposition~\ref{prop:non-cara}, the
+log-utility ($\gamma=1$) equilibrium satisfies $1-R^{2}>0$. The
+continuity just established implies that the deficit remains strictly
+positive in a neighbourhood of $\gamma=1$.
+
+More generally, the Jensen-gap expansion of
+Proposition~\ref{prop:jensen} gives
+$\Delta p=O(\tau^{3}/\gamma^{2})$ at small $\tau$ (the CRRA demand
+approaches CARA as $\gamma\to\infty$, and the deviation from CARA
+pricing scales as $\gamma^{-2}$ through the second-order term in the
+Taylor expansion of $R=e^{z/\gamma}$). This is strictly positive for
+every finite $\gamma$.
+
+Since $1-R^{2}$ is a continuous function of $\Delta p$ (and vanishes
+only when $\Delta p$ vanishes identically over the joint signal
+distribution), the deficit is strictly positive for all
+$\gamma<\infty$.
+
+The deficit is also monotonically decreasing in $\gamma$ at every
+$(\tau,\gamma)$ pair tested numerically (Table~\ref{tab:smooth}).
+The monotonicity at small $\tau$ follows analytically from the
+$O(\tau^{3}/\gamma^{2})$ scaling; the global claim (all $\tau$) rests on
+the numerical evidence.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:ree}]
+The proof has two parts: an analytical argument that the limit of the
+Picard sequence is partially revealing if it exists, and a numerical
+verification that the sequence converges.
+
+\emph{Part (a): the limit is partially revealing.} Define the Picard
+sequence $\mu^{0}(u,p)=\Lam(\tau u)$ (the no-learning posterior) and
+$\mu^{n+1}=\Phi(\mu^{n})$, where $\Phi$ is the contour-integration
+Bayes update defined in Section~\ref{sec:ree}. We show by induction
+that at every $n\geq 0$, the demand function
+$d^{n}(u;p)\equiv x(\mu^{n}(u,p),p)$ is strictly nonlinear in $u$ at
+every interior price $p$, and hence the contour
+$\{(u_{2},u_{3}):d^{n}(u_{2};p)+d^{n}(u_{3};p)=-d^{n}(u_{1};p)\}$ is
+curved.
+
+\emph{Base case} ($n=0$). Since $\mu^{0}=\Lam(\tau u)$, the demand is
+$d^{0}(u)=x(\Lam(\tau u),p)$. Write $z=\logit(\Lam(\tau u))-\logit(p)
+=\tau u-\logit p$. The CRRA demand as a function of $z$ is
+\[
+   x(z) \;=\; \frac{W(e^{z/\gamma}-1)}{(1-p)+e^{z/\gamma}p}.
+\]
+Computing the second derivative: let $R=e^{z/\gamma}$, then
+\begin{align*}
+   \frac{\partial x}{\partial z}
+   &\;=\; \frac{W}{\gamma}\cdot\frac{R}{[(1-p)+Rp]^{2}}, \\
+   \frac{\partial^{2} x}{\partial z^{2}}
+   &\;=\; \frac{W}{\gamma^{2}}\cdot\frac{R\,(1-p-Rp)}{[(1-p)+Rp]^{3}}.
+\end{align*}
+The numerator of $\partial^{2}x/\partial z^{2}$ is $R(1-p-Rp)$, which
+is zero only at $R=(1-p)/p$, i.e.\ at $z=-\gamma\logit p$. At all other
+values of $z$, the second derivative is nonzero. Since $z=\tau u-\logit p$
+is affine in $u$, the composition $d^{0}(u)=x(\tau u-\logit p)$ inherits
+this nonlinearity: $\partial^{2}d^{0}/\partial u^{2}\neq 0$ at all but
+one value of $u$.
+
+Under CARA, $x(z)=z/\alpha$ is affine in $z$, so $d^{0}$ is affine in
+$u$ and the contour is straight---that is the content of
+Proposition~\ref{prop:cara}.
+
+\emph{Inductive step.} Suppose $d^{n}$ is nonlinear in $u$. Then:
+\begin{enumerate}[label=(\roman*),topsep=2pt,itemsep=2pt]
+\item The contour at $(u_{1},p)$ is curved, so $u_{2}+u_{3}$ varies along
+it. The density ratio
+\[
+   \frac{f_{1}(u_{2})\,f_{1}(u_{3})}{f_{0}(u_{2})\,f_{0}(u_{3})}
+   \;=\; \exp\!\bigl(\tau(u_{2}+u_{3})\bigr)
+\]
+is therefore non-constant on the contour. (Under CARA, $u_{2}+u_{3}$ is
+constant on the straight contour, so the ratio is constant and the
+agent learns $\Tstar$ exactly.)
+
+\item The contour integrals
+$A_{v}(u_{1},p)=\int_{C}f_{v}(u_{2})\,f_{v}(u_{3}^{\star}(u_{2}))\,du_{2}$
+average the non-constant density ratio against the signal density. The
+log-ratio $\log(A_{1}/A_{0})$ depends on $u_{1}$ because different own
+signals $u_{1}$ generate different contour shapes (the agent-1 slice
+$P[u_{1},\cdot,\cdot]$ varies with $u_{1}$). The updated posterior
+\[
+   \mu^{n+1}(u_{1},p) \;=\; \Lam\!\bigl(\tau u_{1}+\log(A_{1}/A_{0})\bigr)
+\]
+thus depends on $u_{1}$ beyond the price---it is not identically equal
+to $p$.
+
+\item The demand $d^{n+1}(u)=x(\mu^{n+1}(u,p),p)$ is the composition of
+the CRRA demand (which has nonzero second derivative in $z$ for finite
+$\gamma$ at all but one point, as shown in the base case) with
+$\mu^{n+1}(u,p)$ (which depends nontrivially on $u$ by (ii)). For this
+composition to be affine in $u$, the curvature of $\mu^{n+1}$ would need
+to exactly cancel the demand curvature at the inflection point
+$z=-\gamma\logit p$ for every $u$ simultaneously---a codimension-one
+condition that is violated at every iterate and grid resolution tested
+numerically.
+\end{enumerate}
+
+Since $d^{n}$ is nonlinear at every $n$, the contour is curved at every
+$n$. If $\mu^{n}\to\mu^{\star}$, then $d^{n}\to d^{\star}$, and the
+nonlinearity bound passes to the limit by continuity of the
+second-derivative test. Hence $d^{\star}$ is nonlinear, the limit
+contour is curved, and the limit equilibrium is partially revealing.
+
+\emph{Part (b): convergence.} The Picard sequence is iterated
+numerically using the posterior-function method of
+Appendix~\ref{app:numerics} with isotonic-regression monotonicity
+projection and Newton--Krylov polishing. At grid resolution $G=20$
+with 50-digit multiprecision arithmetic, convergence
+$\|F\|_{\infty}<10^{-25}$ is achieved. The converged deficit $1-R^{2}$
+(measured via probability-weighted regression) is stable under grid
+refinement from $G=10$ to $G=20$
+(Table~\ref{tab:G-ladder}).
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:welfare}]
+\emph{No-learning equilibrium.} Under CARA at the no-learning
+equilibrium of Proposition~\ref{prop:cara} with homogeneous parameters,
+$\logit\mu_{k}=\tau u_{k}$ and $\logit p=(1/K)\sum_{k}\tau u_{k}$, so
+\[
+   \logit\mu_{k}-\logit p
+   \;=\; \tau u_{k} - \frac{1}{K}\sum_{j}\tau u_{j}
+   \;=\; \tau(u_{k}-\bar u).
+\]
+This is zero only when $u_{k}=\bar u$ for all $k$, which occurs on the
+measure-zero set $\{u_{1}=\cdots=u_{K}\}$. The CARA demand
+$x_{k}=\tau(u_{k}-\bar u)/\alpha$ is thus nonzero almost surely, and
+since market clearing $\sum_{k}x_{k}=0$ forces both positive and
+negative demands, aggregate volume
+$V_{\mathrm{vol}}=\tfrac12\sum_{k}|x_{k}|$ is strictly positive on a
+full-measure set.
+
+Under CRRA, the private posteriors $\mu_{k}=\Lam(\tau u_{k})$ differ
+generically across $k$. Market clearing pins the price in the interval
+$p\in(\min_{k}\mu_{k},\max_{k}\mu_{k})$, so $\mu_{k}-p\neq 0$ for at
+least one $k$ (in fact for all but at most one $k$) on a full-measure set.
+The CRRA demand \eqref{eq:crra-demand} is nonzero whenever $\mu_{k}\neq p$
+(since $R\neq 1$ when $z\neq 0$), so volume is strictly positive.
+
+\emph{REE.} At the CARA REE, all posteriors coincide with the
+fully-revealing price: $\mu_{k}=p=\Lam(\Tstar/K)$ for every $k$ and
+every signal realisation. Therefore
+$z_{k}=\logit\mu_{k}-\logit p=0$ for all $k$, and the CARA demand
+is $x_{k}=0/\alpha=0$ identically. This is the \citet{Milgrom1982}
+no-trade outcome: when the price is fully revealing, there are no gains
+from trade.
+
+At the CRRA REE of Proposition~\ref{prop:ree}, posteriors disagree on
+a full-measure set (the converged $\mu_{k}^{\star}(u_{k},p)$ differ
+across agents because the contour integrals differ). Since
+$\mu_{k}\neq p$ for some $k$, the CRRA demand is nonzero and aggregate
+volume is strictly positive.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:value}]
+The certainty-equivalent value of acquiring an additional
+precision-$\tau$ signal $u_{0}$ at the converged REE is
+\[
+   V(\tau) \;=\;
+   \E\!\left[\,\mathrm{CE}\!\left(\mu^{+}\!,p\right)
+            -\mathrm{CE}\!\left(\mu^{-}\!,p\right)\,\right],
+\]
+where $\mu^{+}$ is the posterior of an agent who additionally observes
+$u_{0}$, $\mu^{-}$ is the posterior of an agent who does not, $p$ is the
+equilibrium price, and $\mathrm{CE}(\mu,p)$ denotes the certainty
+equivalent of optimal trading at posterior $\mu$ and price $p$.
+
+\emph{Under CARA.} At the REE, $p=\Lam(\Tstar/K)$ already encodes the
+joint posterior. The price is a sufficient statistic for $v$ given the
+existing signals. Therefore $\mu^{+}=\mu^{-}=\Lam(\Tstar/K)$ for
+almost every realisation that conditions on the price: the additional
+signal $u_{0}$ is redundant. The integrand
+$\mathrm{CE}(\mu^{+},p)-\mathrm{CE}(\mu^{-},p)=0$ almost surely, so
+$V_{\mathrm{CARA}}(\tau)=0$ for every $\tau$.
+
+\emph{Under CRRA.} At the REE, $p$ encodes $\Tstar$ only partially
+(Proposition~\ref{prop:ree}). The additional signal $u_{0}$ provides
+information about $v$ that is not already in the price, so
+$\mu^{+}\neq\mu^{-}$ on a positive-measure set.
+
+Non-negativity: An agent can always replicate
+$\mathrm{CE}(\mu^{-},p)$ by ignoring the additional signal (choosing
+the same trade she would without it), so $\mathrm{CE}(\mu^{+},p)\geq
+\mathrm{CE}(\mu^{-},p)$ and the integrand is non-negative everywhere.
+
+Strict positivity: On the positive-measure set where $\mu^{+}\neq
+\mu^{-}$, the agent can improve her trade by conditioning on the
+additional signal. The optimal demand $x^{+}\neq x^{-}$ (since the FOC
+at $\mu^{+}\neq\mu^{-}$ has a different solution), and the certainty
+equivalent is strictly higher at the optimal trade than at the
+suboptimal one. Hence
+$\mathrm{CE}(\mu^{+},p)>\mathrm{CE}(\mu^{-},p)$ on this set, and
+$V_{\mathrm{CRRA}}(\tau)>0$.
+
+For the small-$\tau$ derivative: a Taylor expansion of the posterior in
+$\tau$ gives $\mu^{\pm}-\bar\mu=O(\tau)$ with leading-order coefficient
+proportional to $u_{0}$ for $\mu^{+}$ and $0$ for $\mu^{-}$. The
+certainty-equivalent shift is order $\tau^{2}$ (from the second-order
+condition for optimal trading), so
+$V_{\mathrm{CRRA}}'(0^{+})>0$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:gs}]
+\emph{Non-existence under CARA.} Suppose for contradiction that there
+exists a CARA REE with no noise and a strictly positive measure
+$\lambda^{\star}\in(0,1]$ of agents acquiring the signal at cost $c>0$.
+By Proposition~\ref{prop:cara} and the homogeneity of the acquiring
+group, the price function in such an equilibrium is fully revealing:
+$p=\Lam(\Tstar/K)$ over the acquiring group. By
+Proposition~\ref{prop:value}, $V_{\mathrm{CARA}}(\tau)=0$ at this fully
+revealing price, so each acquirer's gross value of information is zero.
+The net payoff from acquisition is $0-c=-c<0$. Every acquirer strictly
+prefers not to acquire. Hence $\lambda^{\star}>0$ cannot be an
+equilibrium---contradiction.
+
+If $\lambda=0$ (no one acquires), the price is uninformative and
+$V_{\mathrm{CARA}}(\tau,0)>0$, so each agent strictly prefers to acquire.
+Hence $\lambda=0$ is not an equilibrium either. No equilibrium exists:
+this is the \citet{GS1980} paradox.
+
+\emph{Existence under CRRA.} Let $\lambda\in[0,1]$ denote the fraction of
+agents acquiring the signal, and let $V_{\mathrm{CRRA}}(\tau,\lambda)$
+denote the marginal value of acquisition at fraction $\lambda$.
+
+At $\lambda=0^{+}$: the price reveals nothing, so the first acquirer
+reaps the full informational rent. By Proposition~\ref{prop:value},
+$V_{\mathrm{CRRA}}(\tau,0^{+})>0$.
+
+At $\lambda=1$: all agents have the signal. The price is partially
+revealing (Proposition~\ref{prop:ree}), not fully revealing. The
+marginal value $\bar c\equiv V_{\mathrm{CRRA}}(\tau,1)$ is strictly
+positive but smaller than $V_{\mathrm{CRRA}}(\tau,0^{+})$ (more
+acquirers $\Rightarrow$ more informative price $\Rightarrow$ smaller
+marginal informational rent).
+
+$V_{\mathrm{CRRA}}(\tau,\lambda)$ is continuous in $\lambda$ (by
+continuity of the equilibrium price function in $\lambda$) and weakly
+decreasing (each additional acquirer makes the price weakly more
+informative). For any acquisition cost $c\in(0,\bar c)$, the equation
+$V_{\mathrm{CRRA}}(\tau,\lambda)=c$ has at least one solution
+$\lambda^{\star}(c)\in(0,1)$ by the intermediate-value theorem. At this
+$\lambda^{\star}$, the marginal acquirer is exactly indifferent between
+acquiring and not acquiring, and no agent has an incentive to deviate.
+This is a Grossman--Stiglitz equilibrium with positive information
+acquisition and partially revealing prices.
+\end{proof}

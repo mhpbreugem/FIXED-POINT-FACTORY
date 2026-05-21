@@ -1,0 +1,224 @@
+name: REE solver tasks
+
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: "Task to run: smoke, single, paper-gammas, cara-floor"
+        required: true
+        default: "smoke"
+        type: choice
+        options:
+          - smoke
+          - single
+          - paper-gammas
+          - cara-floor
+      G:
+        description: "Grid size for single run"
+        required: false
+        default: "10"
+      gamma:
+        description: "Gamma for single run"
+        required: false
+        default: "0.5"
+      tau:
+        description: "Tau for single run"
+        required: false
+        default: "2.0"
+      solver:
+        description: "Solver for code.run"
+        required: false
+        default: "anderson"
+        type: choice
+        options:
+          - anderson
+          - picard
+      max_iters:
+        description: "Maximum solver iterations"
+        required: false
+        default: "50"
+      tol:
+        description: "Solver tolerance"
+        required: false
+        default: "1e-7"
+      commit_results:
+        description: "Commit generated .npz/.log files back to results/github_actions"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+env:
+  OMP_NUM_THREADS: "1"
+  MKL_NUM_THREADS: "1"
+  OPENBLAS_NUM_THREADS: "1"
+  NUMBA_NUM_THREADS: "1"
+  PYTHONUNBUFFERED: "1"
+
+jobs:
+  smoke:
+    if: ${{ github.event.inputs.task == 'smoke' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install numpy scipy
+      - name: Run smoke tests
+        run: python -m code.smoke
+
+  single:
+    if: ${{ github.event.inputs.task == 'single' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install numpy scipy
+      - name: Run single solver task
+        run: |
+          mkdir -p output
+          python -m code.run \
+            --G "${{ github.event.inputs.G }}" \
+            --gamma "${{ github.event.inputs.gamma }}" \
+            --tau "${{ github.event.inputs.tau }}" \
+            --solver "${{ github.event.inputs.solver }}" \
+            --max-iters "${{ github.event.inputs.max_iters }}" \
+            --tol "${{ github.event.inputs.tol }}" \
+            --output-dir output \
+            --tag "gha-single"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ree-single-G${{ github.event.inputs.G }}-g${{ github.event.inputs.gamma }}-t${{ github.event.inputs.tau }}
+          path: output/*
+          if-no-files-found: error
+      - name: Optionally commit results
+        if: ${{ github.event.inputs.commit_results == 'true' }}
+        run: |
+          mkdir -p results/github_actions
+          cp -v output/* results/github_actions/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/github_actions
+          git commit -m "Add GitHub Actions solver result" || echo "No changes to commit"
+          git push
+
+  paper-gammas:
+    if: ${{ github.event.inputs.task == 'paper-gammas' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix:
+        gamma: [0.25, 1.0, 4.0]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install numpy scipy
+      - name: Run paper gamma at tau=2
+        run: |
+          mkdir -p output
+          python -m code.run \
+            --G "${{ github.event.inputs.G }}" \
+            --gamma "${{ matrix.gamma }}" \
+            --tau "2.0" \
+            --solver "${{ github.event.inputs.solver }}" \
+            --max-iters "${{ github.event.inputs.max_iters }}" \
+            --tol "${{ github.event.inputs.tol }}" \
+            --output-dir output \
+            --tag "paper-gamma-${{ matrix.gamma }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ree-paper-gamma-${{ matrix.gamma }}-G${{ github.event.inputs.G }}
+          path: output/*
+          if-no-files-found: error
+      - name: Optionally commit results
+        if: ${{ github.event.inputs.commit_results == 'true' }}
+        run: |
+          mkdir -p results/github_actions
+          cp -v output/* results/github_actions/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/github_actions
+          git commit -m "Add paper gamma solver result ${{ matrix.gamma }}" || echo "No changes to commit"
+          git pull --rebase
+          git push
+
+  cara-floor:
+    if: ${{ github.event.inputs.task == 'cara-floor' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix:
+        gamma: [50, 100, 200, 500]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install numpy scipy
+      - name: Run high-gamma CRRA floor check
+        run: |
+          mkdir -p output
+          python -m code.run \
+            --G "${{ github.event.inputs.G }}" \
+            --gamma "${{ matrix.gamma }}" \
+            --tau "2.0" \
+            --solver "${{ github.event.inputs.solver }}" \
+            --max-iters "${{ github.event.inputs.max_iters }}" \
+            --tol "${{ github.event.inputs.tol }}" \
+            --output-dir output \
+            --tag "cara-floor-crra-${{ matrix.gamma }}"
+      - name: Run explicit CARA baseline
+        run: |
+          python -m code.run \
+            --G "${{ github.event.inputs.G }}" \
+            --gamma "${{ matrix.gamma }}" \
+            --tau "2.0" \
+            --cara \
+            --solver "${{ github.event.inputs.solver }}" \
+            --max-iters "${{ github.event.inputs.max_iters }}" \
+            --tol "${{ github.event.inputs.tol }}" \
+            --output-dir output \
+            --tag "cara-floor-explicit-${{ matrix.gamma }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ree-cara-floor-gamma-${{ matrix.gamma }}-G${{ github.event.inputs.G }}
+          path: output/*
+          if-no-files-found: error
+      - name: Optionally commit results
+        if: ${{ github.event.inputs.commit_results == 'true' }}
+        run: |
+          mkdir -p results/github_actions
+          cp -v output/* results/github_actions/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/github_actions
+          git commit -m "Add CARA floor solver result ${{ matrix.gamma }}" || echo "No changes to commit"
+          git pull --rebase
+          git push

@@ -1,0 +1,20 @@
+\documentclass[border=2pt]{standalone}
+\usepackage{xcolor}
+\usepackage{amsmath, booktabs}
+\begin{document}
+\definecolor{placeholderbg}{rgb}{1.00, 0.97, 0.78}
+\pagecolor{placeholderbg}
+\begin{tabular}{lccc}
+\toprule
+  & private prior  &  CARA REE  &  CRRA REE \\
+  &  $\Lambda(\tau u_k)$  &  (closed form)  &  ($\gamma\!=\!0.5$, $G\!=\!5$) \\
+\midrule
+  $\mu_1$ (own signal $u_1\!=\!+1$)  &  0.8808  &  0.8808  &  0.8808 \\
+  $\mu_2$ (own signal $u_2\!=\!-1$)  &  0.1192  &  0.8808  &  0.8808 \\
+  $\mu_3$ (own signal $u_3\!=\!+1$)  &  0.8808  &  0.8808  &  0.8808 \\
+  price $p$  &  ---  &  0.8808  &  0.8808 \\
+  logit$(p)$  &  ---  &  +2.000  &  +2.000 \\
+  $\Vert F\Vert_\infty$  &  ---  &  $0$  &  1.4e-05 \\
+\bottomrule
+\end{tabular}
+\end{document}

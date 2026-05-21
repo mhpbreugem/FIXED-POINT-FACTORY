@@ -1,0 +1,37 @@
+\documentclass[border=2pt]{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\definecolor{red}{rgb}{0.7,0.11,0.11}
+\definecolor{blue}{rgb}{0.0,0.20,0.42}
+\definecolor{green}{rgb}{0.11,0.35,0.02}
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[
+    axis background/.style={fill=black!8},
+    axis background/.style={fill=black!8},
+    width=7.5cm, height=7.5cm, scale only axis,
+    xmode=log,
+    xmin=3, xmax=100,
+    ymin=-0.001, ymax=0.15,
+    xtick={3,5,10,20,50,100},
+    xticklabels={3,5,10,20,50,100},
+    ytick={0,0.05,0.1,0.15},
+    yticklabels={0,0.05,0.10,0.15},
+    xlabel={number of agents $K$},
+    ylabel={$1 - R^2$},
+    title={Number of agents ($K$)},
+    legend pos=north east,
+    legend style={fill=none, draw=none, font=\footnotesize},
+    smooth,
+]
+\addplot[green, solid, very thick] coordinates {(3,0.0893386) (4,0.0773354) (5,0.068899) (6,0.0621329) (7,0.0558935) (8,0.0510347) (10,0.0436108) (12,0.0381176) (15,0.0315946) (20,0.0246391) (25,0.0203878) (30,0.0173064) (40,0.0133102) (50,0.0107944) (70,0.00786043) (100,0.00555648)};
+\addlegendentry{$\gamma = 0.3$};
+\addplot[red, dashed, very thick] coordinates {(3,0.0293472) (4,0.0259576) (5,0.022585) (6,0.0199823) (7,0.0176312) (8,0.0159871) (10,0.0133234) (12,0.0115196) (15,0.00937897) (20,0.00718887) (25,0.00592334) (30,0.00501196) (40,0.00380161) (50,0.00306656) (70,0.00221179) (100,0.00156485)};
+\addlegendentry{$\gamma = 1.0$};
+\addplot[blue, dotted, very thick] coordinates {(3,0.00568915) (4,0.00519129) (5,0.0045996) (6,0.0041195) (7,0.00367226) (8,0.00336457) (10,0.0028198) (12,0.00245685) (15,0.00200117) (20,0.00153919) (25,0.0012683) (30,0.00107365) (40,0.000811969) (50,0.000654946) (70,0.000470786) (100,0.000333173)};
+\addlegendentry{$\gamma = 3.0$};
+\addplot[black, dash dot, ultra thick] coordinates {(3,0) (4,0) (5,0) (6,0) (7,0) (8,0) (10,0) (12,0) (15,0) (20,0) (25,0) (30,0) (40,0) (50,0) (70,0) (100,0)};
+\addlegendentry{$\gamma = \infty\;(\text{CARA})$};
+\end{axis}
+\end{tikzpicture}
+\end{document}

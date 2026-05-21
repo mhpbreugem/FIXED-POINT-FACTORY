@@ -1,0 +1,35 @@
+\documentclass[12pt,border=2mm]{standalone}
+\usepackage{pgfplots}
+\usepgfplotslibrary{groupplots}
+\pgfplotsset{compat=1.18}
+\definecolor{BCred}{rgb}{0.7, 0.11, 0.11}
+\definecolor{BCblue}{rgb}{0.0, 0.20, 0.42}
+\definecolor{BCgreen}{rgb}{0.11, 0.35, 0.02}
+\pgfplotsset{every axis/.append style={
+  width=7.5cm, height=7.5cm, scale only axis,
+  ticklabel style={font=\small, /pgf/number format/fixed, /pgf/number format/precision=2}, yticklabel style={text width=10mm, align=right}, ylabel style={text width=10mm, align=center},
+  label style={font=\normalsize},
+  title style={font=\normalsize},
+  legend style={draw=none, font=\small}}}
+\begin{document}
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size=1 by 1}]
+\nextgroupplot[
+  ymin=-0.001, ymax=0.065, ylabel={$V(\tau)$},
+  xmin=0, xmax=5.5, xlabel={Signal precision ($\tau$)},
+  legend pos=north west,
+  axis background/.style={fill=black!8}]
+\addplot[very thick,color=BCgreen,smooth] coordinates {
+  (0,0)(0.2,0.001)(0.5,0.006)(1.0,0.019)(1.5,0.032)
+  (2.0,0.042)(2.5,0.049)(3.0,0.053)(4.0,0.058)(5.0,0.060)};
+\addplot[very thick,color=BCred,dashed,smooth] coordinates {
+  (0,0)(0.2,0.0003)(0.5,0.002)(1.0,0.007)(1.5,0.013)
+  (2.0,0.019)(2.5,0.024)(3.0,0.028)(4.0,0.033)(5.0,0.036)};
+\addplot[very thick,color=BCblue,dotted,smooth] coordinates {
+  (0,0)(0.2,0.0001)(0.5,0.0005)(1.0,0.002)(1.5,0.004)
+  (2.0,0.006)(2.5,0.008)(3.0,0.010)(4.0,0.013)(5.0,0.015)};
+\addplot[ultra thick,color=black,dashdotted] coordinates {(0,0)(5.5,0)};
+\legend{$\gamma = 0.5$, $\gamma = 1$, $\gamma = 4$, CARA}
+\end{groupplot}
+\end{tikzpicture}
+\end{document}

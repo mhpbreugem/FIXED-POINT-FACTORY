@@ -1,0 +1,36 @@
+\documentclass[12pt,border=2mm]{standalone}
+\usepackage{pgfplots}
+\usepgfplotslibrary{groupplots}
+\pgfplotsset{compat=1.18}
+\definecolor{BCred}{rgb}{0.7, 0.11, 0.11}
+\definecolor{BCblue}{rgb}{0.0, 0.20, 0.42}
+\definecolor{BCgreen}{rgb}{0.11, 0.35, 0.02}
+\pgfplotsset{every axis/.append style={
+  width=7.5cm, height=7.5cm, scale only axis,
+  ticklabel style={font=\small, /pgf/number format/fixed, /pgf/number format/precision=3},
+  yticklabel style={text width=10mm, align=right},
+  ylabel style={text width=10mm, align=center},
+  label style={font=\normalsize},
+  title style={font=\normalsize},
+  legend style={draw=none, font=\small}}}
+\begin{document}
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size=1 by 1}]
+\nextgroupplot[scaled ticks=false,
+  ymin=-0.003, ymax=0.16,
+  xmin=0.08, xmax=5, xmode=log,
+  xlabel={Risk aversion $\gamma$}, ylabel={$1-R^2$},
+  xtick={0.1,0.25,0.5,1,2,4},
+  xticklabels={0.1,0.25,0.5,1,2,4},
+  legend pos=north east,
+  title={(b) versus $\gamma$}]
+% REE (WEIGHTED, G=20, UMAX=5, mp50, τ=2)
+\addplot[very thick,color=BCgreen,mark=*,mark size=1.5pt] coordinates {(0.5,0.088)(1,0.047)(2,0.025)(4,0.016)};
+% No-learning (WEIGHTED, G=20)
+\addplot[very thick,color=BCred,dashed,mark=square*,mark size=1.5pt] coordinates {(0.1,0.141)(0.25,0.098)(0.5,0.062)(1,0.029)(2,0.011)(4,0.003)};
+% CARA baseline
+\addplot[ultra thick,color=black,dashdotted] coordinates {(0.08,0)(5,0)};
+\legend{REE, No-learning, CARA}
+\end{groupplot}
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,41 @@
+% REE revelation deficit vs gamma — posterior method v3, G=14, tau=2
+\documentclass[border=2mm]{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\definecolor{red}{rgb}{0.7, 0.11, 0.11}
+\definecolor{blue}{rgb}{0.0, 0.20, 0.42}
+\definecolor{green}{rgb}{0.11, 0.35, 0.02}
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[
+  legend style={draw=none,legend pos=north east,font=\footnotesize},
+  ticklabel style={/pgf/number format/fixed,/pgf/number format/precision=5},
+  scaled ticks=false,
+  ymin=-0.001, ymax=0.17, ylabel={$1-R^2$},
+  xmin=0.08, xmax=5, xmode=log,
+  xlabel={$\gamma$},
+  xtick={0.1,0.2,0.3,0.5,1,2,3,5},
+  xticklabels={0.1,0.2,0.3,0.5,1,2,3,5},
+  xticklabel style={/pgf/number format/1000 sep=,font=\scriptsize},
+  width=8cm, height=8cm,
+  title={Risk aversion ($\gamma$)}]
+
+% REE (posterior method v3, strict convergence)
+\addplot[very thick,color=green,smooth,mark=*,mark size=1.5pt]
+  coordinates {
+  (0.1,0.154)(0.3,0.119)(0.5,0.108)(1.0,0.100)(2.0,0.079)};
+
+% No-learning (G=20, from smooth transition table)
+\addplot[very thick,color=red,dashed,smooth,mark=square*,mark size=1.5pt]
+  coordinates {
+  (0.1,0.145)(0.3,0.070)(0.5,0.038)(1.0,0.013)(2.0,0.004)};
+
+% CARA baseline
+\addplot[ultra thick,color=black,dashdotted]
+  coordinates {(0.08,0)(5,0)};
+
+\legend{REE ($G\!=\!14$), No-learning ($G\!=\!20$), CARA}
+
+\end{axis}
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,26 @@
+\documentclass[12pt,border=2mm]{standalone}
+\usepackage{pgfplots}
+\usepgfplotslibrary{groupplots}
+\pgfplotsset{compat=1.18}
+\definecolor{BCred}{rgb}{0.7, 0.11, 0.11}
+\definecolor{BCblue}{rgb}{0.0, 0.20, 0.42}
+\definecolor{BCgreen}{rgb}{0.11, 0.35, 0.02}
+\pgfplotsset{every axis/.append style={width=7.5cm, height=7.5cm, scale only axis,
+  ticklabel style={font=\small, /pgf/number format/fixed, /pgf/number format/precision=2}, yticklabel style={text width=10mm, align=right}, ylabel style={text width=10mm, align=center}, label style={font=\normalsize},
+  title style={font=\normalsize}, legend style={draw=none, font=\small}}}
+\begin{document}
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size=1 by 1}]
+\nextgroupplot[axis background/.style={fill=black!8},scaled ticks=false,ymin=-0.003, ymax=0.16,
+  xmin=0.3, xmax=10, xmode=log,
+  xlabel={Signal precision $\tau$}, ylabel={$1-R^2$},
+  xtick={0.5,1,2,4,8}, xticklabels={0.5,1,2,4,8},
+  legend pos=north west, title={(a) versus $\tau$}]
+\addplot[very thick,color=BCgreen,smooth,mark=none] coordinates {(0.26,0.0782)(0.33,0.0824)(0.42,0.0884)(0.53,0.1020)(0.68,0.1028)(0.87,0.1165)(1.12,0.1062)(1.43,0.1003)(1.83,0.1003)(2.34,0.1114)(2.99,0.1096)(3.83,0.1062)(4.89,0.1037)};
+\addplot[very thick,color=BCred,dashed,smooth,mark=none] coordinates {(0.3,0.040)(0.5,0.060)(1.0,0.085)(1.5,0.095)(2.0,0.100)(3.0,0.098)(4.0,0.090)(6.0,0.075)(8.0,0.060)};
+\addplot[very thick,color=BCblue,dotted,smooth,mark=none] coordinates {(0.3,0.010)(0.5,0.020)(1.0,0.038)(1.5,0.048)(2.0,0.058)(3.0,0.062)(4.0,0.058)(6.0,0.045)(8.0,0.035)};
+\addplot[ultra thick,color=black,dashdotted] coordinates {(0.3,0)(10,0)};
+\legend{$\gamma\!=\!0.5$,$\gamma\!=\!1$,$\gamma\!=\!4$,CARA}
+\end{groupplot}
+\end{tikzpicture}
+\end{document}

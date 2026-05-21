@@ -1,0 +1,16 @@
+% Shared figure style for all paper figures
+% Include via \input{figures/fig_style.tex} in each standalone
+\pgfplotsset{
+  every axis/.append style={
+    width=7cm, height=7cm,
+    scale only axis,
+    ticklabel style={font=\scriptsize},
+    label style={font=\small},
+    title style={font=\small},
+    legend style={draw=none, font=\footnotesize},
+  },
+  compat=1.18
+}
+\definecolor{BCred}{rgb}{0.7, 0.11, 0.11}
+\definecolor{BCblue}{rgb}{0.0, 0.20, 0.42}
+\definecolor{BCgreen}{rgb}{0.11, 0.35, 0.02}

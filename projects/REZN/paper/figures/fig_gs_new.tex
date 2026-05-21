@@ -1,0 +1,46 @@
+\documentclass[border=2mm]{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\definecolor{red}{rgb}{0.7, 0.11, 0.11}
+\definecolor{blue}{rgb}{0.0, 0.20, 0.42}
+\definecolor{green}{rgb}{0.11, 0.35, 0.02}
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[
+  legend style={draw=none,legend pos=south west,font=\footnotesize},
+  ticklabel style={/pgf/number format/fixed,/pgf/number format/precision=5},
+  scaled ticks=false,
+  ymin=-0.05, ymax=0.05, ylabel={$V(\tau) - c$},
+  xmin=0, xmax=0.065, xlabel={Acquisition cost $c$},
+  xticklabel style={font=\scriptsize},
+  width=7cm, height=7cm, scale only axis,
+  axis background/.style={fill=black!2}]
+
+% Zero line
+\addplot[thin,color=black!40] coordinates {(0,0)(0.065,0)};
+
+% gamma = 0.25 at tau=2 (V=0.042, invented)
+\addplot[very thick,color=green,smooth] coordinates {(0,0.042)(0.042,0)(0.065,-0.023)};
+
+% gamma = 1 at tau=2 (V=0.019, invented)
+\addplot[very thick,color=red,dashed,smooth] coordinates {(0,0.019)(0.019,0)(0.065,-0.046)};
+
+% gamma = 4 at tau=2 (V=0.006, invented)
+\addplot[very thick,color=blue,dotted,smooth] coordinates {(0,0.006)(0.006,0)(0.065,-0.059)};
+
+% CARA (V=0)
+\addplot[ultra thick,color=black,dashdotted] coordinates {(0,0)(0.065,-0.065)};
+
+% Mark c* points
+\addplot[only marks,mark=*,mark size=2pt,color=green] coordinates {(0.042,0)};
+\addplot[only marks,mark=square*,mark size=2pt,color=red] coordinates {(0.019,0)};
+\addplot[only marks,mark=triangle*,mark size=2pt,color=blue] coordinates {(0.006,0)};
+
+\legend{$\gamma = 0.25$, $\gamma = 1$, $\gamma = 4$, CARA}
+
+\node[anchor=south,font=\scriptsize] at (axis cs:0.042,0.002) {$c^{\star}$};
+\node[anchor=south,font=\scriptsize] at (axis cs:0.019,0.002) {$c^{\star}$};
+
+\end{axis}
+\end{tikzpicture}
+\end{document}

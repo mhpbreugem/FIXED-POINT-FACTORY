@@ -1,0 +1,19 @@
+\documentclass[border=2pt]{standalone}
+\usepackage{xcolor}
+\usepackage{amsmath,booktabs}
+\begin{document}
+\definecolor{placeholderbg}{rgb}{1.00, 0.97, 0.78}
+\pagecolor{placeholderbg}
+\begin{tabular}{lc}
+\toprule
+configuration  &  $1-R^2$ \\
+\midrule
+  baseline (equal $\gamma=1$, equal $\tau=2$)  &  0.0295 \\
+  het $\gamma=(1,3,10)$, equal $\tau=2$  &  0.1776 \\
+  equal $\gamma=1$, het $\tau=(1,3,10)$  &  0.1319 \\
+  het $\gamma+\tau$ aligned: $\gamma=(10,3,1)$, $\tau=(1,3,10)$  &  0.0722 \\
+  het $\gamma+\tau$ opposed: $\gamma=(1,3,10)$, $\tau=(1,3,10)$  &  0.2440 \\
+  extreme opposed: $\gamma=(0.3,3,10)$, $\tau=(0.5,3,10)$  &  0.5025 \\
+\bottomrule
+\end{tabular}
+\end{document}

@@ -1,0 +1,33 @@
+\documentclass[12pt,border=2mm]{standalone}
+\usepackage{pgfplots}
+\usepgfplotslibrary{groupplots}
+\pgfplotsset{compat=1.18}
+\definecolor{BCred}{rgb}{0.7, 0.11, 0.11}
+\definecolor{BCblue}{rgb}{0.0, 0.20, 0.42}
+\definecolor{BCgreen}{rgb}{0.11, 0.35, 0.02}
+\pgfplotsset{every axis/.append style={
+  width=7.5cm, height=7.5cm, scale only axis,
+  ticklabel style={font=\small, /pgf/number format/fixed, /pgf/number format/precision=2}, yticklabel style={text width=10mm, align=right}, ylabel style={text width=10mm, align=center},
+  label style={font=\normalsize},
+  title style={font=\normalsize},
+  legend style={draw=none, font=\small}}}
+\begin{document}
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size=1 by 1}]
+\nextgroupplot[
+  ymin=-0.05, ymax=0.05, ylabel={$V(\tau) - c$},
+  xmin=0, xmax=0.065, xlabel={Acquisition cost $c$},
+  legend pos=south west,
+  axis background/.style={fill=black!8}]
+\addplot[thin,color=black!40] coordinates {(0,0)(0.065,0)};
+\addplot[very thick,color=BCgreen,smooth] coordinates {(0,0.042)(0.042,0)(0.065,-0.023)};
+\addplot[very thick,color=BCred,dashed,smooth] coordinates {(0,0.019)(0.019,0)(0.065,-0.046)};
+\addplot[very thick,color=BCblue,dotted,smooth] coordinates {(0,0.006)(0.006,0)(0.065,-0.059)};
+\addplot[ultra thick,color=black,dashdotted] coordinates {(0,0)(0.065,-0.065)};
+\addplot[only marks,mark=*,mark size=2pt,color=BCgreen] coordinates {(0.042,0)};
+\addplot[only marks,mark=square*,mark size=2pt,color=BCred] coordinates {(0.019,0)};
+\addplot[only marks,mark=triangle*,mark size=2pt,color=BCblue] coordinates {(0.006,0)};
+\legend{$\gamma = 0.5$, $\gamma = 1$, $\gamma = 4$, CARA}
+\end{groupplot}
+\end{tikzpicture}
+\end{document}

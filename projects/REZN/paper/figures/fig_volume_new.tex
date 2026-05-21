@@ -1,0 +1,29 @@
+\documentclass[border=2mm]{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\definecolor{red}{rgb}{0.7, 0.11, 0.11}
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[
+  legend style={draw=none,legend pos=north east,font=\footnotesize},
+  ticklabel style={/pgf/number format/fixed},
+  scaled ticks=false,
+  ymin=-0.001, ymax=0.25, ylabel={$E[|x_k|]$},
+  xmin=0.08, xmax=50, xmode=log,
+  xlabel={$\gamma$},
+  xtick={0.1,0.5,1,2,5,10,50},
+  xticklabels={0.1,0.5,1,2,5,10,50},
+  xticklabel style={font=\scriptsize},
+  width=7cm, height=7cm, scale only axis,
+  axis background/.style={fill=black!2}]
+
+% REE trade volume (invented)
+\addplot[very thick,color=red,smooth,mark=*,mark size=1.5pt] coordinates {
+  (0.1,0.22)(0.25,0.18)(0.5,0.14)(1,0.10)(2,0.065)(5,0.025)(10,0.008)(50,0.001)};
+
+\addplot[ultra thick,color=black,dashdotted] coordinates {(0.08,0)(50,0)};
+
+\legend{CRRA (REE), CARA}
+\end{axis}
+\end{tikzpicture}
+\end{document}
