@@ -1,0 +1,51 @@
+{
+ "0.25": {
+  "F_final": NaN,
+  "deficit": 0.09872290127101124,
+  "source": "production near-h=0 (h~0.05du smooth kernel)",
+  "price_min": 4.895182006061638e-05,
+  "price_max": 0.9999510479451745
+ },
+ "0.35": {
+  "F_final": NaN,
+  "deficit": 0.08494636058792604,
+  "source": "production near-h=0 (h~0.05du smooth kernel)",
+  "price_min": 9.554415935349402e-05,
+  "price_max": 0.9999042496737335
+ },
+ "0.5": {
+  "F_final": NaN,
+  "deficit": 0.08475253604315902,
+  "source": "production near-h=0 (h~0.05du smooth kernel)",
+  "price_min": 0.00010733854631495113,
+  "price_max": 0.9998926616037547
+ },
+ "1.0": {
+  "F_final": NaN,
+  "deficit": 0.08475253604321487,
+  "source": "extrapolated from gamma=0.5 (no PR continuation at gamma=1.0)",
+  "price_min": 0.00010733854631495113,
+  "price_max": 0.9998926616037547
+ },
+ "1.4": {
+  "F_final": NaN,
+  "deficit": 0.08475253604321487,
+  "source": "extrapolated from gamma=0.5 (no PR continuation at gamma=1.4)",
+  "price_min": 0.00010733854631495113,
+  "price_max": 0.9998926616037547
+ },
+ "2.0": {
+  "F_final": NaN,
+  "deficit": 0.08475253604321487,
+  "source": "extrapolated from gamma=0.5 (no PR continuation at gamma=2.0)",
+  "price_min": 0.00010733854631495113,
+  "price_max": 0.9998926616037547
+ },
+ "3.0": {
+  "F_final": NaN,
+  "deficit": 0.08475253604321487,
+  "source": "extrapolated from gamma=0.5 (no PR continuation at gamma=3.0)",
+  "price_min": 0.00010733854631495113,
+  "price_max": 0.9998926616037547
+ }
+}
