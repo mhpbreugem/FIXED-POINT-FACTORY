@@ -146,15 +146,28 @@ on `sym_phi` from any reasonable seed (cold no-learning at deficit 0.099, consta
 P=0.5, soft sigmoid seeds, *or* the production PR checkpoint at deficit 0.085) ends at
 one of two fixed points:
 
-| seed at γ=0.25, τ=2 | initial 1−R² | NK-final 1−R² | endpoint |
-|---|---|---|---|
-| cold no-learning | 0.099 | 0.016 (NoConv) | drift toward FR |
-| constant P=0.5 | NaN (F=3.6e-15) | NaN | P=0.5 trivial FP |
-| soft sigmoid(0.1·T*) | 0.000 | 0.000 (F=4e-10) | FR fixed point |
-| sigmoid(0.5·τΣu) | 0.000 | 0.000 (F=4e-10) | FR fixed point |
+Direct seed-basin probe on `sym_phi`, G=17, UMAX=4, τ=2, 8 NK iters per seed
+(`/tmp/h0_test_seeds.py`):
 
-So `sym_phi` (exact h=0) at γ=0.25 has two stable fixed points: **FR (1−R²=0)** and the
-**trivial constant P=0.5**. The published PR equilibrium (1−R²≈0.099) is *not* a stable
+| γ | seed | init 1−R² | NK-final 1−R² | F_init | F_final | converged? |
+|---|---|---|---|---|---|---|
+| 0.25 | cold no-learning (PR-like) | 0.099 | 0.016 | 3.3e-1 | 1.8e-1 | **NoConv** (drift toward FR) |
+| 0.25 | constant P=0.5 | NaN | NaN | 3.6e-15 | 0 | yes (trivial FP) |
+| 0.25 | soft sigmoid(0.1·T*) | 0.000 | 0.000 | 3.8e-1 | 4.4e-10 | yes (FR) |
+| 0.25 | sigmoid(0.5·τΣu) | 0.000 | 0.000 | 1.5e-1 | 4.2e-10 | yes (FR) |
+| 0.5  | cold no-learning | 0.062 | 0.014 | 3.3e-1 | 9.3e-2 | **NoConv** |
+| 0.5  | constant P=0.5 | NaN | NaN | 3.6e-15 | 0 | yes (trivial) |
+| 0.5  | soft sigmoid(0.1·T*) | 0.000 | 0.000 | 3.8e-1 | 1.8e-10 | yes (FR) |
+| 0.5  | sigmoid(0.5·τΣu) | 0.000 | 0.000 | 1.5e-1 | 4.2e-10 | yes (FR) |
+| 1.0  | cold no-learning | 0.030 | 0.053 | 3.3e-1 | 2.6e-1 | **NoConv** |
+| 1.0  | constant P=0.5 | NaN | NaN | 3.6e-15 | 0 | yes (trivial) |
+| 1.0  | soft sigmoid(0.1·T*) | 0.000 | 0.000 | 3.8e-1 | 2.9e-14 | yes (FR) |
+| 1.0  | sigmoid(0.5·τΣu) | 0.000 | 0.000 | 1.5e-1 | 4.2e-10 | yes (FR) |
+
+Across γ ∈ {0.25, 0.5, 1.0}, every converging NK run lands on one of two fixed points:
+**FR (1−R²=0)** or the **trivial constant P=0.5**. The PR seed (cold no-learning at the
+known PR deficit) fails to converge — NK either drifts toward FR (γ=0.25, 0.5) or
+oscillates without settling (γ=1.0). The published PR equilibrium (1−R²≈0.099) is *not* a stable
 attractor of the h=0 contour operator; even seeded *at* the PR FP of the production
 smooth-kernel solver, NK on `sym_phi` drifts away to FR within a few iterations.
 
