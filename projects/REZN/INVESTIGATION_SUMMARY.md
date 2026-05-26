@@ -128,7 +128,7 @@ full REE) holds.
 
 ---
 
-## 6. "Is PR an artifact of positive kernel bandwidth h?" — **no**
+## 6. "Is PR an artifact of positive kernel bandwidth h?" — partly: PR is a soft-kernel attractor; exact h=0 has no PR fixed point near the production PR
 
 Smooth-kernel h-refinement (fixed grid G=17, γ=0.5, τ=2):
 
@@ -136,15 +136,43 @@ Smooth-kernel h-refinement (fixed grid G=17, γ=0.5, τ=2):
 |---|---|
 | 0.12 | 0.1236 |
 | 0.08 | 0.1051 |
-| **0 (exact, no kernel — `contour_KN_sym`)** | **0.098** |
+| extrapolation to h→0 | ~0.085 |
 
-The deficit **decreases monotonically toward a positive limit (~0.098) as h→0**, not
-toward 0. The zero-bandwidth value is computed *directly* by the exact contour method
-that uses no kernel at all (‖F‖~1e-15) and is firmly PR. Positive h slightly *inflates*
-the deficit but does not create it. Corroborated by grid invariance (EQUATIONS.md
-G=15–20; G=12/17/21 checkpoints all ~0.085) and the analytic no-learning Jensen-gap
-result (Prop 2, PR with no kernel and no grid). Only an under-converged sharp-kernel run
-collapses to ~0 — a convergence failure, not the true h→0 limit.
+The deficit **decreases monotonically toward a positive limit as h→0** in the smooth-kernel
+solver. By that extrapolation it should not collapse to 0. But the *direct* exact-h=0
+computation (`contour_KN_sym.sym_phi`, no kernel at all, on the same G=17, UMAX=4 grid)
+**does not realize the extrapolated PR limit as a numerical attractor**. Newton-Krylov
+on `sym_phi` from any reasonable seed (cold no-learning at deficit 0.099, constant
+P=0.5, soft sigmoid seeds, *or* the production PR checkpoint at deficit 0.085) ends at
+one of two fixed points:
+
+| seed at γ=0.25, τ=2 | initial 1−R² | NK-final 1−R² | endpoint |
+|---|---|---|---|
+| cold no-learning | 0.099 | 0.016 (NoConv) | drift toward FR |
+| constant P=0.5 | NaN (F=3.6e-15) | NaN | P=0.5 trivial FP |
+| soft sigmoid(0.1·T*) | 0.000 | 0.000 (F=4e-10) | FR fixed point |
+| sigmoid(0.5·τΣu) | 0.000 | 0.000 (F=4e-10) | FR fixed point |
+
+So `sym_phi` (exact h=0) at γ=0.25 has two stable fixed points: **FR (1−R²=0)** and the
+**trivial constant P=0.5**. The published PR equilibrium (1−R²≈0.099) is *not* a stable
+attractor of the h=0 contour operator; even seeded *at* the PR FP of the production
+smooth-kernel solver, NK on `sym_phi` drifts away to FR within a few iterations.
+
+**Interpretation.** The published PR equilibrium is a fixed point of the smooth-kernel
+operator (h≈0.05·du in production) but **not** of the exact h=0 contour. As h→0 the
+smooth-kernel PR FP either (a) loses its stability (becomes a non-attracting saddle in
+the function space) or (b) ceases to exist past a critical h. Either way, what survives
+at exact h=0 is FR + trivial constant — PR requires positive h to be the *numerical*
+equilibrium that the solver lands on.
+
+Practical consequence: the h=0 figures (`fig_h0_*.png`) use the production checkpoints
+(h≈0.05·du smooth kernel) as the **near-h=0 PR reference** and label them honestly as
+"near-h=0 (smooth kernel h~0.05du)" rather than as exact h=0 contour solutions.
+
+This refines but does not invalidate the basic Prop 4 statement (PR exists across the
+parameter range). It does mean the "h-independence" reading from sections 5–6 above
+needs the caveat: PR is robust to *small* positive h, but the exact h=0 limit is a
+distinct numerical regime where only FR and trivial fixed points survive.
 
 ---
 
