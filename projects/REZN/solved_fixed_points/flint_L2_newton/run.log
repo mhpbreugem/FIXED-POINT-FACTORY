@@ -296,3 +296,5 @@
 [22:43:31]   outer 115  ||Φ-P||∞=2.086e-01  (L0-bench)  ||F||∞=4.753e+03  (Fp:4.75e+03 Fμ:1.02e-06 FA:6.02e-01 Ff:3.82e-04)  ||δ||∞=9.223e-03  step∞=9.223e-05  gmres_info=1  d_FR=2.6914e-01  N_act=112996  (tot 48.7s, +Φ_bench 9.1s, nF=2530)
 [22:43:34]   build_active_edges: total 2.5s, N_active=112984
 [22:43:34]   --- recache outer 115: N_active 112996→112984, +14 −26, t=2.8s
+[22:43:35]   --- push outer 115: push_rc=0
+[22:44:25]   outer 116  ||Φ-P||∞=2.086e-01  (L0-bench)  ||F||∞=4.727e+03  (Fp:4.73e+03 Fμ:1.05e-06 FA:6.03e-01 Ff:3.11e-207)  ||δ||∞=9.125e-03  step∞=9.125e-05  gmres_info=1  d_FR=2.6914e-01  N_act=112984  (tot 49.9s, +Φ_bench 9.2s, nF=2552)
