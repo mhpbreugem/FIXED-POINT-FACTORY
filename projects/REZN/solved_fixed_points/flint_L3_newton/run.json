@@ -1,0 +1,27 @@
+{
+  "ferr": [
+    10588.906002724798
+  ],
+  "phimP": [
+    0.20939882702440757
+  ],
+  "d_FR": [
+    0.2691658406564557
+  ],
+  "gmres_info": [
+    1
+  ],
+  "outer_done": 1,
+  "nF": 22,
+  "ALPHA": 0.01,
+  "CLIP_INF": 1.0,
+  "GMRES_RESTART": 20,
+  "GMRES_TOL": 0.0001,
+  "FD_EPS": 1e-08,
+  "dps": 200,
+  "SIGMOID_S": 10000.0,
+  "NSTATE_CELL": 7290,
+  "N_potential": 705564,
+  "NSTATE": 712854,
+  "NVAR_PER_CELL": 10
+}

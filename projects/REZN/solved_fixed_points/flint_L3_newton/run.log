@@ -1,0 +1,23 @@
+[20:58:01] Loaded P from /home/user/FIXED-POINT-FACTORY/projects/REZN/solved_fixed_points/flint_persist2/P.npy, shape=(11, 11, 11)
+[20:58:01] Initializing lifted cell-block state (one Φ-helper call per cell)...
+[20:58:02]    init: row i=1 (0.6s elapsed)
+[20:58:02]    init: row i=2 (1.1s elapsed)
+[20:58:03]    init: row i=3 (1.7s elapsed)
+[20:58:03]    init: row i=4 (2.3s elapsed)
+[20:58:04]    init: row i=5 (2.8s elapsed)
+[20:58:04]    init: row i=6 (3.4s elapsed)
+[20:58:05]    init: row i=7 (4.0s elapsed)
+[20:58:06]    init: row i=8 (4.6s elapsed)
+[20:58:06]    init: row i=9 (5.2s elapsed)
+[20:58:06] Cell-block state init done in 5.2s
+[20:58:06] Scanning to build POTENTIAL-edge cache (sigmoid mask, s=1.0e+04)...
+[20:58:09]   build_potential_edges: total 2.5s, N_potential=705564
+[20:58:09] N_potential = 705564, NSTATE = 712854
+[20:58:09] Full state assembled: len=712854
+[20:58:09] Validation gate: computing F_residual at base...
+[20:58:21]   F_residual cost = 12.81s
+[20:58:21]   Block norms at base: ‖Fp‖∞=1.059e+04  ‖Fμ‖∞=6.229e-207  ‖FA‖∞=8.117e-01  ‖Ffrac‖∞=9.984e-01
+[20:58:31]   ‖Φ-P‖∞ (L0-bench) at base = 2.094e-01, computed in 9.1s
+[20:58:31]   d_FR at base = 2.6917e-01
+[20:58:31] L3 JFNK, NSTATE=712854 (cell 7290 + frac 705564), α=0.01, clip||δ||∞≤1.0, FD_eps=1e-08, gmres restart=20 tol=0.0001, sigmoid_s=10000.0
+[21:03:42]   outer   1  ||Φ-P||∞=2.094e-01  (L0-bench)  ||F||∞=1.059e+04  (Fp:1.06e+04 Fμ:6.23e-207 FA:8.12e-01 Ff:9.98e-01)  ||δ||∞=3.648e-03  step∞=3.648e-05  gmres_info=1  d_FR=2.6917e-01  N_pot=705564  (tot 311.7s, +Φ_bench 9.1s, nF=22)
