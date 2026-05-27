@@ -118,5 +118,17 @@
     "intercept": -6.342053313448167e-16,
     "iters": 200,
     "converged": false
+  },
+  "G41_g0.05_FR_ansatz": {
+    "G": 41,
+    "gamma": 0.05,
+    "ic": "FR_ansatz",
+    "final_ferr": 0.004892986551414458,
+    "final_d_FR": 0.0007598525498333658,
+    "final_1mR2": 4.89241212496072e-06,
+    "slope": 1.0012173300197045,
+    "intercept": -6.773047471119969e-16,
+    "iters": 200,
+    "converged": false
   }
 }
