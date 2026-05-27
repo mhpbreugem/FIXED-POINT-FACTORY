@@ -248,3 +248,5 @@
 [22:26:36]   outer  95  ||Φ-P||∞=2.089e-01  (L0-bench)  ||F||∞=5.326e+03  (Fp:5.33e+03 Fμ:6.76e-07 FA:6.00e-01 Ff:3.28e-04)  ||δ||∞=8.429e-03  step∞=8.429e-05  gmres_info=1  d_FR=2.6914e-01  N_act=113042  (tot 47.1s, +Φ_bench 8.9s, nF=2090)
 [22:26:38]   build_active_edges: total 2.3s, N_active=113026
 [22:26:38]   --- recache outer 95: N_active 113042→113026, +44 −60, t=2.6s
+[22:26:39]   --- push outer 95: push_rc=0
+[22:27:30]   outer  96  ||Φ-P||∞=2.089e-01  (L0-bench)  ||F||∞=5.294e+03  (Fp:5.29e+03 Fμ:6.90e-07 FA:6.01e-01 Ff:3.11e-207)  ||δ||∞=8.560e-03  step∞=8.560e-05  gmres_info=1  d_FR=2.6914e-01  N_act=113026  (tot 50.8s, +Φ_bench 9.2s, nF=2112)
