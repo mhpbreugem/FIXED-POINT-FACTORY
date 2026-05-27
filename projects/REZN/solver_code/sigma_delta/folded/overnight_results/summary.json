@@ -82,5 +82,17 @@
     "intercept": -6.292754937126783e-16,
     "iters": 200,
     "converged": false
+  },
+  "G21_g0.5_no_learn": {
+    "G": 21,
+    "gamma": 0.5,
+    "ic": "no_learn",
+    "final_ferr": 0.012735312175042424,
+    "final_d_FR": 0.0025924717547670634,
+    "final_1mR2": 4.886045708724911e-05,
+    "slope": 1.004073369511096,
+    "intercept": -6.492545657186839e-16,
+    "iters": 200,
+    "converged": false
   }
 }
