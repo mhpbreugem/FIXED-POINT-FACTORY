@@ -36,3 +36,11 @@
 [20:31:04]   outer  10  ||Φ-P||∞=2.094e-01  (L0-bench)  ||F||∞=9.814e+03  (Fp:9.81e+03 Fμ:9.75e-10 FA:3.68e-01 Ff:1.55e-04)  ||δ||∞=3.924e-03  step∞=3.924e-05  gmres_info=1  d_FR=2.6916e-01  N_act=112876  (tot 51.6s, +Φ_bench 9.2s, nF=220)
 [20:31:06]   build_active_edges: total 2.2s, N_active=112882
 [20:31:06]   --- recache outer 10: N_active 112876→112882, +92 −86, t=2.5s
+[20:31:07]   --- push outer 10: push_rc=0
+[20:32:00]   outer  11  ||Φ-P||∞=2.094e-01  (L0-bench)  ||F||∞=9.732e+03  (Fp:9.73e+03 Fμ:1.23e-09 FA:3.69e-01 Ff:3.11e-207)  ||δ||∞=3.975e-03  step∞=3.975e-05  gmres_info=1  d_FR=2.6916e-01  N_act=112882  (tot 52.2s, +Φ_bench 9.3s, nF=242)
+[20:32:52]   outer  12  ||Φ-P||∞=2.094e-01  (L0-bench)  ||F||∞=9.652e+03  (Fp:9.65e+03 Fμ:1.49e-09 FA:3.69e-01 Ff:4.04e-05)  ||δ||∞=4.035e-03  step∞=4.035e-05  gmres_info=1  d_FR=2.6916e-01  N_act=112882  (tot 52.0s, +Φ_bench 9.2s, nF=264)
+[20:33:44]   outer  13  ||Φ-P||∞=2.094e-01  (L0-bench)  ||F||∞=9.573e+03  (Fp:9.57e+03 Fμ:1.76e-09 FA:3.69e-01 Ff:8.14e-05)  ||δ||∞=4.114e-03  step∞=4.114e-05  gmres_info=1  d_FR=2.6916e-01  N_act=112882  (tot 52.5s, +Φ_bench 9.4s, nF=286)
+[20:34:36]   outer  14  ||Φ-P||∞=2.094e-01  (L0-bench)  ||F||∞=9.494e+03  (Fp:9.49e+03 Fμ:2.05e-09 FA:3.69e-01 Ff:1.23e-04)  ||δ||∞=4.223e-03  step∞=4.223e-05  gmres_info=1  d_FR=2.6916e-01  N_act=112882  (tot 51.8s, +Φ_bench 9.4s, nF=308)
+[20:35:35]   outer  15  ||Φ-P||∞=2.094e-01  (L0-bench)  ||F||∞=9.417e+03  (Fp:9.42e+03 Fμ:2.35e-09 FA:3.69e-01 Ff:1.66e-04)  ||δ||∞=4.354e-03  step∞=4.354e-05  gmres_info=1  d_FR=2.6916e-01  N_act=112882  (tot 59.0s, +Φ_bench 9.9s, nF=330)
+[20:35:37]   build_active_edges: total 2.2s, N_active=112888
+[20:35:37]   --- recache outer 15: N_active 112882→112888, +50 −44, t=2.6s
