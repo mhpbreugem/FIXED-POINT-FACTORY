@@ -24,3 +24,5 @@
 [20:59:06]   --- push outer 1: push_rc=0
 [20:59:08]   iter 2: F_residual=1.7s
 [20:59:54]   outer   2  ||Φ-P||∞=2.094e-01  (L0-bench)  ||F||∞=1.050e+04  (Fp:1.05e+04 Fμ:3.49e-17 FA:1.49e-10 Ff:3.71e-05)  ||δ||∞=3.669e-03  step∞=3.669e-05  gmres_info=1  d_FR=2.6917e-01  N_act=112848  (tot 47.5s, +Φ_bench 9.5s, nF=44)
+[20:59:55]   --- push outer 2: push_rc=0
+[21:00:43]   outer   3  ||Φ-P||∞=2.094e-01  (L0-bench)  ||F||∞=1.041e+04  (Fp:1.04e+04 Fμ:7.38e-17 FA:3.03e-10 Ff:7.44e-05)  ||δ||∞=3.689e-03  step∞=3.689e-05  gmres_info=1  d_FR=2.6917e-01  N_act=112848  (tot 47.5s, +Φ_bench 8.9s, nF=66)
