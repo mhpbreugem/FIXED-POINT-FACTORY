@@ -64,3 +64,5 @@
 [23:00:33]   outer  21  ||Φ-P||∞=2.093e-01  (L0-bench)  ||F||∞=9.012e+03  (Fp:9.01e+03 Fμ:4.39e-07 FA:8.08e-01 Ff:9.98e-01)  ||δ||∞=4.465e-03  step∞=4.465e-05  gmres_info=1  d_FR=2.6916e-01  N_pot=705564  (tot 326.4s, +Φ_bench 8.9s, nF=462)
 [23:00:35]   --- push outer 21: push_rc=0
 [23:06:00]   outer  22  ||Φ-P||∞=2.093e-01  (L0-bench)  ||F||∞=8.943e+03  (Fp:8.94e+03 Fμ:4.65e-07 FA:8.08e-01 Ff:9.98e-01)  ||δ||∞=4.538e-03  step∞=4.538e-05  gmres_info=1  d_FR=2.6916e-01  N_pot=705564  (tot 325.4s, +Φ_bench 9.4s, nF=484)
+[23:06:01]   --- push outer 22: push_rc=0
+[23:11:27]   outer  23  ||Φ-P||∞=2.093e-01  (L0-bench)  ||F||∞=8.875e+03  (Fp:8.88e+03 Fμ:4.92e-07 FA:8.08e-01 Ff:9.98e-01)  ||δ||∞=4.609e-03  step∞=4.609e-05  gmres_info=1  d_FR=2.6916e-01  N_pot=705564  (tot 326.2s, +Φ_bench 9.6s, nF=506)
