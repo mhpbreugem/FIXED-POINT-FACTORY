@@ -428,3 +428,5 @@
 [23:30:19]   outer 170  ||Φ-P||∞=2.079e-01  (L0-bench)  ||F||∞=3.554e+03  (Fp:3.55e+03 Fμ:2.70e-06 FA:6.06e-01 Ff:3.94e-04)  ||δ||∞=1.007e-02  step∞=1.007e-04  gmres_info=1  d_FR=2.6911e-01  N_act=112952  (tot 50.3s, +Φ_bench 9.1s, nF=3740)
 [23:30:21]   build_active_edges: total 2.2s, N_active=112974
 [23:30:22]   --- recache outer 170: N_active 112952→112974, +50 −28, t=2.6s
+[23:30:23]   --- push outer 170: push_rc=0
+[23:31:13]   outer 171  ||Φ-P||∞=2.079e-01  (L0-bench)  ||F||∞=3.538e+03  (Fp:3.54e+03 Fμ:2.74e-06 FA:6.06e-01 Ff:3.11e-207)  ||δ||∞=1.015e-02  step∞=1.015e-04  gmres_info=1  d_FR=2.6911e-01  N_act=112974  (tot 50.4s, +Φ_bench 9.6s, nF=3762)
