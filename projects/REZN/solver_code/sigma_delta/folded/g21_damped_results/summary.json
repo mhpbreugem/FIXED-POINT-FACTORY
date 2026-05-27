@@ -1,0 +1,16 @@
+{
+  "DAMP_G21_g0.05_FR_ansatz": {
+    "gamma": 0.05,
+    "ic": "FR_ansatz",
+    "final_ferr": 4.512188889072011e-05,
+    "final_d_FR": 0.0017742284505472973,
+    "final_1mR2": 3.189916415910707e-05,
+    "slope": 1.0050158391129553,
+    "intercept": 1.9587072508979714e-08,
+    "iters": 5000,
+    "converged": false,
+    "final_omega": 0.05,
+    "omega_min": 0.05,
+    "omega_max": 1.0
+  }
+}
