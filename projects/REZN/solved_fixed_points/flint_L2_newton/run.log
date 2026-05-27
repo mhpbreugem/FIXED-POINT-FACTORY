@@ -344,3 +344,5 @@
 [23:00:27]   outer 135  ||Φ-P||∞=2.084e-01  (L0-bench)  ||F||∞=4.264e+03  (Fp:4.26e+03 Fμ:1.64e-06 FA:6.04e-01 Ff:3.21e-04)  ||δ||∞=7.831e-03  step∞=7.831e-05  gmres_info=1  d_FR=2.6913e-01  N_act=112956  (tot 51.8s, +Φ_bench 9.3s, nF=2970)
 [23:00:30]   build_active_edges: total 2.3s, N_active=112944
 [23:00:30]   --- recache outer 135: N_active 112956→112944, +38 −50, t=2.6s
+[23:00:31]   --- push outer 135: push_rc=0
+[23:01:20]   outer 136  ||Φ-P||∞=2.083e-01  (L0-bench)  ||F||∞=4.241e+03  (Fp:4.24e+03 Fμ:1.67e-06 FA:6.04e-01 Ff:3.11e-207)  ||δ||∞=7.816e-03  step∞=7.816e-05  gmres_info=1  d_FR=2.6913e-01  N_act=112944  (tot 49.3s, +Φ_bench 9.0s, nF=2992)
