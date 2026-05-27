@@ -44,3 +44,5 @@
 [21:06:30]   outer  10  ||Φ-P||∞=2.094e-01  (L0-bench)  ||F||∞=9.814e+03  (Fp:9.81e+03 Fμ:9.75e-10 FA:3.68e-01 Ff:1.55e-04)  ||δ||∞=3.924e-03  step∞=3.924e-05  gmres_info=1  d_FR=2.6916e-01  N_act=112876  (tot 48.3s, +Φ_bench 9.3s, nF=220)
 [21:06:32]   build_active_edges: total 2.1s, N_active=112882
 [21:06:33]   --- recache outer 10: N_active 112876→112882, +92 −86, t=2.5s
+[21:06:34]   --- push outer 10: push_rc=0
+[21:07:22]   outer  11  ||Φ-P||∞=2.094e-01  (L0-bench)  ||F||∞=9.732e+03  (Fp:9.73e+03 Fμ:1.23e-09 FA:3.69e-01 Ff:3.11e-207)  ||δ||∞=3.975e-03  step∞=3.975e-05  gmres_info=1  d_FR=2.6916e-01  N_act=112882  (tot 48.1s, +Φ_bench 9.2s, nF=242)
