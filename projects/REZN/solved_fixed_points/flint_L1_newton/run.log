@@ -1,0 +1,19 @@
+[20:25:28] Loaded P from /home/user/FIXED-POINT-FACTORY/projects/REZN/solved_fixed_points/flint_persist2/P.npy, shape=(11, 11, 11)
+[20:25:28] Initializing lifted state (one Φ-helper call per cell)...
+[20:25:29]    init: row i=1 (0.6s elapsed)
+[20:25:29]    init: row i=2 (1.1s elapsed)
+[20:25:30]    init: row i=3 (1.7s elapsed)
+[20:25:31]    init: row i=4 (2.3s elapsed)
+[20:25:31]    init: row i=5 (2.9s elapsed)
+[20:25:32]    init: row i=6 (3.5s elapsed)
+[20:25:32]    init: row i=7 (4.0s elapsed)
+[20:25:33]    init: row i=8 (4.6s elapsed)
+[20:25:34]    init: row i=9 (5.2s elapsed)
+[20:25:34] State init done in 5.2s
+[20:25:34] L1 JFNK, lifted state NSTATE=7290, α=0.01, clip||δ||∞≤1.0, FD_eps=1e-08, gmres restart=20 tol=0.0001
+[20:25:39]   iter 1: F_residual=5.2s, ||F||∞=1.059e+04
+[20:27:38]   outer   1  ||Φ-P||∞=2.094e-01  (L0-bench)  ||F||∞=1.059e+04  (Fp:1.06e+04 Fμ:6.23e-207 FA:0.00e+00)  ||δ||∞=1.188e-01  step∞=1.188e-03  gmres_info=1  d_FR=2.6917e-01  (tot 124.5s, +Φ_bench 8.8s, nF=22)
+[20:29:44]   outer   2  ||Φ-P||∞=2.094e-01  (L0-bench)  ||F||∞=1.049e+04  (Fp:1.05e+04 Fμ:4.42e-07 FA:1.80e-01)  ||δ||∞=3.673e-03  step∞=3.673e-05  gmres_info=1  d_FR=2.6917e-01  (tot 125.6s, +Φ_bench 9.2s, nF=44)
+[20:31:48]   outer   3  ||Φ-P||∞=2.094e-01  (L0-bench)  ||F||∞=1.040e+04  (Fp:1.04e+04 Fμ:4.42e-07 FA:2.57e-01)  ||δ||∞=3.693e-03  step∞=3.693e-05  gmres_info=1  d_FR=2.6917e-01  (tot 123.9s, +Φ_bench 8.9s, nF=66)
+[20:33:53]   outer   4  ||Φ-P||∞=2.094e-01  (L0-bench)  ||F||∞=1.031e+04  (Fp:1.03e+04 Fμ:4.42e-07 FA:3.58e-01)  ||δ||∞=3.713e-03  step∞=3.713e-05  gmres_info=1  d_FR=2.6917e-01  (tot 125.0s, +Φ_bench 8.8s, nF=88)
+[20:36:00]   outer   5  ||Φ-P||∞=2.094e-01  (L0-bench)  ||F||∞=1.022e+04  (Fp:1.02e+04 Fμ:4.42e-07 FA:3.58e-01)  ||δ||∞=3.732e-03  step∞=3.732e-05  gmres_info=1  d_FR=2.6917e-01  (tot 127.7s, +Φ_bench 9.1s, nF=110)
