@@ -308,3 +308,5 @@
 [22:47:46]   outer 120  ||Φ-P||∞=2.085e-01  (L0-bench)  ||F||∞=4.625e+03  (Fp:4.62e+03 Fμ:1.18e-06 FA:6.03e-01 Ff:3.64e-04)  ||δ||∞=8.724e-03  step∞=8.724e-05  gmres_info=1  d_FR=2.6913e-01  N_act=112984  (tot 48.6s, +Φ_bench 9.2s, nF=2640)
 [22:47:49]   build_active_edges: total 2.3s, N_active=112968
 [22:47:49]   --- recache outer 120: N_active 112984→112968, +44 −60, t=2.6s
+[22:47:50]   --- push outer 120: push_rc=0
+[22:48:39]   outer 121  ||Φ-P||∞=2.085e-01  (L0-bench)  ||F||∞=4.600e+03  (Fp:4.60e+03 Fμ:1.21e-06 FA:6.03e-01 Ff:3.11e-207)  ||δ||∞=8.631e-03  step∞=8.631e-05  gmres_info=1  d_FR=2.6913e-01  N_act=112968  (tot 48.6s, +Φ_bench 8.9s, nF=2662)
