@@ -21,3 +21,6 @@
 [20:58:19]   d_FR at base = 2.6917e-01
 [20:58:19] L2 JFNK, NSTATE=120138 (cell 7290 + frac 112848), α=0.01, clip||δ||∞≤1.0, FD_eps=1e-08, gmres restart=20 tol=0.0001, recache_every=5
 [20:59:05]   outer   1  ||Φ-P||∞=2.094e-01  (L0-bench)  ||F||∞=1.059e+04  (Fp:1.06e+04 Fμ:6.23e-207 FA:7.48e-13 Ff:3.11e-207)  ||δ||∞=3.648e-03  step∞=3.648e-05  gmres_info=1  d_FR=2.6917e-01  N_act=112848  (tot 46.4s, +Φ_bench 9.1s, nF=22)
+[20:59:06]   --- push outer 1: push_rc=0
+[20:59:08]   iter 2: F_residual=1.7s
+[20:59:54]   outer   2  ||Φ-P||∞=2.094e-01  (L0-bench)  ||F||∞=1.050e+04  (Fp:1.05e+04 Fμ:3.49e-17 FA:1.49e-10 Ff:3.71e-05)  ||δ||∞=3.669e-03  step∞=3.669e-05  gmres_info=1  d_FR=2.6917e-01  N_act=112848  (tot 47.5s, +Φ_bench 9.5s, nF=44)
