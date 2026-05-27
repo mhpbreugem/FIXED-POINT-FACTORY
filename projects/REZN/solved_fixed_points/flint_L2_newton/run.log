@@ -46,3 +46,5 @@
 [21:06:33]   --- recache outer 10: N_active 112876→112882, +92 −86, t=2.5s
 [21:06:34]   --- push outer 10: push_rc=0
 [21:07:22]   outer  11  ||Φ-P||∞=2.094e-01  (L0-bench)  ||F||∞=9.732e+03  (Fp:9.73e+03 Fμ:1.23e-09 FA:3.69e-01 Ff:3.11e-207)  ||δ||∞=3.975e-03  step∞=3.975e-05  gmres_info=1  d_FR=2.6916e-01  N_act=112882  (tot 48.1s, +Φ_bench 9.2s, nF=242)
+[21:07:23]   --- push outer 11: push_rc=0
+[21:08:11]   outer  12  ||Φ-P||∞=2.094e-01  (L0-bench)  ||F||∞=9.652e+03  (Fp:9.65e+03 Fμ:1.49e-09 FA:3.69e-01 Ff:4.04e-05)  ||δ||∞=4.035e-03  step∞=4.035e-05  gmres_info=1  d_FR=2.6916e-01  N_act=112882  (tot 48.1s, +Φ_bench 9.3s, nF=264)
