@@ -320,3 +320,5 @@
 [22:51:57]   outer 125  ||Φ-P||∞=2.085e-01  (L0-bench)  ||F||∞=4.500e+03  (Fp:4.50e+03 Fμ:1.33e-06 FA:6.03e-01 Ff:3.45e-04)  ||δ||∞=8.307e-03  step∞=8.307e-05  gmres_info=1  d_FR=2.6913e-01  N_act=112968  (tot 49.1s, +Φ_bench 9.2s, nF=2750)
 [22:51:59]   build_active_edges: total 2.2s, N_active=112956
 [22:52:00]   --- recache outer 125: N_active 112968→112956, +56 −68, t=2.6s
+[22:52:01]   --- push outer 125: push_rc=0
+[22:52:50]   outer 126  ||Φ-P||∞=2.085e-01  (L0-bench)  ||F||∞=4.476e+03  (Fp:4.48e+03 Fμ:1.36e-06 FA:6.03e-01 Ff:3.11e-207)  ||δ||∞=8.238e-03  step∞=8.238e-05  gmres_info=1  d_FR=2.6913e-01  N_act=112956  (tot 49.3s, +Φ_bench 9.4s, nF=2772)
