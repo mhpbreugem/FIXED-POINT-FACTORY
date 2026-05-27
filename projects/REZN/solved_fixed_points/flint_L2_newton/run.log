@@ -184,3 +184,7 @@
 [22:03:54]   outer  68  ||Φ-P||∞=2.091e-01  (L0-bench)  ||F||∞=6.342e+03  (Fp:6.34e+03 Fμ:3.63e-07 FA:5.98e-01 Ff:1.26e-04)  ||δ||∞=6.159e-03  step∞=6.159e-05  gmres_info=1  d_FR=2.6915e-01  N_act=113028  (tot 49.6s, +Φ_bench 8.8s, nF=1496)
 [22:03:57]   --- push outer 68: push_rc=0
 [22:04:45]   outer  69  ||Φ-P||∞=2.091e-01  (L0-bench)  ||F||∞=6.298e+03  (Fp:6.30e+03 Fμ:3.73e-07 FA:5.98e-01 Ff:1.89e-04)  ||δ||∞=6.211e-03  step∞=6.211e-05  gmres_info=1  d_FR=2.6915e-01  N_act=113028  (tot 47.9s, +Φ_bench 9.2s, nF=1518)
+[22:04:46]   --- push outer 69: push_rc=0
+[22:05:33]   outer  70  ||Φ-P||∞=2.091e-01  (L0-bench)  ||F||∞=6.256e+03  (Fp:6.26e+03 Fμ:3.82e-07 FA:5.98e-01 Ff:2.52e-04)  ||δ||∞=6.294e-03  step∞=6.294e-05  gmres_info=1  d_FR=2.6915e-01  N_act=113028  (tot 47.5s, +Φ_bench 9.2s, nF=1540)
+[22:05:36]   build_active_edges: total 2.2s, N_active=113016
+[22:05:36]   --- recache outer 70: N_active 113028→113016, +22 −34, t=2.6s
