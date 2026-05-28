@@ -154,9 +154,20 @@
     "d_FR_G11": 0.269451419020756,
     "verdict": "Floor shrinks SLOWER than linear (ratio > 0.5) or barely moves: NOT pure O(h) discretization. The discontinuity-only hypothesis is WEAKENED/FALSIFIED -- floor may have a non-vanishing component."
   },
-  "spike_probe": {},
-  "timings": {
-    "picard_min": 11.24978810151418
+  "spike_probe": {
+    "n_probes": 12,
+    "eps": "1e-25",
+    "n_exceeding_1e3": 12,
+    "frac_spike": 1.0,
+    "max_diag_slope": 1.0368749666173448e+22,
+    "typical_jump_magnitude": 2.8021978778866706e-07,
+    "G11_reference_jump": 0.027,
+    "G11_spike_fraction": 0.20713305898491083,
+    "note": "lean re-run after main spike-probe subprocess died mid-run (no traceback)"
   },
-  "status": "running"
+  "timings": {
+    "picard_min": 11.24978810151418,
+    "spike_probe_min": 6.238638810316721
+  },
+  "status": "done"
 }

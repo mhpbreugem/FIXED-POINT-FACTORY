@@ -25,3 +25,19 @@
 [10:16:59]   d_FR(G=21)=0.251875  vs d_FR(G=11)=0.269451
 [10:16:59]   VERDICT: Floor shrinks SLOWER than linear (ratio > 0.5) or barely moves: NOT pure O(h) discretization. The discontinuity-only hypothesis is WEAKENED/FALSIFIED -- floor may have a non-vanishing component.
 [10:16:59] ==========================================
+[10:17:00]   push OK (plateau floor=0.1523 ratio=2.294) attempt 0
+[10:17:00] --- spike probe: 20 accurate arb-FD diagonal probes (eps=1e-25) ---
+[10:26:01] === flint_g21 FINALIZE: lean spike probe at plateau + report status=done ===
+[10:27:00]   probe 1/12 cell(1, 6, 19) diag_slope=4.142e+04 (58s)
+[10:27:28]   probe 2/12 cell(1, 15, 15) diag_slope=4.823e+14 (87s)
+[10:27:57]   probe 3/12 cell(2, 9, 3) diag_slope=7.550e+06 (116s)
+[10:28:26]   probe 4/12 cell(4, 7, 5) diag_slope=3.004e+19 (144s)
+[10:28:55]   probe 5/12 cell(6, 3, 6) diag_slope=2.741e+21 (173s)
+[10:29:23]   probe 6/12 cell(6, 17, 1) diag_slope=3.259e+18 (202s)
+[10:29:52]   probe 7/12 cell(10, 14, 6) diag_slope=2.345e+18 (230s)
+[10:30:21]   probe 8/12 cell(13, 2, 12) diag_slope=1.037e+22 (259s)
+[10:30:49]   probe 9/12 cell(13, 7, 8) diag_slope=2.340e+20 (288s)
+[10:31:18]   probe 10/12 cell(16, 9, 10) diag_slope=4.112e+12 (316s)
+[10:31:47]   probe 11/12 cell(17, 3, 12) diag_slope=6.298e+18 (345s)
+[10:32:16]   probe 12/12 cell(18, 7, 10) diag_slope=3.676e+11 (374s)
+[10:32:16]   spike probe: 12/12 diag slopes > 1e3 (frac 1.000 vs G11 151/729=0.207); max slope 1.037e+22; typical jump 2.8022e-07 (G11 ~0.027)
