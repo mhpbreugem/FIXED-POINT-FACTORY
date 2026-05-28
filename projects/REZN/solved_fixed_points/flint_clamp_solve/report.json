@@ -77,7 +77,7 @@
     }
   ],
   "timings": {},
-  "status": "running",
+  "status": "STOPPED-STALLED",
   "partition": {
     "n_U": 151,
     "n_FREE": 578,
@@ -1001,5 +1001,6 @@
     "F_U_inf": 0.13810108854185058,
     "overall_inf": 0.15333229778951268,
     "d_FR": 0.269451419020756
-  }
+  },
+  "verdict": "Fixed clamp FAILS: clamping the 151 plateau-spike cells does NOT make the 578-cell free block Newton-solvable -- ||F_free||inf frozen at 0.15027 across alpha=1.0..0.0625 even after a fresh accurate Jacobian rebuild (non-descending direction). The tie/active set is iterate-dependent and migrates into the free cells, so a FIXED clamp cannot localize the non-smoothness."
 }
