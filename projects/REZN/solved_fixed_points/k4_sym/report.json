@@ -1,6 +1,6 @@
 {
   "title": "SYMMETRY-REDUCED strict h=0 K=4 (4 identical agents) CRRA REE contour-Phi fixed-point study",
-  "status": "core_complete",
+  "status": "core_complete (gamma=0.1 + Picard done & pushed; gamma=0.25/0.5/1.0 with Picard running in background, will append + push on completion)",
   "grid": {
     "G_inner": 9,
     "pad": 2,
