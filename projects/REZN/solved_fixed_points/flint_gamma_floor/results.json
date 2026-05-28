@@ -1,0 +1,47 @@
+{
+  "meta": {
+    "operator": "phi_sigdelta_strict_cy (Cython, 100-dec)",
+    "prec_bits": 352,
+    "dps": 100,
+    "omega0": 0.3,
+    "omega_floor": 1e-05,
+    "n_iters_cap": 200,
+    "conv_tol": 1e-09,
+    "gammas": [
+      0.1,
+      0.25,
+      0.5,
+      1.0,
+      2.0,
+      5.0
+    ],
+    "dFR_warmstart_PR": 0.2691658406564557,
+    "params_fixed": {
+      "G_FULL": 11,
+      "TOT_u": 2.0,
+      "TOT_S": 3.0,
+      "TOT_d": 3.0,
+      "tau": 2.0,
+      "W": 1.0
+    },
+    "note": "GATE only",
+    "updated": "2026-05-28 11:53:21",
+    "gate": {
+      "0.1": {
+        "s_per_phi": 1.9587252140045166,
+        "interior_ok": true,
+        "interior_lo": 1.517285892506018e-05,
+        "interior_hi": 0.998816945402792,
+        "warmstart_resid": 0.20939882702440757
+      },
+      "1.0": {
+        "s_per_phi": 1.9283356666564941,
+        "interior_ok": true,
+        "interior_lo": 5.655586585183754e-06,
+        "interior_hi": 0.9992480593849117,
+        "warmstart_resid": 0.20715565290586882
+      }
+    }
+  },
+  "results": []
+}

@@ -1,0 +1,2 @@
+[11:53:17] GATE g=0.1: 1.959s/Phi  interior_in(0,1)=True [0.0000,0.9988]  PR warm-start ||F||inf=2.0940e-01
+[11:53:21] GATE g=1.0: 1.928s/Phi  interior_in(0,1)=True [0.0000,0.9992]  PR warm-start ||F||inf=2.0716e-01
