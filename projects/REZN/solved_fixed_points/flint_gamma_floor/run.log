@@ -1,2 +1,15 @@
 [11:53:17] GATE g=0.1: 1.959s/Phi  interior_in(0,1)=True [0.0000,0.9988]  PR warm-start ||F||inf=2.0940e-01
 [11:53:21] GATE g=1.0: 1.928s/Phi  interior_in(0,1)=True [0.0000,0.9992]  PR warm-start ||F||inf=2.0716e-01
+[11:53:25]   push OK (attempt 1)
+[11:54:09] === gamma-floor sweep: gammas=[0.1, 0.25, 0.5, 1.0, 2.0, 5.0] tau=2.0 G=11 ===
+[11:54:09] warm-start PR d_FR=0.26917
+[11:55:21] === gamma=0.5 start (w0=0.3); warm-start PR d_FR=0.26917 ===
+[11:55:21]   [g=0.5] it   0  ||F||inf=2.055332e-01  d_FR=0.26917  (warm start)
+[11:55:21]   [g=0.5] it   1  ||F||inf=1.361347e-01  d_FR=0.26235  w=3.00e-01  (2.1s)
+[11:55:21]   [g=0.5] it   2  ||F||inf=1.234720e-01  d_FR=0.26057  w=1.50e-01  (3.9s)
+[11:55:21]   [g=0.5] it   3  ||F||inf=1.234741e-01  d_FR=0.26057  w=9.16e-06  (30.4s)
+[11:55:21]   [g=0.5] PLATEAU at it 3: w hit floor 1e-05; floor=1.235e-01
+[11:55:21]   [g=0.5] spike probe (arb-FD diagonal Jacobian, eps=1e-25)...
+[11:55:21]   [g=0.5] spike: 0/16 diag>1e3  max|diag|=4.104e+00  (34.4s)
+[11:55:21] === gamma=0.5 done: stop=plateau iters=3 floor=1.2347e-01 d_FR=0.26057 spike=0/16 (1.2 min) ===
+[11:55:21] [1/6] gamma=0.5 floor=1.235e-01 d_FR=0.2606 stop=plateau spike=0/16
