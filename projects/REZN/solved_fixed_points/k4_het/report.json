@@ -194,6 +194,73 @@
      "init_deficit": 0.9963166695957147
     }
    ]
+  },
+  "anti": {
+   "tau_vec": [
+    0.5,
+    1.0,
+    2.0,
+    5.0
+   ],
+   "gamma_vec": [
+    4.0,
+    1.0,
+    0.25,
+    0.05
+   ],
+   "n_unique_fps_at_Ftol_1e-2": 0,
+   "per_seed": [
+    {
+     "seed": "cold_nolearn",
+     "F_inner": 0.2319489692642135,
+     "deficit": 0.09256581801949104,
+     "deficit_manual": 0.09256581801949104,
+     "class": "PR",
+     "status": "noconv",
+     "init_F": 0.41262460431424486,
+     "init_deficit": 0.17667263186888116
+    },
+    {
+     "seed": "fr_het",
+     "F_inner": 0.029876574516109478,
+     "deficit": 0.007330367505541835,
+     "deficit_manual": 0.007330367505541835,
+     "class": "mid",
+     "status": "noconv",
+     "init_F": 0.10036073448527472,
+     "init_deficit": -2.220446049250313e-16
+    },
+    {
+     "seed": "rand_0",
+     "F_inner": 0.08551785369081977,
+     "deficit": 0.07134997820029676,
+     "deficit_manual": 0.07134997820029676,
+     "class": "PR",
+     "status": "noconv",
+     "init_F": 0.9475002088047363,
+     "init_deficit": 0.9913510622554866
+    },
+    {
+     "seed": "rand_1",
+     "F_inner": 0.13943442303950604,
+     "deficit": 0.08200249417834249,
+     "deficit_manual": 0.08200249417834249,
+     "class": "PR",
+     "status": "noconv",
+     "init_F": 0.9293935947967458,
+     "init_deficit": 0.9994220108580474
+    },
+    {
+     "seed": "rand_2",
+     "F_inner": 0.06680356929637787,
+     "deficit": 0.05771822987630093,
+     "deficit_manual": 0.05771822987630093,
+     "class": "PR",
+     "status": "noconv",
+     "init_F": 0.941165485005542,
+     "init_deficit": 0.9963166695957147
+    }
+   ]
   }
  },
  "picard": {
@@ -256,6 +323,66 @@
     "step_residual_first": 0.06909904289270286,
     "step_residual_last": 0.02706323299096436
    }
+  },
+  "anti": {
+   "from_nl": {
+    "config": "anti",
+    "start": "nl",
+    "tau_vec": [
+     0.5,
+     1.0,
+     2.0,
+     5.0
+    ],
+    "gamma_vec": [
+     4.0,
+     1.0,
+     0.25,
+     0.05
+    ],
+    "n_iters": 40,
+    "residual_floor": 0.024332828017500335,
+    "final_het_deficit": 0.0019313171448412936,
+    "final_class": "FR",
+    "tail_alt_step_median": 0.030408068216398743,
+    "tail_twoback_step_median": 0.05969018711761148,
+    "converged_clean": false,
+    "period2_oscillation": false,
+    "het_deficit_first": 0.17667263186888116,
+    "het_deficit_last": 0.0019313171448412936,
+    "het_deficit_min": 0.0019313171448412936,
+    "step_residual_first": 0.41262460431424486,
+    "step_residual_last": 0.024332828017500335
+   },
+   "from_fr": {
+    "config": "anti",
+    "start": "fr",
+    "tau_vec": [
+     0.5,
+     1.0,
+     2.0,
+     5.0
+    ],
+    "gamma_vec": [
+     4.0,
+     1.0,
+     0.25,
+     0.05
+    ],
+    "n_iters": 40,
+    "residual_floor": 0.012579362316418985,
+    "final_het_deficit": 0.001448264713650227,
+    "final_class": "FR",
+    "tail_alt_step_median": 0.015067250574452073,
+    "tail_twoback_step_median": 0.030138099155507914,
+    "converged_clean": false,
+    "period2_oscillation": false,
+    "het_deficit_first": -2.220446049250313e-16,
+    "het_deficit_last": 0.001448264713650227,
+    "het_deficit_min": -2.220446049250313e-16,
+    "step_residual_first": 0.10036073448527472,
+    "step_residual_last": 0.012579362316418985
+   }
   }
  },
  "verdict": {
@@ -293,7 +420,9 @@
   "comparison": {
    "homogeneous_K4": "unique FR equilibrium (deficit ~0), no period-2 oscillation, non-smooth residual floor ~0.015",
    "homogeneous_K3": "unique PARTIALLY-REVEALING equilibrium (deficit ~0.27), period-2 learning oscillation",
-   "heterogeneous_K4_primary": "FR/near-FR equilibrium (Picard-from-NL deficit -> 0.0062), NO period-2 oscillation, non-smooth residual floor ~0.0268 -- matches homogeneous K=4, NOT K=3"
-  }
+   "heterogeneous_K4_primary": "FR/near-FR equilibrium (Picard-from-NL deficit -> 0.0062), NO period-2 oscillation, non-smooth residual floor ~0.0268 -- matches homogeneous K=4, NOT K=3",
+   "heterogeneous_K4_anti": "ANTI-aligned (best-informed agent tau=5 is most risk-NEUTRAL gamma=0.05): Picard-from-NL het-deficit 0.177 -> 0.0019 (FR), NO period-2 oscillation, non-smooth floor ~0.0243 -- SAME verdict as primary, so the FR/stable result is robust to whether high precision pairs with high or low risk aversion."
+  },
+  "anti_config_corroborates": true
  }
 }

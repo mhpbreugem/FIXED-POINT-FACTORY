@@ -36,3 +36,11 @@ NUMBA_NUM_THREADS=2.
   Heterogeneity is absorbed by the precision-weighted sufficient statistic sum_i tau_i u_i, not turned into info loss/instability.
   Saved: P_picard_nl_last_primary.npy (FR limit from NL IC), P_picard_fr_last_primary.npy (FR-seed stationary state),
          fig_k4_het_primary.png (NK residuals, Picard period-2 diagnostic, deficit trajectories).
+
+[MILESTONE 4 / robustness] ANTI-ALIGNED config tau=[0.5,1,2,5], gamma=[4.0,1.0,0.25,0.05]
+  (best-informed agent tau=5 is the MOST risk-NEUTRAL gamma=0.05 -- opposite pairing to primary)
+  NK: fr_het seed reaches deficit ~0.007 (near-FR, lowest); off-FR seeds stall at PR 0.06-0.09; no seed Finf<1e-2.
+  Picard from NL IC: het_def 0.177 -> 0.0019 (FR), period2=FALSE, floor ~0.024.
+  Picard from FR seed: het_def stays 0.0015 (FR), no oscillation.
+  -> SAME verdict as primary. The FR/stable conclusion is robust to whether high precision pairs with high or low
+     risk aversion. Heterogeneity does NOT reintroduce K=3 partial-revelation/oscillation in either pairing.
