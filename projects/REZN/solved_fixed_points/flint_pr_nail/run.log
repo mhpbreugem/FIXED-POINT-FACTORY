@@ -1,6 +1,10 @@
-[07:07:31] === flint_pr_nail: active-set-frozen Newton ===
-[07:07:35]   warm anderson: ||Phi-P||inf=2.183300e-01 ||.||2=4.884402e-01 d_FR=2.685254e-01
-[07:07:39]   warm persist2: ||Phi-P||inf=2.093988e-01 ||.||2=5.869558e-01 d_FR=2.691658e-01
-[07:07:39]   CHOSE warm start: persist2 (||Phi-P||inf=2.093988e-01)
-[07:07:54]   recorded-strict vs fast-strict max diff = 0.000e+00
-[07:08:02]   ||phi_frozen(P) - phi_strict(P)||inf = 0.000e+00 (MUST be < 1e-50)
+[07:53:46] === flint_pr_nail: active-set-frozen Newton ===
+[07:53:51]   warm anderson: ||Phi-P||inf=2.183300e-01 ||.||2=4.884402e-01 d_FR=2.685254e-01
+[07:53:55]   warm persist2: ||Phi-P||inf=2.093988e-01 ||.||2=5.869558e-01 d_FR=2.691658e-01
+[07:54:00]   warm flint_newton: ||Phi-P||inf=2.182594e-01 ||.||2=4.416102e-01 d_FR=2.686154e-01
+[07:54:04]   warm L1: ||Phi-P||inf=2.090767e-01 ||.||2=5.835268e-01 d_FR=2.691524e-01
+[07:54:09]   warm L2: ||Phi-P||inf=2.077727e-01 ||.||2=5.667145e-01 d_FR=2.691094e-01
+[07:54:13]   warm L3: ||Phi-P||inf=2.093075e-01 ||.||2=5.852858e-01 d_FR=2.691617e-01
+[07:54:13]   CHOSE warm start: L2 (||Phi-P||inf=2.077727e-01)
+[07:54:28]   recorded-strict vs fast-strict max diff = 0.000e+00
+[07:54:37]   ||phi_frozen(P) - phi_strict(P)||inf = 0.000e+00 (MUST be < 1e-50)

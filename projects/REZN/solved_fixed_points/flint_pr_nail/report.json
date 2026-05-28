@@ -1,7 +1,7 @@
 {
   "gate": {
-    "warm_chosen": "persist2",
-    "warm_path": "/home/user/FIXED-POINT-FACTORY/projects/REZN/solved_fixed_points/flint_persist2/P.npy",
+    "warm_chosen": "L2",
+    "warm_path": "/home/user/FIXED-POINT-FACTORY/projects/REZN/solved_fixed_points/flint_L2_newton/P.npy",
     "warm_evals": {
       "anderson": {
         "inf": 0.21832998090460645,
@@ -12,11 +12,31 @@
         "inf": 0.20939882702440757,
         "two": 0.5869557816010632,
         "d_FR": 0.2691658406564557
+      },
+      "flint_newton": {
+        "inf": 0.2182593768415635,
+        "two": 0.44161015199507225,
+        "d_FR": 0.2686154265790832
+      },
+      "L1": {
+        "inf": 0.2090766529033361,
+        "two": 0.5835268083409461,
+        "d_FR": 0.26915244711440073
+      },
+      "L2": {
+        "inf": 0.20777270118320304,
+        "two": 0.5667144644343042,
+        "d_FR": 0.2691094137925732
+      },
+      "L3": {
+        "inf": 0.20930754135200896,
+        "two": 0.5852857796151774,
+        "d_FR": 0.2691617418822601
       }
     },
-    "strict_inf": 0.20939882702440757,
-    "strict_2": 0.5869557816010632,
-    "d_FR": 0.2691658406564557,
+    "strict_inf": 0.20777270118320304,
+    "strict_2": 0.5667144644343042,
+    "d_FR": 0.2691094137925732,
     "recorded_vs_fast_strict_maxdiff": 0.0,
     "frozen_vs_strict_maxdiff": 0.0,
     "n_active_sites": 787320,
