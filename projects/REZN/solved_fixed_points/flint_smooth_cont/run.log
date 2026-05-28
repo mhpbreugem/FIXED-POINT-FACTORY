@@ -1,0 +1,7 @@
+[12:36:17] === flint_smooth_cont START; prec=352 bits (~100 dec) ===
+[12:36:17] Warm start from flint_persist2/P.npy, d_FR=0.269166
+[12:36:17] --- GATE (a): strict-limit at s=1e8 ---
+[12:36:48]   GATE(a): full max|Phi_h(s=1e8)-Phi_strict| = 6.713e-02 at (4, 5, 5) (all such cells have exact ties: 364 tie-cells); TIE-FREE max diff = 9.461e-07  (pass<=1e-3: True)  [Phi_h 19.8s, Phi_strict 11.5s]
+[12:36:48] --- GATE (b): smoothness at moderate s=1e3 (FD diagonal Jacobian, eps=1e-25) ---
+[12:37:08]   Phi_h timing at s=1e3: 19.9s for one F eval
+[12:45:05]   GATE(b): 0/24 diagonal Jacobian entries exceed 1e3 (EXPECT 0; strict had 20.7%). max|diag|=1.000e+00, median=0.000e+00
