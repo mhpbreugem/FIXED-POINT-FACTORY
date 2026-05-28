@@ -1,0 +1,2 @@
+K4 SYM STUDY LOG
+[18:56:24] Cython port built and validated: max|cy-nb|=0.0 over full grid (NL IC + random P). PASS<=1e-11. Numba 0.286 s/eval (4thr) vs Cython 0.972 s/eval (1thr). Study uses Numba (faster, parallel).

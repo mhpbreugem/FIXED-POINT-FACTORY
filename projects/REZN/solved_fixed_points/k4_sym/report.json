@@ -1,0 +1,36 @@
+{
+  "title": "SYMMETRY-REDUCED strict h=0 K=4 (4 identical agents) CRRA REE contour-Phi fixed-point study",
+  "status": "in_progress",
+  "grid": {
+    "G_inner": 9,
+    "pad": 2,
+    "G_full": 13,
+    "UMAX_inner": 4.0,
+    "du": 1.0,
+    "tau": 2.0,
+    "W": 1.0,
+    "inner_unknowns_full": 6561,
+    "symmetric_unknowns_C(12,4)": 495
+  },
+  "task1_cython_port": {
+    "operator_used_for_study": "Numba phi_K4_halo (parallel=True, 4 threads) -- faster than the single-threaded Cython port; symmetry reduction is the main tractability win, so we use the faster operator. Cython port built + bit-exact validated.",
+    "cython_module": "/tmp/build_k4_cy/k4_phi_cy*.so (source /tmp/k4_phi_cy.pyx)",
+    "validation": {
+      "init_no_learning_halo_max_abs_diff": 0.0,
+      "phi_on_NL_IC_max_abs_diff": 0.0,
+      "phi_on_random_P_max_abs_diff": 0.0,
+      "worst_max_abs_diff": 0.0,
+      "pass_1e-11": true,
+      "note": "Cython kernel reproduces the Numba operator BIT-EXACTLY (0.0 diff) over the full 13^4 grid on the NL IC and a random P. Built with -O3, fastmath OFF (matches Numba fastmath=False)."
+    },
+    "speed": {
+      "s_per_eval_numba_4threads": 0.286,
+      "s_per_eval_cython_1thread": 0.972,
+      "cython_speedup_vs_numba": 0.29,
+      "note": "Cython is single-threaded; Numba uses prange over 4 cores. Cython matches exactly but is ~3.4x slower here, so the study uses the parallel Numba operator."
+    }
+  },
+  "task2_symmetry": "pending",
+  "task3_gamma_results": {},
+  "picard_oscillation": "pending"
+}

@@ -1,0 +1,13 @@
+{
+  "G_full": 13,
+  "G_inner": 9,
+  "pad": 2,
+  "init_nl_match": 0.0,
+  "phi_nl_match": 0.0,
+  "phi_rand_match": 0.0,
+  "worst_match": 0.0,
+  "pass_1e-11": true,
+  "s_per_eval_numba": 0.28622156733333287,
+  "s_per_eval_cython": 0.9723521036666701,
+  "speedup": 0.2943600021576668
+}
