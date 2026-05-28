@@ -42,5 +42,18 @@
     "note": "Phi maps symmetric->symmetric BIT-EXACTLY (asymmetry of Phi(symmetric P) = 0.0, far below the 1e-12 target). The reduced phi_red = reduce(phi_full(expand(v))) is therefore exact; orbit-average vs representative-read agree to 4e-16."
   },
   "task3_gamma_results": {},
-  "picard_oscillation": "pending"
+  "picard_oscillation": {
+    "gamma": 0.1,
+    "from": "symmetrized no-learning IC",
+    "iters": 40,
+    "Finf_first": 0.4302,
+    "Finf_last": 0.0172,
+    "Finf_tail_min": 0.01234,
+    "Finf_tail_mean": 0.01647,
+    "Finf_tail_max": 0.01991,
+    "deficit_converges_to": 0.0003,
+    "period2_dist_tail_mean": 0.04675,
+    "oscillates_period2": false,
+    "verdict": "K=4 does NOT show the K=3 period-2 learning oscillation. Undamped Picard from the NL IC drives the revelation deficit to ~0.0003 (essentially fully revealing) within ~5 iters, while ||F||inf falls from 0.43 to a small NON-SMOOTH plateau ~0.012-0.020 (mean 0.0165) where it wobbles irregularly (NOT a clean 2-cycle: |P_t - P_(t-2)| ~0.04-0.05 stays comparable to ||F||inf). So a non-smooth residual floor recurs, but at ~0.015 (vs K=3's ~0.2) and the limit is FR, not a partially-revealing 2-cycle."
+  }
 }
