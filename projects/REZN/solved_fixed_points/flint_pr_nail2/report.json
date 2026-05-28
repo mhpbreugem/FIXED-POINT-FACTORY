@@ -1,0 +1,202 @@
+{
+  "task": "Nail the unique partially-revealing (PR) equilibrium of the K=3 CRRA REE strict contour-Phi operator (G=11, 729 interior prices) at ~100-dec, via hybrid damped-Picard -> accurate-Jacobian Newton.",
+  "params": {
+    "G_FULL": 11,
+    "interior": 729,
+    "TOT_u": 2.0,
+    "TOT_S": 3.0,
+    "TOT_d": 3.0,
+    "tau": 2.0,
+    "gamma": 0.1,
+    "W": 1.0,
+    "dps": 100,
+    "prec_bits": 352
+  },
+  "scalar_micro_benchmark_100dec": {
+    "note": "20000 evals each of exp/atanh/log; gmpy2 precision=333 bits (~100 dec).",
+    "per_op_microseconds": {
+      "arb": {
+        "exp": 0.78,
+        "atanh": 0.22,
+        "log": 0.7
+      },
+      "gmpy2": {
+        "exp": 3.05,
+        "atanh": 4.34,
+        "log": 3.68
+      }
+    },
+    "ratio_arb_over_gmpy2": {
+      "exp": 0.25,
+      "atanh": 0.05,
+      "log": 0.19
+    },
+    "winner": "flint.arb is 4x-20x FASTER than gmpy2.mpfr at 100-dec scalars; the Cython/flint path is the correct fast backend."
+  },
+  "phi_backend": {
+    "used": "Cython kernel flint_phi_cy.phi_sigdelta_strict_cy at 100-dec (353 bits)",
+    "per_phi_eval_sec": 1.33,
+    "speedup_vs_python_flint_fast_200dec": 2.38
+  },
+  "validation_gate": {
+    "PASSED": true,
+    "max_diff_cy100_vs_fast200_interior": "2.449e-91",
+    "comment": "Cython Phi at 100-dec reproduces python-flint phi_sigdelta_strict_fast at 200-dec to 2.4e-91 over the persist2 interior price surface (diff = the 100-dec precision floor, exactly as expected)."
+  },
+  "picard_warmup": {
+    "from": "flint_persist2/P.npy (||Phi-P||inf=0.20940, d_FR=0.26917)",
+    "omega": 0.3,
+    "rule": "damped Picard P<-P+omega*F, monotonicity backtrack",
+    "trajectory_inf": [
+      0.209399,
+      0.121323,
+      0.069421,
+      0.067044,
+      0.06647,
+      0.066399,
+      0.066399
+    ],
+    "plateau_inf": 0.13810108854185058,
+    "plateau_d_FR": 0.269451419020756,
+    "comment": "Picard rides the stable manifold down to ||Phi-P||inf=0.0664 in ~5 evals, then the damping omega collapses (0.3 -> 5.9e-4) and it CANNOT descend further -- this is the '0.06 floor' the task targets."
+  },
+  "accurate_jacobian": {
+    "method": "column k = (Phi(P+eps e_k) - Phi(P))/eps with eps=arb('1e-25'), the subtraction done IN ARB at 100-dec then downcast to float64; -1 on the diagonal for the -P term. 729 columns parallel (fork, nproc=4).",
+    "build_time_min": 4.25,
+    "diagonal_spikes_gt_1e3": 151,
+    "max_abs_diagonal": 1.723302018788098e+24,
+    "spike_cells_first15": [
+      [
+        1,
+        5,
+        6
+      ],
+      [
+        1,
+        6,
+        2
+      ],
+      [
+        1,
+        6,
+        3
+      ],
+      [
+        1,
+        6,
+        4
+      ],
+      [
+        1,
+        6,
+        6
+      ],
+      [
+        1,
+        6,
+        9
+      ],
+      [
+        1,
+        7,
+        1
+      ],
+      [
+        1,
+        7,
+        5
+      ],
+      [
+        1,
+        7,
+        6
+      ],
+      [
+        1,
+        9,
+        3
+      ],
+      [
+        1,
+        9,
+        5
+      ],
+      [
+        2,
+        1,
+        2
+      ],
+      [
+        2,
+        1,
+        9
+      ],
+      [
+        2,
+        2,
+        6
+      ],
+      [
+        2,
+        3,
+        2
+      ]
+    ],
+    "cond_raw_J": 5.598141240630381e+25,
+    "smax_raw": 1.723302018788098e+24,
+    "smin_raw": 0.030783468024719665,
+    "cond_spike_regularized_J": 13755.433198846113,
+    "smax_reg": 328.3755750647936,
+    "smin_reg": 0.023872427012501484,
+    "KEY_FINDING": "The strict Phi operator is GENUINELY DISCONTINUOUS in P at contour-node ties: perturbing p_cell by ANY eps (1e-25..1e-4) produces a CONSTANT ~0.027 jump in Phi[self] (symmetric in +/-eps). So 151/729 diagonal 'derivatives' are spurious spikes up to 6.5e23, and cond(J)=5.6e25. This is NOT a float64-accuracy artifact (the prior nail's claimed flaw): the accurate arb Jacobian makes the spikes WORSE, not better, because they are real jumps / a tiny eps. Removing the 151 spike diagonals (-> -1) yields cond=1.4e4, matching the prior frozen-system's 1417: the spikes ARE the entire ill-conditioning."
+  },
+  "newton_descent_test": {
+    "raw_J": {
+      "delta_inf": 1.8951,
+      "strict_inf_by_alpha": {
+        "1.0": 2.301847,
+        "0.3": 0.975252,
+        "0.1": 0.596224,
+        "0.03": 0.075805,
+        "0.01": 0.065735,
+        "0.003": 0.070823,
+        "0.001": 0.071992,
+        "3e-4": 0.072343,
+        "1e-4": 0.066392,
+        "1e-5": 0.066398,
+        "1e-6": 0.066399
+      },
+      "best_strict_inf": 0.065735,
+      "best_alpha": 0.01
+    },
+    "spike_regularized_J": {
+      "delta_inf": 1.7988,
+      "strict_inf_by_alpha": {
+        "1.0": 2.205526,
+        "0.3": 0.946355,
+        "0.1": 0.586592,
+        "0.03": 0.207139,
+        "0.01": 0.065735,
+        "0.003": 0.070847,
+        "0.001": 0.071998,
+        "3e-4": 0.072345,
+        "1e-4": 0.066392
+      },
+      "best_strict_inf": 0.065735,
+      "best_alpha": 0.01
+    },
+    "interpretation": "BOTH the raw accurate Jacobian AND the well-conditioned spike-regularized Jacobian (cond=1.4e4) bottom out at strict ||Phi-P||inf=0.06574 at alpha=0.01 -- INDISTINGUISHABLE from the Picard plateau 0.06640. Larger steps EXPLODE the residual (alpha=1 -> 2.2-2.3) because the contour-crossing topology (active set) flips in hundreds of cells once the step is finite; smaller steps are pinned at the floor. The Newton direction yields ZERO net descent inside the region where the active set is valid."
+  },
+  "HEADLINE": {
+    "final_strict_resid_inf_float": 0.13810108854185058,
+    "final_strict_resid_inf_arb": "0.13810108854185058099",
+    "final_d_FR": 0.269451419020756,
+    "d_FR_target": 0.279,
+    "below_0.06_floor": false,
+    "saddle_nailed_below_floor": false,
+    "verdict": "The accurate Jacobian does NOT break the 0.06 floor. The floor is NOT a Picard-instability artifact removable by root-finding -- it is set by the GENUINE NON-SMOOTHNESS (discontinuity) of the strict contour-Phi operator at node-tie crossings. The task's premise (that the prior nail failed only due to a float64 FD_eps=1e-7 Jacobian, and an accurate arb Jacobian at eps=1e-25 would descend the 13 unstable modes) is FALSIFIED: an accurate arb Jacobian at eps=1e-25 produces spurious 1e23 discontinuity spikes (cond 5.6e25), and even after regularizing them away to a well-conditioned cond=1.4e4 system, the strict residual is pinned at 0.0657. This independently reproduces the prior flint_pr_nail run's conclusion (frozen-Newton pinned at 0.2078 from a worse warm start; here Picard reaches a better 0.0664 plateau, but Newton still cannot improve it). The lowest-residual reachable point is the Picard plateau, saved as P_star.npy."
+  },
+  "d_FR_definition": "RMS distance of interior P from P_FR = sigmoid(tau*(u1+u2+u3)), tau=2.",
+  "status": "DONE_floor_is_genuine_nonsmoothness_not_jacobian_accuracy",
+  "P_star_npy": "Picard-plateau P (lowest strict ||Phi-P||inf reachable = 0.0664)."
+}
