@@ -1,16 +1,2 @@
-[05:31:13] JFNK FAST-Φ from own ckpt outer 36, resume@36, α=0.01, clip||δ||∞≤1.0, FD_eps=1e-08, gmres restart=20 tol=0.0001
-[05:32:54]   outer  37  ||F||∞=1.457e-01  ||δ||∞=1.420e-01  ||δ||₂=4.979e-01  clip×1.00e+00  step∞=1.420e-03  gmres_info=1  d_FR=2.6869e-01  (101.5s nphi=22)
-[05:32:57]   --- push outer 37: push_rc=0
-[05:34:39]   outer  38  ||F||∞=1.442e-01  ||δ||∞=3.242e-01  ||δ||₂=6.355e-01  clip×1.00e+00  step∞=3.242e-03  gmres_info=1  d_FR=2.6867e-01  (101.6s nphi=44)
-[05:34:40]   --- push outer 38: push_rc=0
-[05:36:23]   outer  39  ||F||∞=1.428e-01  ||δ||∞=6.726e-01  ||δ||₂=1.023e+00  clip×1.00e+00  step∞=6.726e-03  gmres_info=1  d_FR=2.6866e-01  (103.2s nphi=66)
-[05:36:24]   --- push outer 39: push_rc=0
-[05:38:08]   outer  40  ||F||∞=1.414e-01  ||δ||∞=2.496e-01  ||δ||₂=5.425e-01  clip×1.00e+00  step∞=2.496e-03  gmres_info=1  d_FR=2.6865e-01  (103.2s nphi=88)
-[05:38:08]   --- push outer 40: push_rc=0
-[05:39:50]   outer  41  ||F||∞=1.399e-01  ||δ||∞=1.802e-01  ||δ||₂=5.438e-01  clip×1.00e+00  step∞=1.802e-03  gmres_info=1  d_FR=2.6864e-01  (101.5s nphi=110)
-[05:39:52]   --- push outer 41: push_rc=0
-[05:41:33]   outer  42  ||F||∞=1.386e-01  ||δ||∞=1.496e-01  ||δ||₂=5.156e-01  clip×1.00e+00  step∞=1.496e-03  gmres_info=1  d_FR=2.6862e-01  (101.8s nphi=132)
-[05:41:35]   --- push outer 42: push_rc=0
-[05:43:16]   outer  43  ||F||∞=2.172e-01  ||δ||∞=9.668e-01  ||δ||₂=1.415e+00  clip×1.00e+00  step∞=9.668e-03  gmres_info=1  d_FR=2.6861e-01  (101.6s nphi=154)
-[05:43:17]   --- push outer 43: push_rc=0
-[05:44:59]   outer  44  ||F||∞=2.151e-01  ||δ||∞=4.928e-01  ||δ||₂=8.305e-01  clip×1.00e+00  step∞=4.928e-03  gmres_info=1  d_FR=2.6861e-01  (101.6s nphi=176)
+[05:48:17] JFNK FAST-Φ from own ckpt outer 42, resume@42, α=0.01, clip||δ||∞≤1.0, FD_eps=1e-08, gmres restart=20 tol=0.0001
+[05:50:06]   outer  43  ||F||∞=2.172e-01->2.151e-01  ||δ||∞=9.668e-01  clip×1.00e+00  α=1.0e-02(bt0 acc1)  step∞=9.668e-03  gmres_info=1  d_FR=2.6861e-01  (108.3s nphi=23)
