@@ -1,0 +1,3 @@
+[13:48:58]   reproduced STRICT diag at the 151 cells: 151 still >1e3, max|diag|=1.723e+24  (331s)
+[13:54:23]   *** DE-SPIKE: of 151 strict-spike cells, 151 still >1e3 under Phi_sym; new max|diag|=1.7021e+24  (325s, 2.14s/Phi_sym) ***
+[13:54:23]   GATE FAILED: spikes NOT removed by the symmetric rule -> discontinuities are non-removable (unequal one-sided limits). The symmetric rule does not fix them.
