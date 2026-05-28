@@ -96,3 +96,22 @@
 [11:56:56]   [g=5.0] spike: 0/16 diag>1e3  max|diag|=8.784e-01  (33.8s)
 [11:56:56] === gamma=5.0 done: stop=plateau iters=9 floor=2.8795e-01 d_FR=0.24976 spike=0/16 (1.4 min) ===
 [11:56:56] [6/6] gamma=5.0 floor=2.880e-01 d_FR=0.2498 stop=plateau spike=0/16
+[11:56:57]   push OK (attempt 1)
+[11:56:57] SWEEP done in 2.8 min
+[11:56:57] ==============================================================================
+[11:56:57] HEADLINE TABLE
+[11:56:57]  gamma |  floor(ferr) |    d_FR |       stop | spike-frac |  spike-max | wall-min
+[11:56:57]    0.1 |   6.6390e-02 |  0.2695 |    plateau | 0/16=0.000 |   9.45e+00 |     1.42
+[11:56:57]   0.25 |   7.9695e-02 |  0.2652 |    plateau | 0/16=0.000 |   4.30e-01 |     1.39
+[11:56:57]    0.5 |   1.2347e-01 |  0.2606 |    plateau | 0/16=0.000 |   4.10e+00 |     1.22
+[11:56:57]    1.0 |   1.0932e-01 |  0.2370 |    plateau | 0/16=0.000 |   1.33e+00 |     1.57
+[11:56:57]    2.0 |   2.3909e-01 |  0.2692 |    plateau | 0/16=0.000 |   2.75e+01 |     1.22
+[11:56:57]    5.0 |   2.8795e-01 |  0.2498 |    plateau | 0/16=0.000 |   8.78e-01 |     1.39
+[11:56:57] ==============================================================================
+[11:56:57] floor monotone-decreasing in gamma? False
+[11:56:57] floor drop g=0.1 -> g=1.0: 6.639e-02 -> 1.093e-01  (0.61x)
+[11:56:57] floor drop g=0.1 -> g=5.0: 6.639e-02 -> 2.880e-01  (0.23x)
+[11:56:57] no gamma reached floor<1e-6 (strict operator stays non-smooth across the sweep)
+[11:56:57] spike-fraction vs gamma: [(0.1, 0.0), (0.25, 0.0), (0.5, 0.0), (1.0, 0.0), (2.0, 0.0), (5.0, 0.0)]
+[11:56:57] spike-fraction shrinks with gamma? True
+[11:56:57] CAVEAT: each gamma is a DIFFERENT economy/equilibrium; d_FR drift: [(0.1, 0.2695), (0.25, 0.2652), (0.5, 0.2606), (1.0, 0.237), (2.0, 0.2692), (5.0, 0.2498)]
