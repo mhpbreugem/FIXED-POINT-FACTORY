@@ -30,7 +30,17 @@
       "note": "Cython is single-threaded; Numba uses prange over 4 cores. Cython matches exactly but is ~3.4x slower here, so the study uses the parallel Numba operator."
     }
   },
-  "task2_symmetry": "pending",
+  "task2_symmetry": {
+    "representation": "sorted index tuples (multisets) i1<=i2<=i3<=i4 over the inner grid",
+    "n_reduced_unknowns": 495,
+    "n_reduced_expected_C(12,4)": 495,
+    "expand_reduce_roundtrip_max_err": 5.55e-16,
+    "expand_output_asymmetry_over_S4": 0.0,
+    "NL_halo_inner_asymmetry": 7.1e-15,
+    "phi_of_symmetric_P_asymmetry_over_S4": 0.0,
+    "commutes_with_permutations": true,
+    "note": "Phi maps symmetric->symmetric BIT-EXACTLY (asymmetry of Phi(symmetric P) = 0.0, far below the 1e-12 target). The reduced phi_red = reduce(phi_full(expand(v))) is therefore exact; orbit-average vs representative-read agree to 4e-16."
+  },
   "task3_gamma_results": {},
   "picard_oscillation": "pending"
 }
