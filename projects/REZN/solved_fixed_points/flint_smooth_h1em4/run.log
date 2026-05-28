@@ -4,3 +4,15 @@
 [16:01:45]   one phi_smooth eval at s=1e+04: 15.0s
 [16:11:50]   diagonal-Jacobian sample (40 cells, accurate arb-FD eps=1e-25): max|diag|=1.0340e+00, #>1e3 = 0/40, median=0.000e+00 (s/4 cap ~ 2500)
 [16:11:50]   warm-start ||F_h||inf at s=1e+04 = 1.6333e-01
+[16:12:01]   push [gate] ok (attempt 1)
+[16:12:01] --- NAIL: Anderson first, Newton fallback if it plateaus ---
+[16:14:57]   Anderson: ferr=1.4169e-01 iters=12 (175.9s); hist[:4]=['1.63e-01', '1.43e-01', '2.08e-01', '1.68e-01'] ... last3=['1.74e-01', '1.84e-01', '1.60e-01']
+[16:14:57]   Anderson plateaued at 1.4169e-01 > 1e-10 -> accurate-Jacobian Newton fallback
+[17:07:58] === FINALIZE (Newton stalled on singular Jacobian; recovering Anderson-best) ===
+[17:07:58] Rerunning Anderson (cheap, ~3 min) to recover the best-residual point...
+[17:10:54]   Anderson-best ||F_h||inf = 1.4169e-01 at iter-count 12; hist min = 1.4169e-01
+[17:10:54]   d_FR at best point = 0.271004
+[17:10:54] Computing strict residual ||Phi_strict(P*)-P*||inf at the best point...
+[17:11:02]   strict ||Phi_strict-P||inf = 1.416972e-01 (9s)
+[17:11:02] Building full accurate Jacobian at best point to confirm singularity (~46 min)...
+[17:57:41]   Jacobian (729, 729): cond=inf, rank=2/729, sigma_min=0.000e+00, sigma_max=1.638e+21, #(sigma<1e-8*smax)=727 (2798s)

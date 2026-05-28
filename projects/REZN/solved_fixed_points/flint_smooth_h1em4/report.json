@@ -22,6 +22,40 @@
     "s_over_4_cap": 2500.0,
     "warm_start_ferr_inf": 0.16333390195981753
   },
-  "nail": {},
+  "nail": {
+    "solver": "anderson (primary) -> accurate-Jacobian Newton fallback STALLED",
+    "anderson_best_ferr_inf": 0.1416926465602806,
+    "anderson_iters": 12,
+    "newton_first_jacobian_build_s": 2764.9,
+    "newton_first_jacobian_cond": "inf (SINGULAR)",
+    "newton_outcome": "Newton fallback engaged after Anderson plateaued. The first accurate arb-FD Jacobian at s=1e4 was SINGULAR (cond=inf). The lstsq pseudo-inverse step gave no descent, Armijo exhausted its 20 backtracks, and the solver began rebuilding the (still-singular) Jacobian -- a ~46-min-per-rebuild loop that cannot converge. Run terminated as a confirmed STALL (degenerate saddle, not a regular root).",
+    "nailed_le_1e10": false,
+    "final_ferr_inf": 0.1416926465602806,
+    "d_FR": 0.2710035651686993,
+    "strict_resid_at_Pstar": 0.14169716479398334,
+    "jacobian_recheck": {
+      "cond": Infinity,
+      "rank": 2,
+      "n": 729,
+      "sigma_min": 0.0,
+      "sigma_max": 1.638307016722904e+21,
+      "n_singular_values_below_1e-8_smax": 727
+    },
+    "anderson_hist": [
+      0.16333390195981753,
+      0.14339561019342414,
+      0.2084512083463867,
+      0.16847106571907955,
+      0.1416926465602806,
+      0.20720049394290374,
+      0.20628386342400137,
+      0.20298012752049682,
+      0.2048404775377403,
+      0.17400713000426532,
+      0.18414908783597306,
+      0.15977185911626282
+    ],
+    "total_time_s": 2983.055316209793
+  },
   "warm_start": "flint_strict_200/P_strict_200.npy"
 }
