@@ -1,0 +1,6 @@
+[16:01:30] === flint_smooth_h1em4 START; prec=352 bits (~100 dec); s=1e+04 h=1e-04 ===
+[16:01:30] Warm start from flint_strict_200/P_strict_200.npy, d_FR=0.272584
+[16:01:30] --- GATE: time one phi_smooth eval; sample diagonal Jacobian; warm-start ||F_h|| ---
+[16:01:45]   one phi_smooth eval at s=1e+04: 15.0s
+[16:11:50]   diagonal-Jacobian sample (40 cells, accurate arb-FD eps=1e-25): max|diag|=1.0340e+00, #>1e3 = 0/40, median=0.000e+00 (s/4 cap ~ 2500)
+[16:11:50]   warm-start ||F_h||inf at s=1e+04 = 1.6333e-01

@@ -1,0 +1,27 @@
+{
+  "constants": {
+    "G_FULL": 11,
+    "TOT_u": 2.0,
+    "TOT_S": 3.0,
+    "TOT_d": 3.0,
+    "tau": 2.0,
+    "gamma": 0.1,
+    "W": 1.0,
+    "prec_bits": 352,
+    "N_interior": 729
+  },
+  "s": 10000.0,
+  "h": 0.0001,
+  "tol": 1e-10,
+  "gate": {
+    "t_phi_smooth_s": 15.003206014633179,
+    "diag_sample_n": 40,
+    "diag_max_abs": 1.0339757656912845,
+    "diag_median_abs": 0.0,
+    "diag_n_exceed_1e3": 0,
+    "s_over_4_cap": 2500.0,
+    "warm_start_ferr_inf": 0.16333390195981753
+  },
+  "nail": {},
+  "warm_start": "flint_strict_200/P_strict_200.npy"
+}
