@@ -27,7 +27,7 @@
   },
   "warm_start": "flint_persist2/P.npy (set_boundary applied)",
   "gate": {
-    "s_per_phi": 3.414909601211548,
+    "s_per_phi": 3.456507921218872,
     "interior_ok": 729,
     "interior_bad": 0,
     "interior_min": 1.517285892506018e-05,
@@ -39,7 +39,7 @@
   "plateau": null,
   "spikes": null,
   "timings": {
-    "gate_s_per_phi": 3.414909601211548
+    "gate_s_per_phi": 3.456507921218872
   },
-  "updated": "2026-05-28 14:16:02"
+  "updated": "2026-05-28 14:16:24"
 }
