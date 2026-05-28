@@ -139,9 +139,24 @@
   ],
   "per_phi_timing_s": 28.226686477661133,
   "warm_start_residual_inf": 0.4160177471861326,
-  "floor": null,
-  "headline": {},
+  "floor": 0.15232951171653436,
+  "headline": {
+    "floor_G21_inf": 0.15232951171653436,
+    "floor_G11_inf": 0.066399,
+    "floor_ratio_21_over_11": 2.2941537028650183,
+    "predicted_h_ratio": 0.5,
+    "tracks_linear_h_scaling": false,
+    "C_h_constant_from_G11": 0.331995,
+    "C_h_constant_from_G21": 1.5232951171653435,
+    "continuum_extrap_intercept_b": 0.23826002343306873,
+    "continuum_extrap_slope_a": -0.8593051171653435,
+    "final_d_FR_G21": 0.25187503683858264,
+    "d_FR_G11": 0.269451419020756,
+    "verdict": "Floor shrinks SLOWER than linear (ratio > 0.5) or barely moves: NOT pure O(h) discretization. The discontinuity-only hypothesis is WEAKENED/FALSIFIED -- floor may have a non-vanishing component."
+  },
   "spike_probe": {},
-  "timings": {},
+  "timings": {
+    "picard_min": 11.24978810151418
+  },
   "status": "running"
 }

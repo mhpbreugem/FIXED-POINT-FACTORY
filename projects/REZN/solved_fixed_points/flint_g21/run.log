@@ -15,3 +15,13 @@
 [10:09:47]   picard  8: ||F||inf 1.922994e-01->1.903717e-01 omega=3.000e-01(bt0) d_FR=0.250447 acc=True
 [10:10:18]   picard  9: ||F||inf 1.903717e-01->1.523295e-01 omega=3.000e-01(bt0) d_FR=0.251875 acc=True
 [10:16:57]   picard 10: ||F||inf 1.523295e-01->1.523295e-01 omega=7.324e-05(bt12) d_FR=0.251875 acc=False
+[10:16:59]   push OK (picard 10 inf=1.5233e-01) attempt 0
+[10:16:59]   picard STALL: omega collapsed to 7.32e-05 -> plateau at ||F||inf=1.523295e-01
+[10:16:59] ================ HEADLINE ================
+[10:16:59]   floor(G=21) = 0.152330   floor(G=11) = 0.066399
+[10:16:59]   ratio floor(21)/floor(11) = 2.2942   predicted h(21)/h(11) = 0.5000
+[10:16:59]   tracks linear h-scaling: False
+[10:16:59]   continuum extrap floor(h->0) intercept = 0.238260  (C from G11=0.3320, G21=1.5233)
+[10:16:59]   d_FR(G=21)=0.251875  vs d_FR(G=11)=0.269451
+[10:16:59]   VERDICT: Floor shrinks SLOWER than linear (ratio > 0.5) or barely moves: NOT pure O(h) discretization. The discontinuity-only hypothesis is WEAKENED/FALSIFIED -- floor may have a non-vanishing component.
+[10:16:59] ==========================================
