@@ -1,2 +1,4 @@
 [06:09:56] Anderson-accelerated Picard: m=6 beta=0.5 omega_safe=0.3 TOL=1.0e-10 maxiter=800 dps=200 N=729
 [06:10:01]   iter   0  ||Phi-P||inf=2.093988e-01  ||Phi-P||2=5.870e-01  d_FR=2.6917e-01  m_k=0  safe=0  (4.5s)
+[06:10:03]   --- push iter 0: ok (attempt 1)
+[06:10:14]   iter   1  ||Phi-P||inf=1.300181e-01  ||Phi-P||2=4.068e-01  d_FR=2.6819e-01  m_k=1  safe=0  (11.0s)
