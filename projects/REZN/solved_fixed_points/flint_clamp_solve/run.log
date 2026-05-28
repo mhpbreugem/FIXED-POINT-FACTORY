@@ -8,3 +8,15 @@
 [15:19:14]   push OK (partition done) attempt 0
 [15:19:14] --- Newton on FREE block (U clamped) ---
 [15:19:28]   newton  1: ||F_free||inf 1.5333e-01->1.5027e-01 alpha=1.562e-02 ||d||inf=1.182e+00 ||F_U||inf=1.3810e-01 d_FR=0.269429
+[15:19:28]     chord stale (small alpha) -> rebuild FREE Jacobian next iter
+[15:19:28]     rebuilding ACCURATE Jacobian FREE cols (578 of 729, eps=1e-25 in arb, nproc=4) ...
+[15:20:37]       jac 100/578 (69s)
+[15:21:40]       jac 200/578 (132s)
+[15:22:40]       jac 300/578 (193s)
+[15:23:37]       jac 400/578 (250s)
+[15:24:25]       jac 500/578 (297s)
+[15:24:59]     Jacobian FREE-col rebuild done in 5.52 min
+[15:25:01]   newton  2: ||F_free||inf 1.5027e-01->1.5027e-01 alpha=1.000e+00 ||d||inf=1.367e-01 ||F_U||inf=1.3810e-01 d_FR=0.269622
+[15:25:04]   newton  3: ||F_free||inf 1.5027e-01->1.5027e-01 alpha=5.000e-01 ||d||inf=1.899e-01 ||F_U||inf=1.3810e-01 d_FR=0.269820
+[15:25:10]   newton  4: ||F_free||inf 1.5027e-01->1.5027e-01 alpha=2.500e-01 ||d||inf=1.004e+00 ||F_U||inf=1.3810e-01 d_FR=0.270547
+[15:25:19]   newton  5: ||F_free||inf 1.5027e-01->1.5027e-01 alpha=6.250e-02 ||d||inf=1.246e+00 ||F_U||inf=1.3810e-01 d_FR=0.270838
