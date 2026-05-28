@@ -1,8 +1,2 @@
-[06:09:56] Anderson-accelerated Picard: m=6 beta=0.5 omega_safe=0.3 TOL=1.0e-10 maxiter=800 dps=200 N=729
-[06:10:01]   iter   0  ||Phi-P||inf=2.093988e-01  ||Phi-P||2=5.870e-01  d_FR=2.6917e-01  m_k=0  safe=0  (4.5s)
-[06:10:03]   --- push iter 0: ok (attempt 1)
-[06:10:14]   iter   1  ||Phi-P||inf=1.300181e-01  ||Phi-P||2=4.068e-01  d_FR=2.6819e-01  m_k=1  safe=0  (11.0s)
-[06:10:16]   --- push iter 1: ok (attempt 1)
-[06:10:28]   iter   2  ||Phi-P||inf=7.977793e-02  ||Phi-P||2=3.106e-01  d_FR=2.6913e-01  m_k=2  safe=0  (11.9s)
-[06:10:29]   --- push iter 2: ok (attempt 1)
-[06:10:42]   iter   3  ||Phi-P||inf=1.117877e-01  ||Phi-P||2=3.291e-01  d_FR=2.6968e-01  m_k=3  safe=0  (12.3s)
+[06:35:57] Robust damped-Picard (omega0=0.3, line-search floor 0.01, hard monotone gate) + gated AA(beta=0.3, m=4, cond_max=1e+10, use=True)  TOL=1.0e-10 maxiter=800 dps=200 N=729
+[06:36:12]   iter   0  ||Phi-P||inf=2.093988e-01  ||Phi-P||2=5.870e-01  d_FR=2.6917e-01  w=0.30000  took=picard  phi/iter=1  (next finf=1.213e-01)  (10.9s)
