@@ -1,6 +1,6 @@
 {
  "study": "NON-SYMMETRIC strict-h0 K=4 CRRA REE contour-Phi fixed-point study with VERY HETEROGENEOUS per-agent tau and gamma",
- "status": "in_progress",
+ "status": "nk_hunt_done",
  "method": {
   "full_block": "FULL 4D inner block G_inner^4 = 6561 unknowns at G_inner=9 (NO multiset reduction; heterogeneity breaks permutation symmetry so price is not symmetric)",
   "operator": "phi_K4_halo / init_no_learning_halo (Numba, per-agent tau_vec/gamma_vec/W_vec); contour evidence = 2D-plane integral over 3-other-agents level set (3 axis-projections averaged), preserved as-is",
@@ -125,6 +125,76 @@
    "s_per_eval_numba": 1.3376041376667065,
    "s_per_eval_cython": 2.5150852556666905,
    "numba_threads": "2"
+  }
+ },
+ "nk_hunt": {
+  "primary": {
+   "tau_vec": [
+    0.5,
+    1.0,
+    2.0,
+    5.0
+   ],
+   "gamma_vec": [
+    0.05,
+    0.25,
+    1.0,
+    4.0
+   ],
+   "n_unique_fps_at_Ftol_1e-2": 0,
+   "note": "NK never reaches Finf<1e-2 from any seed (non-smooth contour floor), same as homogeneous K=4. Classification by NK approach-class + Picard below.",
+   "per_seed": [
+    {
+     "seed": "cold_nolearn",
+     "F_inner": 0.401049244597095,
+     "deficit": 0.2037581723714229,
+     "deficit_manual": 0.2037581723714229,
+     "class": "PR",
+     "status": "noconv",
+     "init_F": 0.37618368601931784,
+     "init_deficit": 0.35210431108038953
+    },
+    {
+     "seed": "fr_het",
+     "F_inner": 0.03757016546703366,
+     "deficit": 0.0377549842054834,
+     "deficit_manual": 0.0377549842054834,
+     "class": "mid",
+     "status": "noconv",
+     "init_F": 0.06909904289270286,
+     "init_deficit": -2.220446049250313e-16
+    },
+    {
+     "seed": "rand_0",
+     "F_inner": 0.43175397863073095,
+     "deficit": 0.12590002439735914,
+     "deficit_manual": 0.12590002439735914,
+     "class": "PR",
+     "status": "noconv",
+     "init_F": 0.9492967324946978,
+     "init_deficit": 0.9913510622554866
+    },
+    {
+     "seed": "rand_1",
+     "F_inner": 0.08803262291277753,
+     "deficit": 0.0988809888582789,
+     "deficit_manual": 0.0988809888582789,
+     "class": "PR",
+     "status": "noconv",
+     "init_F": 0.9489448950715186,
+     "init_deficit": 0.9994220108580474
+    },
+    {
+     "seed": "rand_2",
+     "F_inner": 0.10982611157873645,
+     "deficit": 0.10014282558187781,
+     "deficit_manual": 0.10014282558187781,
+     "class": "PR",
+     "status": "noconv",
+     "init_F": 0.9493663302307248,
+     "init_deficit": 0.9963166695957147
+    }
+   ]
   }
  }
 }

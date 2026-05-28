@@ -9,3 +9,15 @@ NUMBA_NUM_THREADS=2.
   anti    tau=[0.5,1.0,2.0,5.0] gamma=[4.0,1.0,0.25,0.05]:
     init_nl_match=0.00e+00 phi_nl_match=0.00e+00 phi_rand_match=0.00e+00 worst=0.00e+00 -> PASS (<=1e-11)
   Cython port is BIT-EXACT vs Numba with heterogeneous tau/gamma. Using Numba (faster: ~1.3 s/eval @2 threads vs ~2.5 s/eval Cython single-thread) for the runs.
+
+[MILESTONE 2] NK HUNT (primary, FULL 6561 block, 5 seeds: cold_nolearn, fr_het, rand_0/1/2)
+  No seed reaches Finf<1e-2 (non-smooth contour-crossing floor recurs, exactly like homogeneous K=4).
+  cold_nolearn : floor F=0.401  het_def=0.204 (PR)
+  fr_het       : floor F=0.038  het_def=0.038 (mid/near-FR) -- starts at exact lam(sum tau_i u_i), deficit 1e-11, NK drifts it only to 0.038
+  rand_0       : floor F=0.432  het_def=0.126 (PR)
+  rand_1       : floor F=0.088  het_def=0.099 (PR)
+  rand_2       : floor F=0.110  het_def=0.100 (PR)
+  KEY: the FR-het seed keeps the LOWEST deficit (~0.04, near-FR); off-FR seeds stall at PR (0.10-0.20).
+  Unlike homogeneous K=4 (where the exact-FR seed sat at Finf~5e-6, a genuine FP), the het exact-FR
+  price has residual ~0.069 init / 0.038 floor -- het-FR is only an APPROXIMATE Phi fixed point.
+  -> deeper FR probe (more NK iters + Picard from fr_het) needed to decide FR vs PR; see below.
