@@ -1,0 +1,18 @@
+{
+ "study": "NON-SYMMETRIC strict-h0 K=4 CRRA REE contour-Phi fixed-point study with VERY HETEROGENEOUS per-agent tau and gamma",
+ "status": "in_progress",
+ "method": {
+  "full_block": "FULL 4D inner block G_inner^4 = 6561 unknowns at G_inner=9 (NO multiset reduction; heterogeneity breaks permutation symmetry so price is not symmetric)",
+  "operator": "phi_K4_halo / init_no_learning_halo (Numba, per-agent tau_vec/gamma_vec/W_vec); contour evidence = 2D-plane integral over 3-other-agents level set (3 axis-projections averaged), preserved as-is",
+  "grid": {"G_inner": 9, "pad": 2, "UMAX_inner": 4.0, "G_full": 13, "du": 1.0},
+  "solver": "scipy newton_krylov (lgmres) on the inner block, multi-seed; undamped Picard for the oscillation test",
+  "numba_threads": 2,
+  "fr_het_benchmark": "P_FR_het = lam(sum_i tau_i u_i) (precision-weighted aggregate); het-deficit = 1 - R^2 of logit(P) regressed on sum_i tau_i u_i (metrics.revelation_deficit already uses tau_vec, so it is the het deficit; independently cross-checked)"
+ },
+ "params": {
+  "primary": {"tau_vec": [0.5, 1.0, 2.0, 5.0], "gamma_vec": [0.05, 0.25, 1.0, 4.0], "W_vec": [1, 1, 1, 1],
+              "note": "tau 10x spread, gamma 80x spread; in this config the best-informed agent (tau=5) is also the most risk-averse (gamma=4)"},
+  "anti": {"tau_vec": [0.5, 1.0, 2.0, 5.0], "gamma_vec": [4.0, 1.0, 0.25, 0.05], "W_vec": [1, 1, 1, 1],
+           "note": "ANTI-aligned: best-informed agent (tau=5) is the most aggressive/risk-neutral (gamma=0.05); secondary config"}
+ }
+}
