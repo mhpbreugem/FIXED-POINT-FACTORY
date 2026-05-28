@@ -115,3 +115,5 @@
 [11:56:57] spike-fraction vs gamma: [(0.1, 0.0), (0.25, 0.0), (0.5, 0.0), (1.0, 0.0), (2.0, 0.0), (5.0, 0.0)]
 [11:56:57] spike-fraction shrinks with gamma? True
 [11:56:57] CAVEAT: each gamma is a DIFFERENT economy/equilibrium; d_FR drift: [(0.1, 0.2695), (0.25, 0.2652), (0.5, 0.2606), (1.0, 0.237), (2.0, 0.2692), (5.0, 0.2498)]
+[11:56:59]   push OK (attempt 1)
+[11:56:59] ALL DONE
