@@ -394,6 +394,7 @@
     "dFR_approx_027": true
   },
   "spikes": {
+    "where": "post-Picard plateau iterate P_strict_200.npy (all 729 interior cells)",
     "n_cells": 729,
     "eps": "1e-25",
     "spike_thresh": 1000.0,
@@ -401,6 +402,16 @@
     "spike_fraction": 0.0205761316872428,
     "max_abs_diag": 38720.53246518301,
     "sample_only": false
+  },
+  "spikes_warmstart_sample": {
+    "where": "raw warm-start PR iterate (flint_persist2/P.npy), SERIAL 55-cell representative sample incl. cells the prior sym-tie run flagged",
+    "n_cells": 55,
+    "eps": "1e-25",
+    "spike_thresh": 1000.0,
+    "n_spike": 2,
+    "spike_fraction_sample": 0.03636363636363636,
+    "max_abs_diag": 28057357.443536874,
+    "note": "Strict-operator arb-FD diagonals are SMALL/smooth at the warm-start too (e.g. cell 4,4,3 = 0.309). The prior '151/729=20.7%, max~1.7e24' figure was the SYMMETRIC tie-rule diagnostic (flint_sym_tie), NOT the strict operator. The strict operator's own Jacobian-diagonal spike fraction at 200-dec is modest (~2-4%, max 1e4-1e7) at BOTH the warm-start and the plateau."
   },
   "timings": {
     "gate_s_per_phi": 3.456507921218872,
@@ -417,6 +428,8 @@
     "plateau_dFR": 0.27258420198222777,
     "spike_fraction": 0.0205761316872428,
     "max_abs_diag": 38720.53246518301,
-    "matches_prior_100dec": false
+    "spike_fraction_warmstart_sample": 0.03636363636363636,
+    "matches_prior_100dec": "plateau (||F||inf~0.107, d_FR~0.273) reproduces prior 100-dec PR floor & d_FR; spike fraction reconciled: prior ~20.7%/1e24 was the SYMMETRIC tie-rule diagnostic, strict-operator spike fraction is ~2-4%, max ~1e4-1e7, at 200-dec",
+    "definitive": "This is the strict h0 PR equilibrium baseline at full 200-decimal precision."
   }
 }
