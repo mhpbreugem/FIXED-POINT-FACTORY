@@ -1,0 +1,3 @@
+[14:16:02] GATE: 1 Phi_cy @200-dec = 3.415s/Phi
+[14:16:02] GATE: interior Phi prices: 729/729 finite & in (0,1); range [1.51729e-05,0.998817]; bad=0
+[14:16:02] GATE: warm-start residual ||Phi-P||inf = 2.093988e-01; warm-start d_FR = 0.269166

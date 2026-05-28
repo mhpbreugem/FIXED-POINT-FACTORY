@@ -1,0 +1,45 @@
+{
+  "operator": "phi_sigdelta_strict_cy (Cython, FULL 200-dec, h=0 strict, no smoothing)",
+  "precision": {
+    "dps": 200,
+    "prec_bits": 684
+  },
+  "params": {
+    "G_FULL": 11,
+    "INNER": [
+      1,
+      10
+    ],
+    "TOT_u": 2.0,
+    "TOT_S": 3.0,
+    "TOT_d": 3.0,
+    "tau": 2.0,
+    "gamma": 0.1,
+    "W": 1.0
+  },
+  "picard": {
+    "omega0": 0.3,
+    "omega_floor": 1e-05,
+    "n_iters_cap": 80,
+    "plateau_rel": 0.005,
+    "plateau_win": 5,
+    "backtrack": "halve omega if ||F||inf rises"
+  },
+  "warm_start": "flint_persist2/P.npy (set_boundary applied)",
+  "gate": {
+    "s_per_phi": 3.414909601211548,
+    "interior_ok": 729,
+    "interior_bad": 0,
+    "interior_min": 1.517285892506018e-05,
+    "interior_max": 0.998816945402792,
+    "warmstart_residual_inf": 0.20939882702440757,
+    "warmstart_dFR": 0.2691658406564557
+  },
+  "trajectory": [],
+  "plateau": null,
+  "spikes": null,
+  "timings": {
+    "gate_s_per_phi": 3.414909601211548
+  },
+  "updated": "2026-05-28 14:16:02"
+}
