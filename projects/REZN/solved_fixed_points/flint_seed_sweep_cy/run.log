@@ -2,3 +2,6 @@
 [10:36:10] GATE: max|Phi_cy(100) - Phi_fast(200)| over interior = 2.449e-91 (floor ~1e-100)
 [10:36:10] GATE: est wall ~40 seeds x ~150 iters / 4 workers = 49.3 min
 [10:36:10] GATE: match <= 1e-85 ? True
+[10:36:12]   push OK (attempt 1)
+[10:36:17] built 33 seeds
+[10:36:17] seed d_FR range [0.0000, 0.8372]; 32/33 far-from-FR (d_FR>0.05)
