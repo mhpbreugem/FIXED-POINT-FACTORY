@@ -1,0 +1,46 @@
+{
+  "task": "G=21 strict contour-Phi PR-REE: test discontinuity-floor h-scaling hypothesis",
+  "grid": {
+    "G": 21,
+    "interior": 6859,
+    "h_21": 0.1,
+    "h_11": 0.2
+  },
+  "params": {
+    "TOT_u": 2.0,
+    "TOT_S": 3.0,
+    "TOT_d": 3.0,
+    "TAU_F": 2.0,
+    "GAMMA_F": 0.1,
+    "W_F": 1.0
+  },
+  "precision_dps": 100,
+  "precision_bits": 352,
+  "phi_backend": "cython flint_phi_cy at 100-dec, grid-agnostic",
+  "d_FR_definition": "RMS distance of interior P from P_FR=sigmoid(tau*(u1+u2+u3)), tau=2",
+  "reference_G11": {
+    "floor_inf": 0.066399,
+    "d_FR": 0.269451419020756
+  },
+  "cost_gate": {
+    "s_per_phi_eval": 28.226686477661133,
+    "est_picard_evals": 240,
+    "est_picard_wall_min": 112.90674591064453,
+    "warm_start_residual_inf": 0.4160177471861326,
+    "warm_start_d_FR": 0.24476279679985108
+  },
+  "picard_traj": [],
+  "residual_inf_traj": [
+    0.4160177471861326
+  ],
+  "d_FR_traj": [
+    0.24476279679985108
+  ],
+  "per_phi_timing_s": 28.226686477661133,
+  "warm_start_residual_inf": 0.4160177471861326,
+  "floor": null,
+  "headline": {},
+  "spike_probe": {},
+  "timings": {},
+  "status": "running"
+}
