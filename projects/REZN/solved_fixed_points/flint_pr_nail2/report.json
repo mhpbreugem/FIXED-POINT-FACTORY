@@ -187,14 +187,20 @@
     },
     "interpretation": "BOTH the raw accurate Jacobian AND the well-conditioned spike-regularized Jacobian (cond=1.4e4) bottom out at strict ||Phi-P||inf=0.06574 at alpha=0.01 -- INDISTINGUISHABLE from the Picard plateau 0.06640. Larger steps EXPLODE the residual (alpha=1 -> 2.2-2.3) because the contour-crossing topology (active set) flips in hundreds of cells once the step is finite; smaller steps are pinned at the floor. The Newton direction yields ZERO net descent inside the region where the active set is valid."
   },
+  "representation_sensitivity_clincher": {
+    "in_process_plateau_inf": 0.0663990,
+    "string_reloaded_plateau_inf": 0.1381011,
+    "note": "The SAME plateau P, saved to 120-decimal strings and reloaded, jumps from ||Phi-P||inf=0.0664 to 0.1381 -- driven ENTIRELY by ONE cell, (8,3,5), whose residual flips from ~0.066 to 0.138 (the bulk inf-cell (3,8,9) stays at exactly 0.0663990). A sub-1e-100 perturbation of the price flips a contour-crossing (dp*dn)<=0 tie and jumps Phi by ~0.072 in that cell. This is the discontinuity made directly visible: Phi(P) is NOT a function continuous in P to better than O(1e-1) at tie cells, so NO root-finder (any precision) can pin a residual below the tie-jump scale there. d_FR (0.26945) is robust to the reload (it is an RMS over 729 cells)."
+  },
   "HEADLINE": {
-    "final_strict_resid_inf_float": 0.13810108854185058,
-    "final_strict_resid_inf_arb": "0.13810108854185058099",
+    "in_process_picard_plateau_inf": 0.0663990,
+    "bulk_floor_inf": 0.0663990,
+    "string_reloaded_inf": 0.1381011,
     "final_d_FR": 0.269451419020756,
     "d_FR_target": 0.279,
     "below_0.06_floor": false,
     "saddle_nailed_below_floor": false,
-    "verdict": "The accurate Jacobian does NOT break the 0.06 floor. The floor is NOT a Picard-instability artifact removable by root-finding -- it is set by the GENUINE NON-SMOOTHNESS (discontinuity) of the strict contour-Phi operator at node-tie crossings. The task's premise (that the prior nail failed only due to a float64 FD_eps=1e-7 Jacobian, and an accurate arb Jacobian at eps=1e-25 would descend the 13 unstable modes) is FALSIFIED: an accurate arb Jacobian at eps=1e-25 produces spurious 1e23 discontinuity spikes (cond 5.6e25), and even after regularizing them away to a well-conditioned cond=1.4e4 system, the strict residual is pinned at 0.0657. This independently reproduces the prior flint_pr_nail run's conclusion (frozen-Newton pinned at 0.2078 from a worse warm start; here Picard reaches a better 0.0664 plateau, but Newton still cannot improve it). The lowest-residual reachable point is the Picard plateau, saved as P_star.npy."
+    "verdict": "The accurate Jacobian does NOT break the 0.06 floor. The floor is NOT a Picard-instability artifact removable by root-finding -- it is set by the GENUINE NON-SMOOTHNESS (discontinuity) of the strict contour-Phi operator at node-tie crossings. The task's premise (that the prior nail failed only due to a float64 FD_eps=1e-7 Jacobian, and an accurate arb Jacobian at eps=1e-25 would descend the 13 unstable modes) is FALSIFIED on three independent grounds: (1) the accurate arb Jacobian at eps=1e-25 produces spurious 1e23 discontinuity spikes on 151/729 diagonals (cond 5.6e25) because Phi truly JUMPS ~0.027 under any eps perturbation of p_cell; (2) even after regularizing the 151 spikes away to a well-conditioned cond=1.4e4 system (matching the prior frozen-system's 1417), BOTH Newton directions are pinned at strict ||Phi-P||inf=0.0657 = the Picard floor, with larger steps exploding the residual via active-set flips; (3) the SAME plateau P reloaded from 120-digit strings jumps 0.0664->0.1381 from a single tie-cell, proving Phi is discontinuous to O(0.1) in P. This independently reproduces the prior flint_pr_nail run's conclusion. The lowest-residual reachable point (bulk floor 0.0664) is the Picard plateau, saved as P_star.npy."
   },
   "d_FR_definition": "RMS distance of interior P from P_FR = sigmoid(tau*(u1+u2+u3)), tau=2.",
   "status": "DONE_floor_is_genuine_nonsmoothness_not_jacobian_accuracy",
