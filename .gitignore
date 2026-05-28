@@ -4,3 +4,6 @@ __pycache__/
 .venv/
 *.egg-info/
 .DS_Store
+
+# nail-solver intermediate Jacobian dumps (regenerable, large)
+projects/REZN/solved_fixed_points/flint_pr_nail/J_*.npy
