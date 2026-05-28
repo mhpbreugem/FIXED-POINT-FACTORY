@@ -5695,3 +5695,4 @@
 [11:26:56]   [overrev_s1.5] it 200  ||Phi-P||inf=1.0455e-01  d_FR=0.29475  (2.1s)
 [11:26:56] === seed 'overrev_s1.5' done: conv=False plat=False div=False iters=200 dFR_final=0.29475 phiP_final=1.0455e-01 (7.0 min) ===
 [11:26:56] [28/33] CLUSTERS so far: d_FR=0.2975(2); d_FR=0.2947(7); d_FR=0.3032(2); d_FR=0.2897(3); d_FR=0.2916(1); d_FR=0.3015(2); d_FR=0.2933(3); d_FR=0.2962(1); d_FR=0.2872(5); d_FR=0.2850(2)
+[11:26:58]   push OK (attempt 1)
