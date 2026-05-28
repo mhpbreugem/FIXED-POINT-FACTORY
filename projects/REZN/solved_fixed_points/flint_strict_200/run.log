@@ -2,3 +2,12 @@
 [14:16:24] GATE: 1 Phi_cy @200-dec = 3.457s/Phi
 [14:16:24] GATE: interior Phi prices: 729/729 finite & in (0,1); range [1.51729e-05,0.998817]; bad=0
 [14:16:24] GATE: warm-start residual ||Phi-P||inf = 2.093988e-01; warm-start d_FR = 0.269166
+[14:16:26]   push OK (attempt 1)
+[14:16:30]   it   1  ||F||inf=2.093988e-01  d_FR=0.269166  omega=0.3  (3.6s)
+[14:16:33]   it   2  ||F||inf=1.213232e-01  d_FR=0.268525  omega=0.3  (3.6s)
+[14:16:37]   it   3  ||F||inf=6.942047e-02  d_FR=0.269325  omega=0.3  (3.5s)
+[14:16:40]   it   4  ||F||inf=2.084678e-01  d_FR=0.270132  omega=0.3  (3.5s)
+[14:16:40]       residual rose (6.942047e-02->2.084678e-01); omega -> 0.15
+[14:16:44]   it   5  ||F||inf=1.123105e-01  d_FR=0.270497  omega=0.15  (3.5s)
+[14:16:47]   it   6  ||F||inf=1.121512e-01  d_FR=0.270745  omega=0.15  (3.5s)
+[14:16:51]   it   7  ||F||inf=7.710431e-02  d_FR=0.271071  omega=0.15  (3.6s)
