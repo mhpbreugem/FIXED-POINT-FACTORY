@@ -4,15 +4,127 @@
  "method": {
   "full_block": "FULL 4D inner block G_inner^4 = 6561 unknowns at G_inner=9 (NO multiset reduction; heterogeneity breaks permutation symmetry so price is not symmetric)",
   "operator": "phi_K4_halo / init_no_learning_halo (Numba, per-agent tau_vec/gamma_vec/W_vec); contour evidence = 2D-plane integral over 3-other-agents level set (3 axis-projections averaged), preserved as-is",
-  "grid": {"G_inner": 9, "pad": 2, "UMAX_inner": 4.0, "G_full": 13, "du": 1.0},
+  "grid": {
+   "G_inner": 9,
+   "pad": 2,
+   "UMAX_inner": 4.0,
+   "G_full": 13,
+   "du": 1.0
+  },
   "solver": "scipy newton_krylov (lgmres) on the inner block, multi-seed; undamped Picard for the oscillation test",
   "numba_threads": 2,
   "fr_het_benchmark": "P_FR_het = lam(sum_i tau_i u_i) (precision-weighted aggregate); het-deficit = 1 - R^2 of logit(P) regressed on sum_i tau_i u_i (metrics.revelation_deficit already uses tau_vec, so it is the het deficit; independently cross-checked)"
  },
  "params": {
-  "primary": {"tau_vec": [0.5, 1.0, 2.0, 5.0], "gamma_vec": [0.05, 0.25, 1.0, 4.0], "W_vec": [1, 1, 1, 1],
-              "note": "tau 10x spread, gamma 80x spread; in this config the best-informed agent (tau=5) is also the most risk-averse (gamma=4)"},
-  "anti": {"tau_vec": [0.5, 1.0, 2.0, 5.0], "gamma_vec": [4.0, 1.0, 0.25, 0.05], "W_vec": [1, 1, 1, 1],
-           "note": "ANTI-aligned: best-informed agent (tau=5) is the most aggressive/risk-neutral (gamma=0.05); secondary config"}
+  "primary": {
+   "tau_vec": [
+    0.5,
+    1.0,
+    2.0,
+    5.0
+   ],
+   "gamma_vec": [
+    0.05,
+    0.25,
+    1.0,
+    4.0
+   ],
+   "W_vec": [
+    1,
+    1,
+    1,
+    1
+   ],
+   "note": "tau 10x spread, gamma 80x spread; in this config the best-informed agent (tau=5) is also the most risk-averse (gamma=4)"
+  },
+  "anti": {
+   "tau_vec": [
+    0.5,
+    1.0,
+    2.0,
+    5.0
+   ],
+   "gamma_vec": [
+    4.0,
+    1.0,
+    0.25,
+    0.05
+   ],
+   "W_vec": [
+    1,
+    1,
+    1,
+    1
+   ],
+   "note": "ANTI-aligned: best-informed agent (tau=5) is the most aggressive/risk-neutral (gamma=0.05); secondary config"
+  }
+ },
+ "het_cython_validation": {
+  "primary": {
+   "config": "primary",
+   "tau_vec": [
+    0.5,
+    1.0,
+    2.0,
+    5.0
+   ],
+   "gamma_vec": [
+    0.05,
+    0.25,
+    1.0,
+    4.0
+   ],
+   "W_vec": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "G_full": 13,
+   "G_inner": 9,
+   "pad": 2,
+   "inner_unknowns": 6561,
+   "init_nl_match": 0.0,
+   "phi_nl_match": 0.0,
+   "phi_rand_match": 0.0,
+   "worst_match": 0.0,
+   "pass_1e-11": true,
+   "s_per_eval_numba": 1.2922227039998688,
+   "s_per_eval_cython": 2.4493284523332477,
+   "numba_threads": "2"
+  },
+  "anti": {
+   "config": "anti",
+   "tau_vec": [
+    0.5,
+    1.0,
+    2.0,
+    5.0
+   ],
+   "gamma_vec": [
+    4.0,
+    1.0,
+    0.25,
+    0.05
+   ],
+   "W_vec": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "G_full": 13,
+   "G_inner": 9,
+   "pad": 2,
+   "inner_unknowns": 6561,
+   "init_nl_match": 0.0,
+   "phi_nl_match": 0.0,
+   "phi_rand_match": 0.0,
+   "worst_match": 0.0,
+   "pass_1e-11": true,
+   "s_per_eval_numba": 1.3376041376667065,
+   "s_per_eval_cython": 2.5150852556666905,
+   "numba_threads": "2"
+  }
  }
 }
