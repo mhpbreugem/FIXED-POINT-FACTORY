@@ -393,11 +393,20 @@
     "floor_approx_0066": false,
     "dFR_approx_027": true
   },
-  "spikes": null,
+  "spikes": {
+    "n_cells": 729,
+    "eps": "1e-25",
+    "spike_thresh": 1000.0,
+    "n_spike": 15,
+    "spike_fraction": 0.0205761316872428,
+    "max_abs_diag": 38720.53246518301,
+    "sample_only": false
+  },
   "timings": {
     "gate_s_per_phi": 3.456507921218872,
     "picard_wall_s": 212.80808186531067,
-    "picard_iters": 58
+    "picard_iters": 58,
+    "jacobian_wall_s": 1299.8680868148804
   },
-  "updated": "2026-05-28 14:19:59"
+  "updated": "2026-05-28 14:41:40"
 }

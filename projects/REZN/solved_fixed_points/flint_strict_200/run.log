@@ -90,3 +90,6 @@
 [14:19:59]   it  58  ||F||inf=1.072677e-01  d_FR=0.272584  omega=1e-05  (3.5s)
 [14:19:59]   PLATEAU at it 58: ||F||inf=1.072677e-01 d_FR=0.272584 (rel<0.005 x5)
 [14:19:59] PICARD done: 58 iters, 3.5 min; final ||F||inf=1.072677e-01 d_FR=0.272584
+[14:20:01]   push OK (attempt 1)
+[14:20:01] JACOBIAN: building arb-FD diagonal (eps=1e-25) for 729 interior cells on 4 CPUs
+[14:41:40] JACOBIAN: 729 cells in 21.7 min; spike fraction (|diag|>1000) = 15/729 = 0.0206 (2.1%); max|diag| = 3.8721e+04
