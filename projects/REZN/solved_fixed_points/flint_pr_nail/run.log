@@ -1,0 +1,6 @@
+[07:07:31] === flint_pr_nail: active-set-frozen Newton ===
+[07:07:35]   warm anderson: ||Phi-P||inf=2.183300e-01 ||.||2=4.884402e-01 d_FR=2.685254e-01
+[07:07:39]   warm persist2: ||Phi-P||inf=2.093988e-01 ||.||2=5.869558e-01 d_FR=2.691658e-01
+[07:07:39]   CHOSE warm start: persist2 (||Phi-P||inf=2.093988e-01)
+[07:07:54]   recorded-strict vs fast-strict max diff = 0.000e+00
+[07:08:02]   ||phi_frozen(P) - phi_strict(P)||inf = 0.000e+00 (MUST be < 1e-50)

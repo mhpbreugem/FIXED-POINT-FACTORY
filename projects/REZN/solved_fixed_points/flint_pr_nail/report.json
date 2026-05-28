@@ -1,0 +1,27 @@
+{
+  "gate": {
+    "warm_chosen": "persist2",
+    "warm_path": "/home/user/FIXED-POINT-FACTORY/projects/REZN/solved_fixed_points/flint_persist2/P.npy",
+    "warm_evals": {
+      "anderson": {
+        "inf": 0.21832998090460645,
+        "two": 0.4884401788240204,
+        "d_FR": 0.2685253708799588
+      },
+      "persist2": {
+        "inf": 0.20939882702440757,
+        "two": 0.5869557816010632,
+        "d_FR": 0.2691658406564557
+      }
+    },
+    "strict_inf": 0.20939882702440757,
+    "strict_2": 0.5869557816010632,
+    "d_FR": 0.2691658406564557,
+    "recorded_vs_fast_strict_maxdiff": 0.0,
+    "frozen_vs_strict_maxdiff": 0.0,
+    "n_active_sites": 787320,
+    "n_active_keys": 4374
+  },
+  "status": "gate_passed",
+  "stiff_cells": []
+}
