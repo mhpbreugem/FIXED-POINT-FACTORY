@@ -21,3 +21,18 @@ NUMBA_NUM_THREADS=2.
   Unlike homogeneous K=4 (where the exact-FR seed sat at Finf~5e-6, a genuine FP), the het exact-FR
   price has residual ~0.069 init / 0.038 floor -- het-FR is only an APPROXIMATE Phi fixed point.
   -> deeper FR probe (more NK iters + Picard from fr_het) needed to decide FR vs PR; see below.
+
+[MILESTONE 3] UNDAMPED PICARD (40 iters), primary het config
+  From NL IC: het_def 0.352 -> 0.0062 (essentially FR; min 0.0062), step residual 0.376 -> non-smooth floor ~0.027.
+              period2_oscillation = FALSE (d(n,n-2) median 0.059 stays >= d(n,n-1) median 0.029 -- both wobble around the
+              non-smooth floor; NOT a clean 2-cycle). converged_clean=False only because of the contour floor, NOT instability.
+  From exact het-FR seed: het_def stays ~0.0056 (does NOT drift to PR), residual floor ~0.011, no oscillation
+              -> the het-FR price lam(sum_i tau_i u_i) is an APPROXIMATE, STABLE attractor under Picard.
+
+[VERDICT] Very-heterogeneous tau (10x) / gamma (80x) does NOT reintroduce the K=3 partial-revelation/oscillation structure.
+  K=4 stays FULLY-REVEALING (Picard-from-NL deficit -> 0.006, ~FR) and STABLE (no period-2 osc), like homogeneous K=4
+  (-> FR, deficit ~0, no osc) and UNLIKE homogeneous K=3 (unique PR eq deficit ~0.27, period-2 learning oscillation).
+  Only K=3 feature that survives: the non-smooth residual floor (~0.01-0.03 here; homogeneous K=4 had ~0.015).
+  Heterogeneity is absorbed by the precision-weighted sufficient statistic sum_i tau_i u_i, not turned into info loss/instability.
+  Saved: P_picard_nl_last_primary.npy (FR limit from NL IC), P_picard_fr_last_primary.npy (FR-seed stationary state),
+         fig_k4_het_primary.png (NK residuals, Picard period-2 diagnostic, deficit trajectories).
