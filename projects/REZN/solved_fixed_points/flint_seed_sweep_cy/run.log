@@ -6730,3 +6730,5 @@
 [11:40:11]   *** CANDIDATE NEW EQ d_FR=0.3093 floor=1.12e-01 types=['overrev'] members=['overrev_s3'] ***
 [11:40:11]   *** CANDIDATE NEW EQ d_FR=0.2789 floor=1.07e-01 types=['anchor'] members=['anchor_PR_s1'] ***
 [11:40:11]   *** CANDIDATE NEW EQ d_FR=0.2381 floor=1.63e-01 types=['anchor'] members=['anchor_FR_s0'] ***
+[11:40:13]   push OK (attempt 1)
+[11:40:13] ALL DONE
