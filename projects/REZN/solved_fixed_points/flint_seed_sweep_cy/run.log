@@ -1,0 +1,4 @@
+[10:36:10] GATE: 1 Cython-Phi @100-dec = 1.970s/Phi
+[10:36:10] GATE: max|Phi_cy(100) - Phi_fast(200)| over interior = 2.449e-91 (floor ~1e-100)
+[10:36:10] GATE: est wall ~40 seeds x ~150 iters / 4 workers = 49.3 min
+[10:36:10] GATE: match <= 1e-85 ? True
