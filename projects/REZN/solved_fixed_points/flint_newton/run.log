@@ -1,2 +1,2 @@
-[05:48:17] JFNK FAST-Φ from own ckpt outer 42, resume@42, α=0.01, clip||δ||∞≤1.0, FD_eps=1e-08, gmres restart=20 tol=0.0001
-[05:50:06]   outer  43  ||F||∞=2.172e-01->2.151e-01  ||δ||∞=9.668e-01  clip×1.00e+00  α=1.0e-02(bt0 acc1)  step∞=9.668e-03  gmres_info=1  d_FR=2.6861e-01  (108.3s nphi=23)
+[05:51:36] JFNK FAST-Φ from own ckpt outer 41, resume@41, α=0.01, clip||δ||∞≤1.0, FD_eps=1e-08, gmres restart=20 tol=0.0001
+[05:53:37]   outer  42  ||F||∞=1.386e-01->1.384e-01  ||δ||∞=1.496e-01  clip×1.00e+00  α=1.3e-03(bt3 acc1)  step∞=1.871e-04  gmres_info=1  d_FR=2.6862e-01  (120.9s nphi=26)
