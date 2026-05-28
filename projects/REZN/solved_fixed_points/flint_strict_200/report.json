@@ -408,5 +408,15 @@
     "picard_iters": 58,
     "jacobian_wall_s": 1299.8680868148804
   },
-  "updated": "2026-05-28 14:41:40"
+  "updated": "2026-05-28 14:41:42",
+  "summary": {
+    "gate_s_per_phi": 3.456507921218872,
+    "warmstart_residual_inf": 0.20939882702440757,
+    "warmstart_dFR": 0.2691658406564557,
+    "plateau_F_inf": 0.10726766499476868,
+    "plateau_dFR": 0.27258420198222777,
+    "spike_fraction": 0.0205761316872428,
+    "max_abs_diag": 38720.53246518301,
+    "matches_prior_100dec": false
+  }
 }

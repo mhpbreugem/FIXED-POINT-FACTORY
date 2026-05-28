@@ -93,3 +93,4 @@
 [14:20:01]   push OK (attempt 1)
 [14:20:01] JACOBIAN: building arb-FD diagonal (eps=1e-25) for 729 interior cells on 4 CPUs
 [14:41:40] JACOBIAN: 729 cells in 21.7 min; spike fraction (|diag|>1000) = 15/729 = 0.0206 (2.1%); max|diag| = 3.8721e+04
+[14:41:42]   push OK (attempt 1)
