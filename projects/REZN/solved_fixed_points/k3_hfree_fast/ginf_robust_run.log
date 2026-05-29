@@ -1,0 +1,2 @@
+h-free PR deficit vs G (ROBUST orbit-average solver + self-continuation) tau=2 gamma=0.1
+  G= 9: deficit=0.1728 d_FR=0.2567 ||F||=1.3e-13 it=8 conv=True (11.4s)
