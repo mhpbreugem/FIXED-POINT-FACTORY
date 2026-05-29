@@ -24,3 +24,5 @@
 13:21:51 [row  9/15] tau=5.179  nailed 15/15  deficit[min,max]=[0.0056,0.4113]  (655s row, 1354s total)
 13:21:52 [git] pushed row 9/15 tau=5.179 (135/225 cells) (attempt 1)
 13:30:19 [row 10/15] tau=8.483  nailed 15/15  deficit[min,max]=[0.0231,0.4468]  (507s row, 1863s total)
+13:30:25 [git] pushed row 10/15 tau=8.483 (150/225 cells) (attempt 1)
+13:34:06 [row 11/15] tau=13.895  nailed 15/15  deficit[min,max]=[0.0895,0.4539]  (221s row, 2089s total)
