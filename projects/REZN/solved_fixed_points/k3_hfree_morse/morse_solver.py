@@ -132,8 +132,8 @@ def metrics(P, ui, TAU):
     return dict(deficit=deficit, d_FR=d_FR, slope_T=float(a[0]))
 
 
-def solve_morse_pr(G, TAU, GAMMA, x0_red=None, f_tol=1e-9, nk_maxiter=200,
-                   nk_probe_iter=12, picard_iters=120, verbose=None,
+def solve_morse_pr(G, TAU, GAMMA, x0_red=None, f_tol=1e-9, nk_maxiter=150,
+                   nk_probe_iter=15, picard_iters=80, verbose=None,
                    eps_c=EPS_C):
     """Nail the Morse-robust h-free PR fixed point.  Returns (P_full, sol_red,
     Finf, info).  Strategy: short NK probe; if it doesn't reach f_tol, Picard
