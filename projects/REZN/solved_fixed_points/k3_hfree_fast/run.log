@@ -45,3 +45,7 @@ SPEEDUP: dense-FD 146.1s/step vs FAST 39.68s/FULL-solve  (~4x for a whole solve 
 ----------------------------------------------------------------------
 9-cell (gamma,tau) mini-sweep (each nailed with FAST solver):
 resuming sweep: 6 cells already done
+  gamma= 10.0 tau= 1.0 -> ||F||=7.94e-04 deficit=0.07549 conv=False picard=True  281.20s
+  gamma= 10.0 tau= 2.0 -> ||F||=7.32e-04 deficit=0.08708 conv=False picard=True  72.19s
+  gamma= 10.0 tau= 4.0 -> ||F||=2.98e-05 deficit=0.07699 conv=False picard=True  72.76s
+ALL 9 CELLS DONE; checkpoint has 9

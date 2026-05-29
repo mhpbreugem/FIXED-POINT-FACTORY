@@ -167,8 +167,16 @@ def main():
                 m = av
         return m
 
-    # arb state
-    x = [arb(repr(float(x0[k]))) for k in range(n)]
+    # arb state -- resume from checkpoint if present (survives interruption)
+    ckpt = os.path.join(OUTDIR, "ckpt_reduced.json")
+    if os.path.exists(ckpt):
+        with open(ckpt) as f:
+            cdat = json.load(f)
+        x = [arb(s) for s in cdat["x"]]
+        log(f"RESUMED from checkpoint at prior step {cdat['step']} "
+            f"(||F||inf was {cdat['Finf']:.3e})")
+    else:
+        x = [arb(repr(float(x0[k]))) for k in range(n)]
     teval = time.time()
     F = Fred_arb(x)
     dt_arb = time.time() - teval
@@ -207,6 +215,10 @@ def main():
         if Finf_new < best_Finf:
             best_Finf = Finf_new
             best_x = list(x)
+        # checkpoint after every step (full arb strings) so a kill loses <=1 step
+        with open(ckpt, "w") as f:
+            json.dump({"step": step, "Finf": float(Finf_new),
+                       "x": [v.str(220, radius=False) for v in x]}, f)
         # stop if at/below target or stagnating (no longer improving by >5%)
         if float(Finf_new) < 1e-100:
             log("reached < 1e-100")
