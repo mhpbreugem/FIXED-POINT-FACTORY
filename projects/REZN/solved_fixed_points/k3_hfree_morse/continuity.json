@@ -1,0 +1,39 @@
+{
+  "G": 17,
+  "p_star": 0.49999999999167366,
+  "p_range": [
+    0.30230494120677415,
+    0.6976950587923927
+  ],
+  "coarse": {
+    "step": 0.0005000000000000004,
+    "orig_maxjump_A": 1115.375417398907,
+    "morse_maxjump_A": 1.1761768606507257,
+    "orig_maxjump_mu": 0.18070136626774663,
+    "morse_maxjump_mu": 0.07682248469243708
+  },
+  "fine": {
+    "step": 0.00012499999999998623,
+    "orig_maxjump_A": 560.644189837839,
+    "morse_maxjump_A": 0.3567588890320783,
+    "orig_maxjump_mu": 0.2968870613297768,
+    "morse_maxjump_mu": 0.027944601944980663
+  },
+  "finer": {
+    "step": 3.124999999998268e-05,
+    "orig_maxjump_A": 542.2554432160846,
+    "morse_maxjump_A": 0.10075819764874216,
+    "orig_maxjump_mu": 0.2838222127585496,
+    "morse_maxjump_mu": 0.008643669609431692
+  },
+  "eps_c": 0.01,
+  "step_ratio": 4.000000000000444,
+  "morse_mu_jump_shrink_1": 2.74909926588651,
+  "morse_mu_jump_shrink_2": 3.2329558171090227,
+  "orig_mu_jump_shrink_1": 0.6086535582196585,
+  "orig_mu_jump_shrink_2": 1.0460318043617736,
+  "morse_continuous": true,
+  "orig_jumps": true,
+  "orig_peakA": 1115.375417398907,
+  "morse_peakA": 1.1761768606507257
+}
