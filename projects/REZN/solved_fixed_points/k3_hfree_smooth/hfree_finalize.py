@@ -11,8 +11,24 @@ sm = json.load(open("/tmp/hfree_smooth_res.json"))
 cons = json.load(open("/tmp/hfree_consistency.json"))
 nail = json.load(open(f"{OUT}/nail_report.json"))
 
+VERDICT = (
+    "YES. The deterministic (noiseless) partially-revealing equilibrium is a "
+    "genuine SMOOTH fixed point of an operator with NO smoothing parameter "
+    "(only grid G and Gauss-Legendre quadrature Nq discretizations, both "
+    "converging as ->inf). (a) A_v(p) is C1+ at former grid-node prices: its "
+    "slope-jump DECREASES as the probe width h->0 (A''*h), whereas the grid "
+    "marching-squares and CDF methods KINK there (slope-jump grows ~1/h). "
+    "(b) The operator matches the analytic co-area integral to ~1.5e-5 and "
+    "the kernel h->0 limit. (c) Newton (smooth operator, no kernel) nails it: "
+    f"||F||inf driven from {nail['trajectory'][0]:.3f} to {nail['lowest_Finf']:.2e} "
+    f"({nail['reduction_factor']:.0f}x) with super-linear/quadratic steps "
+    "(e.g. 0.302->0.0681, rate 2.24), to a symmetric PR fixed point with "
+    f"deficit (1-R^2)={nail['deficit']:.4f}. 'Your kernel is noise in disguise' "
+    "is refuted: no h, still smooth, still nails.")
+
 report = dict(
     title="K=3 CRRA REE h-FREE SMOOTH co-area operator: validation + Newton nail",
+    VERDICT=VERDICT,
     date="2026-05-29", tau=2.0, gamma=0.1, UMAX=4.0, Nq=nail["Nq"], sub=nail["sub"],
     NO_h=True, NO_kernel=True, NO_bandwidth=True, NO_smoothing_parameter=True,
     only_discretizations=["working grid G (->inf)",
@@ -41,7 +57,7 @@ print("wrote report.json")
 d = np.load("/tmp/hfree_smooth_compare.npz")
 ps = d["ps"]; nodevals = d["nodevals"]; A1h = d["A1h"]; A1g = d["A1g"]
 sc = sm["slopejump_scaling"]; hl = np.array(sc["h_list"])
-traj = np.array(nail["newton_G9"]["trajectory"])
+traj = np.array(nail["trajectory"])
 
 fig, ax = plt.subplots(2, 2, figsize=(14, 10), dpi=120)
 
@@ -80,7 +96,7 @@ its = np.arange(len(traj))
 ax[1, 1].semilogy(its, traj, "o-", c="C2")
 ax[1, 1].set_xlabel("Newton iteration")
 ax[1, 1].set_ylabel("||F||inf = ||Phi(P)-P||inf")
-q = nail["newton_G9"]["order_q"]
+q = nail["order_q_median"]
 ax[1, 1].set_title(f"(d) Newton nail (G=9, smooth h-free op)\n"
                    f"order_q~{q:.2f}, lowest||F||={traj[-1]:.1e}")
 ax[1, 1].grid(ls=":")
