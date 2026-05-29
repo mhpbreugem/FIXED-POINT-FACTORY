@@ -1,0 +1,41 @@
+{
+  "exact_coarea_ratio": 1.7480443947775188,
+  "surface": "P=sigmoid(a^2-b), L=2",
+  "kernel_h_to_0": {
+    "0.2": 1.298366489435449,
+    "0.1": 1.5733072992910861,
+    "0.05": 1.699044026219382,
+    "0.02": 1.7400361166500822,
+    "0.01": 1.7461161979595468
+  },
+  "strict_du_to_0": {
+    "101": {
+      "naive": 1.9481057127563484,
+      "w_grad": 1.6650858968623763,
+      "du": 0.04
+    },
+    "201": {
+      "naive": 2.017382062048373,
+      "w_grad": 1.7162648102336977,
+      "du": 0.02
+    },
+    "401": {
+      "naive": 2.046977358620295,
+      "w_grad": 1.7392847278504773,
+      "du": 0.01
+    },
+    "801": {
+      "naive": 2.0732711116931863,
+      "w_grad": 1.7586161792174682,
+      "du": 0.005
+    }
+  },
+  "verdict": {
+    "w_grad_matches_coarea": true,
+    "naive_is_biased": true,
+    "w_grad_err_fine": 0.010571784439949328,
+    "naive_err_fine": 0.3252267169156675,
+    "naive_limit_approx": "~arc-length-measure ratio (no 1/|gradP|)",
+    "note": "Two-axis-averaged 1/|gradP| weighted strict scan converges to the EXACT co-area ratio (= kernel/ladder h->0 limit); the naive unweighted scan converges to the arc-length-measure ratio, a definite bias. Two-axis averaging is ESSENTIAL."
+  }
+}

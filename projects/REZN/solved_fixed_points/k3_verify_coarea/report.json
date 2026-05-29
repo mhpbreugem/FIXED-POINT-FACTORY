@@ -1,0 +1,193 @@
+{
+  "task": "Verify h->0 kernel/co-area ladder == strict h=0 co-area-WEIGHTED (1/|gradP|) contour, and that naive unweighted contour is biased. Plus numerical audit.",
+  "params": {
+    "tau": 2.0,
+    "gamma": 0.1,
+    "W": 1.0,
+    "UMAX": 4.0,
+    "pad": 2,
+    "G_LIST": [
+      9,
+      13,
+      17,
+      21
+    ],
+    "h_law": "h=0.45*du^0.5"
+  },
+  "TEST1": {
+    "methods": {
+      "a": "h->0 kernel ladder (phi_K3_halo_smooth, newton_krylov nailed to ~1e-11)",
+      "b": "naive strict contour (phi_K3_halo, damped-Picard plateau)",
+      "c": "co-area-WEIGHTED strict contour (phi_K3_halo_weighted, 1/|gradP|, Picard+capped-Newton)"
+    },
+    "rows": [
+      {
+        "G_inner": 9,
+        "du": 1.0,
+        "h": 0.45,
+        "a_deficit": 0.29119915498954435,
+        "a_d_FR": 0.30859618268043837,
+        "a_b1": 0.3224075444339018,
+        "a_slopeT": 0.16120377221695073,
+        "a_Finf": 7.216449660063518e-16,
+        "a_conv": true,
+        "a_it": 1,
+        "b_deficit": 0.003545707284335866,
+        "b_d_FR": 0.06961711715795971,
+        "b_b1": 1.995991983971527,
+        "b_slopeT": 0.9979959919857628,
+        "b_Finf": 0.04172457606466051,
+        "c_deficit": 0.00399228552945978,
+        "c_d_FR": 0.06348669290538497,
+        "c_b1": 2.023314264028479,
+        "c_slopeT": 1.010734787470068,
+        "c_Finf": 0.0013910783720894604,
+        "c_conv": false,
+        "c_it": 60,
+        "c_picard_deficit": 0.00399228552945978,
+        "diff_ac": 0.6489584569241433,
+        "diff_ab": 0.6155567485765256,
+        "diff_bc": 0.5107232857369488,
+        "bias_b": 0.2876534477052085,
+        "gap_c": 0.28720686946008456,
+        "walltime_s": 17.4
+      },
+      {
+        "G_inner": 13,
+        "du": 0.6666666666666666,
+        "h": 0.3674234614174767,
+        "a_deficit": 0.28382652171446254,
+        "a_d_FR": 0.30388846250558504,
+        "a_b1": 0.3410236105758475,
+        "a_slopeT": 0.17051180528792384,
+        "a_Finf": 5.995204332975845e-15,
+        "a_conv": true,
+        "a_it": 1,
+        "b_deficit": 0.006156222196327196,
+        "b_d_FR": 0.03744283945092232,
+        "b_b1": 1.9669563633162739,
+        "b_slopeT": 0.9825513367604205,
+        "b_Finf": 0.020836883743722,
+        "c_deficit": 0.0023965417145771187,
+        "c_d_FR": 0.04160553327638772,
+        "c_b1": 2.0241346510299696,
+        "c_slopeT": 1.0119834782139185,
+        "c_Finf": 0.0018071556830956403,
+        "c_conv": false,
+        "c_it": 60,
+        "c_picard_deficit": 0.0023965417145771187,
+        "diff_ac": 0.6615565125962957,
+        "diff_ab": 0.614154724514042,
+        "diff_bc": 0.4026220350886679,
+        "bias_b": 0.2776702995181353,
+        "gap_c": 0.28142997999988545,
+        "walltime_s": 30.5
+      },
+      {
+        "G_inner": 17,
+        "du": 0.5,
+        "h": 0.3181980515339464,
+        "a_deficit": 0.28133940878960034,
+        "a_d_FR": 0.3015215569962575,
+        "a_b1": 0.3566584772687122,
+        "a_slopeT": 0.17832923863435576,
+        "a_Finf": 6.8833827526759706e-15,
+        "a_conv": true,
+        "a_it": 1,
+        "b_deficit": 0.011672723047549105,
+        "b_d_FR": 0.05696763134089005,
+        "b_b1": 1.9308923142166625,
+        "b_slopeT": 0.9644867627034655,
+        "b_Finf": 0.01801949963104249,
+        "c_deficit": 0.0024108776339492187,
+        "c_d_FR": 0.05292779518304518,
+        "c_b1": 2.01693333177235,
+        "c_slopeT": 1.0094357436123518,
+        "c_Finf": 0.003428664015998062,
+        "c_conv": false,
+        "c_it": 60,
+        "c_picard_deficit": 0.0024108776339492187,
+        "diff_ac": 0.6619798238532204,
+        "diff_ab": 0.6124718258197672,
+        "diff_bc": 0.4283541102368241,
+        "bias_b": 0.2696666857420512,
+        "gap_c": 0.27892853115565114,
+        "walltime_s": 83.6
+      },
+      {
+        "G_inner": 21,
+        "du": 0.4,
+        "h": 0.28460498941515416,
+        "a_deficit": 0.2792806797915499,
+        "a_d_FR": 0.29971288074475183,
+        "a_b1": 0.37059399327883985,
+        "a_slopeT": 0.18529699663941995,
+        "a_Finf": 6.8833827526759706e-15,
+        "a_conv": true,
+        "a_it": 1,
+        "b_deficit": 0.01599752299485118,
+        "b_d_FR": 0.06382404083278241,
+        "b_b1": 1.9014716189650789,
+        "b_slopeT": 0.9496920821519566,
+        "b_Finf": 0.01607225485350139,
+        "c_deficit": 0.1339608700843136,
+        "c_d_FR": 0.04648421999454095,
+        "c_b1": 1.6755261506346946,
+        "c_slopeT": 0.836233099161976,
+        "c_Finf": 0.00273424600376998,
+        "c_conv": false,
+        "c_it": 60,
+        "c_picard_deficit": 0.0016093147429379806,
+        "diff_ac": 0.6581465431307871,
+        "diff_ab": 0.606329758821658,
+        "diff_bc": 0.4132916587931652,
+        "bias_b": 0.2632831567966987,
+        "gap_c": 0.14531980970723632,
+        "walltime_s": 184.0
+      }
+    ],
+    "ANALYTIC_DECISIVE": {
+      "surface": "P=sigmoid(a^2-b), L=2",
+      "exact_coarea_ratio": 1.7480443947775188,
+      "kernel_h_to_0": {
+        "0.2": 1.298366489435449,
+        "0.1": 1.5733072992910861,
+        "0.05": 1.699044026219382,
+        "0.02": 1.7400361166500822,
+        "0.01": 1.7461161979595468
+      },
+      "strict_du_to_0": {
+        "101": {
+          "naive": 1.9481057127563484,
+          "w_grad": 1.6650858968623763,
+          "du": 0.04
+        },
+        "201": {
+          "naive": 2.017382062048373,
+          "w_grad": 1.7162648102336977,
+          "du": 0.02
+        },
+        "401": {
+          "naive": 2.046977358620295,
+          "w_grad": 1.7392847278504773,
+          "du": 0.01
+        },
+        "801": {
+          "naive": 2.0732711116931863,
+          "w_grad": 1.7586161792174682,
+          "du": 0.005
+        }
+      },
+      "verdict": {
+        "w_grad_matches_coarea": true,
+        "naive_is_biased": true,
+        "w_grad_err_fine": 0.010571784439949328,
+        "naive_err_fine": 0.3252267169156675,
+        "naive_limit_approx": "~arc-length-measure ratio (no 1/|gradP|)",
+        "note": "Two-axis-averaged 1/|gradP| weighted strict scan converges to the EXACT co-area ratio (= kernel/ladder h->0 limit); the naive unweighted scan converges to the arc-length-measure ratio, a definite bias. Two-axis averaging is ESSENTIAL."
+      }
+    },
+    "verdict": "CONFIRMED at the QUADRATURE level (decisive analytic test on a controlled curved surface with known exact co-area): the h->0 kernel/ladder limit (1.746) equals the exact co-area integral (1.748), and the TWO-AXIS-AVERAGED 1/|gradP|-weighted strict scan converges to the SAME exact co-area (1.74-1.76 as du->0). The naive UNWEIGHTED scan converges instead to the arc-length-measure ratio (~2.07), a definite bias of ~0.33 (~19%). KEY CAVEAT discovered: two-axis averaging is ESSENTIAL for the 1/|gradP| weight to recover co-area. At the REE-OPERATOR level on coarse grids (G<=21, du>=0.4) the weighted fixed point (c) does NOT yet match the ladder (gap 0.145 at G=21) because quadrature convergence to co-area is slow (needs G~400+) and fixed-point composition amplifies residual error; the naive scan bias at G=21 is 0.263. Both strict scans have near-zero deficit (~0.01-0.13) on these grids vs the ladder ~0.28, so neither is a substitute for the ladder at usable resolutions; the ladder is the reliable estimator."
+  },
+  "TEST2": "see test2.json (running)"
+}
