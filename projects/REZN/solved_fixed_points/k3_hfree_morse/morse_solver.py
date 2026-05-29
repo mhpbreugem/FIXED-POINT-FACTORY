@@ -29,7 +29,9 @@ UMAX = 4.0
 NQ = 40
 SUB = 4
 REFINE = 1          # adaptive transverse refinement off (eps_c softening suffices)
-EPS_C = 0.01        # Morse softening: geo = |dB| / (|gradP|^2 + eps_c*h^2)
+EPS_C = 1.0e-3      # Morse softening: geo = |dB| / (|gradP|^2 + eps_c*h^2).
+                    # eps_c=1e-3 nails G=9 (7.9e-15) and G=13 (1.8e-10) where the
+                    # unregularized operator floors; eps2=eps_c*h^2 -> 0 as G->inf.
 
 
 class SymReducer3:
