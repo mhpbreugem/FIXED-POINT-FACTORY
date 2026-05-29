@@ -3,4 +3,20 @@ FAST h-FREE SMOOTH co-area K=3 solver  (matrix-free NK + symmetry reduction)
 SAME operator as hfree_operator.py: NO kernel / bandwidth / smoothing param.
 date 2026-05-29  UMAX=4 Nq=40 sub=4
 operator permutation-commute asymmetry = 8.882e-16 (verifies Phi(perm P)=perm Phi(P))
-single operator eval = 0.325s
+single operator eval = 0.144s
+DENSE-FD per-column 0.124s x N=729 -> ~90.2s / Newton step (extrapolated; original hfree_nail logged 84-98s/step)
+  nk it 1 ||F||=3.027e-01
+  nk it 2 ||F||=6.284e-02
+  nk it 3 ||F||=3.390e-02
+  nk it 4 ||F||=7.271e-03
+  nk it 5 ||F||=5.684e-04
+  nk it 6 ||F||=4.201e-06
+  nk it 7 ||F||=2.461e-09
+  nk it 8 ||F||=1.256e-13
+FAST nail @ tau=2,gamma=0.1: reduced||F||=1.256e-13 full||F||=1.257e-13 iters=8 walltime=18.98s
+  deficit=0.17285 slope_T=0.36266 d_FR=0.2567 asym=0.00e+00
+SPEEDUP: dense-FD 90.2s/step vs FAST 18.98s/FULL-solve  (~5x for a whole solve vs one dense step)
+----------------------------------------------------------------------
+9-cell (gamma,tau) mini-sweep (each nailed with FAST solver):
+  gamma=  0.1 tau= 1.0 -> ||F||=8.58e-05 deficit=0.09178 nkit=25 picN=1.5e-03  58.98s
+  gamma=  0.1 tau= 2.0 -> ||F||=1.69e-04 deficit=0.19487 nkit=25 picN=3.0e-04  27.86s

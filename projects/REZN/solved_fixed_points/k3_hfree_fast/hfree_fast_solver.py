@@ -101,6 +101,30 @@ def make_red_resid(red: SymReducer3, ui, gn, gw, tau, gam, W):
 
 
 # ----------------------------------------------------------------------
+# Symmetry-reduced Picard (fixed-point) pre-iteration. Cheap (one operator
+# eval / step) and globally well-behaved; used to slide a warm start into the
+# PR basin before the Newton-Krylov polish. Tracks the BEST (lowest-||F||)
+# iterate, since at weak-signal parameters (small tau) the PR can be only
+# marginally Picard-stable (||F|| can oscillate).
+# ----------------------------------------------------------------------
+def picard_prestage(x0_red, red, ui, gn, gw, tau, gam, W, iters=60):
+    v = x0_red.copy()
+    best = v.copy()
+    Fn = red.reduce(H.phi_hfree(red.expand(v), ui, gn, gw, tau, gam, W, SUB))
+    best_norm = float(np.max(np.abs(Fn - v)))
+    for _ in range(iters):
+        vn = red.reduce(H.phi_hfree(red.expand(v), ui, gn, gw, tau, gam, W, SUB))
+        nrm = float(np.max(np.abs(vn - v)))
+        v = vn
+        if nrm < best_norm:
+            best_norm = nrm
+            best = v.copy()
+        if best_norm < 1e-9:
+            break
+    return best, best_norm
+
+
+# ----------------------------------------------------------------------
 # Matrix-free Newton-Krylov solve (symmetry-reduced).
 # ----------------------------------------------------------------------
 def nk_solve(G, x0_red, red, ui, gn, gw, tau, gam, W,
@@ -121,13 +145,12 @@ def nk_solve(G, x0_red, red, ui, gn, gw, tau, gam, W,
 
     conv = True
     try:
-        # inner_maxiter caps the Krylov (lgmres) inner products per outer step:
-        # each inner product is ONE FD directional-derivative = one operator
-        # eval (vs the dense FD Jacobian's N=729 evals/step). rdiff sets the FD
-        # step for the Jacobian-vector products.
+        # Matrix-free Newton-Krylov: each lgmres inner product is ONE FD
+        # directional derivative = one operator eval (vs the dense FD
+        # Jacobian's N=729 evals/step). Default Krylov settings give clean
+        # quadratic-tail convergence to ~1e-13 in ~8 outer steps.
         sol = newton_krylov(Fred, x0_red, f_tol=f_tol, maxiter=maxiter,
-                            method="lgmres", inner_maxiter=20, outer_k=8,
-                            rdiff=1e-6, callback=cb)
+                            method="lgmres", callback=cb)
     except NoConvergence as e:
         sol = np.asarray(e.args[0]).ravel()
         conv = False
@@ -173,8 +196,16 @@ def warm_start_red(G, red, ui, TAU):
     return red.reduce(P_fr)
 
 
-def solve_hfree_pr(G, TAU, GAMMA, x0_red=None, f_tol=1e-10, verbose=None):
-    """Nail the h-free PR fixed point. Returns (P_full, Finf, info)."""
+def solve_hfree_pr(G, TAU, GAMMA, x0_red=None, f_tol=1e-10, nk_maxiter=80,
+                   picard_iters=0, verbose=None):
+    """Nail the h-free PR fixed point. Returns (P_full, sol_red, Finf, info).
+
+    picard_iters>0 runs a cheap symmetry-reduced Picard pre-stage to slide the
+    warm start into the PR basin before the matrix-free Newton-Krylov polish
+    (needed at weak-signal parameters, e.g. small tau, where the bare NK from a
+    distant seed stalls). Returns the lowest-||F|| iterate found across both
+    stages, so the reported Finf is the best achieved residual.
+    """
     ui = np.linspace(-UMAX, UMAX, G)
     gn, gw = H.gauss_legendre(NQ, -UMAX, UMAX)
     tau = np.full(3, TAU)
@@ -183,13 +214,27 @@ def solve_hfree_pr(G, TAU, GAMMA, x0_red=None, f_tol=1e-10, verbose=None):
     red = SymReducer3(G)
     if x0_red is None:
         x0_red = warm_start_red(G, red, ui, TAU)
+
+    Fred = make_red_resid(red, ui, gn, gw, tau, gam, W)
+    picard_norm = None
+    if picard_iters > 0:
+        x0_red, picard_norm = picard_prestage(
+            x0_red, red, ui, gn, gw, tau, gam, W, iters=picard_iters)
+
     sol, Finf, iters, conv = nk_solve(
         G, x0_red, red, ui, gn, gw, tau, gam, W,
-        f_tol=f_tol, verbose=verbose)
+        f_tol=f_tol, maxiter=nk_maxiter, verbose=verbose)
+
+    # keep the better of (Picard pre-stage, NK polish)
+    if picard_norm is not None and picard_norm < Finf:
+        sol = x0_red
+        Finf = picard_norm
+
     P_full = red.expand(sol)
     m = metrics(P_full, ui, TAU)
     info = dict(G=G, tau=TAU, gamma=GAMMA, Finf=Finf, iters=iters,
-                converged=conv, n_red=red.n_red, **m)
+                converged=conv, n_red=red.n_red, picard_iters=picard_iters,
+                picard_norm=picard_norm, **m)
     return P_full, sol, Finf, info
 
 
