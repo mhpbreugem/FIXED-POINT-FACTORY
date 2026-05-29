@@ -8,6 +8,15 @@
       "iters": 8,
       "conv": true,
       "sec": 11.4
+    },
+    {
+      "G": 13,
+      "deficit": 0.10678506932866698,
+      "d_FR": 0.1692078860162427,
+      "Finf": 0.0011899697372922402,
+      "iters": 80,
+      "conv": false,
+      "sec": 1019.9
     }
   ],
   "solver": "robust orbit-average + self-continuation"
