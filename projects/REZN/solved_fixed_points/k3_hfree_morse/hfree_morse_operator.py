@@ -270,9 +270,15 @@ def _grad_soft(dmag, denom, eps2):
 @njit(cache=True, fastmath=False)
 def slice_evidence(S, h, u0, p_target, gnodes, gweights, tauA, tauB,
                    sub, Mcols_buf, Mrows_buf, refine, eps_c):
+    """Co-area evidence for the (axisA rows, axisB cols) slice at level
+    p_target.  When refine==1: single-node-per-GL-point path (same node set as
+    the original operator, only the eps2-softened geometric weight differs).
+    When refine>1: adaptive transverse sub-nodes are added inside near-critical
+    panels (fix 2).  Returns A0,A1 over IDENTICAL nodes/weights (fix 1)."""
     n = S.shape[0]
     Nq = gnodes.size
     eps2 = eps_c * h * h
+    umax = u0 + (n - 1) * h
     A0 = 0.0
     A1 = 0.0
     maxroots = 2 * n + 4
@@ -282,56 +288,42 @@ def slice_evidence(S, h, u0, p_target, gnodes, gweights, tauA, tauB,
     # =============== term A^(B): fix uA, root-find along axis B ===============
     colM = Mcols_buf
     for ib in range(n):
-        col = S[:, ib]
-        colM[ib, :] = natural_spline_M(col, h)
-
+        colM[ib, :] = natural_spline_M(S[:, ib], h)
     rowvals = np.empty(n)
     rowdA = np.empty(n)
     for q in range(Nq):
-        # --- base node + adaptive sub-nodes (fix 2) ---
-        # Build the local node set for this panel.  We evaluate the contour at
-        # the base node; if it sits in a near-critical region (small transverse
-        # |dB| at any of its roots) we split the GL weight across `refine`
-        # equal sub-nodes spanning the half-panel, clustering resolution where
-        # 1/|gradP| is large.  Sub-node spacing uses the local GL weight as the
-        # panel width so the composite rule integrates the same smooth function.
         uA_base = gnodes[q]
         wA_base = gweights[q]
-        # quick criticality probe at the base node
-        for ib in range(n):
-            v, d = spline_eval(S[:, ib], colM[ib, :], h, u0, uA_base)
-            rowvals[ib] = v
-            rowdA[ib] = d
-        Mrow = natural_spline_M(rowvals, h)
-        MrowdA = natural_spline_M(rowdA, h)
-        ncnt = spline_roots(rowvals, Mrow, h, u0, p_target,
-                            roots_u, roots_d, sub)
-        min_dB = 1.0e30
-        for r in range(ncnt):
-            uB = roots_u[r]
-            dAval, _ = spline_eval(rowdA, MrowdA, h, u0, uB)
-            gmag = math.sqrt(roots_d[r] * roots_d[r] + dAval * dAval)
-            if gmag < min_dB:
-                min_dB = gmag
-        # decide sub-node count for this panel
+        # --- adaptive sub-node decision (fix 2; only when refine>1) ---
         nsub = 1
-        if refine > 1 and min_dB < 0.25 * h:
-            nsub = refine
-        # half-panel width represented by this GL node (weight ~ length)
+        if refine > 1:
+            for ib in range(n):
+                v, d = spline_eval(S[:, ib], colM[ib, :], h, u0, uA_base)
+                rowvals[ib] = v
+                rowdA[ib] = d
+            Mrow = natural_spline_M(rowvals, h)
+            MrowdA = natural_spline_M(rowdA, h)
+            ncnt = spline_roots(rowvals, Mrow, h, u0, p_target,
+                                roots_u, roots_d, sub)
+            min_g = 1.0e30
+            for r in range(ncnt):
+                dAval, _ = spline_eval(rowdA, MrowdA, h, u0, roots_u[r])
+                gmag = math.sqrt(roots_d[r] * roots_d[r] + dAval * dAval)
+                if gmag < min_g:
+                    min_g = gmag
+            if min_g < 0.5 * h:
+                nsub = refine
         half = 0.5 * wA_base
         for sidx in range(nsub):
             if nsub == 1:
-                uA = uA_base
-                wA = wA_base
+                uA = uA_base; wA = wA_base
             else:
-                # symmetric cluster of sub-nodes across [uA_base-half, uA_base+half]
-                frac = (sidx + 0.5) / nsub
-                uA = uA_base - half + 2.0 * half * frac
+                uA = uA_base - half + 2.0 * half * ((sidx + 0.5) / nsub)
                 wA = wA_base / nsub
             if uA < u0:
                 uA = u0
-            if uA > u0 + (n - 1) * h:
-                uA = u0 + (n - 1) * h
+            elif uA > umax:
+                uA = umax
             fA0 = f_signal(uA, 0, tauA)
             fA1 = f_signal(uA, 1, tauA)
             for ib in range(n):
@@ -346,13 +338,10 @@ def slice_evidence(S, h, u0, p_target, gnodes, gweights, tauA, tauB,
                 uB = roots_u[r]
                 dB = roots_d[r]
                 dAval, _ = spline_eval(rowdA, MrowdA, h, u0, uB)
-                dA2 = dAval * dAval
-                dB2 = dB * dB
-                denom = dA2 + dB2
+                denom = dAval * dAval + dB * dB
                 if denom <= 0.0:
                     continue
-                # wB/|dB| = dB^2/denom / |dB| = |dB|/denom : softened by eps2.
-                geo = _grad_soft(dB, denom, eps2)
+                geo = _grad_soft(dB, denom, eps2)   # = |dB|/(denom+eps2)
                 fB0 = f_signal(uB, 0, tauB)
                 fB1 = f_signal(uB, 1, tauB)
                 A0 += wA * geo * fA0 * fB0
@@ -361,44 +350,41 @@ def slice_evidence(S, h, u0, p_target, gnodes, gweights, tauA, tauB,
     # =============== term A^(A): fix uB, root-find along axis A ===============
     rowM = Mrows_buf
     for ia in range(n):
-        row = S[ia, :]
-        rowM[ia, :] = natural_spline_M(row, h)
+        rowM[ia, :] = natural_spline_M(S[ia, :], h)
     colvals = np.empty(n)
     coldB = np.empty(n)
     for q in range(Nq):
         uB_base = gnodes[q]
         wB_base = gweights[q]
-        for ia in range(n):
-            v, d = spline_eval(S[ia, :], rowM[ia, :], h, u0, uB_base)
-            colvals[ia] = v
-            coldB[ia] = d
-        Mcol = natural_spline_M(colvals, h)
-        McoldB = natural_spline_M(coldB, h)
-        ncnt = spline_roots(colvals, Mcol, h, u0, p_target,
-                            roots_u, roots_d, sub)
-        min_g = 1.0e30
-        for r in range(ncnt):
-            uA = roots_u[r]
-            dBval, _ = spline_eval(coldB, McoldB, h, u0, uA)
-            gmag = math.sqrt(roots_d[r] * roots_d[r] + dBval * dBval)
-            if gmag < min_g:
-                min_g = gmag
         nsub = 1
-        if refine > 1 and min_g < 0.25 * h:
-            nsub = refine
+        if refine > 1:
+            for ia in range(n):
+                v, d = spline_eval(S[ia, :], rowM[ia, :], h, u0, uB_base)
+                colvals[ia] = v
+                coldB[ia] = d
+            Mcol = natural_spline_M(colvals, h)
+            McoldB = natural_spline_M(coldB, h)
+            ncnt = spline_roots(colvals, Mcol, h, u0, p_target,
+                                roots_u, roots_d, sub)
+            min_g = 1.0e30
+            for r in range(ncnt):
+                dBval, _ = spline_eval(coldB, McoldB, h, u0, roots_u[r])
+                gmag = math.sqrt(roots_d[r] * roots_d[r] + dBval * dBval)
+                if gmag < min_g:
+                    min_g = gmag
+            if min_g < 0.5 * h:
+                nsub = refine
         half = 0.5 * wB_base
         for sidx in range(nsub):
             if nsub == 1:
-                uB = uB_base
-                wB_node = wB_base
+                uB = uB_base; wB_node = wB_base
             else:
-                frac = (sidx + 0.5) / nsub
-                uB = uB_base - half + 2.0 * half * frac
+                uB = uB_base - half + 2.0 * half * ((sidx + 0.5) / nsub)
                 wB_node = wB_base / nsub
             if uB < u0:
                 uB = u0
-            if uB > u0 + (n - 1) * h:
-                uB = u0 + (n - 1) * h
+            elif uB > umax:
+                uB = umax
             fB0 = f_signal(uB, 0, tauB)
             fB1 = f_signal(uB, 1, tauB)
             for ia in range(n):
@@ -413,12 +399,10 @@ def slice_evidence(S, h, u0, p_target, gnodes, gweights, tauA, tauB,
                 uA = roots_u[r]
                 dA = roots_d[r]
                 dBval, _ = spline_eval(coldB, McoldB, h, u0, uA)
-                dA2 = dA * dA
-                dB2 = dBval * dBval
-                denom = dA2 + dB2
+                denom = dA * dA + dBval * dBval
                 if denom <= 0.0:
                     continue
-                geo = _grad_soft(dA, denom, eps2)   # = |dA|/denom, softened.
+                geo = _grad_soft(dA, denom, eps2)   # = |dA|/(denom+eps2)
                 fA0 = f_signal(uA, 0, tauA)
                 fA1 = f_signal(uA, 1, tauA)
                 A0 += wB_node * geo * fA0 * fB0
