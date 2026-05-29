@@ -20,7 +20,7 @@ bayes = H.bayes
 clear_crra = H.clear_crra
 
 
-@njit(cache=True, parallel=True, fastmath=True)
+@njit(cache=True, parallel=True, fastmath=False)
 def phi_rep(P, ui, gn, gw, tau, gam, W, sub, ri, rj, rl):
     n = ri.size; h = ui[1] - ui[0]; u0 = ui[0]; G = ui.size
     out = np.empty(n)
