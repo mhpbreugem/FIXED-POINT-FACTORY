@@ -28,3 +28,4 @@ g= 4.00 t= 2.0 G=17 h=0.3182 | ||F||=7.14e-14 it=4 conv=True nail=True | deficit
 g= 4.00 t= 4.0 G=17 h=0.3182 | ||F||=1.86e-11 it=6 conv=True nail=True | deficit=0.12038 d_FR=0.2251 slopeT=0.2490 beta=(0.996,0.996,0.996)  [12s tot 385s]
 wrote figure k3_coarea_sweep.png
 DONE 24 cells, 24 nailed (||F||<=1e-8)
+[git] pushed: full 24-cell sweep done (24/24 nailed)
