@@ -1,0 +1,511 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{parskip}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\logit}{\operatorname{logit}}
+\newcommand{\grad}{\nabla}
+
+\title{\textbf{Solving for Partially--Revealing Equilibria:\\
+A Co--Area / Interior--Point Method for the K=3 CRRA Economy}}
+\author{REZN fixed--point project}
+\date{29 May 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+\textbf{Plain--English summary.}
+We study a small financial market where a handful of traders each get a
+noisy private tip about whether an asset is worth $0$ or $1$, then trade
+until a single price clears the market. Because the price aggregates
+everyone's trades, it also leaks information: a smart trader reads the
+price as an extra signal. The long--standing question is whether the price
+ends up revealing \emph{everything} (a fully--revealing equilibrium) or only
+\emph{part} of what is known (a partially--revealing equilibrium). Earlier
+numerical work on this model suggested partial revelation was fragile --
+that it ``needed noise'' or was intrinsically jagged and uncomputable.
+This document shows that conclusion was a \emph{numerical artifact}. The
+partially--revealing equilibrium is a genuine, smooth, deterministic fixed
+point of the trading process. The earlier jaggedness came from an
+inconsistent way of doing the key integral (a ``contour scan''). The fix is
+to replace that scan with a smooth Gaussian band of width $h$ -- which is
+simultaneously an interior--point \emph{barrier} (its central path is
+$h\to0$) and a correct \emph{co--area} quadrature. Taken in a joint limit
+($h\to0$ together with the grid spacing $\Delta u\to0$, with $\Delta u\ll
+h$), Newton's method nails the equilibrium to machine precision
+($\sim10^{-14}$). The size of the information gap is governed by a clean
+closed--form ``Jensen gap'' formula: it is proportional to the traders'
+disagreement times the curvature of demand, divided by risk aversion.
+\end{abstract}
+
+\tableofcontents
+
+% =====================================================================
+\section{The economic model, in plain terms}
+% =====================================================================
+
+\textbf{The players.} There are $K$ traders (we focus on $K=3$, and discuss
+general $K$). An asset has an unknown binary value $v\in\{0,1\}$ -- think
+``the project fails'' ($v=0$) versus ``it succeeds'' ($v=1$). Nobody knows
+$v$; the common prior is $P(v=1)=\tfrac12$.
+
+\textbf{The signals.} Trader $i$ privately observes a noisy signal $u_i$.
+We centre signals so that $u_i$ is drawn from a Gaussian with mean $+\tfrac12$
+if $v=1$ and mean $-\tfrac12$ if $v=0$, with variance $1/\tau$:
+\begin{equation}
+  f_v(u_i) \;=\; \sqrt{\tfrac{\tau}{2\pi}}\,
+  \exp\!\Big(-\tfrac{\tau}{2}\big(u_i-(v-\tfrac12)\big)^2\Big).
+  \label{eq:fsignal}
+\end{equation}
+Here $\tau>0$ is the \emph{precision}: large $\tau$ means sharp,
+informative signals (small noise); small $\tau$ means vague signals. A high
+$u_i$ is evidence for $v=1$.
+
+\textbf{Preferences.} Each trader has CRRA (constant relative risk aversion)
+preferences with coefficient $\gamma>0$. Large $\gamma$ = very cautious;
+small $\gamma$ = aggressive. Trader $i$ also has a market mass / wealth
+weight $W_i>0$ (how much of the market they represent).
+
+\textbf{The market.} Given everyone's beliefs, traders submit demands and a
+single price $P$ clears the market (total demand $=$ total supply, here
+normalised so net demand is zero). Because the clearing price depends on all
+signals $u_1,\dots,u_K$, it is itself a function $P(u_1,\dots,u_K)$.
+
+\textbf{Rational expectations.} A sophisticated trader knows the price is
+informative and uses it as an \emph{extra} signal about $v$, on top of their
+own $u_i$. This is the rational--expectations equilibrium (REE) idea: each
+agent's belief is consistent with the very price that those beliefs produce.
+
+\textbf{Two kinds of equilibrium.}
+\begin{itemize}
+\item \emph{Fully--revealing (FR):} the price $P$ is a one--to--one function
+  of the aggregate sufficient statistic $T=\sum_i \tau_i u_i$. Reading the
+  price tells you $T$ exactly, i.e.\ everything the signals jointly imply.
+  Private signals become redundant.
+\item \emph{Partially--revealing (PR):} the price reveals \emph{some} but not
+  all of the joint information. Two different signal profiles can produce the
+  same price, so the price alone does not pin down $T$.
+\end{itemize}
+
+\textbf{The Grossman--Stiglitz tension (one paragraph).} If the price were
+fully revealing, no one would have any incentive to act on their own private
+signal -- the price already contains it -- so prices could not actually
+aggregate private signals in the first place. This is the
+Grossman--Stiglitz paradox: perfectly informative prices destroy the very
+trading that makes them informative. Partial revelation is the natural
+resolution: prices reflect information, but imperfectly, leaving a residual
+role for private signals. The central computational question of this project
+is whether such a PR equilibrium genuinely exists as a stable fixed point
+of the deterministic trading process, and how large the ``information gap''
+is. We answer: yes, it exists; it is smooth; and the gap is closed--form.
+
+% =====================================================================
+\section{The fixed--point operator $\Phi$}
+% =====================================================================
+
+We represent the unknown price function $P(u_1,u_2,u_3)$ as values on a
+3--D grid: each axis is the signal $u_i$ discretised to $G$ points spanning
+$[-u_{\max},u_{\max}]$ with spacing $\Delta u$. The equilibrium is a fixed
+point of an operator $\Phi$ that maps one price function to the next.
+
+\textbf{One application of $\Phi$.} At a grid point $(u_1,u_2,u_3)$ the
+current price is $p=P(u_1,u_2,u_3)$. Then:
+\begin{enumerate}
+\item Each agent $i$ forms a posterior
+  $\mu_i = \mathrm{Bayes}\big(\text{own signal }u_i,\ \text{evidence from }
+  p\big)$, combining their own signal density with the likelihood of seeing
+  price $p$ under each state (computed in Section~\ref{sec:coarea}).
+\item Given the three posteriors $\mu_1,\mu_2,\mu_3$, CRRA market clearing
+  produces a new price.
+\end{enumerate}
+
+\textbf{CRRA demand.} Writing the odds of a probability $q$ as
+$q/(1-q)$, agent $i$'s demand at price $p$ is
+\begin{equation}
+  x_i \;=\; W_i\,\frac{R_i-1}{(1-p)+R_i\,p},
+  \qquad
+  R_i \;=\; \left(\frac{\mu_i/(1-\mu_i)}{p/(1-p)}\right)^{1/\gamma_i}.
+  \label{eq:demand}
+\end{equation}
+Here $R_i$ is the ratio of the agent's posterior odds to the price's odds,
+raised to $1/\gamma_i$. If $R_i>1$ the agent thinks the asset is cheap and
+buys ($x_i>0$); if $R_i<1$ they sell. Risk aversion $\gamma_i$ damps how
+strongly an odds gap turns into a position (a more cautious agent trades
+less for the same disagreement).
+
+\textbf{Market clearing.} The new price $p^\star$ is the unique solution of
+\begin{equation}
+  \sum_{i=1}^{K} W_i\,x_i(\mu_i,p^\star) \;=\; 0 .
+  \label{eq:clearing}
+\end{equation}
+Aggregate excess demand is strictly decreasing in $p$, so \eqref{eq:clearing}
+has exactly one root, found by a guarded bisection.
+
+\textbf{Equilibrium $=$ fixed point.} Collecting the per--point updates gives
+the operator $\Phi$ on the whole price function. An REE is a price function
+with
+\begin{equation}
+  \boxed{\;\Phi(P) = P\;}
+\end{equation}
+the price agents condition on equals the price their trades produce.
+
+% =====================================================================
+\section{The inference step is a co--area (level--set) integral}
+\label{sec:coarea}
+% =====================================================================
+
+This is the crux of the whole method.
+
+\textbf{What does an agent actually learn from the price?} Agent~$1$
+observes its own signal $u_1$ and the price $p$. The price was produced by
+\emph{all} signals, so once $u_1$ and $p$ are fixed, the other agents'
+signals $(u_2,u_3)$ are constrained to lie on the \emph{level set}
+\begin{equation}
+  \{(u_2,u_3): P(u_1,u_2,u_3)=p\},
+\end{equation}
+a curve in the 2--D space of the others' signals. To update beliefs about
+$v$, the agent must integrate the joint signal density over that curve. The
+correct way to integrate a density over a level set is the \emph{co--area
+formula}:
+\begin{equation}
+  A_v(p) \;=\; \int_{\{P=p\}} \frac{f_v}{\,|\grad P|\,}\;d\sigma,
+  \label{eq:coarea}
+\end{equation}
+where $f_v$ is the joint density of the others' signals under state $v$,
+$d\sigma$ is arc length along the level curve, and $|\grad P|$ is the
+magnitude of the price gradient. $A_v(p)$ is the likelihood of observing
+price $p$ when the true state is $v$; Bayes' rule then gives the posterior
+\begin{equation}
+  \mu_1 \;=\; \frac{f_1(u_1)\,A_1(p)}
+                   {f_0(u_1)\,A_0(p)+f_1(u_1)\,A_1(p)} .
+  \label{eq:bayes}
+\end{equation}
+
+\textbf{Why the $1/|\grad P|$ weight? (plain terms.)} Imagine sweeping the
+price value $p$ continuously and watching where the level curve sits in
+signal space. Where the price surface is \emph{steep}, a tiny change in $p$
+moves the curve only a little, so each price ``slice'' covers very little
+signal--space there. Where the surface is \emph{flat}, the curve sweeps
+across a lot of signal space for the same change in $p$. So a given price
+value samples signal space with weight $1/|\grad P|$: steep regions are
+under--represented, flat regions over--represented. Forgetting this weight
+(just counting points on the curve with equal weight) integrates against the
+wrong measure and biases the answer -- see Section~\ref{sec:numeric}.
+
+\textbf{The key smoothness fact.} In the continuum, as $p$ varies the level
+set $\{P=p\}$ moves \emph{smoothly}, and the integral \eqref{eq:coarea} is a
+\emph{smooth function of $p$}. Therefore the deterministic operator $\Phi$ is
+smooth -- \emph{except} at a measure--zero set of Morse--critical prices
+where $|\grad P|=0$ (saddles/extrema of $P$). At those isolated prices the
+$1/|\grad P|$ weight blows up, but the singularity is \emph{integrable}, so
+it does not break the integral or the fixed point. The upshot: there is
+\emph{nothing intrinsically jagged} about PR equilibrium. Any jaggedness seen
+numerically must come from the discretisation, not the economics.
+
+% =====================================================================
+\section{The numerical method and the interior--point / kernel idea}
+\label{sec:numeric}
+% =====================================================================
+
+\subsection{The naive contour scan and why it is flawed}
+
+The obvious way to find the level set $\{P=p\}$ on a grid is a
+\emph{contour scan}: walk along each grid edge and detect a
+\emph{sign change} of $P-p$; wherever $P-p$ flips sign, the curve crosses
+that edge, so record the crossing point and add its signal density to $A_v$.
+This is simple but has two serious flaws.
+
+\textbf{(a) Discontinuous include/exclude (an active--set problem).}
+An edge either contains a crossing or it does not -- a hard binary decision.
+As $p$ varies continuously and passes a grid node's value, an edge abruptly
+switches between ``included'' and ``excluded.'' The evidence sum $A_v(p)$
+therefore \emph{jumps} as $p$ crosses grid--node values. This is exactly an
+active--set / combinatorial discontinuity: $\Phi$ becomes piecewise and
+non--differentiable on the grid, so Newton stalls and damped iteration only
+crawls to a noisy plateau (it never truly ``nails'' the fixed point).
+
+\textbf{(b) Wrong measure.} The naive scan sums crossings with equal weight,
+i.e.\ it integrates against \emph{arc length}, omitting the $1/|\grad P|$
+co--area weight. This is a definite, systematic bias. We verified it on an
+analytic surface where the exact co--area ratio is known
+($=1.748$): the naive scan converges as $\Delta u\to0$ to $\approx 2.07$
+(arc--length measure), a $\sim$\,19\,\% over--statement, while the
+$1/|\grad P|$--weighted scan converges to $1.748$ (Table in
+Section~\ref{sec:results}, and Fig.~\ref{fig:verify}).
+
+\subsection{The fix: a smooth Gaussian band (co--area $=$ interior point)}
+
+Replace the hard include/exclude with a smooth Gaussian \emph{band} of
+width $h$ around the level value, and sum over the \emph{whole} slice:
+\begin{equation}
+  A_v(p) \;=\; \sum_{\text{cells}}
+  \underbrace{\exp\!\Big(-\tfrac{(P-p)^2}{2h^2}\Big)}_{K_h(P-p)}\;
+  f_v(u_a)\,f_v(u_b)\,\Delta u^2 .
+  \label{eq:band}
+\end{equation}
+This single change does \emph{double duty}.
+
+\textbf{It removes the discontinuity (interior--point view).} The kernel
+$K_h$ is a soft, differentiable membership weight -- the analogue of an
+interior--point \emph{barrier} that replaces a hard constraint by a smooth
+penalty. The bandwidth $h$ is the barrier parameter, and the
+\emph{central path} is $h\to0$. For $h>0$, $\Phi$ is an analytic
+(infinitely differentiable) function of $P$, so Newton's quadratic
+convergence applies.
+
+\textbf{It fixes the measure (co--area view).} A standard co--area identity
+says that smearing a density along the normal direction with a unit--mass
+kernel reconstructs the level--set integral \emph{with} the correct
+$1/|\grad P|$ weight:
+\begin{equation}
+  \int K_h\big(P(u)-p\big)\,f(u)\,du
+  \;\xrightarrow[h\to0]{}\;
+  \int_{\{P=p\}} \frac{f}{|\grad P|}\,d\sigma .
+  \label{eq:coarea-limit}
+\end{equation}
+So the very smoothing that makes $\Phi$ differentiable \emph{also}
+automatically restores the right measure -- no separate $1/|\grad P|$
+computation is needed.
+
+\subsection{The joint limit (the part earlier work got wrong)}
+
+There are two small parameters: the band width $h$ and the grid spacing
+$\Delta u$. They must be sent to zero \emph{together}, with $\Delta u\ll h$,
+so that the band always spans \emph{many} cells. We use
+\begin{equation}
+  h \;=\; C\,\Delta u^{0.5}, \qquad C\approx 0.45,
+  \label{eq:hlaw}
+\end{equation}
+which makes $h/\Delta u = C\,\Delta u^{-0.5}\to\infty$ as the grid refines.
+
+\textbf{Why this matters.} If instead you fix the grid and send $h\to0$, the
+band eventually becomes \emph{narrower than one grid cell}. Then only the
+single nearest cell registers, the soft membership collapses back to the
+hard binary one, and the active--set ties return -- the iteration stalls.
+This is precisely why earlier fixed--grid $h\to0$ attempts plateaued and
+were misread as ``PR is intrinsically non--smooth.'' Along the joint ladder
+\eqref{eq:hlaw} the band keeps spanning a growing number of cells, the
+quadrature stays consistent, and
+\texttt{scipy.optimize.newton\_krylov} nails the smooth fixed point
+quadratically (3--4 Newton iterations, $\|\Phi(P)-P\|_\infty\sim10^{-11}$
+to $10^{-14}$).
+
+% =====================================================================
+\section{Results}
+\label{sec:results}
+% =====================================================================
+
+\subsection{The PR equilibrium is genuine and smooth}
+
+Along the joint co--area ladder \eqref{eq:hlaw} at $\gamma=0.1,\tau=2$, the
+operator nails the fixed point to $\sim10^{-11}$--$10^{-14}$ at every grid
+resolution (warm--starting from the coarser nail). The information deficit
+\begin{equation}
+  \text{deficit} \;=\; 1-R^2 \quad\text{of}\quad
+  \logit(P)\ \text{regressed on}\ T=\tau(u_1+u_2+u_3)
+\end{equation}
+converges to a \emph{positive, grid--independent} limit
+$\approx 0.26$--$0.28$ (Fig.~\ref{fig:limit}). A positive deficit means the
+price is \emph{not} a pure function of the aggregate $T$: this is genuine
+partial revelation, not FR. (FR would give deficit $=0$.)
+
+For contrast, the strict contour scan ran in parallel as a control: it
+\emph{floored} at $\|\Phi-P\|_\infty\sim 0.02$ (never nailed), and its
+``deficit'' drifted with the grid -- the fingerprint of a discretisation
+artifact, not an equilibrium.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{k3_coarea_limit.png}
+\caption{Joint co--area limit at $\gamma=0.1,\tau=2$.
+(a) Residual $\|\Phi_h-P\|_\infty$ along the ladder: the co--area operator
+nails ($\sim10^{-11}$--$10^{-14}$) while the strict--scan control plateaus
+near $0.02$. (b) PR metrics versus $h$ with Richardson extrapolation to
+$h=0$: deficit $\to\approx0.26$--$0.28$, distance--to--FR $\to\approx0.28$,
+both positive. (c) A slice of the converged smooth PR price surface.}
+\label{fig:limit}
+\end{figure}
+
+\subsection{The naive scan was an artifact, verified against analytics}
+
+On an analytic surface $P=\sigma(a^2-b)$ where the exact co--area ratio is
+known to be $1.748$, three methods were compared
+(Fig.~\ref{fig:verify}): the kernel ladder $h\to0$, the
+$1/|\grad P|$--weighted strict scan, and the naive unweighted scan. The
+first two converge to $1.748$; the naive scan converges to the
+arc--length value $\approx 2.07$. The bias is the missing $1/|\grad P|$
+co--area weight, not the economics.
+
+\begin{equation*}
+\begin{array}{lccc}
+\toprule
+\Delta u & \text{naive (arc--length)} & 1/|\grad P|\text{--weighted} &
+\text{exact co--area}\\
+\midrule
+0.02  & 2.017 & 1.716 & 1.748\\
+0.01  & 2.047 & 1.739 & 1.748\\
+0.005 & 2.073 & 1.759 & 1.748\\
+\bottomrule
+\end{array}
+\end{equation*}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{test1_three_methods.png}
+\caption{Three quadrature methods against the analytic co--area truth. The
+kernel ladder and the $1/|\grad P|$--weighted scan converge to the exact
+ratio $1.748$; the naive unweighted contour scan converges to the biased
+arc--length value ($\approx2.07$, $\sim$19\,\% high).}
+\label{fig:verify}
+\end{figure}
+
+\subsection{The $(\gamma,\tau)$ deficit map}
+
+Solving the nailed PR fixed point across a grid of risk--aversion and
+precision values (all 24 cells nail to $10^{-11}$--$10^{-14}$) gives the
+deficit map in Table~\ref{tab:sweep} and Fig.~\ref{fig:sweep}. The pattern
+is clean: \textbf{the deficit rises with precision $\tau$ and falls with
+risk aversion $\gamma$.} Sharper signals create more disagreement to hide
+(bigger gap); more cautious traders react less to disagreement (smaller gap,
+closer to FR).
+
+\begin{table}[t]
+\centering
+\caption{Information deficit $1-R^2$ of the nailed PR equilibrium
+($G=17$, $K=3$, $W_i=1$). Rows: risk aversion $\gamma$; columns:
+precision $\tau$. All 24 cells nailed.}
+\label{tab:sweep}
+\begin{tabular}{lcccc}
+\toprule
+$\gamma\backslash\tau$ & $0.5$ & $1$ & $2$ & $4$\\
+\midrule
+$0.10$ & 0.155 & 0.203 & 0.281 & 0.357\\
+$0.25$ & 0.082 & 0.163 & 0.257 & 0.347\\
+$0.50$ & 0.027 & 0.106 & 0.209 & 0.291\\
+$1.00$ & 0.008 & 0.049 & 0.140 & 0.243\\
+$2.00$ & 0.002 & 0.019 & 0.077 & 0.186\\
+$4.00$ & 0.001 & 0.008 & 0.041 & 0.120\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{k3_coarea_sweep.png}
+\caption{The $(\gamma,\tau)$ deficit map for the nailed K=3 PR equilibrium.
+Deficit increases with signal precision $\tau$ and decreases with risk
+aversion $\gamma$ -- exactly what the closed--form Jensen gap predicts.}
+\label{fig:sweep}
+\end{figure}
+
+\subsection{The closed--form Jensen gap}
+
+Why this exact pattern? It follows from a second--order expansion of CRRA
+demand. Write $m_i=\logit(\mu_i)$ for agent $i$'s log--posterior--odds and
+$\bar m_W=\sum_i W_i m_i/\sum_i W_i$ for the wealth--weighted average.
+Linearising the demand \eqref{eq:demand} around the common price and
+imposing market clearing \eqref{eq:clearing}, the equilibrium price's
+log--odds $\pi=\logit(P)$ satisfies, to second order,
+\begin{equation}
+  \boxed{\;
+  \pi \;=\; \bar m_W \;+\;
+  \Big(\tfrac12-p\Big)\,\frac{\Var_W(m)}{\gamma}\; }
+  \label{eq:jensen}
+\end{equation}
+where $\Var_W(m)=\sum_i W_i (m_i-\bar m_W)^2/\sum_i W_i$ is the
+wealth--weighted \emph{disagreement} across agents and $p$ is the price
+level. Interpretation:
+\begin{itemize}
+\item The leading term $\bar m_W$ is the ``naive average belief'': if all
+  agents agreed, the price would just be the consensus, which is the FR
+  outcome. The deficit lives entirely in the second term.
+\item The gap is \emph{proportional to disagreement} $\Var_W(m)$ and
+  \emph{inversely proportional to risk aversion} $\gamma$. More precise
+  signals $\Rightarrow$ more spread in beliefs $\Rightarrow$ larger gap
+  (deficit $\uparrow$ in $\tau$). More caution $\Rightarrow$ smaller gap
+  (deficit $\downarrow$ in $\gamma$). This is exactly Table~\ref{tab:sweep}.
+\item The factor $(\tfrac12-p)$ makes the gap \emph{change sign} at
+  $p=\tfrac12$: the demand non--linearity tilts the price one way below the
+  midpoint and the other way above it.
+\item Under FR all agents share the same information, so $\Var_W(m)\to0$ and
+  the gap vanishes -- consistent with FR being a deficit--zero limit.
+\end{itemize}
+The same formula explains the $K=3\to K=4$ collapse: adding agents averages
+away idiosyncratic disagreement, shrinking $\Var_W(m)$ and hence the gap,
+pushing the economy toward FR. The gap is a genuine Jensen (curvature)
+effect: market clearing aggregates beliefs through a \emph{non--linear}
+demand, and Jensen's inequality turns belief dispersion into a price wedge.
+
+% =====================================================================
+\section{Numerical caveats (an honest audit)}
+% =====================================================================
+
+\begin{enumerate}
+\item \textbf{Co--area weight bias of the naive scan (severity: high,
+  $\sim$19\,\%).} The strict contour scan integrates against arc length, not
+  the co--area measure; it omits $1/|\grad P|$ and over--states evidence by
+  $\sim$19\,\% on the analytic test. The kernel band fixes this
+  automatically.
+\item \textbf{The deficit $1-R^2$ is measure--dependent (severity: medium).}
+  The price \emph{surface} is invariant, but the scalar summary $1-R^2$
+  depends on how state space is weighted: across uniform, signal--density
+  weighted, and stretched--node grids the deficit at $\gamma=0.1,\tau=2$
+  ranges over a spread of $\sim$0.12 (e.g.\ $0.279$ uniform vs $0.155$
+  signal--weighted). Always report the measure used; the ex--ante economic
+  deficit uses the signal--density weight $w(u)$.
+\item \textbf{Bandwidth--exponent robustness (severity: medium).} The
+  $h=C\Delta u^q$ extrapolation depends mildly on the exponent $q$: the
+  finest raw deficit is stable at $\approx0.28$ across $q\in\{0.3,0.5,0.7\}$,
+  but the $h\to0$ extrapolated intercept spreads. Extrapolate using
+  matched--$C$ raw values and quote the stable raw limit ($\approx0.28$)
+  alongside.
+\item \textbf{Morse--critical prices (severity: mild, integrable).} At
+  saddles/extrema $|\grad P|=0$ and the co--area weight is singular. These
+  sites are measure--zero and the singularity is integrable; the fixed point
+  still nails to $\sim10^{-11}$, so they do not block the solve.
+\item \textbf{The weighted--contour direct method converges only
+  $O(\Delta u)$ and is mildly non--smooth (severity: low).} It is a useful
+  \emph{cross--check} that lands on the same co--area limit, but the smooth
+  kernel ladder is the reliable estimator for nailing and extrapolation.
+\end{enumerate}
+
+% =====================================================================
+\section{Conclusion}
+% =====================================================================
+
+\textbf{Plain--English conclusion.}
+Partial revelation in this CRRA economy is a \emph{genuine, smooth,
+deterministic} equilibrium -- a true fixed point of the trading process,
+nailable to machine precision. The earlier impression that ``it needs noise''
+or ``it is intrinsically non--smooth'' was a numerical artifact of an
+inconsistent contour method that (i) made a hard, discontinuous
+include/exclude decision on grid edges and (ii) integrated against the wrong
+(arc--length) measure. The fix is a single idea wearing two hats: a Gaussian
+band $K_h$ that is at once an interior--point barrier (removing the
+discontinuity, central path $h\to0$) and a co--area quadrature (restoring the
+$1/|\grad P|$ measure), taken in a \emph{joint} limit $h,\Delta u\to0$ with
+$\Delta u\ll h$ so the band always spans many cells. Newton then converges
+quadratically. Finally, the size of the information gap is not mysterious: it
+is the closed--form Jensen gap, proportional to belief disagreement times
+demand curvature, divided by risk aversion -- which explains the entire
+$(\gamma,\tau)$ map and the drift toward full revelation as the number of
+traders grows.
+
+\vspace{1em}
+\noindent\textbf{Reproducing this.} The accompanying
+\texttt{reference\_operator.py} is a clean, self--contained implementation of
+$\Phi$ (Eqs.~\ref{eq:band},~\ref{eq:demand},~\ref{eq:clearing}) and the
+Newton nail. Running it nails the $\gamma=0.1,\tau=2$ PR equilibrium to
+$\sim10^{-12}$ and prints the deficit $\approx0.28$.
+
+\end{document}
