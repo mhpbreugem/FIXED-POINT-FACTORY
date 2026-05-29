@@ -219,35 +219,31 @@ def spline_roots(y, M, h, u0, p_target, sub):
             # fall back to bisection). The bracket invariant flo*fhi<=0 is kept.
             lo = t_prev
             hi = t_cur
-            flo = dp
-            fhi = dc
+            flo = dp                      # sign at lo (provably opposite fhi)
             t = HALF * (lo + hi)
             for _ in range(400):
                 val, der = spline_eval(y, M, h, u0, t)
                 fval = val - p_target
-                # Newton candidate; accept only if PROVABLY strictly inside.
-                use_newton = False
-                if not (der == 0):
-                    tn = t - fval / der
-                    if (tn > lo) and (tn < hi):
-                        use_newton = True
-                if not use_newton:
-                    tn = HALF * (lo + hi)
-                # shrink the sign-bracket using the sign of fval at t
+                # tighten the sign-bracket with the sign of fval at the current t
                 if (flo * fval) <= 0:
                     hi = t
-                    fhi = fval
                 else:
                     lo = t
                     flo = fval
-                # Converged when the step / residual is NOT provably above tol
-                # (inverted test: once the ball straddles 0 the direct "< tol"
-                # comparison is undecidable and returns False forever, stalling
-                # the loop; "not (x > tol)" is True as soon as x drops to tol).
-                if not (abs(tn - t) > NEWTON_TOL) or not (abs(fval) > ROOT_FTOL):
-                    t = tn
+                # Converged when residual is no longer provably above tol OR the
+                # bracket has collapsed below tol. Inverted comparisons because
+                # once a ball straddles 0 the direct "< tol" test is undecidable
+                # (returns False forever); "not (x > tol)" flips True at the tol.
+                if (not (abs(fval) > ROOT_FTOL)) or (not ((hi - lo) > NEWTON_TOL)):
                     break
-                t = tn
+                # next iterate: Newton if PROVABLY strictly inside (lo,hi),
+                # else bisection of the maintained sign-bracket.
+                if not (der == 0):
+                    tn = t - fval / der
+                    if (tn > lo) and (tn < hi):
+                        t = tn
+                        continue
+                t = HALF * (lo + hi)
             val, der = spline_eval(y, M, h, u0, t)
             out.append((t, abs(der)))
         t_prev = t_cur

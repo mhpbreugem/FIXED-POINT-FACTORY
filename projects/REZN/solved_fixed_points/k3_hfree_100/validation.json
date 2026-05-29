@@ -1,0 +1,22 @@
+{
+  "title": "K=3 CRRA REE h-FREE SMOOTH co-area operator -- 100-decimal (arb) port: VALIDATION",
+  "date": "2026-05-29",
+  "impl_path": "python-flint (arb) direct port of /tmp/hfree_operator.py; chosen per task fallback (correctness + the 1e-100 result prioritized over raw speed; warm-start keeps the flint nail cheap).",
+  "ported_functions": ["lam", "logit", "f_signal", "x_crra", "clear_crra", "bayes", "natural_spline_M", "spline_eval", "spline_roots", "slice_evidence", "phi_hfree", "gauss_legendre"],
+  "NO_kernel": true, "NO_bandwidth": true, "NO_smoothing_parameter": true, "strict_h_zero": true,
+  "config": {"G": 9, "tau": 2.0, "gamma": 0.1, "W": 1.0, "Nq": 40, "sub": 4, "UMAX": 4.0},
+  "validation_a_matches_float64": {
+    "test": "100-dec arb phi_hfree vs Numba float64 hfree_operator.phi_hfree on the nailed P at G=9, tau=2, gamma=0.1",
+    "max_abs_diff": 6.661338147750939e-16,
+    "verdict": "MATCHES float64 to machine epsilon (~7e-16); algorithm mirrored exactly",
+    "s_per_float64_eval": 0.55,
+    "s_per_arb_eval_100dec": 77.04
+  },
+  "validation_b_precision_scaling": {
+    "test": "single arb operator run at increasing working precision vs a high-precision reference (260-300 dec), on a smooth analytic test surface sigmoid(0.4*(u1+u2+u3)) given EXACTLY in arb",
+    "good_digits_at_working_precision": {"110_dec": 58, "160_dec": 109, "210_dec": "exact vs ref"},
+    "internal_digit_loss": "~48-52 digits (contour 1/|der| co-area weighting + spline tridiagonal solve)",
+    "full_operator_100dec_vs_200dec_max_diff": 6.187199713499436e-54,
+    "verdict": "scales to full precision with NO hidden float (loss is pure working-precision, halves with bits); => run the nail at 180-dec working precision so the residual carries >100 reliable digits"
+  }
+}
