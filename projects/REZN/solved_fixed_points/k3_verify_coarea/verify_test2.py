@@ -68,7 +68,7 @@ def deficit_of(Pin, ui, w_quad=None):
     return float(sse / max(sst, 1e-30))
 
 
-def nail_smooth(Gi, h, x0=None):
+def nail_smooth(Gi, h, x0=None, maxiter=40):
     du, uf, lo, hi = build_grid(Gi)
     slc = (slice(lo, hi),) * K
     halo = init_no_learning_K3(uf, tv, gv, wv)
@@ -82,7 +82,7 @@ def nail_smooth(Gi, h, x0=None):
     def cb(x, fx): cnt['n'] += 1
     conv = True
     try:
-        sol = newton_krylov(resid, x0, f_tol=1e-10, maxiter=300,
+        sol = newton_krylov(resid, x0, f_tol=1e-10, maxiter=maxiter,
                             callback=cb, method='lgmres')
     except NoConvergence as e:
         sol = np.asarray(e.args[0]).ravel(); conv = False
@@ -106,23 +106,15 @@ def audit():
     for alpha in (0.3, 0.5, 0.7):
         C = 0.45 if alpha == 0.5 else (0.45 * (1.0 ** (0.5 - alpha)))
         defs = []; hs = []
-        x0 = None; prevGi = None
         for Gi in G_LIST:
             du = 2 * UMAX / (Gi - 1)
             h = 0.45 * du ** alpha
-            # warm-start: interp from previous
-            if x0 is not None and prevGi is not None:
-                from scipy.interpolate import RegularGridInterpolator
-                axo = np.linspace(-UMAX, UMAX, prevGi)
-                axn = np.linspace(-UMAX, UMAX, Gi)
-                rgi = RegularGridInterpolator((axo, axo, axo),
-                        x0.reshape((prevGi,) * 3), bounds_error=False,
-                        fill_value=None)
-                A, B, Cc = np.meshgrid(axn, axn, axn, indexing='ij')
-                xx0 = rgi(np.column_stack([A.ravel(), B.ravel(),
-                          Cc.ravel()])).ravel()
-            else:
-                xx0 = None
+            # robust warm-start: the alpha=0.5 ladder nail at this Gi (always
+            # available from k3_coarea_limit) is close for all alpha here.
+            warm = os.path.join('/home/user/FIXED-POINT-FACTORY/projects/'
+                                'REZN/solved_fixed_points/k3_coarea_limit',
+                                f'P_inner_G{Gi}.npy')
+            xx0 = np.load(warm).ravel() if os.path.exists(warm) else None
             P, F, conv, it, ui = nail_smooth(Gi, h, xx0)
             d = deficit_of(P, ui)
             defs.append(d); hs.append(h)
