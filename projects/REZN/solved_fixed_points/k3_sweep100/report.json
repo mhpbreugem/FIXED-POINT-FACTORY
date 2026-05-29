@@ -1,0 +1,63 @@
+{
+  "study": "K=3 CRRA REE genuine partially-revealing equilibrium (gamma,tau) co-area deficit sweep at 100-decimal (flint/arb)",
+  "operator": "phi_K3_halo_smooth ported to python-flint, prec=352 bits (100 dec); consistent Gaussian-band co-area operator",
+  "grid": {
+    "G_inner": 9,
+    "pad": 2,
+    "UMAX_inner": 4.0,
+    "du": 1.0,
+    "kernel_h": "0.45*du^0.5=0.45",
+    "W": 1.0,
+    "K": 3,
+    "gammas": [
+      0.1,
+      0.16378937069540642,
+      0.2682695795279726,
+      0.43939705607607904,
+      0.7196856730011519,
+      1.1787686347935873,
+      1.9306977288832496,
+      3.1622776601683795,
+      5.17947467923121,
+      8.483428982440717,
+      13.894954943731374,
+      22.758459260747887,
+      37.27593720314938,
+      61.054022965853264,
+      100.0
+    ],
+    "taus": [
+      0.1,
+      0.16378937069540642,
+      0.2682695795279726,
+      0.43939705607607904,
+      0.7196856730011519,
+      1.1787686347935873,
+      1.9306977288832496,
+      3.1622776601683795,
+      5.17947467923121,
+      8.483428982440717,
+      13.894954943731374,
+      22.758459260747887,
+      37.27593720314938,
+      61.054022965853264,
+      100.0
+    ]
+  },
+  "validation_gate": {
+    "gamma": 0.1,
+    "tau": 2.0,
+    "G_inner": 9,
+    "h": 0.45,
+    "midpoint_float64": 0.5000000000000036,
+    "midpoint_flint": 0.5000000000000004,
+    "midpoint_absdiff": 3.1086244689504383e-15,
+    "max_absdiff_inner": 3.4416913763379853e-15,
+    "prec_bits": 352,
+    "gate_pass": true
+  },
+  "resolution_note": "Signal width ~1/sqrt(tau). Du=1. tau<=1 resolved; 1<tau<=16 borderline; tau>16 under-resolved; tau~100 badly under-resolved (deficit grid-limited).",
+  "cells_done": 0,
+  "cells_total": 225,
+  "rows": []
+}

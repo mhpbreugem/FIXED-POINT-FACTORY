@@ -1,0 +1,6 @@
+12:59:15 ======================================================================
+12:59:15 K=3 co-area deficit sweep 100-dec START 2026-05-29 12:59
+12:59:15 GAMMAS=[np.float64(0.1), np.float64(0.164), np.float64(0.268), np.float64(0.439), np.float64(0.72), np.float64(1.179), np.float64(1.931), np.float64(3.162), np.float64(5.179), np.float64(8.483), np.float64(13.895), np.float64(22.758), np.float64(37.276), np.float64(61.054), np.float64(100.0)]
+12:59:15 TAUS  =[np.float64(0.1), np.float64(0.164), np.float64(0.268), np.float64(0.439), np.float64(0.72), np.float64(1.179), np.float64(1.931), np.float64(3.162), np.float64(5.179), np.float64(8.483), np.float64(13.895), np.float64(22.758), np.float64(37.276), np.float64(61.054), np.float64(100.0)]
+12:59:15 225 cells, 4 cores. OUT=/home/user/FIXED-POINT-FACTORY/projects/REZN/solved_fixed_points/k3_sweep100
+12:59:15 VALIDATION GATE: max|flint-float64| inner = 3.442e-15  PASS=True
