@@ -42,3 +42,38 @@ K=3 prior evidence (flint_persist2 + k3_plateau_table):
 [04:00:03]     [Picard w=0.1 subset2] it= 80 Finf=8.260e-02 1-R2=0.0018
 [04:00:15]     [Picard w=0.1 subset2] it=120 Finf=3.527e-02 1-R2=0.0017
 [04:00:26]     [Picard w=0.1 subset2] it=160 Finf=1.657e-02 1-R2=0.0015
+[04:00:38]     [Picard w=0.3 subset2] it=  0 Finf=1.985e-01 1-R2=0.0193
+[04:00:50]     [Picard w=0.3 subset2] it= 40 Finf=4.331e-02 1-R2=0.0017
+[04:01:01]     [Picard w=0.3 subset2] it= 80 Finf=7.317e-03 1-R2=0.0016
+[04:01:13]     [Picard w=0.3 subset2] it=120 Finf=4.356e-03 1-R2=0.0019
+[04:01:24]     [Picard w=0.3 subset2] it=160 Finf=7.528e-03 1-R2=0.0019
+[04:06:54] === TEST A tau4 homotopy (gamma=0.1, tau3=2.0); partial-S3 N_RED=1485 ===
+[04:06:55] --- tau4=0.05 (near-K=3 anchor): solving from PR seeds ---
+[04:06:55]   seed nl: init Finf=4.216e-01 def=0.2910
+[04:06:55]     [Picard w=0.1 nl] it=  0 Finf=4.216e-01 1-R2=0.2910
+[04:07:06]     [Picard w=0.1 nl] it= 40 Finf=6.881e-02 1-R2=0.0335
+
+[note] First homotopy run stalled in scipy.newton_krylov (1485-dim, non-smooth -> GMRES inner iters
+very slow, ~13min no progress). Killed and relaunched LEANER: NK is a light probe (maxiter=6,
+inner_maxiter=15); Picard/Anderson 150 iters; accurate 1485-col Newton only at tau4 in {0.05, 2.0}.
+Also killed a stale PRIOR-run process (k4_pr_newton_sym.py with the BUGGY FR-collinear 'underreveal'
+seeds, deficit==0) that was contending for CPU and interleaving into the log. K=3 table left running.
+Preliminary signal (all tau4=0.05 seeds): damped Picard drives every PR-region seed toward deficit~0.002
+(FR) with residual falling toward the FR floor -> no sustained PR plateau even just above tau4=0.
+[04:07:18]     [Picard w=0.1 nl] it= 80 Finf=3.574e-02 1-R2=0.0052
+[04:07:29]     [Picard w=0.1 nl] it=120 Finf=4.076e-02 1-R2=0.0024
+[04:07:38]     [Picard w=0.3 nl] it=  0 Finf=4.216e-01 1-R2=0.2910
+[04:07:49]     [Picard w=0.3 nl] it= 40 Finf=4.112e-02 1-R2=0.0024
+[04:08:00]     [Picard w=0.3 nl] it= 80 Finf=2.450e-02 1-R2=0.0020
+[04:08:12]     [Picard w=0.3 nl] it=120 Finf=6.068e-03 1-R2=0.0020
+[04:09:05]   seed subset3: init Finf=7.725e-02 def=0.0010
+[04:09:05]     [Picard w=0.1 subset3] it=  0 Finf=7.725e-02 1-R2=0.0010
+[04:09:17]     [Picard w=0.1 subset3] it= 40 Finf=6.278e-02 1-R2=0.0007
+[04:09:28]     [Picard w=0.1 subset3] it= 80 Finf=4.027e-02 1-R2=0.0012
+[04:09:40]     [Picard w=0.1 subset3] it=120 Finf=3.991e-02 1-R2=0.0015
+[04:09:48]     [Picard w=0.3 subset3] it=  0 Finf=7.725e-02 1-R2=0.0010
+[04:10:00]     [Picard w=0.3 subset3] it= 40 Finf=4.294e-02 1-R2=0.0015
+[04:10:11]     [Picard w=0.3 subset3] it= 80 Finf=3.614e-02 1-R2=0.0019
+[04:10:23]     [Picard w=0.3 subset3] it=120 Finf=3.003e-02 1-R2=0.0019
+[04:12:16]   tau4=0.05 best after Picard/Anderson/NK: Finf=4.762e-03 def=0.0020 d_fr=0.2285
+[04:12:17]       jac col 0/1485 t=0s
