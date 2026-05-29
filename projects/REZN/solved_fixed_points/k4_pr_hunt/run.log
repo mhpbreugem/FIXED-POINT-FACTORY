@@ -12,3 +12,33 @@ K=3 prior evidence (flint_persist2 + k3_plateau_table):
   K=4 uniform u-grid (UMAX=4). So TEST A seeds the tau4=0 K=4 system and solves it natively to find the K=3 plateau.
 
 === TEST A: tau4 -> ... homotopy (definitive locator) ===
+[03:51:38] === TEST A tau4 homotopy (gamma=0.1, tau3=2.0); partial-S3 N_RED=1485 ===
+[03:51:39] --- tau4=0.05 (near-K=3 anchor): solving from PR seeds ---
+[03:51:39]   seed nl: init Finf=4.216e-01 def=0.2910
+[03:51:40]     [Picard w=0.1 nl] it=  0 Finf=4.216e-01 1-R2=0.2910
+[03:52:03]     [Picard w=0.1 nl] it= 40 Finf=6.881e-02 1-R2=0.0335
+[03:52:25]     [Picard w=0.1 nl] it= 80 Finf=3.574e-02 1-R2=0.0052
+[03:52:47]     [Picard w=0.1 nl] it=120 Finf=4.076e-02 1-R2=0.0024
+[03:53:11]     [Picard w=0.1 nl] it=160 Finf=4.083e-02 1-R2=0.0019
+[03:53:34]     [Picard w=0.3 nl] it=  0 Finf=4.216e-01 1-R2=0.2910
+[03:53:56]     [Picard w=0.3 nl] it= 40 Finf=4.112e-02 1-R2=0.0024
+[03:54:19]     [Picard w=0.3 nl] it= 80 Finf=2.450e-02 1-R2=0.0020
+[03:54:42]     [Picard w=0.3 nl] it=120 Finf=6.068e-03 1-R2=0.0020
+[03:55:05]     [Picard w=0.3 nl] it=160 Finf=4.811e-03 1-R2=0.0020
+[03:56:45]   seed subset3: init Finf=7.725e-02 def=0.0010
+[03:56:45]     [Picard w=0.1 subset3] it=  0 Finf=7.725e-02 1-R2=0.0010
+[03:56:57]     [Picard w=0.1 subset3] it= 40 Finf=6.278e-02 1-R2=0.0007
+[03:57:09]     [Picard w=0.1 subset3] it= 80 Finf=4.027e-02 1-R2=0.0012
+[03:57:20]     [Picard w=0.1 subset3] it=120 Finf=3.991e-02 1-R2=0.0015
+[03:57:32]     [Picard w=0.1 subset3] it=160 Finf=3.899e-02 1-R2=0.0016
+[03:57:44]     [Picard w=0.3 subset3] it=  0 Finf=7.725e-02 1-R2=0.0010
+[03:57:55]     [Picard w=0.3 subset3] it= 40 Finf=4.294e-02 1-R2=0.0015
+[03:58:07]     [Picard w=0.3 subset3] it= 80 Finf=3.614e-02 1-R2=0.0019
+[03:58:19]     [Picard w=0.3 subset3] it=120 Finf=3.003e-02 1-R2=0.0019
+[03:58:30]     [Picard w=0.3 subset3] it=160 Finf=7.589e-02 1-R2=0.0019
+[03:59:40]   seed subset2: init Finf=1.985e-01 def=0.0193
+[03:59:41]     [Picard w=0.1 subset2] it=  0 Finf=1.985e-01 1-R2=0.0193
+[03:59:52]     [Picard w=0.1 subset2] it= 40 Finf=1.549e-01 1-R2=0.0029
+[04:00:03]     [Picard w=0.1 subset2] it= 80 Finf=8.260e-02 1-R2=0.0018
+[04:00:15]     [Picard w=0.1 subset2] it=120 Finf=3.527e-02 1-R2=0.0017
+[04:00:26]     [Picard w=0.1 subset2] it=160 Finf=1.657e-02 1-R2=0.0015
