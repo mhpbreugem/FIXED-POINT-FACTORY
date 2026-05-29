@@ -1,0 +1,13 @@
+{
+  "surface": "P=sigmoid(tau*(a^2-b^2)), saddle at origin, critical value p_c=0.5",
+  "coarea_A_at_pc": 29.127441858234988,
+  "coarea_A_median_away": 5.915492862148255,
+  "coarea_A_peak_over_away_ratio": 4.923924774656417,
+  "coarea_dAdp_peak_near_pc": 3777.5309989506204,
+  "coarea_dAdp_median_away": 29.445863407289607,
+  "dAdp_blowup_ratio": 128.28732330584188,
+  "kernel_h0.08_dAdp_peak": 24.766030005395805,
+  "kernel_h0.04_dAdp_peak": 73.1172417789885,
+  "kernel_h0.02_dAdp_peak": 150.67553091009177,
+  "verdict": "Co-area A(p) spikes at the Morse-critical price p_c=0.5 and its derivative A'(p) blows up there (128x the away-from-critical level) -> the deterministic co-area operator is C0-not-C1 (or worse) at critical prices. The kernel-band A_h(p) is SMOOTH (bounded A') -> the kernel is precisely the C-infinity smoothing that makes Newton work at high G. The non-smoothness is INTRINSIC to the deterministic operator (no parameter); the kernel is a consistent quadrature that regularizes it."
+}
