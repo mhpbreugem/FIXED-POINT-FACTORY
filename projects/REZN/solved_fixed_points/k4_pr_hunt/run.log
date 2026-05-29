@@ -117,3 +117,13 @@ Preliminary signal (all tau4=0.05 seeds): damped Picard drives every PR-region s
 [04:27:45]     [Picard w=0.1 tau4=0.5] it= 40 Finf=3.498e-02 1-R2=0.0009
 [04:27:58]     [Picard w=0.1 tau4=0.5] it= 80 Finf=3.651e-02 1-R2=0.0008
 [04:28:10]     [Picard w=0.1 tau4=0.5] it=120 Finf=2.859e-02 1-R2=0.0007
+[04:31:45]   tau4=0.5: tracked Finf=2.330e-02 deficit=0.0007 d_fr=0.1680  (301s)
+[04:31:45] --- tau4=1.0: continuation warm-started from prev solution ---
+[04:31:46]     [Picard w=0.3 tau4=1.0] it=  0 Finf=1.847e-01 1-R2=0.0136
+[04:32:10]     [Picard w=0.3 tau4=1.0] it= 40 Finf=4.343e-02 1-R2=0.0007
+[04:32:36]     [Picard w=0.3 tau4=1.0] it= 80 Finf=4.072e-02 1-R2=0.0006
+[04:33:01]     [Picard w=0.3 tau4=1.0] it=120 Finf=1.609e-02 1-R2=0.0006
+[04:33:20]     [Picard w=0.1 tau4=1.0] it=  0 Finf=1.847e-01 1-R2=0.0136
+[04:33:45]     [Picard w=0.1 tau4=1.0] it= 40 Finf=7.225e-02 1-R2=0.0013
+[04:34:05]     [Picard w=0.1 tau4=1.0] it= 80 Finf=5.514e-02 1-R2=0.0008
+[04:34:18]     [Picard w=0.1 tau4=1.0] it=120 Finf=4.298e-02 1-R2=0.0007
