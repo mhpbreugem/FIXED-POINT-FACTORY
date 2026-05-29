@@ -1,0 +1,15 @@
+{
+  "rows": [
+    {
+      "G": 9,
+      "deficit": 0.11817719008142294,
+      "d_FR": 0.0041431316464336475,
+      "Finf": 0.0011318669815296722,
+      "iters": 4985,
+      "conv": false,
+      "sec": 68.5,
+      "n_rep": 165
+    }
+  ],
+  "operator": "fast reduced-output float64"
+}

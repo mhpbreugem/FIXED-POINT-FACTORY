@@ -1,2 +1,0 @@
-[FAST-REP] G=9: deficit=0.1182 ||F||=1.1e-03 iters=4985 n_rep=165 time=72.8s (old full-grid solver ~21s)
-G->inf (FAST reduced-output operator), tau=2 gamma=0.1:
