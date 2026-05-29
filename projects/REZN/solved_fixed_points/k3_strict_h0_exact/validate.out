@@ -1,0 +1,24 @@
+=== STRICT h=0 co-area integrator validation ===
+prec bits = 461
+grid G=81 du=0.1500 u in [-6.000,6.000]
+
+(a) KNOWN-SURFACE check: P=sigmoid(k*ua), exact co-area vs marching-squares
+  p=0.3: A0=2.0444555610e+00 exact=2.0195710574e+00 relerr=1.232e-02 | A1 relerr=9.583e-03
+  p=0.45: A0=1.5749000421e+00 exact=1.5560489954e+00 relerr=1.211e-02 | A1 relerr=1.201e-02
+  p=0.5: A0=1.3562545509e+00 exact=1.3519731984e+00 relerr=3.167e-03 | A1 relerr=3.167e-03
+  p=0.6: A0=9.5264450760e-01 exact=9.3539315502e-01 relerr=1.844e-02 | A1 relerr=1.894e-02
+  p=0.72: A0=4.6406748178e-01 exact=4.7826819823e-01 relerr=2.969e-02 | A1 relerr=2.813e-02
+  MAX rel error (known surface) = 2.969e-02
+
+(consistency) strict h=0 vs Gaussian-band kernel as h->0 (same ramp slice)
+  h=0.6: band_int/(h sqrt2pi A_strict) = 0.457161  (->1 as h->0, grid permitting)
+  h=0.4: band_int/(h sqrt2pi A_strict) = 0.632575  (->1 as h->0, grid permitting)
+  h=0.25: band_int/(h sqrt2pi A_strict) = 0.834686  (->1 as h->0, grid permitting)
+  h=0.15: band_int/(h sqrt2pi A_strict) = 0.958241  (->1 as h->0, grid permitting)
+
+(b) CONTINUITY of A_v(p): interior p-sweep, compare to NAIVE edge-scan
+  STRICT contour : max interior rel jump  dp=0.02 -> 3.342e-01,  dp=0.01 -> 1.867e-01  (ratio 1.79 ~ continuous)
+  NAIVE edge-scan: max interior rel jump  dp=0.02 -> 3.995e-01,  dp=0.01 -> 3.995e-01  (ratio ~1 => DISCONTINUOUS tie-jumps)
+
+validation walltime 1.8 s
+VALIDATION_DONE
