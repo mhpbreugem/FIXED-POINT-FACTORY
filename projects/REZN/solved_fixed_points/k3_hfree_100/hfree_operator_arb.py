@@ -25,10 +25,29 @@ flint.ctx.prec = int(DPS * 3.3219) + 30  # 395 bits at DPS=110
 ZERO = arb(0)
 ONE = arb(1)
 HALF = arb("0.5")
-EPS_PRICE = arb(10) ** (-12)        # mirrors 1e-12 float64
-NEWTON_TOL = arb(10) ** (-30)       # tighter than float64 1e-14
-ROOT_FTOL = arb(10) ** (-40)
-BISECT_TOL = arb(10) ** (-40)       # clear_crra bracket tol
+EPS_PRICE = arb(10) ** (-12)        # mirrors 1e-12 float64 price clamp
+# Internal solver tolerances must be FAR below the 1e-100 fixed-point target so
+# the root-finder / market-clearing bisection are NOT the precision floor.
+NEWTON_TOL = arb(10) ** (-130)      # contour-root Newton coordinate tol
+ROOT_FTOL = arb(10) ** (-130)       # contour-root residual tol
+BISECT_TOL = arb(10) ** (-130)      # clear_crra bracket tol
+
+
+def set_precision(dec):
+    """Set arb working precision to ~`dec` decimals and rebuild constants so
+    there is NO hidden lower-precision floor. Tolerances are kept well below
+    the precision so the solver converges to the precision, not the tol."""
+    global DPS, ZERO, ONE, HALF, EPS_PRICE, NEWTON_TOL, ROOT_FTOL, BISECT_TOL
+    DPS = dec
+    flint.ctx.prec = int(dec * 3.3219) + 30
+    ZERO = arb(0)
+    ONE = arb(1)
+    HALF = arb("0.5")
+    EPS_PRICE = arb(10) ** (-12)
+    tol = arb(10) ** (-(dec + 20))
+    NEWTON_TOL = tol
+    ROOT_FTOL = tol
+    BISECT_TOL = tol
 
 
 # ----------------------------------------------------------------------
@@ -76,7 +95,9 @@ def clear_crra(mu0, mu1, mu2, g0, g1, g2, W0, W1, W2):
         return a
     if fb >= 0:
         return b
-    for _ in range(400):
+    # bisection: linear convergence, need ~log2(1/BISECT_TOL) steps. At
+    # BISECT_TOL=1e-130 that is ~440 steps; 600 gives headroom.
+    for _ in range(600):
         c = HALF * (a + b)
         fc = ex(c)
         if fc >= 0:
@@ -191,36 +212,42 @@ def spline_roots(y, M, h, u0, p_target, sub):
             v_prev = v_cur
             continue
         if (dp * dc) <= 0:
-            # Robust bracketed Newton (mirrors float64 source, but uses a
-            # provably-inside test so wide/non-finite arb balls never escape;
-            # falls back to bisection on the maintained sign bracket).
+            # Newton with strict bisection safeguard (rtsafe) on the maintained
+            # sign-bracket [lo, hi]. Same root as the float64 source's bracketed
+            # Newton, but converges robustly to arbitrary (arb) tolerance and is
+            # immune to undecidable arb-ball comparisons (wide/straddling der ->
+            # fall back to bisection). The bracket invariant flo*fhi<=0 is kept.
             lo = t_prev
             hi = t_cur
-            flo = dp     # = spline(lo) - p_target
+            flo = dp
+            fhi = dc
             t = HALF * (lo + hi)
-            for _ in range(160):
+            for _ in range(400):
                 val, der = spline_eval(y, M, h, u0, t)
                 fval = val - p_target
-                # try a Newton step, accept only if PROVABLY inside (lo, hi)
-                accepted = False
+                # Newton candidate; accept only if PROVABLY strictly inside.
+                use_newton = False
                 if not (der == 0):
                     tn = t - fval / der
                     if (tn > lo) and (tn < hi):
-                        accepted = True
-                if not accepted:
-                    tn = HALF * (lo + hi)   # bisection
-                # update bracket using sign of fval at t (the current point)
+                        use_newton = True
+                if not use_newton:
+                    tn = HALF * (lo + hi)
+                # shrink the sign-bracket using the sign of fval at t
                 if (flo * fval) <= 0:
                     hi = t
+                    fhi = fval
                 else:
                     lo = t
                     flo = fval
-                if abs(tn - t) < NEWTON_TOL:
+                # Converged when the step / residual is NOT provably above tol
+                # (inverted test: once the ball straddles 0 the direct "< tol"
+                # comparison is undecidable and returns False forever, stalling
+                # the loop; "not (x > tol)" is True as soon as x drops to tol).
+                if not (abs(tn - t) > NEWTON_TOL) or not (abs(fval) > ROOT_FTOL):
                     t = tn
                     break
                 t = tn
-                if abs(fval) < ROOT_FTOL:
-                    break
             val, der = spline_eval(y, M, h, u0, t)
             out.append((t, abs(der)))
         t_prev = t_cur
