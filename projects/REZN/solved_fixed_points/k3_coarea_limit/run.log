@@ -4,3 +4,4 @@ G=  9 du=1.0000 h=0.4500 h/du=0.45 | NAILED ||F||=6.18e-15 it=3 conv=True | defi
 G= 13 du=0.6667 h=0.3674 h/du=0.55 | NAILED ||F||=2.00e-11 it=3 conv=True | deficit=0.28383 d_FR=0.3039 beta=0.341 slopeT=0.1705 || STRICT ||F||=0.0260 def=0.0166 (4s, this 2s)
 G= 17 du=0.5000 h=0.3182 h/du=0.64 | NAILED ||F||=9.23e-12 it=3 conv=True | deficit=0.28134 d_FR=0.3015 beta=0.357 slopeT=0.1783 || STRICT ||F||=0.0234 def=0.0234 (11s, this 6s)
 G= 21 du=0.4000 h=0.2846 h/du=0.71 | NAILED ||F||=3.22e-11 it=3 conv=True | deficit=0.27928 d_FR=0.2997 beta=0.371 slopeT=0.1853 || STRICT ||F||=0.0223 def=0.0277 (25s, this 14s)
+G= 25 du=0.3333 h=0.2598 h/du=0.78 | NAILED ||F||=2.66e-14 it=4 conv=True | deficit=0.27648 d_FR=0.2978 beta=0.384 slopeT=0.1919 || STRICT ||F||=0.0223 def=0.0305 (72s, this 47s)

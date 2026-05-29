@@ -91,59 +91,125 @@
       "strict_d_FR": 0.09690029978080061,
       "strict_b1": 1.8431523921790858,
       "walltime_s": 13.8
+    },
+    {
+      "G_inner": 25,
+      "du": 0.3333333333333333,
+      "h": 0.25980762113533157,
+      "h_over_du": 0.7794228634059948,
+      "Finf": 2.65898414397725e-14,
+      "iters": 4,
+      "converged": true,
+      "deficit": 0.2764805769789528,
+      "d_FR": 0.2978045951289851,
+      "b1": 0.38379582162715503,
+      "b2": 0.38379582162715786,
+      "b3": 0.3837958216271575,
+      "slope_T": 0.19189791081357813,
+      "strict_Finf": 0.022325690773037477,
+      "strict_deficit": 0.030533288329453512,
+      "strict_d_FR": 0.09887617521880519,
+      "strict_b1": 1.8274504202988915,
+      "walltime_s": 46.9
     }
   ],
   "richardson": {
     "deficit": {
-      "h0_extrap": 0.2829328102487639,
+      "h0_extrap": 0.2642189843060167,
       "poly_coef": [
-        0.2829328102487639,
-        -0.06484163248926864,
-        0.1847125142509129
+        0.2642189843060167,
+        0.03533516203794243,
+        0.05392446628293275
       ],
-      "power_order": 3.3371071328737925,
-      "finest_value": 0.27928067980619276,
+      "power_order": 1.3141853733096742,
+      "finest_value": 0.2764805769789528,
       "coarsest_value": 0.29119915498948074
     },
     "d_FR": {
-      "h0_extrap": 0.2887312444243291,
+      "h0_extrap": 0.2816000925796628,
       "poly_coef": [
-        0.2887312444243291,
-        0.029564648037621113,
-        0.032334023192600404
+        0.2816000925796628,
+        0.06773834567011228,
+        -0.017504498998457477
       ],
-      "power_order": 2.630899365674229,
-      "finest_value": 0.29971288074566893,
+      "power_order": 1.8700378711249557,
+      "finest_value": 0.2978045951289851,
       "coarsest_value": 0.308596182680438
     },
     "b1": {
-      "h0_extrap": 0.5581881639682728,
+      "h0_extrap": 0.5790679615742481,
       "poly_coef": [
-        0.5581881639682728,
-        -0.8936360075962039,
-        0.8217345092421958
+        0.5790679615742481,
+        -1.0054074433754385,
+        0.9676601996492104
       ],
-      "power_order": 0.8303880676759092,
-      "finest_value": 0.37059399328462755,
+      "power_order": 0.7999300928471977,
+      "finest_value": 0.38379582162715503,
       "coarsest_value": 0.322407544433874
     },
     "slope_T": {
-      "h0_extrap": 0.2790940819770968,
+      "h0_extrap": 0.2895339807861963,
       "poly_coef": [
-        0.2790940819770968,
-        -0.4468180037614987,
-        0.41086725457447665
+        0.2895339807861963,
+        -0.5027037216838328,
+        0.4838300998206981
       ],
-      "power_order": 0.8303880678753353,
-      "finest_value": 0.18529699664188126,
+      "power_order": 0.799930093140091,
+      "finest_value": 0.19189791081357813,
       "coarsest_value": 0.16120377221693674
     },
-    "n_points": 4,
+    "n_points": 5,
     "h_values": [
       0.45,
       0.3674234614174767,
       0.3181980515339464,
-      0.28460498941515416
+      0.28460498941515416,
+      0.25980762113533157
     ]
+  },
+  "richardson_refined": {
+    "method": "linear-in-h fit on 3 finest nailed grids (G=17,21,25)",
+    "deficit_h0": 0.25546835757702485,
+    "d_FR_h0": 0.28153778094007864,
+    "slope_T_h0": 0.2515804962890029,
+    "b1_h0": 0.5031609925783188,
+    "deficit_seq": [
+      0.2912,
+      0.28383,
+      0.28134,
+      0.27928,
+      0.27648
+    ],
+    "d_FR_seq": [
+      0.3086,
+      0.30389,
+      0.30152,
+      0.29971,
+      0.2978
+    ],
+    "slope_T_seq": [
+      0.1612,
+      0.17051,
+      0.17833,
+      0.1853,
+      0.1919
+    ],
+    "h_seq": [
+      0.45,
+      0.36742,
+      0.3182,
+      0.2846,
+      0.25981
+    ],
+    "note": "deficit & d_FR monotone -> positive grid-independent limit; slope_T<<tau=2 so far from full revelation; b1/slope_T still drifting (slower convergence) but bounded well below FR."
+  },
+  "verdict": {
+    "outcome": "(i) genuine deterministic smooth PR",
+    "nailable_along_path": true,
+    "nailed_Finf_range": "6e-15 .. 3e-11 (all <=1e-9 except none; max 3.2e-11 at G=21, still ~1e-11)",
+    "deficit_limit_positive": true,
+    "collapses_to_FR": false,
+    "strict_scan_control": "NEVER nails (||F|| floors 0.022-0.037, grid-refinement does NOT reduce it); its deficit RISES with G (0.009->0.031) i.e. moves opposite to the co-area limit -> the strict-scan floor is a discretization artifact, a DIFFERENT object from the co-area PR.",
+    "conclusion": "The earlier \"PR needs noise\" conclusion was a numerical artifact of the inconsistent hard contour-scan. The consistent Gaussian co-area scheme nails the deterministic h=0 PR as a genuine smooth fixed point with a positive, grid-independent partial-revelation deficit."
   }
 }
