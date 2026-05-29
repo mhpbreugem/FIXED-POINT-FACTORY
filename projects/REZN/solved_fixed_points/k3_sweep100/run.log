@@ -6,3 +6,5 @@
 12:59:15 VALIDATION GATE: max|flint-float64| inner = 3.442e-15  PASS=True
 12:59:17 [git] pushed validation gate + setup (attempt 1)
 13:00:29 [row  1/15] tau=0.100  nailed 15/15  deficit[min,max]=[0.0000,0.0578]  (73s row, 73s total)
+13:00:32 [git] pushed row 1/15 tau=0.100 (15/225 cells) (attempt 1)
+13:01:27 [row  2/15] tau=0.164  nailed 15/15  deficit[min,max]=[0.0000,0.1067]  (55s row, 130s total)
