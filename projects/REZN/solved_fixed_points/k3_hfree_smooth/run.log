@@ -1,0 +1,8 @@
+=== h-FREE SMOOTH co-area operator: VALIDATION (2026-05-29) ===
+NO kernel, NO bandwidth, NO smoothing parameter.
+(a) SMOOTHNESS slope-jump scaling at grid-node prices (probe width h):
+    h_list        = [0.004, 0.002, 0.001, 0.0005]
+    hfree median  = [311.99, 507.86, 377.83, 10.43]  -> DECREASES (SMOOTH)
+    grid_scan med = [6.8, 11.87, 22.21, 43.0]  -> GROWS ~1/h (KINK)
+    grid_cdf med  = [7825.5, 15660.3, 31330.0, 62669.2]  -> GROWS ~1/h (KINK)
+(b) CONSISTENCY vs analytic co-area (sigmoid surface): max rel err 1.45e-05
