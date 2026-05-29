@@ -167,3 +167,99 @@ Preliminary signal (all tau4=0.05 seeds): damped Picard drives every PR-region s
 [05:05:57]     tau4=1.00  deficit=0.0007  Finf=1.020e-02  d_fr=0.1935
 [05:05:57]     tau4=2.00  deficit=0.0010  Finf=1.643e-02  d_fr=0.1776
 [05:05:57] VERDICT (TEST A): TEST A: PR deficit collapses to ~0 by tau4*=0.05 (merges into FR) -> NO genuine K=4 PR FP.
+[05:06:40] === TEST B symmetric accurate-Jacobian Newton, genuinely-partial seeds (gamma=0.1, tau=2.0) ===
+[05:06:40] reduced n=495; warming JIT
+[05:06:41]   seed 'subset2_reveal2of4': deficit=0.0255 Finf=3.660e-01 d_fr=0.2481
+[05:06:41]   seed 'subset3_reveal3of4': deficit=0.0124 Finf=2.188e-01 d_fr=0.1940
+[05:06:41]   seed 'nl_symmetrized': deficit=0.2179 Finf=4.302e-01 d_fr=0.3393
+[05:06:42]   seed 'k3embed_subset3_to_half': deficit=0.0660 Finf=3.188e-01 d_fr=0.2749
+[05:06:42] -- Newton from 'subset2_reveal2of4' --
+[05:06:42]     jac col 0/495 t=0s
+[05:07:14]     jac col 100/495 t=32s
+[05:07:46]     jac col 200/495 t=64s
+[05:08:18]     jac col 300/495 t=96s
+[05:08:50]     jac col 400/495 t=128s
+[05:09:23]   [Newton subset2_reveal2of4] it= 1 Finf=2.488e-01 1-R2=0.02088 d_fr=0.2444 alpha=0.125
+[05:09:26]   [Newton subset2_reveal2of4] it= 2 Finf=2.472e-01 1-R2=0.02073 d_fr=0.2452 alpha=0.00781
+[05:09:30]   [Newton subset2_reveal2of4] it= 3 Finf=2.468e-01 1-R2=0.02069 d_fr=0.2452 alpha=0.00195
+[05:09:30]     jac col 0/495 t=0s
+[05:10:04]     jac col 100/495 t=34s
+[05:10:37]     jac col 200/495 t=67s
+[05:11:10]     jac col 300/495 t=100s
+[05:11:44]     jac col 400/495 t=134s
+[05:12:17]   [Newton subset2_reveal2of4] it= 4 Finf=2.368e-01 1-R2=0.01849 d_fr=0.2507 alpha=0.125
+[05:12:18]   [Newton subset2_reveal2of4] it= 5 Finf=1.902e-01 1-R2=0.01690 d_fr=0.2360 alpha=0.25
+[05:12:28]   [Newton subset2_reveal2of4] it= 6 Finf=1.902e-01 1-R2=0.01690 d_fr=0.2360 alpha=2.98e-08
+[05:12:28]     jac col 0/495 t=0s
+[05:13:01]     jac col 100/495 t=34s
+[05:13:35]     jac col 200/495 t=68s
+[05:14:09]     jac col 300/495 t=102s
+[05:14:43]     jac col 400/495 t=135s
+[05:15:16]   [Newton subset2_reveal2of4] it= 7 Finf=1.664e-01 1-R2=0.01703 d_fr=0.2362 alpha=0.125
+[05:15:18]   [Newton subset2_reveal2of4] it= 8 Finf=1.248e-01 1-R2=0.01772 d_fr=0.2378 alpha=0.25
+[05:15:20]   [Newton subset2_reveal2of4] it= 9 Finf=1.209e-01 1-R2=0.01780 d_fr=0.2381 alpha=0.0312
+[05:15:21]     jac col 0/495 t=0s
+[05:16:11] === TEST B symmetric accurate-Jacobian Newton, genuinely-partial seeds (gamma=0.1, tau=2.0) ===
+[05:16:12] reduced n=495; warming JIT
+[05:16:12]   seed 'subset2_reveal2of4': deficit=0.0255 Finf=3.660e-01 d_fr=0.2481
+[05:16:13]   seed 'subset3_reveal3of4': deficit=0.0124 Finf=2.188e-01 d_fr=0.1940
+[05:16:13]   seed 'nl_symmetrized': deficit=0.2179 Finf=4.302e-01 d_fr=0.3393
+[05:16:13]   seed 'k3embed_subset3_to_half': deficit=0.0660 Finf=3.188e-01 d_fr=0.2749
+[05:16:13] -- Newton from 'subset2_reveal2of4' --
+[05:16:14]     jac col 0/495 t=0s
+[05:16:45]     jac col 100/495 t=32s
+[05:17:17]     jac col 200/495 t=63s
+[05:17:48]     jac col 300/495 t=95s
+[05:18:22]     jac col 400/495 t=129s
+[05:18:56]   [Newton subset2_reveal2of4] it= 1 Finf=2.488e-01 1-R2=0.02088 d_fr=0.2444 alpha=0.125
+[05:19:00]   [Newton subset2_reveal2of4] it= 2 Finf=2.472e-01 1-R2=0.02073 d_fr=0.2452 alpha=0.00781
+[05:19:04]   [Newton subset2_reveal2of4] it= 3 Finf=2.468e-01 1-R2=0.02069 d_fr=0.2452 alpha=0.00195
+[05:19:08]   [Newton subset2_reveal2of4] it= 4 Finf=2.466e-01 1-R2=0.02067 d_fr=0.2452 alpha=0.000977
+[05:19:08]     jac col 0/495 t=0s
+[05:19:42]     jac col 100/495 t=34s
+[05:20:15]     jac col 200/495 t=67s
+[05:20:48]     jac col 300/495 t=100s
+[05:21:21]     jac col 400/495 t=133s
+[05:21:55]   [Newton subset2_reveal2of4] it= 5 Finf=2.135e-01 1-R2=0.01849 d_fr=0.2516 alpha=0.125
+[05:21:56]   [Newton subset2_reveal2of4] it= 6 Finf=1.958e-01 1-R2=0.01691 d_fr=0.2375 alpha=0.25
+[05:22:05]   [Newton subset2_reveal2of4] it= 7 Finf=1.958e-01 1-R2=0.01691 d_fr=0.2375 alpha=2.98e-08
+[05:22:15]   [Newton subset2_reveal2of4] it= 8 Finf=1.958e-01 1-R2=0.01691 d_fr=0.2375 alpha=2.98e-08
+[05:22:15]     jac col 0/495 t=0s
+[05:22:50]     jac col 100/495 t=35s
+[05:23:25] === TEST B symmetric accurate-Jacobian Newton, genuinely-partial seeds (gamma=0.1, tau=2.0) ===
+[05:23:26] reduced n=495; warming JIT
+[05:23:26]   seed 'subset2_reveal2of4': deficit=0.0255 Finf=3.660e-01 d_fr=0.2481
+[05:23:27]   seed 'subset3_reveal3of4': deficit=0.0124 Finf=2.188e-01 d_fr=0.1940
+[05:23:27]   seed 'nl_symmetrized': deficit=0.2179 Finf=4.302e-01 d_fr=0.3393
+[05:23:27]   seed 'k3embed_subset3_to_half': deficit=0.0660 Finf=3.188e-01 d_fr=0.2749
+[05:23:27] -- Newton from 'subset2_reveal2of4' --
+[05:23:28]     jac col 0/495 t=0s
+[05:23:59]     jac col 100/495 t=32s
+[05:24:31]     jac col 200/495 t=64s
+[05:25:03]     jac col 300/495 t=96s
+[05:25:36]     jac col 400/495 t=128s
+[05:26:07]   [Newton subset2_reveal2of4] it= 1 Finf=2.488e-01 1-R2=0.02088 d_fr=0.2444 alpha=0.125
+[05:26:11]   [Newton subset2_reveal2of4] it= 2 Finf=2.472e-01 1-R2=0.02073 d_fr=0.2452 alpha=0.00781
+[05:26:15]   [Newton subset2_reveal2of4] it= 3 Finf=2.468e-01 1-R2=0.02069 d_fr=0.2452 alpha=0.00195
+[05:26:19]   [Newton subset2_reveal2of4] it= 4 Finf=2.466e-01 1-R2=0.02067 d_fr=0.2452 alpha=0.000977
+[05:26:23]   [Newton subset2_reveal2of4] it= 5 Finf=2.464e-01 1-R2=0.02065 d_fr=0.2451 alpha=0.000977
+[05:26:23]   [Newton subset2_reveal2of4] stalled at it=5 (non-smooth floor Finf=2.464e-01); stop
+[05:26:23]    -> 'subset2_reveal2of4' Newton best Finf=2.464e-01 deficit=0.0207 d_fr=0.2451
+[05:26:23] -- Newton from 'subset3_reveal3of4' --
+[05:26:24]     jac col 0/495 t=0s
+[05:26:55]     jac col 100/495 t=32s
+[05:27:28]     jac col 200/495 t=65s
+[05:27:59]     jac col 300/495 t=96s
+[05:28:33]     jac col 400/495 t=129s
+[05:29:06]   [Newton subset3_reveal3of4] it= 1 Finf=2.048e-01 1-R2=0.01159 d_fr=0.1920 alpha=0.0625
+[05:29:09]   [Newton subset3_reveal3of4] it= 2 Finf=1.981e-01 1-R2=0.01124 d_fr=0.1915 alpha=0.0312
+[05:29:12]   [Newton subset3_reveal3of4] it= 3 Finf=1.977e-01 1-R2=0.01122 d_fr=0.1915 alpha=0.00195
+[05:29:16]   [Newton subset3_reveal3of4] it= 4 Finf=1.975e-01 1-R2=0.01121 d_fr=0.1915 alpha=0.000977
+[05:29:21]   [Newton subset3_reveal3of4] it= 5 Finf=1.974e-01 1-R2=0.01120 d_fr=0.1915 alpha=0.000488
+[05:29:21]   [Newton subset3_reveal3of4] stalled at it=5 (non-smooth floor Finf=1.974e-01); stop
+[05:29:21]    -> 'subset3_reveal3of4' Newton best Finf=1.974e-01 deficit=0.0112 d_fr=0.1915
+[05:29:21] -- Newton from 'nl_symmetrized' --
+[05:29:21]     jac col 0/495 t=0s
+[05:29:55]     jac col 100/495 t=34s
+[05:30:26]     jac col 200/495 t=65s
+[05:30:58]     jac col 300/495 t=97s
