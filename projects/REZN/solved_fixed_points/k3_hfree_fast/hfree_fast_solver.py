@@ -65,9 +65,11 @@ class SymReducer3:
         return vec_red[self.red_of_cell]
 
     def reduce(self, full):
-        """full (G,G,G) -> reduced via orbit-average (symmetrize + read)."""
-        acc = np.zeros(self.n_red)
-        np.add.at(acc, self.red_of_cell.ravel(), full.ravel())
+        """full (G,G,G) -> reduced via orbit-average (symmetrize + read).
+        Uses np.bincount (fast C scatter-add) over the precomputed cell->reduced
+        index map; ~10x faster than np.add.at."""
+        acc = np.bincount(self.red_of_cell.ravel(), weights=full.ravel(),
+                          minlength=self.n_red)
         return acc / self.orbit_count
 
     def read_rep(self, full):
