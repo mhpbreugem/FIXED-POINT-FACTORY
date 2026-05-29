@@ -77,3 +77,12 @@ Preliminary signal (all tau4=0.05 seeds): damped Picard drives every PR-region s
 [04:10:23]     [Picard w=0.3 subset3] it=120 Finf=3.003e-02 1-R2=0.0019
 [04:12:16]   tau4=0.05 best after Picard/Anderson/NK: Finf=4.762e-03 def=0.0020 d_fr=0.2285
 [04:12:17]       jac col 0/1485 t=0s
+[04:13:42]       jac col 300/1485 t=86s
+[04:15:09]       jac col 600/1485 t=172s
+[04:16:35]       jac col 900/1485 t=258s
+[04:18:05]       jac col 1200/1485 t=349s
+[04:19:34]     [Newton tau4=0.05] it=1 Finf=4.687e-03 1-R2=0.0020 alpha=0.0156
+[04:19:37]     [Newton tau4=0.05] it=2 Finf=4.651e-03 1-R2=0.0020 alpha=0.00781
+[04:19:41]     [Newton tau4=0.05] it=3 Finf=4.633e-03 1-R2=0.0020 alpha=0.00391
+[04:19:45]     [Newton tau4=0.05] it=4 Finf=4.628e-03 1-R2=0.0020 alpha=0.000977
+[04:19:50]     [Newton tau4=0.05] it=5 Finf=4.627e-03 1-R2=0.0020 alpha=0.000122
