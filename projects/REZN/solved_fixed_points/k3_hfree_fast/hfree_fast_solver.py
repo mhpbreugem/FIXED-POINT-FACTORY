@@ -128,7 +128,7 @@ def picard_prestage(x0_red, red, ui, gn, gw, tau, gam, W, iters=60):
 # Matrix-free Newton-Krylov solve (symmetry-reduced).
 # ----------------------------------------------------------------------
 def nk_solve(G, x0_red, red, ui, gn, gw, tau, gam, W,
-             f_tol=1e-10, maxiter=80, verbose=None):
+             f_tol=1e-10, maxiter=80, inner_maxiter=30, verbose=None):
     from scipy.optimize import newton_krylov
     try:
         from scipy.optimize import NoConvergence
@@ -147,10 +147,13 @@ def nk_solve(G, x0_red, red, ui, gn, gw, tau, gam, W,
     try:
         # Matrix-free Newton-Krylov: each lgmres inner product is ONE FD
         # directional derivative = one operator eval (vs the dense FD
-        # Jacobian's N=729 evals/step). Default Krylov settings give clean
-        # quadratic-tail convergence to ~1e-13 in ~8 outer steps.
+        # Jacobian's N=729 evals/step). inner_maxiter bounds the inner Krylov
+        # products per outer step (so a near-singular Jacobian -- e.g. at
+        # weak-signal cells -- can't run away). At the reference this still
+        # gives clean quadratic-tail convergence to ~1e-13 in ~8 outer steps.
         sol = newton_krylov(Fred, x0_red, f_tol=f_tol, maxiter=maxiter,
-                            method="lgmres", callback=cb)
+                            method="lgmres", inner_maxiter=inner_maxiter,
+                            callback=cb)
     except NoConvergence as e:
         sol = np.asarray(e.args[0]).ravel()
         conv = False
@@ -197,14 +200,20 @@ def warm_start_red(G, red, ui, TAU):
 
 
 def solve_hfree_pr(G, TAU, GAMMA, x0_red=None, f_tol=1e-10, nk_maxiter=80,
-                   picard_iters=0, verbose=None):
+                   nk_probe_iter=10, picard_fallback_iters=80, verbose=None):
     """Nail the h-free PR fixed point. Returns (P_full, sol_red, Finf, info).
 
-    picard_iters>0 runs a cheap symmetry-reduced Picard pre-stage to slide the
-    warm start into the PR basin before the matrix-free Newton-Krylov polish
-    (needed at weak-signal parameters, e.g. small tau, where the bare NK from a
-    distant seed stalls). Returns the lowest-||F|| iterate found across both
-    stages, so the reported Finf is the best achieved residual.
+    Strategy (robust + fast across the (gamma,tau) plane):
+      1. A SHORT Newton-Krylov probe (nk_probe_iter outer steps) from the warm
+         start. At the bulk of the plane (and at the reference tau=2,gamma=0.1)
+         this already nails to ~1e-13 and we stop.
+      2. If the probe does not reach f_tol (weak-signal cells, e.g. small tau,
+         where the PR is only marginally determined and NK-from-far stalls),
+         run a cheap Picard pre-stage (~one operator eval/step) then a fresh NK
+         polish, and KEEP THE GLOBAL BEST (lowest-||F||) iterate. The short
+         probe keeps the hard cells from burning a long NK run before falling
+         back.
+    Never degrades a cell NK already solves; rescues the hard ones cheaply.
     """
     ui = np.linspace(-UMAX, UMAX, G)
     gn, gw = H.gauss_legendre(NQ, -UMAX, UMAX)
@@ -215,31 +224,38 @@ def solve_hfree_pr(G, TAU, GAMMA, x0_red=None, f_tol=1e-10, nk_maxiter=80,
     if x0_red is None:
         x0_red = warm_start_red(G, red, ui, TAU)
 
-    Fred = make_red_resid(red, ui, gn, gw, tau, gam, W)
-    picard_norm = None
-    if picard_iters > 0:
-        x0_red, picard_norm = picard_prestage(
-            x0_red, red, ui, gn, gw, tau, gam, W, iters=picard_iters)
-
+    # --- attempt 1: short NK probe (cheap to fail) ---
     sol, Finf, iters, conv = nk_solve(
         G, x0_red, red, ui, gn, gw, tau, gam, W,
-        f_tol=f_tol, maxiter=nk_maxiter, verbose=verbose)
+        f_tol=f_tol, maxiter=nk_probe_iter, verbose=verbose)
+    best_sol, best_Finf = sol, Finf
+    used_picard = False
+    picard_norm = None
 
-    # keep the better of (Picard pre-stage, NK polish)
-    if picard_norm is not None and picard_norm < Finf:
-        sol = x0_red
-        Finf = picard_norm
+    # --- attempt 2 (fallback): Picard pre-stage + full NK polish ---
+    if Finf > f_tol and picard_fallback_iters > 0:
+        used_picard = True
+        v0, picard_norm = picard_prestage(
+            x0_red, red, ui, gn, gw, tau, gam, W, iters=picard_fallback_iters)
+        if picard_norm < best_Finf:
+            best_sol, best_Finf = v0, picard_norm
+        sol2, Finf2, iters2, conv2 = nk_solve(
+            G, v0, red, ui, gn, gw, tau, gam, W,
+            f_tol=f_tol, maxiter=nk_maxiter, verbose=verbose)
+        if Finf2 < best_Finf:
+            best_sol, best_Finf, iters, conv = sol2, Finf2, iters2, conv2
 
+    sol, Finf = best_sol, best_Finf
     P_full = red.expand(sol)
     m = metrics(P_full, ui, TAU)
     info = dict(G=G, tau=TAU, gamma=GAMMA, Finf=Finf, iters=iters,
-                converged=conv, n_red=red.n_red, picard_iters=picard_iters,
-                picard_norm=picard_norm, **m)
+                converged=bool(Finf <= f_tol), n_red=red.n_red,
+                used_picard=used_picard, picard_norm=picard_norm, **m)
     return P_full, sol, Finf, info
 
 
 if __name__ == "__main__":
-    # Quick standalone nail at the reference point.
+    # Quick standalone nail at the reference point (tau=2, gamma=0.1).
     t = time.time()
     P, sol, Finf, info = solve_hfree_pr(9, 2.0, 0.1,
                                         verbose=lambda n, f: print(
