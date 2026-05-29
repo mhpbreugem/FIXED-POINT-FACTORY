@@ -7,3 +7,12 @@
   P4: corr(|gap|, Var(m)) at gamma=1 = 0.4797 (expect >0)
   wrote testA_scatter.png and testA_report.json
 === TEST A done ===
+=== TEST B : Jensen gap on nailed noisy-PR equilibrium (kernel_h=0.30, tau=2) === Fri May 29 08:58:36 2026
+  gamma=0.1  ||F||=6.70e-13 conv=True | corr=0.6493 R2=0.4216 deficit=0.5784 slope=0.071 mean|gap|=2.6352 signmatch(disp)=0.9417
+  gamma=0.2  ||F||=3.08e-13 conv=True | corr=0.6326 R2=0.4002 deficit=0.5998 slope=0.088 mean|gap|=1.8347 signmatch(disp)=0.8861
+  gamma=0.4  ||F||=1.65e-11 conv=True | corr=0.6513 R2=0.4243 deficit=0.5757 slope=0.131 mean|gap|=1.3924 signmatch(disp)=0.8861
+  gamma=0.8  ||F||=8.96e-12 conv=True | corr=0.7320 R2=0.5358 deficit=0.4642 slope=0.217 mean|gap|=1.0665 signmatch(disp)=0.7917
+  gamma=1.6  ||F||=1.30e-14 conv=True | corr=0.8447 R2=0.7135 deficit=0.2865 slope=0.332 mean|gap|=0.7612 signmatch(disp)=0.7472
+  P3: log-log slope deficit vs gamma = -0.240; mean|gap| vs gamma = -0.437 (expect ~ -1 for gap)
+  wrote testB_figures.png and testB_report.json
+=== TEST B done ===
