@@ -12,6 +12,45 @@ runnable reference: `methodology/reference_operator.py`.
 
 ---
 
+## LATEST (no-kernel / smoothness chapter — resolves "is the smoothing just noise?")
+
+**Question pursued:** can the deterministic PR equilibrium be nailed with NO smoothing parameter
+(no kernel h), to settle whether the kernel is "noise in disguise"?
+
+**Answer — sharp and honest:**
+1. **A no-kernel co-area operator exists and nails the PR at coarse G** (`k3_hfree_fast`,
+   `k3_hfree_morse`): zero kernel/bandwidth, only grid + Gauss quadrature (standard
+   discretizations). Nails G=9 to ‖F‖≈8e-15, deficit≈0.17. Proves a smooth deterministic fixed
+   point exists with no regularization parameter. The Morse-robust variant is also C0 (continuous):
+   the naive contour-scan's O(0.1) tie-jumps were a discretization artifact (jump 1115→1.18, shrinks
+   with step).
+2. **But it FAILS at high G** (G≥13: ‖F‖ floors ~2.6e-3, Newton stalls). **Diagnosed and PROVEN
+   (`k3_hfree_morse/c0_not_c1.{json,png}`):** the deterministic co-area evidence A_v(p) is
+   **C0 but NOT C1** at Morse-critical prices (where ∇P=0 on a level set). On a controlled saddle
+   surface, A_v(p) spikes and its derivative A_v'(p) blows up **128×** at the critical price, while
+   the kernel-band A_h'(p) stays bounded. Newton needs C1; at finer grids more cells sit near
+   critical prices → the no-kernel operator is fundamentally not Newton-nailable at high resolution.
+3. **The kernel is the C∞ fix, and it is NUMERICS not noise:** the Gaussian band is a CONSISTENT
+   co-area quadrature (→ the exact integral as h→0, verified to 1.5e-5; the missing 1/|∇P| weight
+   makes the *naive* scan biased ~19%, `k3_verify_coarea`). It regularizes the intrinsic
+   C0-not-C1 singularity. So the kernel parameter is a numerical convergence knob (deficit is
+   INVARIANT to it once resolved), NOT economic noise (whose deficit would be a real h-curve).
+
+**Net:** partial revelation is a genuine **deterministic** CRRA equilibrium — **no noise traders
+needed** (the contribution vs the 1990s noise-trader requirement). Existence is solid: continuous
+operator ⇒ Brouwer fixed point; nailed at G=9 (no-kernel) and to G=31 by the kernel method
+(continuum deficit ≈ 0.26, `k3_coarea_limit`). High-RESOLUTION computation requires a C∞
+(kernel/consistent-quadrature) operator because the bare co-area operator is C0-not-C1 — a
+numerical fact, stated honestly, not a re-introduction of noise.
+
+**Definitive (γ,τ) deficit map** (`k3_coarea_2dsweep`, consistent kernel co-area, G=17, 31/32 cells
+nailed to 1e-12): deficit rises with τ, falls with γ — the Jensen-gap law on genuine equilibria;
+replaces the artifact strict-scan maps. **CARA = γ→∞ CRRA limit** (`k3_cara`, deficit ~γ^-0.94 → 0):
+the no-gap benchmark — confirming the Jensen gap (hence partial revelation) is exactly the CRRA
+wealth-curvature effect, absent under CARA.
+
+---
+
 ## HEADLINE RESULT (corrected)
 
 The deterministic (noiseless, h=0) K=3 CRRA economy has a **genuine, smooth, partially-revealing
