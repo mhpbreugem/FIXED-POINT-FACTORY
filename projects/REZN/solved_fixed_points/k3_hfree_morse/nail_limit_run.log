@@ -19,3 +19,12 @@ date 2026-05-29  UMAX=4.0 NQ=40 SUB=4 eps_c=0.001 (geo softened by eps_c*h^2)
     G=13 nk it 7 ||F||=2.196e-03
     G=13 nk it 8 ||F||=2.830e-03
     G=13 nk it 9 ||F||=2.663e-03
+    G=13 nk it 10 ||F||=2.610e-03
+    G=13 nk it 11 ||F||=2.613e-03
+    G=13 nk it 12 ||F||=2.608e-03
+    G=13 nk it 13 ||F||=2.608e-03
+    G=13 nk it 14 ||F||=2.608e-03
+    G=13 nk it 15 ||F||=2.608e-03
+    G=13 nk it 1 ||F||=5.115e-03
+    G=13 nk it 2 ||F||=5.031e-03
+    G=13 nk it 3 ||F||=5.031e-03

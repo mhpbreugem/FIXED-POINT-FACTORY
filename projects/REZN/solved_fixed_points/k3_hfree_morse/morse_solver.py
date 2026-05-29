@@ -132,12 +132,20 @@ def metrics(P, ui, TAU):
     return dict(deficit=deficit, d_FR=d_FR, slope_T=float(a[0]))
 
 
-def solve_morse_pr(G, TAU, GAMMA, x0_red=None, f_tol=1e-9, nk_maxiter=150,
-                   nk_probe_iter=15, picard_iters=80, verbose=None,
-                   eps_c=EPS_C):
+def solve_morse_pr(G, TAU, GAMMA, x0_red=None, f_tol=1e-9, nk_maxiter=60,
+                   nk_probe_iter=15, picard_iters=40, n_cycles=5,
+                   inner_maxiter=60, verbose=None, eps_c=EPS_C):
     """Nail the Morse-robust h-free PR fixed point.  Returns (P_full, sol_red,
-    Finf, info).  Strategy: short NK probe; if it doesn't reach f_tol, Picard
-    pre-stage + full NK polish, keep the global best."""
+    Finf, info).
+
+    Robust strategy: a short NK probe from the warm start, then up to n_cycles
+    of (Picard pre-stage -> NK polish), always RE-SEEDING from the global-best
+    iterate and keeping the global best.  Newton-Krylov can stall at a Picard
+    endpoint when the Jacobian I-Phi' is locally ill-conditioned (a few cells
+    near a critical price); re-running a short Picard relaxation off the stalled
+    point perturbs into a better-conditioned neighbourhood from which NK
+    descends.  Each cycle starts a FRESH Krylov subspace.  Stops as soon as
+    f_tol is met."""
     ui = np.linspace(-UMAX, UMAX, G)
     gn, gw = H.gauss_legendre(NQ, -UMAX, UMAX)
     tau = np.full(3, TAU)
@@ -149,24 +157,35 @@ def solve_morse_pr(G, TAU, GAMMA, x0_red=None, f_tol=1e-9, nk_maxiter=150,
 
     sol, Finf, iters, conv = nk_solve(
         x0_red, red, ui, gn, gw, tau, gam, W,
-        f_tol=f_tol, maxiter=nk_probe_iter, verbose=verbose, eps_c=eps_c)
-    best_sol, best_Finf = sol, Finf
+        f_tol=f_tol, maxiter=nk_probe_iter, inner_maxiter=inner_maxiter,
+        verbose=verbose, eps_c=eps_c)
+    best_sol, best_Finf = sol.copy(), Finf
     used_picard = False
     picard_norm = None
-    if Finf > f_tol and picard_iters > 0:
-        used_picard = True
-        v0, picard_norm = picard_prestage(
-            x0_red, red, ui, gn, gw, tau, gam, W, iters=picard_iters,
-            eps_c=eps_c)
-        if picard_norm < best_Finf:
-            best_sol, best_Finf = v0, picard_norm
-        sol2, Finf2, iters2, conv2 = nk_solve(
-            v0, red, ui, gn, gw, tau, gam, W,
-            f_tol=f_tol, maxiter=nk_maxiter, verbose=verbose, eps_c=eps_c)
-        if Finf2 < best_Finf:
-            best_sol, best_Finf, iters, conv = sol2, Finf2, iters2, conv2
+    total_iters = iters
 
-    sol, Finf = best_sol, best_Finf
+    c = 0
+    while best_Finf > f_tol and c < n_cycles:
+        c += 1
+        used_picard = True
+        # Picard relaxation off the current best (slides into a smoother basin)
+        v0, pn = picard_prestage(
+            best_sol, red, ui, gn, gw, tau, gam, W, iters=picard_iters,
+            eps_c=eps_c)
+        picard_norm = pn
+        if pn < best_Finf:
+            best_sol, best_Finf = v0.copy(), pn
+        # NK polish from the freshly-relaxed Picard endpoint (better-conditioned
+        # neighbourhood than a stalled NK iterate)
+        sol2, Finf2, it2, conv2 = nk_solve(
+            v0, red, ui, gn, gw, tau, gam, W,
+            f_tol=f_tol, maxiter=nk_maxiter, inner_maxiter=inner_maxiter,
+            verbose=verbose, eps_c=eps_c)
+        total_iters += it2
+        if Finf2 < best_Finf:
+            best_sol, best_Finf, conv = sol2.copy(), Finf2, conv2
+
+    sol, Finf, iters = best_sol, best_Finf, total_iters
     P_full = red.expand(sol)
     m = metrics(P_full, ui, TAU)
     info = dict(G=G, tau=TAU, gamma=GAMMA, Finf=Finf, iters=iters,
