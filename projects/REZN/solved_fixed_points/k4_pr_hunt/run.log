@@ -263,3 +263,50 @@ Preliminary signal (all tau4=0.05 seeds): damped Picard drives every PR-region s
 [05:29:55]     jac col 100/495 t=34s
 [05:30:26]     jac col 200/495 t=65s
 [05:30:58]     jac col 300/495 t=97s
+[05:31:29]     jac col 400/495 t=128s
+[05:32:07]   [Newton nl_symmetrized] it= 1 Finf=4.302e-01 1-R2=0.21788 d_fr=0.3393 alpha=2.98e-08
+[05:32:16]   [Newton nl_symmetrized] it= 2 Finf=4.302e-01 1-R2=0.21788 d_fr=0.3393 alpha=2.98e-08
+[05:32:25]   [Newton nl_symmetrized] it= 3 Finf=4.302e-01 1-R2=0.21788 d_fr=0.3393 alpha=2.98e-08
+[05:32:25]   [Newton nl_symmetrized] stalled at it=3 (non-smooth floor Finf=4.302e-01); stop
+[05:32:25]    -> 'nl_symmetrized' Newton best Finf=4.302e-01 deficit=0.2179 d_fr=0.3393
+[05:32:25] -- Newton from 'k3embed_subset3_to_half' --
+[05:32:25]     jac col 0/495 t=0s
+[05:32:56]     jac col 100/495 t=32s
+[05:33:28]     jac col 200/495 t=63s
+[05:33:59]     jac col 300/495 t=95s
+[05:34:32]     jac col 400/495 t=127s
+[05:35:04]   [Newton k3embed_subset3_to_half] it= 1 Finf=2.885e-01 1-R2=0.06902 d_fr=0.2694 alpha=0.0625
+[05:35:07]   [Newton k3embed_subset3_to_half] it= 2 Finf=2.781e-01 1-R2=0.06976 d_fr=0.2692 alpha=0.0156
+[05:35:09]   [Newton k3embed_subset3_to_half] it= 3 Finf=2.690e-01 1-R2=0.07572 d_fr=0.2614 alpha=0.125
+[05:35:12]   [Newton k3embed_subset3_to_half] it= 4 Finf=2.527e-01 1-R2=0.07626 d_fr=0.2623 alpha=0.0156
+[05:35:15]   [Newton k3embed_subset3_to_half] it= 5 Finf=2.514e-01 1-R2=0.07678 d_fr=0.2609 alpha=0.0156
+[05:35:16]   [Newton k3embed_subset3_to_half] it= 6 Finf=2.500e-01 1-R2=0.01117 d_fr=0.2619 alpha=1
+[05:35:17]   [Newton k3embed_subset3_to_half] it= 7 Finf=2.491e-01 1-R2=0.04188 d_fr=0.2733 alpha=0.25
+[05:35:27]   [Newton k3embed_subset3_to_half] it= 8 Finf=2.491e-01 1-R2=0.04188 d_fr=0.2733 alpha=2.98e-08
+[05:35:27]    -> 'k3embed_subset3_to_half' Newton best Finf=2.491e-01 deficit=0.0419 d_fr=0.2733
+[05:35:27] VERDICT (TEST B): TEST B: best PR-region Newton residual floored at Finf=4.30e-01 (>1e-5) with deficit>0.05 => NON-SMOOTH PLATEAU, not a true FP. Only FR is genuine.
+
+=== TEST A COMPLETE: tau4 homotopy (gamma=0.1, tau3=2) ===
+  tau4   tracked Finf   deficit(1-R2)   d_fr
+  0.05   3.94e-3        0.0020          0.2285
+  0.10   8.56e-4        0.0017          0.2298
+  0.25   3.97e-3        0.0010          0.2139
+  0.50   2.33e-2        0.0007          0.1680
+  1.00   1.02e-2        0.0007          0.1935
+  2.00   1.64e-2        0.0010          0.1776  (accurate 1485-col Newton stalled, alpha->2e-4)
+  => deficit ~0 (FR manifold) at every tau4; residual on the non-smooth floor; no PR branch.
+  NOTE: at exactly tau4=0 this operator's axis-3 evidence sweep (x f_signal(.,0)=0) collapses phi to P==0.5,
+  so the anchor is tau4=0.05; the K=3 PR plateau is NOT recovered as a low-residual K=4 PR state.
+
+=== TEST B COMPLETE: symmetric 495-dim accurate-Jacobian Newton, genuinely-partial seeds ===
+  seed                      best ||F||inf   deficit@best
+  subset2_reveal2of4        0.2464          0.0207
+  subset3_reveal3of4        0.1974          0.0112
+  nl_symmetrized            0.4302          0.2179   (Newton FROZEN: alpha->3e-8 from iter 1)
+  k3embed_subset3_to_half   0.2491          0.0419
+  => every seed floors on the non-smooth plateau; none reaches ||F||inf<1e-5; only deficit>0.05 point
+     (nl, def=0.218) has the LARGEST residual (0.43). Plateau, not a fixed point.
+
+=== OVERALL VERDICT: NO genuine K=4 PR fixed point. Only FR is a true K=4 FP (||F||inf=9.45e-6, deficit~0).
+    PR exists only as a non-smooth plateau (deficit>0 but ||F||inf floored ~0.07-0.43). Consistent with K=3
+    (PR plateau only) and the homogeneous k4_sym result; consistent with PR requiring noise/smoothing.

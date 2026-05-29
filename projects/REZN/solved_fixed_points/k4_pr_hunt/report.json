@@ -1,6 +1,6 @@
 {
  "title": "K=4 strict-h0 CRRA REE contour-Phi: genuine PR fixed point hunt",
- "status": "in_progress",
+ "status": "complete",
  "params": {
   "gamma": 0.1,
   "tau_base": 2.0,
@@ -94,7 +94,7 @@
   }
  },
  "test_B_newton": {
-  "status": "subset3_reveal3of4 done",
+  "status": "done",
   "seeds": [
    {
     "seed": "subset2_reveal2of4",
@@ -185,9 +185,113 @@
       0.19150723580408927
      ]
     ]
+   },
+   {
+    "seed": "nl_symmetrized",
+    "init_deficit": 0.2178774731013764,
+    "best_Finf": 0.43024112207775933,
+    "deficit_at_best": 0.2178774731013764,
+    "d_fr_at_best": 0.33926804737121624,
+    "traj": [
+     [
+      0,
+      0.43024112207775933,
+      0.2178774731013764,
+      0.33926804737121624
+     ],
+     [
+      1,
+      0.43024112207775933,
+      0.2178774731013764,
+      0.33926804737121624
+     ],
+     [
+      2,
+      0.43024112207775933,
+      0.2178774731013764,
+      0.33926804737121624
+     ],
+     [
+      3,
+      0.43024112207775933,
+      0.2178774731013764,
+      0.33926804737121624
+     ]
+    ]
+   },
+   {
+    "seed": "k3embed_subset3_to_half",
+    "init_deficit": 0.065983909787936,
+    "best_Finf": 0.2490522918444294,
+    "deficit_at_best": 0.04188047603055234,
+    "d_fr_at_best": 0.27326559776390796,
+    "traj": [
+     [
+      0,
+      0.3187937142940087,
+      0.065983909787936,
+      0.2748742737264947
+     ],
+     [
+      1,
+      0.2884937486238862,
+      0.06902113275376609,
+      0.26935902780283766
+     ],
+     [
+      2,
+      0.27811965382237946,
+      0.069759865063723,
+      0.26924319950826353
+     ],
+     [
+      3,
+      0.2689611770310639,
+      0.07571967603839147,
+      0.26138582357732576
+     ],
+     [
+      4,
+      0.2527496444314199,
+      0.07626180166907004,
+      0.2622926040678027
+     ],
+     [
+      5,
+      0.25139641077018826,
+      0.07678207031668705,
+      0.2608915223237119
+     ],
+     [
+      6,
+      0.24999999900005598,
+      0.011170274541872804,
+      0.26187767169604204
+     ],
+     [
+      7,
+      0.2490522918444294,
+      0.04188047603055234,
+      0.27326559776390796
+     ],
+     [
+      8,
+      0.2490522918444294,
+      0.04188047603055234,
+      0.27326559776390796
+     ]
+    ]
    }
   ],
-  "best_pr_region": null
+  "best_pr_region": {
+   "seed": "nl_symmetrized",
+   "best_Finf": 0.43024112207775933,
+   "deficit_at_best": 0.2178774731013764,
+   "d_fr_at_best": 0.33926804737121624
+  }
  },
- "verdict": "TEST A: PR deficit collapses to ~0 by tau4*=0.05 (merges into FR) -> NO genuine K=4 PR FP."
+ "verdict_test_A": "TEST A (tau4->.. homotopy, heterogeneous tau): the tracked low-residual solution sits on the FR manifold (deficit ~0.001-0.002) at EVERY tau4 in {0.05,0.1,0.25,0.5,1,2}; residual stays on the non-smooth floor (~1e-3..2e-2) and the accurate 1485-col Newton stalls (alpha->2e-4) without reaching a true FP floor. PR character merges into FR immediately above the degenerate tau4=0 limit (where this operator collapses to P==0.5). No PR branch persists. NO genuine K=4 PR FP via continuation.",
+ "verdict_test_B": "TEST B (symmetric 495-dim, accurate-Jacobian Newton, genuinely-partial seeds): every seed floors on the non-smooth plateau, none reaches ||F||inf<1e-5. subset2 Finf=0.246/def=0.021; subset3 Finf=0.197/def=0.011; k3embed Finf=0.249/def=0.042; nl_symmetrized FROZEN at its initial Finf=0.430/def=0.218 (Newton step alpha->3e-8 immediately). The only deficit>0.05 point (nl, def=0.218) has the LARGEST residual (0.43) -- the hallmark of a non-smooth plateau, NOT a fixed point.",
+ "verdict": "NO genuine K=4 partially-revealing fixed point exists (gamma=0.1, tau base 2, strict h0, G_inner=9). The ONLY true K=4 fixed point is the fully-revealing one (||F||inf=9.45e-6, deficit~0). Every partially-revealing surface is at best a NON-SMOOTH PLATEAU: deficit>0 but ||F||inf floored at ~0.07-0.43 (homogeneous) / ~1e-3..2e-2 (along the heterogeneous homotopy, where it additionally collapses to deficit~0/FR). Newton with an accurate Jacobian stalls on the floor at any deficit>0 and never reaches ~1e-5. This matches K=3 (PR only as a ~0.06-0.2 plateau, no true FP) and the homogeneous k4_sym result; consistent with PR requiring noise/smoothing. Conclusion (b): only FR is a genuine K=4 FP; PR is a plateau, not a fixed point.",
+ "note_best_pr_global_homotopy": "test_A.best_pr_global (tau4=2, deficit=0.064, Finf=0.068) is a transient PR-region iterate seen during a Picard/Anderson sweep, NOT a fixed point: its residual 0.068 is the non-smooth floor, far above 1e-5. It does not survive Newton."
 }
