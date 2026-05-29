@@ -1,0 +1,6 @@
+======================================================================
+FAST h-FREE SMOOTH co-area K=3 solver  (matrix-free NK + symmetry reduction)
+SAME operator as hfree_operator.py: NO kernel / bandwidth / smoothing param.
+date 2026-05-29  UMAX=4 Nq=40 sub=4
+operator permutation-commute asymmetry = 8.882e-16 (verifies Phi(perm P)=perm Phi(P))
+single operator eval = 0.325s

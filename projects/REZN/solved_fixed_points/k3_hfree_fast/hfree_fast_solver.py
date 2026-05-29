@@ -119,8 +119,13 @@ def nk_solve(G, x0_red, red, ui, gn, gw, tau, gam, W,
 
     conv = True
     try:
+        # inner_maxiter caps the Krylov (lgmres) inner products per outer step:
+        # each inner product is ONE FD directional-derivative = one operator
+        # eval (vs the dense FD Jacobian's N=729 evals/step). rdiff sets the FD
+        # step for the Jacobian-vector products.
         sol = newton_krylov(Fred, x0_red, f_tol=f_tol, maxiter=maxiter,
-                            method="lgmres", callback=cb)
+                            method="lgmres", inner_maxiter=20, outer_k=8,
+                            rdiff=1e-6, callback=cb)
     except NoConvergence as e:
         sol = np.asarray(e.args[0]).ravel()
         conv = False
