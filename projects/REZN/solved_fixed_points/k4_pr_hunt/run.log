@@ -86,3 +86,9 @@ Preliminary signal (all tau4=0.05 seeds): damped Picard drives every PR-region s
 [04:19:41]     [Newton tau4=0.05] it=3 Finf=4.633e-03 1-R2=0.0020 alpha=0.00391
 [04:19:45]     [Newton tau4=0.05] it=4 Finf=4.628e-03 1-R2=0.0020 alpha=0.000977
 [04:19:50]     [Newton tau4=0.05] it=5 Finf=4.627e-03 1-R2=0.0020 alpha=0.000122
+[04:19:57]     [Newton tau4=0.05] it=6 Finf=3.938e-03 1-R2=0.0020 alpha=7.63e-06
+[04:19:57]   tau4=0.05 FINAL: Finf=3.938e-03 deficit=0.0020 d_fr=0.2285  (near-K=3 plateau)
+[04:19:57] --- tau4=0.1: continuation warm-started from prev solution ---
+[04:19:57]     [Picard w=0.3 tau4=0.1] it=  0 Finf=2.609e-02 1-R2=0.0022
+[04:20:09]     [Picard w=0.3 tau4=0.1] it= 40 Finf=1.450e-02 1-R2=0.0017
+[04:20:21]     [Picard w=0.3 tau4=0.1] it= 80 Finf=3.253e-03 1-R2=0.0017
