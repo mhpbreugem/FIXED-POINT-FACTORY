@@ -1,0 +1,15 @@
+{
+  "title": "K=4 strict-h0 CRRA REE contour-Phi: genuine PR fixed point hunt",
+  "status": "in_progress",
+  "params": {"gamma": 0.1, "tau_base": 2.0, "W": 1.0, "G_inner": 9, "pad": 2, "UMAX": 4.0, "G_full": 13},
+  "phi_call_seconds": 0.59,
+  "fr_check": {"Finf": 9.45e-06, "deficit": 1.1e-16, "d_fr": 1.7e-10, "genuine": true},
+  "nl_baseline_sym": {"Finf": 0.4302, "deficit": 0.2179, "d_fr": 0.3393},
+  "k3_prior_evidence": {
+    "note": "K=3 plateau (flint_persist2) best ferr=1.2e-4 at deficit~0.27, d_FR~0.25; k3_plateau_table shows plateau_floor ~0.05-0.08 with deficit>0.2 across gamma. K=3 itself has NO genuine PR FP, only a non-smooth plateau.",
+    "best_ferr_K3": 1.2e-4
+  },
+  "test_A_homotopy": {"status": "pending", "trajectory": []},
+  "test_B_newton": {"status": "pending", "seeds": []},
+  "verdict": "pending"
+}
