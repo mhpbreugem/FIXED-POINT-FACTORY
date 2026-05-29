@@ -1,0 +1,37 @@
+{
+  "config": {
+    "tau": 2.0,
+    "gamma": 0.1,
+    "W": 1.0,
+    "G_inner": 7,
+    "pad": 2,
+    "UMAX": 4.0,
+    "prec_bits": 461,
+    "du": 1.3333333333333333
+  },
+  "operator": "strict h=0 marching-squares co-area, NO kernel/bandwidth",
+  "lowest_Finf": 0.9952803774328729,
+  "lowest_Finf_str": "0.99528037743287290000",
+  "reached_1e_100": false,
+  "nail_trajectory": [
+    0.9952803774328729,
+    0.9952803774328729
+  ],
+  "deficit_1_minus_R2": 0.2918684183117077,
+  "walltime_s": 1250.3,
+  "validation": {
+    "known_surface_max_relerr": 0.029691952130395428,
+    "continuity_strict_jump_dp02": 0.33417972803930673,
+    "continuity_strict_jump_dp01": 0.18668622255684242,
+    "continuity_naive_jump_dp02": 0.39950442118773405,
+    "continuity_naive_jump_dp01": 0.39950442118773405,
+    "prec_bits": 461,
+    "grid": {
+      "G_inner": 81,
+      "pad": 0,
+      "UMAX": 6.0,
+      "du": 0.15
+    },
+    "walltime_s": 1.8
+  }
+}
