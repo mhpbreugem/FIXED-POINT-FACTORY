@@ -1,0 +1,32 @@
+{
+ "nk_traj": [
+  0.002594324,
+  0.009151239,
+  0.008071257,
+  0.007982759,
+  0.003305751,
+  0.003305806,
+  0.003302693,
+  0.003296076,
+  0.003232265,
+  0.003231884,
+  0.003231515,
+  0.003226744,
+  0.00322113,
+  0.003215489,
+  0.003210781,
+  0.003210537,
+  0.003205622,
+  0.003205428,
+  0.003203454,
+  0.003201821,
+  0.003199956,
+  0.003198272,
+  0.003196892
+ ],
+ "nk_status": "stalled_killed_at_plateau",
+ "F_start": 0.002594445,
+ "F_nk": 0.002594324,
+ "F_nk_best_seen": 0.002594324,
+ "note": "matrix-free LGMRES newton_krylov from warm start: bounced to ~9e-3 then settled at ~3.2e-3, descending only ~1.7e-6/iter (essentially stalled on the non-smooth plateau, never approaching a root). Killed at it=22 to free cores for the decisive accurate-Jacobian Newton."
+}
