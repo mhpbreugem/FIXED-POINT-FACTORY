@@ -1,3 +1,10 @@
 === K3 CO-AREA (gamma,tau) DEFICIT SWEEP  C=0.45 G=17 ===
 date 2026-05-29  GAMMAS=[0.1, 0.25, 0.5, 1.0, 2.0, 4.0] TAUS=[0.5, 1.0, 2.0, 4.0]  bar=1e-08
 g= 0.10 t= 0.5 G=17 h=0.3182 | ||F||=5.99e-14 it=3 conv=True nail=True | deficit=0.15547 d_FR=0.2002 slopeT=0.2859 beta=(0.143,0.143,0.143)  [5s tot 5s]
+[git] pushed: first row (g=0.1,t=0.5) nailed
+g= 0.10 t= 1.0 G=17 h=0.3182 | ||F||=6.69e-15 it=4 conv=True nail=True | deficit=0.20336 d_FR=0.2605 slopeT=0.2177 beta=(0.218,0.218,0.218)  [6s tot 12s]
+g= 0.10 t= 2.0 G=17 h=0.3182 | ||F||=5.50e-11 it=3 conv=True nail=True | deficit=0.28134 d_FR=0.3015 slopeT=0.1783 beta=(0.357,0.357,0.357)  [2s tot 15s]
+g= 0.10 t= 4.0 G=17 h=0.3182 | ||F||=1.14e-11 it=3 conv=True nail=True | deficit=0.35701 d_FR=0.3268 slopeT=0.1534 beta=(0.614,0.614,0.614)  [3s tot 18s]
+g= 0.25 t= 0.5 G=17 h=0.3182 | ||F||=2.51e-12 it=3 conv=True nail=True | deficit=0.08192 d_FR=0.1934 slopeT=0.3013 beta=(0.151,0.151,0.151)  [3s tot 20s]
+g= 0.25 t= 1.0 G=17 h=0.3182 | ||F||=6.53e-11 it=3 conv=True nail=True | deficit=0.16293 d_FR=0.2513 slopeT=0.2355 beta=(0.235,0.235,0.235)  [2s tot 23s]
+g= 0.25 t= 2.0 G=17 h=0.3182 | ||F||=1.63e-12 it=4 conv=True nail=True | deficit=0.25723 d_FR=0.2935 slopeT=0.1891 beta=(0.378,0.378,0.378)  [4s tot 27s]

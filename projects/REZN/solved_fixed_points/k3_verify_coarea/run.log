@@ -1,0 +1,4 @@
+
+=== TEST1 three-way verification  tau=2.0 gamma=0.1 ===
+date 2026-05-29  G_LIST=[9, 13, 17, 21]  h=C*du^0.5 C=0.45
+G=  9 du=1.000 h=0.450 | (a)def=0.29120 F=7.2e-16 conv=True | (b)def=0.00355 F=0.0417 | (c)def=0.24582 F=5.9e-03 conv=False || |a-c|=6.48e-01 |a-b|=6.16e-01 bias_b=0.2877 gap_c=0.0454 (73s)
