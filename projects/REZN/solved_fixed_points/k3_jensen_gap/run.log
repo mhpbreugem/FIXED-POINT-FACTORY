@@ -1,0 +1,9 @@
+=== TEST A : CRRA clearing Jensen expansion === Fri May 29 08:57:32 2026
+  gamma=0.1 : corr(self)=-0.00451 rms_self=2.16e+00 max_self=1.16e+01 mean|gap|=0.2969 sign_match(disp>.05)=0.5809
+  gamma=0.3 : corr(self)=0.23554 rms_self=6.31e-01 max_self=3.73e+00 mean|gap|=0.2292 sign_match(disp>.05)=0.6986
+  gamma=1.0 : corr(self)=0.83136 rms_self=9.62e-02 max_self=7.33e-01 mean|gap|=0.1101 sign_match(disp>.05)=0.8894
+  gamma=3.0 : corr(self)=0.98641 rms_self=1.10e-02 max_self=8.68e-02 mean|gap|=0.0447 sign_match(disp>.05)=0.9684
+  P3: log-log slope mean|gap| vs gamma = -0.5625 (expect ~ -1)
+  P4: corr(|gap|, Var(m)) at gamma=1 = 0.4797 (expect >0)
+  wrote testA_scatter.png and testA_report.json
+=== TEST A done ===
