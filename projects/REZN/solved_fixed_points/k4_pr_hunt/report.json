@@ -27,13 +27,14 @@
   "best_ferr_K3": 0.00012
  },
  "test_A_homotopy": {
-  "status": "tau4=1.0 done",
+  "status": "done",
   "tau4_path_done": [
    0.05,
    0.1,
    0.25,
    0.5,
-   1.0
+   1.0,
+   2.0
   ],
   "trajectory": [
    {
@@ -75,13 +76,26 @@
      "deficit": 0.0006648957514491238,
      "d_fr": 0.19352474542717435
     }
+   },
+   {
+    "tau4": 2.0,
+    "tracked": {
+     "Finf": 0.01642545098195841,
+     "deficit": 0.0009871552620110968,
+     "d_fr": 0.17757987323236868
+    }
    }
   ],
-  "best_pr_global": null
+  "best_pr_global": {
+   "tau4": 2.0,
+   "Finf": 0.067802856887338,
+   "deficit": 0.06424836081135643,
+   "d_fr": 0.18284571520757814
+  }
  },
  "test_B_newton": {
   "status": "pending",
   "seeds": []
  },
- "verdict": "pending"
+ "verdict": "TEST A: PR deficit collapses to ~0 by tau4*=0.05 (merges into FR) -> NO genuine K=4 PR FP."
 }

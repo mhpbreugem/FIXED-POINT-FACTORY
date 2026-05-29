@@ -137,3 +137,33 @@ Preliminary signal (all tau4=0.05 seeds): damped Picard drives every PR-region s
 [04:37:32]     [Picard w=0.1 tau4=2.0] it= 40 Finf=9.572e-02 1-R2=0.0017
 [04:37:46]     [Picard w=0.1 tau4=2.0] it= 80 Finf=8.480e-02 1-R2=0.0007
 [04:37:59]     [Picard w=0.1 tau4=2.0] it=120 Finf=3.899e-02 1-R2=0.0008
+[04:40:11]       jac col 0/1485 t=0s
+[04:41:53]       jac col 300/1485 t=103s
+[04:43:36]       jac col 600/1485 t=206s
+[04:45:18]       jac col 900/1485 t=308s
+[04:47:07]       jac col 1200/1485 t=416s
+[04:48:59]     [Newton tau4=2.0] it=1 Finf=1.647e-02 1-R2=0.0010 alpha=0.000122
+[04:49:05]     [Newton tau4=2.0] it=2 Finf=1.647e-02 1-R2=0.0010 alpha=6.1e-05
+[04:49:14]     [Newton tau4=2.0] it=3 Finf=1.647e-02 1-R2=0.0010 alpha=2.98e-08
+[04:49:15]       jac col 0/1485 t=0s
+[04:50:59]       jac col 300/1485 t=105s
+[04:52:36]       jac col 600/1485 t=202s
+[04:54:16]       jac col 900/1485 t=301s
+[04:55:58]       jac col 1200/1485 t=403s
+[04:57:34]     [Newton tau4=2.0] it=4 Finf=1.643e-02 1-R2=0.0010 alpha=0.00391
+[04:57:43]     [Newton tau4=2.0] it=5 Finf=1.643e-02 1-R2=0.0010 alpha=2.98e-08
+[04:57:44]       jac col 0/1485 t=0s
+[04:59:22]       jac col 300/1485 t=98s
+[05:00:59]       jac col 600/1485 t=195s
+[05:02:38]       jac col 900/1485 t=295s
+[05:04:17]       jac col 1200/1485 t=394s
+[05:05:57]     [Newton tau4=2.0] it=6 Finf=1.643e-02 1-R2=0.0010 alpha=0.000244
+[05:05:57]   tau4=2.0: tracked Finf=1.643e-02 deficit=0.0010 d_fr=0.1776  (1768s)
+[05:05:57] TEST A trajectory (tau4, deficit, Finf, d_fr):
+[05:05:57]     tau4=0.05  deficit=0.0020  Finf=3.938e-03  d_fr=0.2285
+[05:05:57]     tau4=0.10  deficit=0.0017  Finf=8.564e-04  d_fr=0.2298
+[05:05:57]     tau4=0.25  deficit=0.0010  Finf=3.969e-03  d_fr=0.2139
+[05:05:57]     tau4=0.50  deficit=0.0007  Finf=2.330e-02  d_fr=0.1680
+[05:05:57]     tau4=1.00  deficit=0.0007  Finf=1.020e-02  d_fr=0.1935
+[05:05:57]     tau4=2.00  deficit=0.0010  Finf=1.643e-02  d_fr=0.1776
+[05:05:57] VERDICT (TEST A): TEST A: PR deficit collapses to ~0 by tau4*=0.05 (merges into FR) -> NO genuine K=4 PR FP.
