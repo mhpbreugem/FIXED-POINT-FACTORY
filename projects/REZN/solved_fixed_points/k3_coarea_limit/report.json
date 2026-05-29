@@ -111,6 +111,26 @@
       "strict_d_FR": 0.09887617521880519,
       "strict_b1": 1.8274504202988915,
       "walltime_s": 46.9
+    },
+    {
+      "G_inner": 31,
+      "du": 0.26666666666666666,
+      "h": 0.232379000772445,
+      "h_over_du": 0.8714212528966687,
+      "Finf": 0.008521944977944229,
+      "iters": 300,
+      "converged": false,
+      "deficit": 0.262566643936748,
+      "d_FR": 0.291876609102505,
+      "b1": 0.405879222639595,
+      "b2": 0.40587931365934626,
+      "b3": 0.4058779477042375,
+      "slope_T": 0.20293941400052967,
+      "strict_Finf": 0.022540017525856326,
+      "strict_deficit": 0.03322201693869512,
+      "strict_d_FR": 0.10173535021703975,
+      "strict_b1": 1.8099601778906058,
+      "walltime_s": 5201.7
     }
   ],
   "richardson": {
@@ -166,50 +186,5 @@
       0.28460498941515416,
       0.25980762113533157
     ]
-  },
-  "richardson_refined": {
-    "method": "linear-in-h fit on 3 finest nailed grids (G=17,21,25)",
-    "deficit_h0": 0.25546835757702485,
-    "d_FR_h0": 0.28153778094007864,
-    "slope_T_h0": 0.2515804962890029,
-    "b1_h0": 0.5031609925783188,
-    "deficit_seq": [
-      0.2912,
-      0.28383,
-      0.28134,
-      0.27928,
-      0.27648
-    ],
-    "d_FR_seq": [
-      0.3086,
-      0.30389,
-      0.30152,
-      0.29971,
-      0.2978
-    ],
-    "slope_T_seq": [
-      0.1612,
-      0.17051,
-      0.17833,
-      0.1853,
-      0.1919
-    ],
-    "h_seq": [
-      0.45,
-      0.36742,
-      0.3182,
-      0.2846,
-      0.25981
-    ],
-    "note": "deficit & d_FR monotone -> positive grid-independent limit; slope_T<<tau=2 so far from full revelation; b1/slope_T still drifting (slower convergence) but bounded well below FR."
-  },
-  "verdict": {
-    "outcome": "(i) genuine deterministic smooth PR",
-    "nailable_along_path": true,
-    "nailed_Finf_range": "6e-15 .. 3e-11 (all <=1e-9 except none; max 3.2e-11 at G=21, still ~1e-11)",
-    "deficit_limit_positive": true,
-    "collapses_to_FR": false,
-    "strict_scan_control": "NEVER nails (||F|| floors 0.022-0.037, grid-refinement does NOT reduce it); its deficit RISES with G (0.009->0.031) i.e. moves opposite to the co-area limit -> the strict-scan floor is a discretization artifact, a DIFFERENT object from the co-area PR.",
-    "conclusion": "The earlier \"PR needs noise\" conclusion was a numerical artifact of the inconsistent hard contour-scan. The consistent Gaussian co-area scheme nails the deterministic h=0 PR as a genuine smooth fixed point with a positive, grid-independent partial-revelation deficit."
   }
 }
