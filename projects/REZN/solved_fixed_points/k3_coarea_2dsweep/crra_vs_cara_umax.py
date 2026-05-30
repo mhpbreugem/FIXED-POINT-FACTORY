@@ -19,15 +19,23 @@ KCARA = os.path.join(os.path.dirname(HERE), 'k3_cara', 'cara_umax_diag.json')
 
 cara = json.load(open(KCARA))['A_fixedG']
 crra = json.load(open(os.path.join(HERE, 'crra_umax_diag.json')))['rows']
+try:
+    crra17 = json.load(open(os.path.join(HERE, 'crra_umax_diag_G17.json')))['rows']
+except FileNotFoundError:
+    crra17 = []
 
 uc = np.array([r['umax'] for r in cara], float); dc = np.array([r['deficit'] for r in cara], float)
 ur = np.array([r['umax'] for r in crra], float); dr = np.array([r['deficit'] for r in crra], float)
+u17 = np.array([r['umax'] for r in crra17], float) if crra17 else np.array([])
+d17 = np.array([r['deficit'] for r in crra17], float) if crra17 else np.array([])
 
 fig, ax = plt.subplots(1, 2, figsize=(14, 5.2), dpi=140)
 
 # (left) shared linear scale: CRRA stays high, CARA hugs zero
-ax[0].plot(ur, dr, 's-', color='C2', lw=2.5, ms=10, label=f'CRRA  γ=0.1, τ=2, G=11  (Jensen gap, intrinsic)')
-ax[0].plot(uc, dc, 'o-', color='C3', lw=2.5, ms=10, label=f'CARA  τ=2, G=9  (Hellwig: FR, deficit→0)')
+if u17.size:
+    ax[0].plot(u17, d17, 'D-', color='C0', lw=2.5, ms=10, label='CRRA  γ=0.1, τ=2, G=17 (headline)')
+ax[0].plot(ur, dr, 's-', color='C2', lw=2.5, ms=10, label='CRRA  γ=0.1, τ=2, G=11')
+ax[0].plot(uc, dc, 'o-', color='C3', lw=2.5, ms=10, label='CARA  τ=2, G=9  (Hellwig: FR, deficit→0)')
 ax[0].axhline(0, color='k', ls=':', alpha=0.5)
 ax[0].set_xlabel('box half-width UMAX'); ax[0].set_ylabel('revelation deficit 1−R²')
 ax[0].set_title('CRRA gap is intrinsic; CARA "gap" was a box-clip artifact')
@@ -38,6 +46,8 @@ for u, d in zip(ur, dr):
     ax[0].annotate(f'{d:.3f}', (u, d), textcoords='offset points', xytext=(6, 8), fontsize=8, color='C2')
 
 # (right) log y axis so the CARA collapse is visible
+if u17.size:
+    ax[1].semilogy(u17, d17, 'D-', color='C0', lw=2.5, ms=10, label='CRRA  γ=0.1, τ=2, G=17')
 ax[1].semilogy(ur, dr, 's-', color='C2', lw=2.5, ms=10, label='CRRA  γ=0.1, τ=2, G=11')
 ax[1].semilogy(uc, np.maximum(dc, 1e-15), 'o-', color='C3', lw=2.5, ms=10, label='CARA  τ=2, G=9')
 ax[1].set_xlabel('UMAX'); ax[1].set_ylabel('deficit  (log)')
