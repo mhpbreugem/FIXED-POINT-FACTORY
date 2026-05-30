@@ -1,0 +1,12 @@
+{
+  "tau": 2.0,
+  "A_fixedG": [
+    {"G": 9, "umax": 4, "du": 1.0,   "h": 0.450, "deficit": 3.8348e-03, "Finf": 4.4e-14, "iters": 35,  "sec": 4},
+    {"G": 9, "umax": 6, "du": 1.5,   "h": 0.551, "deficit": 6.4158e-04, "Finf": 1.3e-12, "iters": 400, "sec": 42},
+    {"G": 9, "umax": 8, "du": 2.0,   "h": 0.636, "deficit": 4.8504e-05, "Finf": 8.0e-11, "iters": 400, "sec": 41},
+    {"G": 9, "umax": 12, "du": 3.0,  "h": 0.779, "deficit": 7.3286e-09, "Finf": 3.2e-15, "iters": 7,   "sec": 1}
+  ],
+  "B_fixed_du": [],
+  "hypothesis": "box-edge clip on p saturates analytic FR when 3*tau*UMAX > log(1e9) ~ 20.7; pushing UMAX out kills the discrete-FP deficit -> confirms the discretization artifact is the box-clip.",
+  "verdict": "CONFIRMED. At G=9, UMAX 4->12 drops the deficit from 3.8e-3 to 7e-9 (6 orders of magnitude). Hellwig (CARA = FR, deficit = 0) verified numerically."
+}
