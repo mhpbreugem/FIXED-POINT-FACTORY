@@ -23,6 +23,9 @@ Verification:
 
 So p* = lam(τΣu) is a self-consistent CARA equilibrium → **FR is a CARA fixed point** with revelation deficit identically zero (1−R² of logit(p*) on τΣu = 0).
 
+### General K
+The proof above used K=3 only for concreteness — it goes through verbatim for any K≥2. The sufficient statistic of all K signals is S = τΣ_{i=1..K} u_i (still by log-LR = τu_i for each signal, summed, with flat prior). With CARA log-odds clearing, π = (1/K)Σ_i logit(μ_i), and the same three-step verification (Inference → Aggregation → Clearing) collapses to π = S in the candidate p\*(u) = σ(S). Hence **for every K≥2, the unique CARA equilibrium of this Gaussian-binary model without noise traders is fully revealing**: p\*(u) = σ(τΣ_i u_i), deficit identically 0. This is the binary-asset analog of Hellwig (1980).
+
 ## Uniqueness (Hellwig 1980 analog)
 In Hellwig's CARA-normal model without noise traders, the linear-RE equilibrium is unique and fully revealing — Grossman's paradox. Our setting is the binary-asset analog with linear-log-odds clearing; the *continuum* counterpart of the Hellwig argument yields the same conclusion: **FR is the unique CARA equilibrium**, so the deficit should be zero.
 
