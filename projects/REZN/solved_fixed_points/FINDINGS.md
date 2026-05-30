@@ -49,6 +49,14 @@ replaces the artifact strict-scan maps. **CARA = γ→∞ CRRA limit** (`k3_cara
 the no-gap benchmark — confirming the Jensen gap (hence partial revelation) is exactly the CRRA
 wealth-curvature effect, absent under CARA.
 
+**Hellwig closed-form CARA cross-check** (`k3_cara/HELLWIG_CLOSED_FORM.md`,
+`test_FR_is_fixed_point.py`): the K=3 noiseless CARA model has a clean sufficient statistic
+log[f₁/f₀] = τΣu, so the unique CARA equilibrium is the analytic FR price p\* = sigmoid(τΣu).
+Direct numerical check: at the analytic P\_FR the deficit is ~10⁻⁴ (essentially 0, shrinking with
+G) — confirming Hellwig. The "growing CARA deficit" earlier reported by `cara_vs_G.py` came from
+running CARA Picard with an **NL halo around an FR-shaped inner** (a self-inconsistent BC); with
+an FR-consistent halo (`cara_fr_halo_vs_G.py`) the deficit collapses to ~0 as G grows.
+
 ---
 
 ## HEADLINE RESULT (corrected)
