@@ -28,6 +28,15 @@
       "h": 0.3181980515339464,
       "du": 0.5,
       "sec": 324.0
+    },
+    {
+      "G": 21,
+      "deficit": 0.041954090027980825,
+      "Finf": 9.540697898380301e-09,
+      "iters": 400,
+      "h": 0.28460498941515416,
+      "du": 0.4,
+      "sec": 639.4
     }
   ],
   "theory": "Hellwig: CARA without noise traders -> FR (deficit=0) in continuum."
