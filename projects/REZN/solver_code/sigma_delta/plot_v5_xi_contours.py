@@ -64,6 +64,7 @@ def make_xi_grid(Pdict, gammas_list, xi_inner, u_phys, S_phys, d_phys, xi_u1_tar
         ax.contour(xi_inner, xi_inner, FR_p, levels=[0.5], colors='lime', linewidths=1.2, linestyles='--')
         ax.set_title(f'γ = {g:g}  ({title_suffix}, ξ_u₁={xi_u_actual:+.2f} ⇒ u₁≈{u_actual:.2f})', fontsize=10)
         ax.set_xlabel('ξ_Σ (Σ̂)'); ax.set_ylabel('ξ_δ (δ̂)')
+        ax.set_xlim(-1, 1); ax.set_ylim(-1, 1)
         ax.set_aspect('equal')
         last_cs = cs
     if last_cs is not None:
@@ -102,6 +103,7 @@ def make_xi_logit_grid(Pdict, gammas_list, xi_inner, u_phys, S_phys, d_phys, xi_
         ax.contour(xi_inner, xi_inner, lp_FR, levels=[-4, -2, 0, 2, 4], colors='lime', linewidths=0.8, linestyles='--', alpha=0.85)
         ax.set_title(f'γ = {g:g}  (ξ_u₁={xi_u_actual:+.2f})', fontsize=10)
         ax.set_xlabel('ξ_Σ'); ax.set_ylabel('ξ_δ')
+        ax.set_xlim(-1, 1); ax.set_ylim(-1, 1)
         ax.set_aspect('equal')
         last_cs = cs
     if last_cs is not None:
