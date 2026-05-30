@@ -1,0 +1,3 @@
+CARA deficit vs G (linear log-odds clearing, tau=2.0). Theory: deficit -> 0 as G -> inf.
+  G= 9: deficit=3.8348e-03  ||F||=7.79e-14  iters=33  h=0.4500  (3.5s)
+  G=13: deficit=1.1509e-02  ||F||=7.99e-14  iters=62  h=0.3674  (21.7s)
