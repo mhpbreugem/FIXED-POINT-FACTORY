@@ -579,8 +579,20 @@ aversion). CARA is exactly the $\gamma\to\infty$ limit of CRRA: demand becomes
 $(\tfrac12-p)\delta_i^2$ term. Plugging linear demand into market clearing
 gives $\pi=\bar m_W$ -- the price is exactly the average belief, the deficit
 term in~\eqref{eq:jensen} is identically zero, and the equilibrium is fully
-revealing. We confirmed this numerically: running the same nailing machinery
-on a CARA operator gives deficit $\approx0$ across the whole precision range.
+revealing. A closed--form check confirms this in our specific model: under
+the Gaussian--signal/binary--value setup, $\log[f_1(u)/f_0(u)]=\tau u$, so the
+sufficient statistic of all signals is $\tau\sum_i u_i$, and the unique CARA
+equilibrium price is the analytic fully--revealing surface
+$p^\star(u)=\sigma(\tau\sum_i u_i)$ with revelation deficit identically zero
+(a Hellwig 1980 analog without noise traders; see
+\texttt{k3\_cara/HELLWIG\_CLOSED\_FORM.md}). Plugging the analytic $p^\star$
+into the numerical CARA operator gives a deficit of $\sim10^{-4}$ shrinking
+with grid resolution -- consistent with full revelation up to the kernel--band
+truncation/clip artifact. The same nailing machinery applied to the CARA
+operator gives a deficit that is small at every resolution we tested and is
+\emph{not} a Jensen gap (CARA has no curvature term by construction): it is the
+discrete operator's near--FR Picard attractor, identical under either the
+no--learning or the FR--consistent halo.
 
 We then verified that CRRA really does converge to CARA as
 $\gamma\to\infty$ (Fig.~\ref{fig:cara}). Holding $\tau$ fixed and raising
