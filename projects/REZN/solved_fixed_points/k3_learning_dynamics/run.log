@@ -1,0 +1,9 @@
+Applying Phi twice to NL...
+Nailing the fixed point with Newton-Krylov...
+  nailed: ||F||=3.37e-12 conv=True
+wrote picard_iterations_contour.png
+Building Jacobian-vector product and computing spectral radius (Arnoldi)...
+  spectral radius rho(Phi') = 0.3690  (13s)
+  top eigenvalues |λ|: ['0.3690', '0.3479', '0.3334', '0.3334', '0.3212', '0.3212', '0.3212', '0.3212']
+wrote picard_dynamics.json
+VERDICT: rho=0.369 < 1 -> the fixed point is a Picard ATTRACTOR: undamped Picard will converge to it from a neighborhood.
