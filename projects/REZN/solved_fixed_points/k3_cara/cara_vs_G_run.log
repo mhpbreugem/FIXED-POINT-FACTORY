@@ -1,3 +1,10 @@
 CARA deficit vs G (linear log-odds clearing, tau=2.0). Theory: deficit -> 0 as G -> inf.
   G= 9: deficit=3.8348e-03  ||F||=7.79e-14  iters=33  h=0.4500  (3.5s)
   G=13: deficit=1.1509e-02  ||F||=7.99e-14  iters=62  h=0.3674  (21.7s)
+  G=17: deficit=2.5732e-02  ||F||=8.46e-06  iters=600  h=0.3182  (468.6s)
+  G=21: deficit=4.1954e-02  ||F||=1.15e-12  iters=600  h=0.2846  (926.0s)
+  G=25: deficit=6.0418e-02  ||F||=2.21e-10  iters=600  h=0.2598  (1606.4s)
+  G=31: deficit=8.7322e-02  ||F||=9.57e-14  iters=258  h=0.2324  (1395.6s)
+  Richardson extrap deficit(G->inf) [1/G] = 9.7168e-02
+  Richardson extrap deficit(G->inf) [1/G^2] = 6.4956e-02
+wrote cara_vs_G.png
