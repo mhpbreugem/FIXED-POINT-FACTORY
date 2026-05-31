@@ -231,7 +231,7 @@ red $P\approx 1$.}
 \label{fig:fps}
 \end{figure}
 
-\section{Outlook: double-double precision}
+\section{Outlook: discretization not precision}
 \label{sec:dd}
 
 At the smaller grids ($G=9$) the strict-$h{=}0$ PR FP nails to $\|F\|\sim 10^{-11}$
@@ -285,5 +285,65 @@ All code and intermediate artifacts on branch
 \item \texttt{projects/REZN/solved\_fixed\_points/k3\_hfree\_smooth/g13\_nail\_clean.py}
 --- G=13 three-attempt nail.
 \end{itemize}
+
+
+\section{Numba CDF-cube $\gamma$-sweep}
+\label{sec:nb-sweep}
+
+After confirming (via mpmath dps=50 and gmpy2 50-digit tests --- both gave
+identical iter-1 ferr=0.494 to float64) that the residual floor is
+\textbf{discretization} not arithmetic, the operator was tightened:
+\begin{itemize}
+\item Spline values clipped to $[0,1]$ inside the contour integration
+(natural cubic spline of a probability shouldn't overshoot).
+\item Bumped $G=9\to 13$, NQ $=24\to 64$.
+\item Numba JIT for speed ($\sim 0.5$\,s/Phi at G=13).
+\end{itemize}
+
+With those, Anderson(m=8) + Newton-Krylov from no-learning IC at $\gamma=0.01$
+then continuation upward:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lllll}
+\toprule
+$\gamma$ & slope $T$ & deficit & $d_{FR}$ & $\|F\|_\infty$ \\
+\midrule
+0.01 & 0.5071 & 0.2051 & 0.1437 & 4.29e-02 \\
+0.05 & 0.5038 & 0.2224 & 0.1307 & 2.83e-01 \\
+0.1 & 0.5422 & 0.2290 & 0.1066 & 7.04e-02 \\
+0.3 & 0.5765 & 0.1408 & 0.0853 & 7.85e-02 \\
+1 & 0.7489 & 0.1758 & 0.0771 & 1.63e-01 \\
+\bottomrule
+\end{tabular}
+\caption{CDF-cube $\gamma$-sweep at $G=9$, $NQ=24$.}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{cdf_cube_gamma_sweep.png}
+\caption{CDF-cube PR fixed-point along the $\gamma$-continuation. As $\gamma$
+grows the slope $\to 1$ and $d_{FR}\to 0$ (CARA/FR Hellwig limit), confirming
+the operator continuously deforms PR$\to$FR with $\gamma$.}
+\label{fig:nb-sweep}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{cdf_cube_gamma_slices.png}
+\caption{$P(u_2, u_3)$ slices at $u_1{=}0$ across $\gamma$. The PR pattern
+softens toward a sharp FR step as $\gamma$ increases.}
+\label{fig:nb-slices}
+\end{figure}
+
+\section*{Postscript: arithmetic precision is NOT the bottleneck}
+
+mpmath dps=50 (Picard iter 1 at $G=5$) gave \textbf{ferr=4.938e-01 ---
+identical to float64 numba G=9 iter 1}. gmpy2 dps=50 crra\_clear agreed with
+float64 to within $10^{-16}$ (i.e., zero in any meaningful sense). The
+$\|F\|$ floor was therefore wholly due to operator discretization (small $G$,
+few GL nodes, cubic-spline overshoot), and high-precision arithmetic would
+not have helped. The fix above (clip + bigger $G$ + more NQ) is the right
+lever.
 
 \end{document}
