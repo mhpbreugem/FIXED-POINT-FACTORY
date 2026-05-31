@@ -117,10 +117,19 @@ def crra_clear(mu0, mu1, mu2, gamma, steps=120):
     me1 = max(min(mu1, 1-EPS_PRICE), EPS_PRICE)
     me2 = max(min(mu2, 1-EPS_PRICE), EPS_PRICE)
     lm0 = math.log(me0/(1-me0)); lm1 = math.log(me1/(1-me1)); lm2 = math.log(me2/(1-me2))
+    def safe_exp(x):
+        if x > 700: return 1e300
+        if x < -700: return 0.0
+        return math.exp(x)
     for _ in range(steps):
         m = 0.5*(a+b); lp = math.log(m/(1-m))
-        R0 = math.exp((lm0-lp)/gamma); R1 = math.exp((lm1-lp)/gamma); R2 = math.exp((lm2-lp)/gamma)
-        e = (R0-1)/((1-m)+R0*m) + (R1-1)/((1-m)+R1*m) + (R2-1)/((1-m)+R2*m)
+        R0 = safe_exp((lm0-lp)/gamma); R1 = safe_exp((lm1-lp)/gamma); R2 = safe_exp((lm2-lp)/gamma)
+        # demand_k = (R_k-1)/((1-m)+R_k*m); when R_k overflowed (=1e300), demand ≈ 1/m (positive)
+        def demand_k(R, m):
+            if R > 1e290:
+                return 1.0/m if m > 0 else 1e290
+            return (R-1)/((1-m) + R*m)
+        e = demand_k(R0,m) + demand_k(R1,m) + demand_k(R2,m)
         if e > 0: a = m
         else: b = m
     return 0.5*(a+b)
