@@ -1,0 +1,18 @@
+{
+  "tau": 2.0,
+  "rows": [
+    {
+      "G": 5,
+      "epsb": 0.1,
+      "dxi": 0.45,
+      "u_max": 1.4722194895832204,
+      "deficit": 0.016882106642522716,
+      "d_FR": 0.014554356068241568,
+      "slope": 0.9544283867610197,
+      "Finf": 0.0764073654237577,
+      "iters": 200,
+      "sec": 298.3
+    }
+  ],
+  "theory": "PROPER xi-grid co-area: CARA -> FR with deficit ~ 0 (Hellwig)."
+}
