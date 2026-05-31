@@ -89,6 +89,9 @@ def spline_eval(y, M, h, z0, z):
     A = (zR - z)/h; B = (z - zL)/h
     val = A*y[i] + B*y[i+1] + ((A**3-A)*M[i] + (B**3-B)*M[i+1])*(h*h)/6.0
     der = (y[i+1]-y[i])/h - (3*A*A-1)*h*M[i]/6.0 + (3*B*B-1)*h*M[i+1]/6.0
+    # Clip overshoot: spline values for P should stay in [0, 1] (probabilities)
+    if val < 0.0: val = 0.0
+    elif val > 1.0: val = 1.0
     return val, der
 
 @njit(cache=True)

@@ -23,8 +23,8 @@ from cdf_cube_numba import (phi_cdf_numba, build_zeta_grid, gauss_legendre,
                              crra_clear_nb, metrics, TAU,
                              TAB_Z, TAB_U, TAB_DUDZ)
 
-G = 9
-NQ = 24
+G = 13
+NQ = 64
 GAMMAS = [0.01, 0.05, 0.1, 0.3, 1.0, 3.0, 10.0, 100.0]
 TOL = 1e-7
 NK_MAXIT = 30
@@ -142,7 +142,7 @@ for gv in GAMMAS:
        f'deficit={m["deficit"]:.4f} slope={m["slope_T"]:.4f} d_FR={m["d_FR"]:.4f} '
        f'(cum {dt/60:.1f}m)')
 
-    np.save(os.path.join(HERE, f'cdf_cube_NB_g{gv:g}.npy'), P_fp)
+    np.save(os.path.join(HERE, f'cdf_cube_NB_G{G}_NQ{NQ}_g{gv:g}.npy'), P_fp)
     rec = dict(gamma=gv, conv=conv, Finf=Finf, anderson_iters=len(hist_a),
                 anderson_best_ferr=best_a['ferr'], nk_iters=nk_iters, dt=dt,
                 **m)
@@ -153,10 +153,10 @@ for gv in GAMMAS:
 
     # auto push
     cmd = (f'cd /home/user/FIXED-POINT-FACTORY && '
-           f'git add projects/REZN/solver_code/sigma_delta/cdf_cube_NB_g{gv:g}.npy '
+           f'git add projects/REZN/solver_code/sigma_delta/cdf_cube_NB_G{G}_NQ{NQ}_g{gv:g}.npy '
            f'projects/REZN/solver_code/sigma_delta/cdf_cube_NB_sweep.json '
            f'projects/REZN/solver_code/sigma_delta/cdf_cube_NB_sweep.log && '
-           f'git commit -m "CDF-cube (numba) γ={gv}: ||F||={Finf:.2e} slope={m["slope_T"]:.3f} '
+           f'git commit -m "CDF-cube (numba G={G} NQ={NQ}) γ={gv}: ||F||={Finf:.2e} slope={m["slope_T"]:.3f} '
            f'deficit={m["deficit"]:.3f} d_FR={m["d_FR"]:.3f}" 2>&1 | tail -2 && '
            f'git push -u origin claude/study-fixed-point-economics-y12PB 2>&1 | tail -2')
     os.system(cmd)
