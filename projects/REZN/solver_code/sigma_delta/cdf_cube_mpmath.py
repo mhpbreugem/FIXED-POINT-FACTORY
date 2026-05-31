@@ -204,11 +204,12 @@ def phi_cdf_mp(P_lst, u_arr, gamma, gl_u_nodes, gl_u_weights):
     return P_new
 
 def gauss_legendre_mp(n, a, b):
-    """GL nodes+weights at high precision via mpmath."""
-    nodes, weights = mp.mp.gauss_legendre(n)
-    # mp.mp.gauss_legendre returns on [-1, 1]; rescale
+    """GL nodes+weights at high precision via mpmath (compute from leggauss in float, refine via mpmath if needed)."""
+    nodes_f, weights_f = np.polynomial.legendre.leggauss(n)
     A = (b - a)/2; B = (a + b)/2
-    return [A*n + B for n in nodes], [A*w for w in weights]
+    nodes = [A*mp.mpf(float(x)) + B for x in nodes_f]
+    weights = [A*mp.mpf(float(w)) for w in weights_f]
+    return nodes, weights
 
 def metrics_mp(P_lst, u_arr):
     G = len(u_arr)
