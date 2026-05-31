@@ -104,7 +104,9 @@ def spline_eval_pair(y, M, h, u0, t):
 @njit(cache=True, fastmath=False)
 def spline_roots_fill(y, M, h, u0, p_target, sub, out_roots, out_ders):
     """Fill out_roots[0:cnt] and out_ders[0:cnt] with roots of spline=p_target.
-    Returns cnt. Max roots = out_roots.size."""
+    Returns cnt. Max roots = out_roots.size.
+    Dedups roots that land within 1e-9 of the previous one (avoids
+    double-counting roots at subinterval seams / knots)."""
     n = y.size
     nseg = (n-1)*sub
     cnt = 0
@@ -129,10 +131,13 @@ def spline_roots_fill(y, M, h, u0, p_target, sub, out_roots, out_ders):
                 if abs(tn - t) < 1e-13: break
                 t = tn
             _, der = spline_eval_pair(y, M, h, u0, t)
-            out_roots[cnt] = t
-            out_ders[cnt] = der
-            cnt += 1
-            if cnt >= max_roots: return cnt
+            if cnt > 0 and abs(t - out_roots[cnt-1]) < 1e-9:
+                pass  # duplicate root at subinterval seam; skip
+            else:
+                out_roots[cnt] = t
+                out_ders[cnt] = der
+                cnt += 1
+                if cnt >= max_roots: return cnt
         t_prev = t_cur; v_prev = v_cur
     return cnt
 
@@ -157,8 +162,10 @@ def evidence_agent1_v10(P, i_u, p_target, xi_arr, dxi, xi_gl, w_gl, nq, TOT_S_, 
     Ma_cache = np.empty((G, G))
     for kb in range(G):
         Ma_cache[kb] = natural_spline_M(P[i_u, :, kb], dxi)
-    out_roots = np.empty(4)
-    out_ders = np.empty(4)
+    # Max-roots = 32: G=13 knots × cubic-pieces × spline oscillation can exceed
+    # the previous limit of 4 near the PR FP, which biased A_v.
+    out_roots = np.empty(32)
+    out_ders = np.empty(32)
 
     # Pass A: fix xi_d at GL nodes, root-find in xi_S
     for q in range(nq):
@@ -230,7 +237,8 @@ def evidence_agent_oblique_v10(P, p_target, xi_arr, dxi, xi_gl, w_gl, nq,
     """Same GL-decoupled approach but slice extracted via tensor cubic Sigma-interp."""
     G = xi_arr.size; xi0 = xi_arr[0]
     A0 = 0.0; A1 = 0.0
-    out_roots = np.empty(4); out_ders = np.empty(4)
+    # Same bump as evidence_agent1_v10: 4 was too small near oscillating PR FP.
+    out_roots = np.empty(32); out_ders = np.empty(32)
 
     # Pass A: fix xi_d at GL nodes, root-find in xi_u
     for q in range(nq):
