@@ -1,7 +1,13 @@
-# FIXED-POINT-FACTORY — Extended Session Summary & Handoff
+# FIXED-POINT-FACTORY → MIZN — Extended Session Summary & Handoff
 
-> Purpose: a self-contained brain-dump so a **fresh chat in a fresh repo** can continue
-> the research with zero loss of context. Read this top-to-bottom before starting.
+> Purpose: a self-contained brain-dump so a **fresh chat in the new `MIZN` repo** can
+> continue the research with zero loss of context. Read this top-to-bottom before starting.
+>
+> **Companion docs (read in this order in the new MIZN repo):**
+> 1. `MIZN_STARTUP.md` — reading order + rules of engagement
+> 2. `HANDOFF_SUMMARY.md` (this file) — what the prior repo learned
+> 3. `MIZN_DESIGN.md` — the 5-step skeleton, file tree, build order
+> 4. `MIZN_EXEC_LOG_DESIGN.md` — per-run logging + LaTeX/PDF reports + version manifests
 
 ---
 
