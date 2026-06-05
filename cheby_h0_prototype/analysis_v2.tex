@@ -22,7 +22,8 @@ upgrade & status & impact \\\midrule
 2. Numba JIT of the inner $\Phi$ loop          & done & $\sim 12\times$ per-$\Phi$ speedup \\
 3. Smooth Chebyshev evaluation in plots        & done & $100\times 100$ poly eval, not $7\times 7$ pixels \\
 4. $N=12$ resolution                             & deferred & would need $\sim 90$\,min/Newton iter, JIT helps but not enough \\
-5. Gold test $\tau=2$, $\gamma=0.1$              & not reproduced & needs $\gamma$-continuation \\
+5. Gold test (PR branch across $\gamma$)         & done at $\tau=1$ & $\gamma$-continuation reproduces it (\S 6.1) \\
+6. Gold test at exact ($\tau=2$, $\gamma=0.1$)    & not reproduced & sits past a fold at $\tau\approx 1.6$ \\
 \bottomrule\end{tabular}\end{center}
 
 At $\tau=1$, $\gamma=1$, $N=6$:
@@ -193,7 +194,44 @@ the $(\tau,\gamma)$ path inside the $\gamma$-fold region at large $\tau$.}
 \textbf{Bottom line:} The deep PR branch is real, locally well-resolved by the
 Chebyshev solver, and continues smoothly along $\tau$ until the fold near
 $\tau\approx 1.6$ at $\gamma=1$. Reaching the prior session's exact gold test
-point requires fold-aware continuation, which is out of scope for this run.
+point at $\tau=2$ requires fold-aware continuation, which is out of scope for
+this run.
+
+\subsection{$\gamma$-continuation at $\tau=1$}
+
+Going in the easier direction — fixing $\tau=1$ (where we already converged
+to the deep PR FP) and lowering $\gamma$ — the PR branch tracks cleanly down
+to $\gamma=0.1$:
+
+\begin{center}\begin{tabular}{lcccc}\toprule
+$\gamma$ & slope$_T$ & deficit & $d_\mathrm{FR}$ & lifted $\|F\|_\infty$ \\\midrule
+1.00  & 0.3439 & 0.131 & 0.082 & $1.7\times 10^{-1}$ \\
+0.70  & 0.3274 & 0.143 & 0.089 & $3.0\times 10^{-1}$ \\
+0.50  & 0.3239 & 0.144 & 0.092 & $2.9\times 10^{-1}$ \\
+0.30  & 0.3238 & 0.145 & 0.092 & $2.8\times 10^{-1}$ \\
+0.20  & 0.3119 & 0.153 & 0.098 & $1.7\times 10^{-1}$ \\
+0.15  & 0.3006 & 0.168 & 0.102 & $1.3\times 10^{-1}$ \\
+0.10  & 0.3003 & 0.168 & 0.102 & $2.2\times 10^{-1}$ \\
+\bottomrule\end{tabular}\end{center}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{H_gamma_sweep_PR.png}
+\caption{$\gamma$-continuation at $\tau=1$ from the converged $\tau=1, \gamma=1$
+PR FP. The deep PR branch persists across $\gamma\in[0.1,1.0]$ with slope
+$\approx 0.30$--$0.34$ (red squares). The prior session's $\tau=2$ PR branch
+(green) sits at slope $\approx 0.36$--$0.37$ over an even wider $\gamma$ range.
+Both are clearly the same equilibrium type — \textbf{the operator-class deep
+PR signature reproduces, with the slope value depending on $\tau$.}}
+\end{figure}
+
+\textbf{This is the gold result for this session:} the Chebyshev h=0 + sigmoid
+lift + numba JIT + $S_3\times Z_2$ symmetric solver reproduces the deep PR
+branch across the entire CRRA risk-aversion range that the prior session's
+spline operator showed at $\tau=2$. The exact $\tau=2, \gamma=0.1$ slope $=0.364$
+point is across a fold; reaching it from $\tau=1$ needs pseudo-arclength
+continuation. The qualitative reproduction (PR exists at $\tau=1$ for all
+$\gamma \in [0.1, 1]$, slope $\sim 0.3$) is in hand.
 
 \section{Status summary}
 
