@@ -106,16 +106,24 @@ the equilibrium-type signature (slope $\approx 0.34$, deficit $\approx 0.13$--$0
 \end{figure}
 
 \paragraph{Why is the lifted residual norm \emph{larger} than the unlifted?}
-This is a subtlety. The unlifted residual measures
-$\|\Phi(P)-P\|_\infty$ over cube cells; the lifted one measures
-$\|\Phi_\textrm{lift}(\alpha,h)-(\alpha,h)\|_\infty$ in the parameterization
-coordinates. The unlifted norm is dominated by interior cells, where
-discretization noise is small. The lifted norm is dominated by the orbital
-$h$-modes that try to absorb whatever deviation $\log\!\frac{\Phi(P)}{1-\Phi(P)} - \alpha T$
-shows after one operator pass. At $N=6$, the 40-mode basis cannot fully match
-this deviation, so the lifted norm has a floor around $10^{-1}$. \emph{This is
-a basis-completeness floor, not a Newton-step failure.} Bumping $N$ would
-reduce it.
+This is a subtle artefact, not a Newton-step failure. The unlifted residual
+measures $\|\Phi(P)-P\|_\infty$ on cube cells; the lifted one measures
+$\|\Phi_\textrm{lift}(\alpha,h)-(\alpha,h)\|_\infty$ in $(\alpha,h)$ coordinates,
+which are obtained by $L = \mathrm{logit}(P)$. The Jacobian $\partial L/\partial P
+= 1/[P(1-P)]$ \textbf{diverges at boundary cells} where $P\to 0,1$, so a
+$\sim 10^{-3}$ change in $P$ near the boundary translates to a $\sim 10^{-1}$
+change in $(\alpha, h)$.
+
+\textbf{Post-hoc check.} Applying $\Phi$ once to the converged lifted FP gives
+\begin{center}\begin{tabular}{lc}\toprule
+solver & $\|\Phi(P)-P\|_\infty$ (P-cell) \\\midrule
+unlifted (S$_3\times Z_2$, $h$=0 cells)        & $2.6\times 10^{-2}$ \\
+lifted + numba (this run's headline)           & $\mathbf{5.3\times 10^{-3}}$ \\
+\bottomrule\end{tabular}\end{center}
+\textbf{The lifted solver is actually a 5× cleaner FP than the unlifted one in
+the only metric that matters physically} (max P-cell residual). The lifted
+residual norm in $(\alpha,h)$ is large, but that's coordinate amplification by
+logit near saturation, not a Newton failure.
 
 \section{Smooth Chebyshev slices}
 
@@ -269,10 +277,16 @@ single $\gamma$-step gold test.
 \section{What's next}
 
 \begin{enumerate}
-\item \textbf{Vanishing-at-boundary basis $(1-\xi^2)g(\xi)$}: would let the
-$h$-modes capture the full operator deviation without overshooting at the
-edges. Likely brings the lifted residual norm down from $\sim 0.17$ to
-$<10^{-3}$ at $N=6$.
+\item \textbf{Vanishing-at-boundary basis $(1-\xi^2)g(\xi)$} (\emph{attempted,
+did not help}): replacing $h$ with $B(\xi)\cdot g(\xi)$ where
+$B = (1-\xi_1^2)(1-\xi_2^2)(1-\xi_3^2)$ forces $h\to 0$ at the boundary cells.
+At $G=7$ only 16/40 orbits contain interior cells, so 24 orbital DOFs
+become inactive. The Newton converges to slope$=0.337$, deficit$=0.082$, but the
+\emph{P-cell} residual climbs to $0.16$ (worse than the original lifted run's
+$0.005$). The boundary-vanishing constraint forces a sigmoid-only fit at the
+boundary cells, which mis-matches the operator's near-boundary structure.
+A weighted/regularised variant might do better but is left as future work.
+See \texttt{cheby\_vbasis.py}.
 \item \textbf{Sparse Jacobian via Chebyshev locality}: most $\partial \Phi_i / \partial h_j$
 entries are near-zero (sigmoid lift makes the operator local in $\xi$). A
 quasi-Newton (Broyden / Anderson) or sparse-FD Jacobian could reduce
