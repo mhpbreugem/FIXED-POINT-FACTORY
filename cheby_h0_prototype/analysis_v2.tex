@@ -162,12 +162,38 @@ operator differences and the higher $\tau$ used there.}
 no-learning Bayesian IC at $\tau=2$, $\gamma=0.1$ lands in a different basin:
 slope $\to 0.02$, deficit $\to 0.93$ (essentially no-information FP).
 $\gamma$-continuation from $\gamma=1$ down to $\gamma=0.1$, starting from the
-NL Bayes IC, also stays in this shallow basin. \textbf{The prior session's
-deep PR branch at slope $=0.36$ was likely reached by warm-starting at
-$\gamma=0.259$ (the upper fold of that branch) and continuing down.} Reproducing
-it here would require either two-parameter continuation $(\tau,\gamma)$ from
-the converged $\tau=1$, $\gamma=1$ PR solution, or a tailored IC near
-$\gamma_{\mathrm{fold}}$. Out of scope for this session.
+NL Bayes IC, also stays in this shallow basin.
+
+We then attempted a \textbf{two-parameter continuation} from the converged
+$\tau=1$, $\gamma=1$ lifted PR FP, increasing $\tau$ in steps before lowering
+$\gamma$. The PR branch tracks cleanly:
+\begin{center}\begin{tabular}{cccc}\toprule
+$\tau$ & slope & deficit & lifted $\|F\|_\infty$ \\\midrule
+1.00 & 0.3439 & 0.131 & 1.7$\times 10^{-1}$ \\
+1.20 & 0.3009 & 0.133 & 1.9$\times 10^{-1}$ \\
+1.50 & 0.2700 & 0.155 & 1.6 \\
+\midrule
+1.75 & 0.099  & 0.561 & 9.8$\times 10^{-1}$ (fallen off) \\
+2.00 & 0.086  & 0.567 & 1.4 (NL basin) \\
+\bottomrule\end{tabular}\end{center}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{G_tau_sweep_fold.png}
+\caption{$\tau$-sweep at $\gamma=1$ continuing from the $\tau=1, \gamma=1$ PR
+FP. The PR branch (green) tracks smoothly from $\tau=1$ to $\tau\approx 1.5$
+with slope shrinking $0.344\to 0.270$ and the lifted residual rising. Between
+$\tau=1.5$ and $\tau=1.75$ the branch \textbf{folds}: slope collapses to
+$\sim 0.1$ and Newton drops into the no-information basin (red). The prior
+session's $\tau=2$, $\gamma=0.1$ PR FP (slope $= 0.364$, blue star) is
+\textbf{not connected to this branch by a $\gamma=1$ horizontal path}. Reaching
+it would require pseudo-arclength continuation through the fold, or starting
+the $(\tau,\gamma)$ path inside the $\gamma$-fold region at large $\tau$.}
+\end{figure}
+
+\textbf{Bottom line:} The deep PR branch is real, locally well-resolved by the
+Chebyshev solver, and continues smoothly along $\tau$ until the fold near
+$\tau\approx 1.6$ at $\gamma=1$. Reaching the prior session's exact gold test
+point requires fold-aware continuation, which is out of scope for this run.
 
 \section{Status summary}
 
