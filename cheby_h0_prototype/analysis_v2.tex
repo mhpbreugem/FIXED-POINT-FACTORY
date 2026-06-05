@@ -247,6 +247,25 @@ Per-$\Phi$ wall time (numba) & 0.27 s \\
 Total run time (Picard + Newton, $N=6$) & $\sim 3$ min on 1 CPU \\
 \bottomrule\end{tabular}\end{center}
 
+\section{N=8 feasibility check}
+
+We measured per-$\Phi$ wall time at $N=8$ ($G=9$, 729 cells) using the same
+numba pipeline. Theoretical scaling is $(9/7)^3 \cdot (9/7)^2 \approx 4.4\times$
+the $N=6$ cost.
+
+\begin{center}\begin{tabular}{lcc}\toprule
+resolution & cells & per-$\Phi$ \\\midrule
+$N=6$, $G=7$ & 343 & 0.27 s \\
+$N=8$, $G=9$ & 729 & 1.18 s ($4.4\times$) \\
+\bottomrule\end{tabular}\end{center}
+
+Measured matches theory. With $\sim 150$ symmetric DOFs at $N=8$, a Newton outer
+iteration would be $\sim 150 \cdot 1.18 \approx 180$ s ($\sim 3$ min), and a
+full 10-iter Newton would be $\sim 30$ min on 1 CPU. \textbf{$N=8$ is
+practical} with the existing numba pipeline; $N=10$ at $\sim 16\times$ over
+$N=6$ would be $\sim 1.5$ h per Newton iter, borderline but doable for a
+single $\gamma$-step gold test.
+
 \section{What's next}
 
 \begin{enumerate}
@@ -254,15 +273,15 @@ Total run time (Picard + Newton, $N=6$) & $\sim 3$ min on 1 CPU \\
 $h$-modes capture the full operator deviation without overshooting at the
 edges. Likely brings the lifted residual norm down from $\sim 0.17$ to
 $<10^{-3}$ at $N=6$.
-\item \textbf{Bump to $N=8$ or $N=10$}: at $N=8$ the symmetric basis has
-$\sim 75$ free DOFs (vs 40 at $N=6$). With numba, expected Newton iter $\sim 35$~s.
 \item \textbf{Sparse Jacobian via Chebyshev locality}: most $\partial \Phi_i / \partial h_j$
 entries are near-zero (sigmoid lift makes the operator local in $\xi$). A
-quasi-Newton or sparse-FD Jacobian could reduce $\sim N_{\mathrm{DOF}}^2$ to
-$\sim N_{\mathrm{DOF}}$ cost.
-\item \textbf{Two-parameter continuation $(\tau,\gamma)$}: would reproduce the
-prior session's $\tau=2$, $\gamma=0.1$ deep PR FP from this run's
-$\tau=1$, $\gamma=1$ converged FP.
+quasi-Newton (Broyden / Anderson) or sparse-FD Jacobian could reduce
+$\sim N_{\mathrm{DOF}}^2$ to $\sim N_{\mathrm{DOF}}$ cost.
+\item \textbf{Pseudo-arclength continuation through the $\tau$-fold} would
+let us reach the exact prior session $\tau=2$ gold point. Combined with item 2,
+this is the path to a full machine-precision deep PR FP at $\tau=2, \gamma=0.1$.
+\item \textbf{Bump to $N=8$ or $N=10$} as a confirmation run for the $\gamma$-sweep
+result.
 \end{enumerate}
 
 \paragraph{Reproducibility.}
