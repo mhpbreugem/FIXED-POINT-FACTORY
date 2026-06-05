@@ -282,12 +282,30 @@ than the $41\times 41$ at $N=6$, and the line search keeps backing off without
 finding descent. This is \emph{not} a bug in the operator -- it's the well-
 known difficulty of high-resolution spectral Newton from cold IC.
 
-\textbf{Fix (next step):} interpolate the converged $N=6$ FP (P-resid $5\times
-10^{-3}$) onto the $N=8$ Lobatto grid via Chebyshev resampling, then run
-Newton from that warm-start. The starting iterate would already have
-P-resid $\lesssim 10^{-2}$ (just the $N=6$ truncation error), well inside the
-quadratic-convergence basin of $N=8$ Newton. Expected $N=8$ converged
-P-resid $\sim 10^{-4}$--$10^{-5}$.
+\textbf{Warm-start attempt.} We resampled the converged $N=6$ lifted FP onto
+the $N=8$ grid: take $\alpha_{N=6}=0.344$, expand $h_{N=6}$ to the cube,
+spectrally interpolate to the $N=8$ grid, project onto $N=8$ symmetric
+orbits. Result:
+
+\begin{center}\begin{tabular}{lccc}\toprule
+$N=8$ run & slope & deficit & P-cell residual \\\midrule
+cold-start (NL Bayes IC, 6 Newton iters)        & 0.330 & 0.280 & $1.02\times 10^{-1}$ \\
+warm-start (resampled $N=6$ FP, 8 Newton iters) & 0.364 & 0.146 & $\mathbf{6.18\times 10^{-2}}$ \\
+($N=6$ baseline for comparison)                 & 0.344 & 0.131 & $5.3\times 10^{-3}$ \\
+\bottomrule\end{tabular}\end{center}
+
+The warm-start gives a $\sim 2\times$ better $N=8$ P-residual (0.062 vs 0.102)
+and metrics much closer to $N=6$ (deficit 0.15 vs 0.28). But Newton still
+bounces in the lifted $(\alpha, h)$ coordinates after iter 6 -- the line
+search collapses to $\alpha_\mathrm{LS}=0$ at iter 7--8. This is the same
+\emph{coordinate-amplification} effect seen at $N=6$: the lifted residual
+norm is dominated by logit blow-up at saturated cells, not by genuine
+operator misfit. To drive $N=8$ P-residual below $10^{-3}$, the remaining
+steps are (i) a regularized or trust-region Newton that doesn't get fooled
+by the logit amplification, (ii) more Picard iters at $N=8$ to take it
+into the quadratic-convergence basin before switching to Newton, or
+(iii) Anderson acceleration on the Picard iteration. All three left as
+future work.
 
 \section{What's next}
 
