@@ -255,11 +255,10 @@ Per-$\Phi$ wall time (numba) & 0.27 s \\
 Total run time (Picard + Newton, $N=6$) & $\sim 3$ min on 1 CPU \\
 \bottomrule\end{tabular}\end{center}
 
-\section{N=8 feasibility check}
+\section{$N=8$ run: feasibility and cold-start failure mode}
 
-We measured per-$\Phi$ wall time at $N=8$ ($G=9$, 729 cells) using the same
-numba pipeline. Theoretical scaling is $(9/7)^3 \cdot (9/7)^2 \approx 4.4\times$
-the $N=6$ cost.
+We measured per-$\Phi$ wall time at $N=8$ ($G=9$, 729 cells). Theoretical
+scaling: $(9/7)^3 \cdot (9/7)^2 \approx 4.4\times$ the $N=6$ cost.
 
 \begin{center}\begin{tabular}{lcc}\toprule
 resolution & cells & per-$\Phi$ \\\midrule
@@ -267,12 +266,28 @@ $N=6$, $G=7$ & 343 & 0.27 s \\
 $N=8$, $G=9$ & 729 & 1.18 s ($4.4\times$) \\
 \bottomrule\end{tabular}\end{center}
 
-Measured matches theory. With $\sim 150$ symmetric DOFs at $N=8$, a Newton outer
-iteration would be $\sim 150 \cdot 1.18 \approx 180$ s ($\sim 3$ min), and a
-full 10-iter Newton would be $\sim 30$ min on 1 CPU. \textbf{$N=8$ is
-practical} with the existing numba pipeline; $N=10$ at $\sim 16\times$ over
-$N=6$ would be $\sim 1.5$ h per Newton iter, borderline but doable for a
-single $\gamma$-step gold test.
+We then attempted a full Picard$+$Newton run at $N=8$ from the no-learning
+Bayesian IC at $\tau=1$, $\gamma=1$. Result (81 symmetric DOFs, 5 Picard $+$ 6
+Newton iters $\sim 8$ min total):
+\begin{itemize}
+\item slope $=0.330$ (vs $0.344$ at $N=6$)
+\item deficit $=0.280$ (vs $0.131$ at $N=6$ -- \textbf{worse})
+\item $d_\mathrm{FR}=0.092$ (vs $0.082$ at $N=6$)
+\item P-cell residual $\|\Phi(P)-P\|_\infty = 0.10$ (vs $5.3\times 10^{-3}$ at $N=6$)
+\end{itemize}
+
+\textbf{The cold-start $N=8$ run did not converge to a clean FP.} Newton's
+dense $81\times 81$ Jacobian is harder to navigate from the Picard endpoint
+than the $41\times 41$ at $N=6$, and the line search keeps backing off without
+finding descent. This is \emph{not} a bug in the operator -- it's the well-
+known difficulty of high-resolution spectral Newton from cold IC.
+
+\textbf{Fix (next step):} interpolate the converged $N=6$ FP (P-resid $5\times
+10^{-3}$) onto the $N=8$ Lobatto grid via Chebyshev resampling, then run
+Newton from that warm-start. The starting iterate would already have
+P-resid $\lesssim 10^{-2}$ (just the $N=6$ truncation error), well inside the
+quadratic-convergence basin of $N=8$ Newton. Expected $N=8$ converged
+P-resid $\sim 10^{-4}$--$10^{-5}$.
 
 \section{What's next}
 
