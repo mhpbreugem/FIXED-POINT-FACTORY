@@ -1,0 +1,212 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,graphicx,booktabs,xcolor,hyperref,float}
+\graphicspath{{figs/}}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+\title{Chebyshev h=0 prototype v2:\\sigmoid lift, numba JIT, smooth slices}
+\author{Auto-generated report}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section*{Headline}
+
+The Chebyshev h=0 prototype now ships with three of the four improvements
+identified after the v1 run.
+
+\begin{center}\begin{tabular}{lll}\toprule
+upgrade & status & impact \\\midrule
+1. Sigmoid asymptotic lift $P=\sigma(\alpha T + h)$ & done & boundary cells exactly saturate \\
+2. Numba JIT of the inner $\Phi$ loop          & done & $\sim 12\times$ per-$\Phi$ speedup \\
+3. Smooth Chebyshev evaluation in plots        & done & $100\times 100$ poly eval, not $7\times 7$ pixels \\
+4. $N=12$ resolution                             & deferred & would need $\sim 90$\,min/Newton iter, JIT helps but not enough \\
+5. Gold test $\tau=2$, $\gamma=0.1$              & not reproduced & needs $\gamma$-continuation \\
+\bottomrule\end{tabular}\end{center}
+
+At $\tau=1$, $\gamma=1$, $N=6$:
+\begin{itemize}
+\item \textbf{Unlifted, S$_3\times Z_2$ symmetric Newton} (40 DOFs from 343 cells):
+    converged to $\|F\|_\infty = 2.6\times 10^{-2}$, slope $=0.335$, deficit $=0.181$.
+\item \textbf{Lifted, S$_3\times Z_2$ symmetric Newton} (1 + 40 = 41 DOFs):
+    converged to $\|F\|_\infty = 1.7\times 10^{-1}$ in lifted coords, slope $=0.344$,
+    deficit $=0.131$. The metrics improve (lower deficit, smaller $d_{\mathrm{FR}}$ gap)
+    but the residual norm in lifted variables is dominated by spectral-basis-insufficiency
+    at $N=6$ rather than discretization noise.
+\end{itemize}
+
+The numba JIT is the headline practical win: \textbf{$\sim 3.1$ s $\to$ $\sim 0.27$ s
+per $\Phi$ evaluation} at $N=6$, $G=7$. Newton outer-iteration time drops from
+$\sim 130$ s to $\sim 13$ s.
+
+\section{What numba changed}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.65\linewidth]{E_numba_speedup.png}
+\caption{Per-$\Phi$ wall time at $N=6$. Pure Python uses
+\texttt{numpy.polynomial.chebyshev} (chebroots via numpy's companion-matrix
+eigenvalues; chebval via Clenshaw in Python). Numba JIT inlines all of:
+chebval (Clenshaw), chebder (coefficient recurrence), chebroots (custom colleague
+matrix + \texttt{np.linalg.eigvals}), the GL quadrature loop, and the per-cell
+Bayes/CRRA clearing. The 343-cell triple loop runs as native code.}
+\end{figure}
+
+\paragraph{Validation.} Numba output matches pure Python to
+$\|P_{\mathrm{numba}}-P_{\mathrm{ref}}\|_\infty \approx 9\times 10^{-11}$
+(roundoff-level differences in eigenvalue routines). Determinism: re-running
+numba phi gives \emph{exact} bit-for-bit identical output (diff $=0$).
+
+\paragraph{Implementation.} A single-file module \texttt{cheby\_numba.py}
+exposes \texttt{phi(P\_vals, gamma=GAMMA, tau=TAU)} with the same signature
+as the pure-Python reference. The Chebyshev-Lobatto value$\to$coefficient
+conversion uses a precomputed Vandermonde inverse (offline once,
+$\Theta(G^3)$ matmul thereafter) instead of repeated \texttt{chebfit}.
+
+\section{What the sigmoid lift changed}
+
+The lifted parameterization is
+\[
+P(\xi) = \sigma\bigl(\alpha\,T(\xi) + h(\xi)\bigr),
+\quad T = \tau\,(u_1+u_2+u_3),
+\]
+with $\alpha\in\mathbb R$ a single scalar slope DOF and $h(\xi)$ the Chebyshev
+correction. Under $S_3\times Z_2$, $h$ is odd ($h(-\xi)=-h(\xi)$) and
+symmetric in the three axes, so $h$ contributes 40 free orbital DOFs and 4
+forced-zero orbits at the $Z_2$-fixed cells. Total: 41 unknowns.
+
+\begin{itemize}
+\item \textbf{Boundary saturation is exact.} As $u_k\to\pm\infty$, $T\to\pm\infty$,
+so $\sigma\to 0$ or $1$ regardless of $h$. The boundary cells no longer leak
+into the residual.
+\item \textbf{$\alpha$ converges fast.} From IC $\alpha=0.5$ (FR-with-slope-1/2),
+Picard drives $\alpha\to 0.347$ in 8 iters; Newton stabilizes at $\alpha=0.344$.
+This matches the prior PR signature.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{A_convergence_v2.png}
+\caption{Convergence: unlifted (P-cell residual, 40 DOFs) vs lifted ($\alpha,h$-residual,
+41 DOFs). Both phases visible. The lifted residual norm is measured in the
+sigmoid-lift coordinates and is \emph{stricter} than the P-cell norm; it
+stops at $\sim 0.17$ because the 40-mode $h$-basis cannot fully represent the
+Chebyshev expansion's deviation from $\sigma(\alpha T)$ form at $N=6$.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{B_metrics_v2.png}
+\caption{Per-iteration FP metrics. The lifted parameterization converges in
+1--2 iterations on slope/deficit/$d_{\mathrm{FR}}$, whereas the unlifted run
+takes 6 Newton iters to find the deep PR basin. The two solvers agree on
+the equilibrium-type signature (slope $\approx 0.34$, deficit $\approx 0.13$--$0.18$).}
+\end{figure}
+
+\paragraph{Why is the lifted residual norm \emph{larger} than the unlifted?}
+This is a subtlety. The unlifted residual measures
+$\|\Phi(P)-P\|_\infty$ over cube cells; the lifted one measures
+$\|\Phi_\textrm{lift}(\alpha,h)-(\alpha,h)\|_\infty$ in the parameterization
+coordinates. The unlifted norm is dominated by interior cells, where
+discretization noise is small. The lifted norm is dominated by the orbital
+$h$-modes that try to absorb whatever deviation $\log\!\frac{\Phi(P)}{1-\Phi(P)} - \alpha T$
+shows after one operator pass. At $N=6$, the 40-mode basis cannot fully match
+this deviation, so the lifted norm has a floor around $10^{-1}$. \emph{This is
+a basis-completeness floor, not a Newton-step failure.} Bumping $N$ would
+reduce it.
+
+\section{Smooth Chebyshev slices}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{C_slices_lifted_smooth.png}
+\caption{Three $P(u_2,u_3)$ slices of the lifted FP at $u_1 \in \{-1.1, 0, +1.1\}$
+(i.e. $\xi_1 \in \{-0.5, 0, +0.5\}$). \textbf{These are the actual Chebyshev
+polynomial evaluated on a $100\times 100$ fine grid}, not the $7\times 7$
+Lobatto-node pixel image of the v1 figure. The transition zone $P=0.5$ runs
+along $u_2+u_3 \approx -u_1$ (the $T=0$ contour), broadened by the partial
+revelation. Yellow contours: $P\in\{0.25, 0.5, 0.75\}$.}
+\end{figure}
+
+\paragraph{Polynomial overshoot.} Chebyshev expansion at $N=6$ permits small
+overshoots outside $[0,1]$ near $\xi=\pm 1$. Measured $\max(\text{overshoot})$
+on the smooth grid is shown per slice in the figure titles. Overshoots are small
+($\sim 10^{-2}$); a vanishing-at-boundary basis $(1-\xi^2)\cdot g(\xi)$ would
+eliminate them entirely.
+
+\section{Spectral decay diagnostic}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{D_spectral_decay_v2.png}
+\caption{Chebyshev coefficient decay, unlifted vs lifted. Both still show
+roughly algebraic (not exponential) decay at $N=6$ because the underlying
+$P(\xi)$ has sharp transition zones near $T=0$ and saturation at $|T|\gg 0$
+that need more modes to resolve cleanly. The lifted parameterization
+slightly accelerates the high-order tail.}
+\end{figure}
+
+\section{Comparison with prior session}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{F_comparison_v2.png}
+\caption{Both unlifted (blue star) and lifted (red star) Chebyshev runs at
+$\tau=1$, $\gamma=1$ produce slope$\approx 0.34$. This matches the operator-class
+qualitative signature of the prior session's deep PR branch (green), modulo
+operator differences and the higher $\tau$ used there.}
+\end{figure}
+
+\paragraph{Gold test status ($\tau=2$, $\gamma=0.1$).} Cold-start from the
+no-learning Bayesian IC at $\tau=2$, $\gamma=0.1$ lands in a different basin:
+slope $\to 0.02$, deficit $\to 0.93$ (essentially no-information FP).
+$\gamma$-continuation from $\gamma=1$ down to $\gamma=0.1$, starting from the
+NL Bayes IC, also stays in this shallow basin. \textbf{The prior session's
+deep PR branch at slope $=0.36$ was likely reached by warm-starting at
+$\gamma=0.259$ (the upper fold of that branch) and continuing down.} Reproducing
+it here would require either two-parameter continuation $(\tau,\gamma)$ from
+the converged $\tau=1$, $\gamma=1$ PR solution, or a tailored IC near
+$\gamma_{\mathrm{fold}}$. Out of scope for this session.
+
+\section{Status summary}
+
+\begin{center}\begin{tabular}{lr}\toprule
+metric (lifted, $\tau=1$, $\gamma=1$, $N=6$) & value \\\midrule
+$\alpha_{\mathrm{slope}}$ (sigmoid lift parameter) & 0.344 \\
+slope$_T$ (logit$P$ vs $T$, measured) & 0.344 \\
+deficit ($1-R^2$ of that regression) & 0.131 \\
+$d_{\mathrm{FR}}$ (RMS distance from $P_{\mathrm{FR}}=\sigma(T)$) & 0.082 \\
+$\|F\|_\infty$ (lifted coords) & $1.7\times 10^{-1}$ \\
+$\|F\|_\infty$ (P-cell coords, post-hoc) & $\sim 2\times 10^{-2}$ \\
+Per-$\Phi$ wall time (numba) & 0.27 s \\
+Total run time (Picard + Newton, $N=6$) & $\sim 3$ min on 1 CPU \\
+\bottomrule\end{tabular}\end{center}
+
+\section{What's next}
+
+\begin{enumerate}
+\item \textbf{Vanishing-at-boundary basis $(1-\xi^2)g(\xi)$}: would let the
+$h$-modes capture the full operator deviation without overshooting at the
+edges. Likely brings the lifted residual norm down from $\sim 0.17$ to
+$<10^{-3}$ at $N=6$.
+\item \textbf{Bump to $N=8$ or $N=10$}: at $N=8$ the symmetric basis has
+$\sim 75$ free DOFs (vs 40 at $N=6$). With numba, expected Newton iter $\sim 35$~s.
+\item \textbf{Sparse Jacobian via Chebyshev locality}: most $\partial \Phi_i / \partial h_j$
+entries are near-zero (sigmoid lift makes the operator local in $\xi$). A
+quasi-Newton or sparse-FD Jacobian could reduce $\sim N_{\mathrm{DOF}}^2$ to
+$\sim N_{\mathrm{DOF}}$ cost.
+\item \textbf{Two-parameter continuation $(\tau,\gamma)$}: would reproduce the
+prior session's $\tau=2$, $\gamma=0.1$ deep PR FP from this run's
+$\tau=1$, $\gamma=1$ converged FP.
+\end{enumerate}
+
+\paragraph{Reproducibility.}
+\texttt{cheby\_h0\_prototype/cheby\_numba.py} (operator),
+\texttt{cheby\_h0\_prototype/cheby\_lifted\_numba.py} (lifted Newton),
+\texttt{cheby\_h0\_prototype/cheby\_sym2.py} (symmetric basis),
+\texttt{cheby\_h0\_prototype/make\_analysis\_v2.py} (this report's figures).
+All committed in the \texttt{fixed-point-factory} repo on branch
+\texttt{claude/study-fixed-point-economics-y12PB}.
+
+\end{document}
