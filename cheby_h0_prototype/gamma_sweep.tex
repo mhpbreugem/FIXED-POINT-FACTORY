@@ -55,15 +55,93 @@ fixed point with Anderson-accelerated Picard + Newton--Krylov.
         aggregate signal $T = \tau \sum_k u_k$. A larger slope means the
         price translates more aggressively into posterior odds: more
         revealing.
-  \item $1-R^2$ is the \emph{information deficit}: the fraction of
-        $\mathrm{logit}\,P$ variance not explained by $T$. Zero means
-        fully revealing (price exactly summarizes $T$); larger means
-        partial revelation.
+  \item $1-R^2$ in this figure is the \emph{linear} deficit: residual
+        variance after the linear fit $\mathrm{logit}\,P = \alpha\, T + \beta$.
+        \textbf{This includes nonlinearity in $f(T)$ as part of the deficit,
+        even when the FP is a perfect function of $T$.} See \S\ref{sec:correct_R2}
+        for the corrected nonparametric deficit.
 \end{itemize}
 
-As $\gamma$ grows from 0.1 to 5.0, agents become more risk-averse.
-The slope $\alpha^*$ and deficit $1-R^2$ trace out the partially-revealing
-branch of the K=3 REE.
+\section{The one-to-one mapping breakdown: linear vs nonparametric deficit}
+\label{sec:correct_R2}
+
+The economically meaningful question is: \emph{is the price function
+$P(u_1, u_2, u_3)$ a function of $T$ alone?} If yes, $(u_1, u_2, u_3) \to P$
+factors through $T = \tau \sum_k u_k$: the price is a sufficient statistic
+for $T$ (although not for the individual $u_k$). If no, two signal triples
+$(u_1, u_2, u_3)$ and $(u_1', u_2', u_3')$ with $\sum u_k = \sum u_k'$
+generally give different prices: \emph{the one-to-one mapping breaks}.
+
+A linear fit $\mathrm{logit}\,P = \alpha T + \beta$ confounds two effects:
+\begin{enumerate}
+  \item the residual from \emph{nonlinearity} of the true relationship
+        (e.g.\ $P = \sigma(\alpha T + 0.1 T^3)$ has nonzero linear residual
+        but is still a perfect function of $T$);
+  \item the residual from \emph{genuine non-function-of-$T$ structure}
+        (different $(u_1, u_2, u_3)$ at the same $T$ giving different $P$).
+\end{enumerate}
+Only (2) measures the one-to-one breakdown.
+
+To isolate (2), we use a \emph{nonparametric} ANOVA: group the $G^3 = 343$
+cells by their (discrete) $T$ value, and compute within-group variance.
+At $G{=}7$ there are 63 unique $T$ values and 280 cells share a $T$ with
+at least one other cell. The best possible $f(T)$ fit is the per-group
+mean; the residual is the within-group variance.
+
+\[
+   R^2_{\rm nonparam} \;=\; 1 \;-\; \frac{\sum_{g} \sum_{i \in g}
+                           (\mathrm{logit}\,P_i - \overline{\mathrm{logit}\,P}_g)^2}
+                          {\sum_i (\mathrm{logit}\,P_i - \overline{\mathrm{logit}\,P})^2}
+\]
+
+\textbf{Comparison.}
+\begin{center}
+\begin{tabular}{cccccc}
+\toprule
+$\gamma$ & $1-R^2_{\rm lin}$ & $1-R^2_{\rm poly3}$ & $1-R^2_{\rm poly9}$ &
+$\mathbf{1-R^2_{\rm nonparam}}$ & max spread within $T$ \\
+\midrule
+0.10 & 0.1977 & 0.0747 & 0.0973 & $\mathbf{0.0361}$ & 4.83 \\
+0.30 & 0.1668 & 0.0688 & 0.0597 & $\mathbf{0.0339}$ & 3.13 \\
+0.50 & 0.1745 & 0.0716 & 0.0438 & $\mathbf{0.0309}$ & 3.13 \\
+0.80 & 0.1575 & 0.0666 & 0.0439 & $\mathbf{0.0306}$ & 3.23 \\
+1.00 & 0.1448 & 0.0623 & 0.0401 & $\mathbf{0.0285}$ & 3.20 \\
+1.50 & 0.1107 & 0.0475 & 0.0275 & $\mathbf{0.0175}$ & 2.80 \\
+2.00 & 0.1008 & 0.0392 & 0.0180 & $\mathbf{0.0129}$ & 2.52 \\
+3.00 & 0.0895 & 0.0306 & 0.0131 & $\mathbf{0.0076}$ & 2.06 \\
+5.00 & 0.0821 & 0.0231 & 0.0102 & $\mathbf{0.0033}$ & 1.62 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{The true one-to-one-breakdown deficit is 5--25$\times$ smaller than
+the linear deficit.}
+
+\begin{center}
+\includegraphics[width=\linewidth]{08_correct_R2.png}
+\end{center}
+
+\paragraph{Economic interpretation revised.}
+\begin{itemize}
+  \item As $\gamma$ rises (more risk aversion), the deficit shrinks from
+        $3.6\%$ to $0.33\%$. The price is becoming \emph{almost} a
+        function of $T$ alone --- nearly fully T-revealing.
+  \item The "max within-$T$ spread" (largest logit-$P$ difference between
+        two cells with the same $T$) ranges from 4.8 (at $\gamma{=}0.1$)
+        to 1.6 (at $\gamma{=}5$), in logit units. \emph{Two signal
+        triples with the same $T$ can produce prices that differ by a
+        factor of $\sim 100\!\times$ in odds at low $\gamma$, but only
+        $\sim 5\!\times$ at high $\gamma$.}
+  \item The one-to-one mapping $T \leftrightarrow P$ \emph{does} break ---
+        but by much less than the standard linear-fit deficit suggested,
+        and the breakdown shrinks rapidly with risk aversion.
+\end{itemize}
+
+\paragraph{Why this matters.} For a paper on partial-revelation REE, the
+nonparametric deficit is the right metric. The linear deficit conflates
+"residual nonlinearity in $f(T)$" (an artifact of the regressor choice)
+with "genuine multi-valued price". The former vanishes if you use a
+flexible $f$; the latter is the actual economics.
 
 \section{Price contours $\{P(u_1, u_2, u_3) = p\}$ at each $\gamma$}
 
