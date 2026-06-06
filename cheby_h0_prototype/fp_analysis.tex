@@ -233,6 +233,76 @@ the standard one: combine the smoothed operator with Newton--Krylov
 (matrix-free Newton via LGMRES), where the spectral radius of $J$ is
 irrelevant --- only the conditioning of $I-J$ matters.
 
+\section{Result of Option 3: floor is structural, not from box-edge creases}
+
+We implemented the smoothed operator (\texttt{cheby\_numba\_smooth.py}) and
+swept the smoothing bandwidth $h_{\mathrm{bw}}$ over six decades from
+$10^{0}$ to $10^{-9}$, running both Anderson-accelerated Picard and
+Levenberg--Marquardt at each setting.
+
+\begin{center}
+\includegraphics[width=0.97\linewidth]{fp_analysis_smooth_sweep.png}
+\end{center}
+
+\begin{tabular}{cccc}
+\toprule
+$h_{\mathrm{bw}}$ & Anderson floor & LM floor & LM cost $\tfrac{1}{2}\|F\|_2^2$ \\
+\midrule
+$10^{0}$  & $2.50\!\times\!10^{-3}$ & $2.41\!\times\!10^{-3}$ & $7.73\!\times\!10^{-6}$ \\
+$10^{-1}$ & $2.50\!\times\!10^{-3}$ & $2.79\!\times\!10^{-3}$ & $9.97\!\times\!10^{-6}$ \\
+$10^{-2}$ & $2.50\!\times\!10^{-3}$ & $2.75\!\times\!10^{-3}$ & $8.26\!\times\!10^{-6}$ \\
+$10^{-3}$ & $2.50\!\times\!10^{-3}$ & $\mathbf{1.95\!\times\!10^{-3}}$ & $4.53\!\times\!10^{-6}$ \\
+$10^{-4}$ & $2.50\!\times\!10^{-3}$ & $2.38\!\times\!10^{-3}$ & $7.23\!\times\!10^{-6}$ \\
+$10^{-6}$ & $2.50\!\times\!10^{-3}$ & $2.70\!\times\!10^{-3}$ & $8.05\!\times\!10^{-6}$ \\
+$10^{-9}$ & $2.50\!\times\!10^{-3}$ & $2.70\!\times\!10^{-3}$ & $8.05\!\times\!10^{-6}$ \\
+\midrule
+reference & \multicolumn{3}{c}{bisect, no smoothing: $2.70\!\times\!10^{-3}$;
+                                 chebroots: $4.25\!\times\!10^{-3}$} \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.5em}
+\textbf{Verdict.} Boundary corrections improve the LM floor by a factor of
+$\sim 1.4\times$ (from $2.70\!\times\!10^{-3}$ to $1.95\!\times\!10^{-3}$
+at $h_{\mathrm{bw}}=10^{-3}$) --- a measurable but small effect.
+The Anderson floor barely moves. The improvement is too small to be
+"the" missing remedy; the residual surface still has a deep, broad
+minimum around $\|F\|_\infty \approx 2\!\times\!10^{-3}$ even when the
+edge-crease pathology is smoothed.
+
+\paragraph{What this tells us.} The C$^0$ creases at root births are
+\emph{a} source of non-smoothness, but not \emph{the} reason the operator
+has no FP at $N{=}7$. The residual minimum is set by the geometry of the
+operator's image vs.\ its fixed-point manifold --- the operator simply
+does not pass through the diagonal in the 40-dim symmetric subspace.
+Reducing the floor further requires one of:
+
+\begin{enumerate}
+  \item \textbf{Increase $N$.} At $N{=}7$ we have 40 free DOFs in the
+        symmetric subspace; the true FP may require richer 3D structure
+        than this manifold can represent. The deficit between $\Phi(P)$
+        and $P$ is then irreducible. Going to $N{=}9$ or $N{=}11$ ought
+        to shrink this deficit; the tabulated operator ($\sim$30--50$\times$
+        speedup) makes that affordable.
+  \item \textbf{Use the lifted-coordinate form with full $h(u_1,u_2,u_3)$
+        flexibility.} Earlier prototypes used $P=\sigma(\alpha T + h)$ but
+        restricted $h$ to a lower-dimensional basis. Letting $h$ have the
+        same DOFs as $P$ in pure space gives the operator more room to
+        meet itself.
+  \item \textbf{Accept the floor at this resolution.} The economically
+        meaningful quantities (logit slope $\approx 0.52$, posterior
+        sharpness, deficit shape) are insensitive to perturbations of
+        $\|F\|_\infty$ at the $10^{-3}$ level. A FP this accurate
+        \emph{is} a working REE for downstream analysis; only the
+        numerical residual is non-zero.
+\end{enumerate}
+
+The natural next experiment is option (1): rerun the diagnostic at $N{=}9$
+with the tabulated operator and see whether (a) $\rho(J)$ drops below 1,
+and (b) the LM floor drops below $10^{-4}$. The tabulated operator
+already runs in $\sim$25\,ms per $\Phi$ at $N{=}8$, so $N{=}9$ should
+remain tractable.
+
 \section{Reproducibility}
 
 All numbers in this note come from
