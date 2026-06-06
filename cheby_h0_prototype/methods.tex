@@ -180,39 +180,100 @@ the chebroots-based all-roots to numba (companion matrix eigenvalues
 are well-supported in numba's \texttt{linalg.eigvals}) or to dramatically
 increase the scan resolution near the boundary.
 
+\section{POU+chebroots: only 20\% better than scan-bisect}
+
+Implemented numba chebroots (companion-matrix eigvals on a complex128
+matrix; $\sim 19\,\mu$s per call, $3.4\times$ faster than numpy
+chebroots). Built POU operator on top: 420\,ms per $\Phi$ at $G_p{=}121$
+(vs 50\,ms scan-bisect; vs 2200\,ms non-numba chebroots).
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+POU variant & Anderson floor & + NK + FD-Newton \\
+\midrule
+scan-and-bisect & $5.7\!\times\!10^{-3}$ & $2.71\!\times\!10^{-3}$ \\
+chebroots (all-real-roots) & $4.42\!\times\!10^{-3}$ & $\mathbf{2.15\!\times\!10^{-3}}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+20\% improvement only. \textbf{All-roots completeness is NOT the
+dominant bottleneck.} The 3.7e-4 per-$\Phi$ difference between
+scan-and-bisect and chebroots came from near-boundary roots whose
+amplitude is suppressed by the atanh stretching (so they don't
+accumulate during iteration).
+
+\section{Kernel-band push to strict $h{=}0$: slope tops at 0.23, POU says 0.37}
+
+Pushed kernel-band Cheb-tab to very small $h$ at $N{=}8$ with NQK and
+$G_p$ scaled up:
+
+\begin{center}
+\begin{tabular}{rcccc}
+\toprule
+$h$ & NQK & $G_p$ & $\|F\|_\infty$ & slope $\alpha^*$ \\
+\midrule
+0.50 & 16 & 121  & $3\!\times\!10^{-15}$ & 0.128 \\
+0.35 & 16 & 143  & $8\!\times\!10^{-15}$ & 0.138 \\
+0.25 & 16 & 200  & $8\!\times\!10^{-15}$ & 0.164 \\
+0.18 & 17 & 278  & $4\!\times\!10^{-16}$ & 0.192 \\
+0.13 & 24 & 385  & $3.4\!\times\!10^{-4}$ (FAIL) & 0.211 \\
+0.10 & 30 & 500  & $3.9\!\times\!10^{-2}$ (FAIL) & 0.219 \\
+0.08 & 38 & 625  & $5\!\times\!10^{-14}$ & 0.226 \\
+0.06 & 50 & 834  & $1.5\!\times\!10^{-2}$ (FAIL) & 0.232 \\
+0.04 & 75 & 1250 & $1.5\!\times\!10^{-2}$ (FAIL) & 0.273 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{The kernel-band joint limit tops out around slope $\approx 0.23$,
+while POU strict-$h{=}0$ gives slope $\approx 0.37$.} This 0.14 gap is
+not explained by extrapolation of the converged data.
+
+\paragraph{Diagnosis.} The tensor-GL quadrature in the kernel-band
+needs $N_{Q} \cdot h \gg 1$ to resolve the narrow Gaussian band. For
+$h \sim 0.05$, $N_Q \sim 75$ is marginal; the integral becomes
+sensitive to where GL nodes fall relative to the contour. Failed
+Anderson at small $h$ confirms operator ill-conditioning. \emph{POU
+side-steps this by evaluating the contour exactly via root extraction.}
+
 \section{Path forward to machine $\varepsilon$ at strict $h=0$}
 
-If the chebroots experiment confirms much lower POU floor, the next
-implementation step is straightforward:
-\begin{enumerate}
-  \item Port chebroots (companion matrix) to numba — Cheb's
-        comrade matrix at $N\!=\!6$ is $6\!\times\!6$, eigenvalue
-        extraction is fast and supported in numba.
-  \item Re-run POU Anderson+NK; expect floor $\to$ $10^{-7}$ or lower
-        if root-finding completeness was the bottleneck.
-\end{enumerate}
+The POU operator finds the correct REE shape ($\alpha^* \approx 0.37$)
+but generic Anderson/Newton-Krylov/FD-Newton all floor near
+$2\!\times\!10^{-3}$. Line search alpha collapses to $10^{-9}$,
+indicating FD-Jacobian noise dominates. Three remaining paths:
 
-If FD-Newton still floors above $10^{-7}$ after fixing the root-finding,
-the remaining route is \textbf{analytic-Jacobian Newton} (the legacy
-path):
 \begin{enumerate}
-  \item Implement complex-step differentiation: replace all float64 in
-        the POU operator with complex128, compute $\partial F / \partial x_j
-        = \mathrm{Im}[F(x + i\,h\,e_j)] / h$ with $h \!=\! 10^{-30}$.
-        Exact to machine $\varepsilon$ (no FD cancellation).
-  \item Or: derive $\partial A_v / \partial P_{\rm coeffs}$ in closed
-        form. POU is differentiable (Newton-tracked roots give smooth
-        $\partial \xi_b^* / \partial P_{\rm coeffs} = -\partial_{\rm coeff} P /
-        \partial_{\xi_b} P$ at the root); the per-$P$-coeff sensitivity
-        of $A_v$ chains through the partition weights, Bayes update,
-        and CRRA clearing.
+  \item \textbf{Larger $N$ or larger $G_p$.} Currently testing in
+        background. If table interpolation or grid resolution is
+        the constraint, going from $G_p{=}121$ to $G_p{=}1001$
+        should drop the floor.
+  \item \textbf{Higher NQ.} Currently testing $N_Q \in \{12, 16, 24, 32\}$.
+        The integrand is a sum over discrete roots, so the GL
+        quadrature error is for the outer integral over $u_a$ (or
+        $u_b$) — not for the contour itself, which is exact via
+        chebroots.
+  \item \textbf{Analytic / complex-step Jacobian.} The remaining
+        route. Two options:
+    \begin{enumerate}
+      \item Complex-step: replace all float64 in POU with complex128;
+            compute $\partial F / \partial x_j = \mathrm{Im}[F(x+i\,h\,e_j)]/h$
+            with $h\!=\!10^{-30}$. Exact to machine $\varepsilon$.
+            Effort: $\sim 500$ LOC for complex-safe POU.
+      \item Closed-form: derive $\partial \xi_b^* / \partial P_{\rm coeffs}
+            = -T_i(\xi_a) T_j(\xi_b^*) T_k(\xi_k) / (dP/d\xi_b)$
+            (implicit function theorem on the root); chain through
+            the partition weights, Bayes update, and CRRA clearing
+            (implicit on the price equation).
+    \end{enumerate}
 \end{enumerate}
 
 The kernel-band Cheb-tab \emph{already} reaches machine $\varepsilon$
-for the smoothed operator. The remaining question is whether the
-\emph{strict} $h{=}0$ FP (which is the actual REE) is reachable at
-machine $\varepsilon$ in pure float64 without arb-precision arithmetic.
-The legacy $k3\_hfree\_100$ work shows it can be nailed to 100 decimals
-in arb; whether float64 is enough is an empirical question.
+for the smoothed operator. The remaining open question is whether the
+\emph{strict} $h{=}0$ FP can be nailed to machine $\varepsilon$ in
+float64 without higher precision arithmetic. The legacy $k3\_hfree\_100$
+work shows it can be nailed to 100 decimals in arb.
 
 \end{document}
