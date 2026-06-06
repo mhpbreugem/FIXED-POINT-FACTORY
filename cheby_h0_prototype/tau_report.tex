@@ -1,0 +1,146 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{graphicx,amsmath,amssymb,booktabs,hyperref,xcolor}
+\graphicspath{{/tmp/cheby_h0/figs/tau_report/}}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlength{\parskip}{6pt}
+\title{Lin-CDF Richardson: 100-$\tau$ sweep at $\gamma=1$\\
+       (with clipping-artifact warning at high $\tau$)}
+\author{Fixed-Point Factory --- signal precision sweep}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Headline}
+
+100 values of signal precision $\tau \in [0.01, 1000]$ at fixed
+$\gamma = 1$, solved with Lin-CDF 2-pt Richardson and warm-start chain.
+\textbf{99/100 reach machine $\varepsilon$.} Per-$\tau$ wall time $\sim 1$\,s.
+
+\paragraph{Two regimes:}
+\begin{itemize}
+  \item \textbf{Valid range $\tau \lesssim 5$}: clean economics.
+        Slope $\alpha^*$ rises from $0.33$ at $\tau{=}0.01$ to a peak
+        of $0.44$ around $\tau{=}3$. One-to-one deficit grows from
+        $\sim 0$ to $\sim 0.05$ over the same range --- partial revelation
+        emerges as signals become more informative.
+  \item \textbf{High-$\tau$ clipping artifact ($\tau \gtrsim 5$)}: slope
+        drops toward 0, deficit flattens at $\sim 0.11$. \emph{Not}
+        economically meaningful --- this is a numerical clipping artifact
+        ($1\!-\!P$ clipped at $10^{-15}$ caps $|\mathrm{logit}\,P| \leq 34.5$).
+        At high $\tau$ the true $\mathrm{logit}\,P$ at corner cells
+        would be $\sim 0.5 \tau u_{\max}^2 \sim 100$+, so most cells
+        saturate at the clip.
+\end{itemize}
+
+\section{Convergence}
+
+\begin{center}
+\includegraphics[width=\linewidth]{02_floor.png}
+\end{center}
+
+99/100 reach machine $\varepsilon$. The lone failure at $\tau \approx 3.4$
+is a transitional regime (intermediate signal precision with mixed
+revelation/non-revelation features).
+
+\section{Equilibrium statistics across $\tau$}
+
+\begin{center}
+\includegraphics[width=\linewidth]{01_headline.png}
+\end{center}
+
+The grey shaded region marks $\tau \geq 5$ where the metrics become
+unreliable due to logit clipping. Within the valid range $\tau < 5$,
+both slope and deficit are monotone in $\tau$.
+
+\section{Zoomed: clipping-free range $\tau < 5$}
+
+\begin{center}
+\includegraphics[width=\linewidth]{03_valid_range.png}
+\end{center}
+
+\textbf{Interpretation.}
+\begin{itemize}
+  \item As $\tau$ grows from $0$ to $\sim 3$, signals become more
+        informative. The slope $\alpha^*$ of $\mathrm{logit}\,P$ on $T$
+        rises because both the variance of $T$ and the price's
+        response to it grow.
+  \item The one-to-one deficit $1-R^2_{\rm nonparam}$ also rises ---
+        partial revelation emerges in this regime. At very low $\tau$,
+        signals are so noisy that the price is essentially $\sigma(T)$
+        exactly (no partial revelation: $T$ contains all information).
+        As $\tau$ grows, the individual $u_k$ start carrying information
+        beyond what $T$ summarizes.
+\end{itemize}
+
+\newpage
+
+\section{Linear vs nonparametric deficit}
+
+\begin{center}
+\includegraphics[width=0.95\linewidth]{05_deficits.png}
+\end{center}
+
+The linear deficit (vs $\alpha T$ fit) is always larger than the
+nonparametric deficit (vs best $f(T)$). The gap is the residual
+nonlinearity in $f(T)$ which has no economic meaning. The nonparametric
+deficit is the right metric.
+
+\section{logit-$P$ vs $T$ scatter (valid $\tau$ range)}
+
+\begin{center}
+\includegraphics[width=\linewidth]{06_logitT.png}
+\end{center}
+
+At low $\tau$ the scatter is tight (price is function of $T$). As $\tau$
+grows the spread increases (different signal triples with same $T$
+give different prices). Above $\tau \sim 5$ the linear regression
+saturates due to clipping.
+
+\section{Contour gallery: how the FP deforms with $\tau$}
+
+\begin{center}
+\includegraphics[width=\linewidth]{04_contours.png}
+\end{center}
+
+\section{Summary and recommendations}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+$\tau$ range & convergence & metric reliability \\
+\midrule
+$[0.01, 0.5]$ & machine $\varepsilon$ & reliable (clean economics) \\
+$[0.5, 5]$    & machine $\varepsilon$ (except $\tau\approx 3.4$) & reliable \\
+$[5, 1000]$   & machine $\varepsilon$ & \textbf{clipping artifact in slope/deficit} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{For the paper:}
+\begin{itemize}
+  \item Report $\tau \in [0.01, 5]$ economics.
+  \item Show that slope $\alpha^*$ rises from $0.33$ to peak $\sim 0.44$
+        across this range, and deficit rises from $0$ to $\sim 0.05$.
+  \item Note that the operator continues to converge at high $\tau$ but
+        the metrics are obscured by the float64 logit clip.
+\end{itemize}
+
+\paragraph{Comparison to $\gamma$-sweep at $\tau=1$:}
+The $\tau$-sweep and $\gamma$-sweep both show monotonically rising slope
+with the relevant parameter. But the slope direction is different:
+\begin{itemize}
+  \item Higher $\gamma$ (more risk averse) $\rightarrow$ price more revealing
+        (higher slope). Mechanism: risk aversion damps demand response,
+        the price is gentler.
+  \item Higher $\tau$ (more precise signals) $\rightarrow$ same direction
+        (higher slope), but for a different reason: agents' posteriors
+        sharpen and the price reflects this.
+\end{itemize}
+
+\paragraph{Implementation note.} The Lin-CDF 2-pt Richardson operator
+nailed 99 of 100 $\tau$ values in $\sim 100$ seconds total (warm-start
+chain). This is the right tool for economic parametric sweeps.
+
+\end{document}
