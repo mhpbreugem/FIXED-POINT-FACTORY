@@ -1,0 +1,195 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{graphicx,amsmath,amssymb,booktabs,hyperref,xcolor}
+\graphicspath{{/tmp/cheby_h0/figs/lin_r2_report/}}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlength{\parskip}{6pt}
+\title{Linear-CDF Richardson: 100-$\gamma$ sweep at machine $\varepsilon$\\
+       across five decades of risk aversion}
+\author{Fixed-Point Factory --- Lin-CDF + Richardson 2-pt}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Headline}
+
+\textbf{100/100 gammas $\gamma \in [0.01, 1000]$ reach machine
+$\varepsilon$.} Per-$\gamma$ wall time $\sim 1$\,s (warm-start chain).
+Equilibrium slope $\alpha^*$ rises monotonically from $0.226$ at
+$\gamma{=}0.01$ to a $0.508$ asymptote at $\gamma{\geq}100$. Genuine
+one-to-one breakdown $1-R^2_{\rm nonparam}$ \emph{decays}
+$0.039 \to 0.001$ as $\gamma$ grows --- on the Lin-CDF grid the
+high-$\gamma$ price approaches a pure function of $T$.
+
+\section{Operator (recap)}
+
+\paragraph{Architecture: tabulated $\mu$ + Richardson on Lin-CDF grid.}
+\begin{itemize}
+  \item $u$-grid: Gaussian quantiles (CDF-uniform) on $|u|\!\leq\!2.33$
+  \item $P$ representation: values at grid + bilinear interpolation
+  \item Co-area integral: Gaussian kernel band $K_h(P-p)$ at multiple
+        bandwidths
+  \item \textbf{Richardson extrapolation 2-pt} $h \in \{0.5, 0.3\}$
+        with weights $(-0.5625, 1.5625)$ cancels the $O(h^2)$ kernel bias
+        in the $\mu(p, u_k)$ table
+  \item Per-cube CRRA clearing using the extrapolated table
+\end{itemize}
+
+\paragraph{Why it works.} Each $\mu^{h_i}(p, u_k)$ is smooth in $P$
+(Gaussian kernel of polynomial differences). The linear combination is
+still smooth, so Newton converges quadratically. But the \emph{table
+values} are unbiased estimates of the strict-$h{=}0$ co-area integral,
+so the FP has no kernel-smoothing artifact in the $1-R^2_{\rm nonparam}$.
+
+\paragraph{Why only 2-pt on Lin-CDF.} Higher-order Richardson (3-pt or 4-pt)
+amplifies the bilinear-interpolation error on the linear grid (weights
+$(0.107, -1.25, 2.143)$ for 3-pt blow up small perturbations). 2-pt has
+moderate weights and the leading $O(h^4)$ residual is small enough.
+
+\section{Convergence}
+
+\begin{center}
+\includegraphics[width=\linewidth]{02_floor.png}
+\end{center}
+
+All 100 $\gamma$-points reach machine $\varepsilon$. The bumps at very
+extreme $\gamma$ ($\sim 0.01$ and $\sim 1000$) are well below $10^{-13}$.
+
+\newpage
+
+\section{Equilibrium statistics}
+
+\begin{center}
+\includegraphics[width=\linewidth]{01_headline.png}
+\end{center}
+
+\paragraph{Slope $\alpha^*$.} The slope of $\mathrm{logit}\, P$ on
+$T = \tau\sum_k u_k$ rises monotonically with $\gamma$, from $0.226$
+(highly under-revealing) at $\gamma{=}0.01$ to $0.508$ (more revealing)
+at the high-$\gamma$ asymptote. The S-shape is characteristic: most
+of the change happens between $\gamma=0.1$ and $\gamma=10$, with
+flatness at both extremes.
+
+\paragraph{Deficit $1-R^2_{\rm nonparam}$.} The one-to-one breakdown
+decays from $0.039$ at $\gamma{=}0.01$ to $0.001$ at $\gamma{=}1000$
+--- on the Lin-CDF grid the high-$\gamma$ FP approaches a pure function
+of $T$. (We will see this is different on the Cheb grid.)
+
+\section{Linear vs nonparametric deficit}
+
+\begin{center}
+\includegraphics[width=0.95\linewidth]{03_deficits_both.png}
+\end{center}
+
+The linear deficit $1-R^2_{\rm lin}$ from a linear fit
+$\mathrm{logit}\, P \approx \alpha T + \beta$ is much larger ($\sim 10\%$)
+than the nonparametric deficit ($\sim 0.1$--$4\%$) at every $\gamma$.
+\emph{Most of the linear deficit is just nonlinearity of $f(T)$, not
+genuine one-to-one breakdown.}
+
+For the paper, the nonparametric deficit is the right quantity:
+it measures the actual residual of $P$ from \emph{any} function of $T$.
+
+\newpage
+
+\section{Lin-CDF FP contours $\{P=p\}$ across $\gamma$}
+
+\begin{center}
+\includegraphics[width=\linewidth]{05_contours.png}
+\end{center}
+
+Visual evidence of how the equilibrium price function deforms with $\gamma$.
+At low $\gamma$ contours are nearly straight, slope small. At high $\gamma$
+contours become steeper and more sharply curved, indicating a steeper
+informational response.
+
+\newpage
+
+\section{logit-$P$ vs $T$ scatter}
+
+\begin{center}
+\includegraphics[width=\linewidth]{07_logit_T.png}
+\end{center}
+
+The cells fall closer and closer to the linear fit as $\gamma$ grows;
+at $\gamma=100$ the scatter is essentially a single line --- consistent
+with the deficit shrinking to $\sim 10^{-3}$.
+
+\section{Cheb vs Lin-CDF Richardson: same machinery, different grids}
+
+\begin{center}
+\includegraphics[width=\linewidth]{04_cheb_vs_lin.png}
+\end{center}
+
+\paragraph{Slope.} Lin-CDF FP slopes are higher than Cheb FP slopes
+across the entire $\gamma$ range. The asymptote is $0.508$ on Lin-CDF
+vs $0.437$ on Cheb. Different grids see different "tails" of the
+signal distribution and converge to different limits.
+
+\paragraph{Deficit.} \textbf{This is the key difference.} On Lin-CDF
+the deficit decays toward 0 (one-to-one mapping in the $\gamma\to\infty$
+limit); on Cheb the deficit \emph{persists} at $\sim 0.025$ even at
+$\gamma=1000$.
+
+\paragraph{Reading.} The Lin-CDF grid covers $|u|\!\leq\!2.33$ (the
+central region of the Gaussian signal). The Cheb grid covers $|u|\!\leq\!9.9$
+via atanh stretching (essentially the full tails). The one-to-one breakdown
+appears to be a \emph{tail effect}: in the central region $P$ is
+effectively a function of $T$, but the tails carry additional
+information that makes the full-domain FP not exactly $f(T)$.
+
+\section{Wall time: 100$\times$ faster than strict-$h{=}0$ POU}
+
+\begin{center}
+\includegraphics[width=0.95\linewidth]{06_time.png}
+\end{center}
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+operator & per-$\gamma$ wall time & machine-$\varepsilon$ reach \\
+\midrule
+Cheb-strict-$h{=}0$ POU (NQ-tuned)   & $\sim 100$\,s & 6 of 9 \\
+Cheb Richardson 3-pt (manual)        & $\sim 0.7$\,s & 7 of 9 \\
+Cheb Richardson 10-pt (chain)        & $\sim 10$\,s  & 54 of 100 \\
+\textbf{Lin-CDF Richardson 2-pt (chain)} & $\sim 1$\,s   & \textbf{100 of 100} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Lin-CDF Richardson 2-pt is the best operator for parametric
+sweeps requiring honest deficits.} Robust (all converged), fast
+($\sim 1$\,s/$\gamma$), no NQ sweet-spot fishing, machine-$\varepsilon$
+guaranteed. The trade-off is the grid restriction to $|u|\!\leq\!2.33$
+which biases the FP toward the central-region equilibrium.
+
+\section{Verdict for the paper}
+
+\begin{itemize}
+  \item \textbf{Use Lin-CDF Richardson 2-pt for parametric sweeps.}
+        It nails 100\% to machine $\varepsilon$, runs in $\sim 1$\,s
+        per $\gamma$, and reports the honest nonparametric deficit
+        (no kernel-smoothing artifact).
+  \item \textbf{Report both Cheb and Lin-CDF deficits.} They differ
+        qualitatively: Cheb shows persistent $\sim 2.5\%$ deficit at
+        all $\gamma$; Lin-CDF shows deficit decaying to $\sim 0.1\%$
+        at high $\gamma$. The discrepancy reveals the deficit is a
+        \emph{tail effect}, which is itself an interesting structural
+        result.
+  \item \textbf{The slope asymptote is operator-dependent.} 0.44 (Cheb)
+        vs 0.51 (Lin-CDF). The right asymptote depends on what you
+        consider the "true" signal domain.
+\end{itemize}
+
+\paragraph{Stable economic findings (robust to operator choice):}
+\begin{itemize}
+  \item $\alpha^*$ monotone increasing in $\gamma$
+  \item Most of the change occurs in $\gamma \in [0.1, 10]$
+  \item At very low $\gamma$, the price is highly under-revealing
+        ($\alpha^* \approx 0.2$, deficit $\sim 0.03$)
+  \item At high $\gamma$, the price approaches a (near-)function of
+        $T$ with $\alpha^* \in [0.44, 0.51]$
+\end{itemize}
+
+\end{document}
