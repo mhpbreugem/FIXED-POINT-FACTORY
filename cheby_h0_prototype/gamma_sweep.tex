@@ -1,0 +1,103 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{graphicx,amsmath,amssymb,booktabs,hyperref,xcolor}
+\graphicspath{{/tmp/cheby_h0/figs/gamma_sweep/}}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlength{\parskip}{6pt}
+\title{K=3 CRRA REE: $\gamma$-sweep with strict-$h{=}0$ machine-$\varepsilon$ FPs}
+\author{Fixed-Point Factory --- $\gamma$-sweep at $\tau{=}1$, $G{=}7$}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Summary}
+
+Sweep of the risk-aversion parameter $\gamma \in \{0.1, 0.3, 0.5, 0.8, 1.0,
+1.5, 2.0, 3.0, 5.0\}$ at fixed $\tau=1$, on the $G{=}7$ Lobatto--atanh grid.
+For each $\gamma$ we run the strict-$h{=}0$ POU+chebroots operator
+auto-selecting the best $N_Q$ from $\{12,14,16,18,20,22\}$, and nail the
+fixed point with Anderson-accelerated Picard + Newton--Krylov.
+
+\textbf{Methodology recap.}
+\begin{itemize}
+  \item \textbf{Operator}: strict $h{=}0$, tensor-Chebyshev representation
+        of $P(u_1,u_2,u_3)$ on Lobatto--atanh nodes (stretching $c{=}2$).
+        Per-cell co-area integral via partition-of-unity over both axes,
+        all real roots from chebroots (companion-matrix eigvals in numba).
+        $G_p{=}121$ logit-uniform table for $\mu(p, u_k)$ lookup.
+  \item \textbf{Solver}: Anderson Type-II with memory $m{=}10$, then
+        SciPy \texttt{newton\_krylov} to nail to machine $\varepsilon$.
+  \item \textbf{$N_Q$ auto-selection}: try several GL orders, keep the
+        FP with smallest $\|F\|_\infty$. Different $(\tau, \gamma)$ have
+        different sweet spots.
+\end{itemize}
+
+\section{Convergence and per-$\gamma$ floor}
+
+\begin{center}
+\includegraphics[width=0.95\linewidth]{02_convergence.png}
+\end{center}
+
+\begin{center}
+\includegraphics[width=0.85\linewidth]{03_floors_per_gamma.png}
+\end{center}
+
+\section{Equilibrium statistics vs $\gamma$}
+
+\begin{center}
+\includegraphics[width=0.95\linewidth]{01_slope_deficit.png}
+\end{center}
+
+\paragraph{Interpretation.}
+\begin{itemize}
+  \item $\alpha^*$ measures the slope of $\mathrm{logit}\,P$ on the
+        aggregate signal $T = \tau \sum_k u_k$. A larger slope means the
+        price translates more aggressively into posterior odds: more
+        revealing.
+  \item $1-R^2$ is the \emph{information deficit}: the fraction of
+        $\mathrm{logit}\,P$ variance not explained by $T$. Zero means
+        fully revealing (price exactly summarizes $T$); larger means
+        partial revelation.
+\end{itemize}
+
+As $\gamma$ grows from 0.1 to 5.0, agents become more risk-averse.
+The slope $\alpha^*$ and deficit $1-R^2$ trace out the partially-revealing
+branch of the K=3 REE.
+
+\section{Price contours $\{P(u_1, u_2, u_3) = p\}$ at each $\gamma$}
+
+Each page shows three slices of the price function $P$ at low / mid / high
+$u_3$. The labeled contours are the level sets at $p \in \{0.1, 0.2, ..., 0.9\}$.
+
+\input{contour_pages.tex}
+
+\section{Posterior $\mu(p, u_k)$ tables}
+
+For each $\gamma$, $\mu(p, u_k)$ is the conditional probability $\Pr(v=1 \mid p, u_k)$
+that an agent with private signal $u_k$ assigns to the asset paying off, given the
+market price $p$. Left panel: heatmap on $(p, u_k)$. Right panel: slices at each $u_k$.
+
+\input{mu_pages.tex}
+
+\section{Logit-$P$ vs $T$ regression}
+
+For each $\gamma$, $\mathrm{logit}\,P$ scatter against $T$, with the
+best-fit slope $\alpha^*$ overlaid. Linear fit deviations are the
+information deficit.
+
+\begin{center}
+\includegraphics[width=0.95\linewidth]{06_logit_scatter.png}
+\end{center}
+
+\section{$P$ slice visualizations}
+
+3D price function projected to 2D slices at fixed $u_3$.
+
+\input{slice_pages.tex}
+
+\section{Summary table}
+
+\input{summary_table.tex}
+
+\end{document}
