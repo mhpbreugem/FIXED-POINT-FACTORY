@@ -1,0 +1,253 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx,amsmath,amssymb,booktabs,hyperref,xcolor}
+\usepackage{listings}
+\definecolor{codegray}{rgb}{0.95,0.95,0.95}
+\lstset{basicstyle=\ttfamily\footnotesize,backgroundcolor=\color{codegray},
+        breaklines=true,frame=single,xleftmargin=4pt,xrightmargin=4pt}
+\graphicspath{{/tmp/cheby_h0/figs/}}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\title{Why the $N{=}7$ Chebyshev CRRA fixed point floors at $\|F\|_\infty\!\sim\!3\!\times\!10^{-3}$,
+       and what to do about it}
+\author{Fixed-Point Factory --- diagnostic note}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+We asked all five available solvers (two Picard variants, two Anderson-accelerated
+variants, and a Levenberg--Marquardt minimiser) to drive the K=3 CRRA Hellwig operator
+to machine precision in the $S_3$-symmetric subspace at $N{=}7$, $\tau{=}\gamma{=}1$.
+\emph{All five floor at $\|F\|_\infty \in [1.2,\,5.3]\!\times\!10^{-3}$.} A direct
+linearisation of the operator at the best LM iterate gives spectral radius
+$\rho(J)=4.58$ with four eigenvalues outside the unit circle: the operator
+\emph{repels} in the symmetric subspace, so no Picard / Anderson / Newton scheme
+can converge there. Levenberg--Marquardt, which minimises $\|F\|_2^2$ rather than
+solving $F=0$, settles at $\|F\|_\infty = 2.70\!\times\!10^{-3}$ --- and that is
+the genuine minimum of the residual, not a tolerance artefact. We trace the
+non-vanishing residual to a known structural feature of the contour-extraction
+operator: the integrand jumps as the conjectured price polynomial gains or loses
+roots inside the integration box. The closed-form rank-1 and 1D-in-$T$ operators,
+which never extract roots, hit machine $\varepsilon$ and $4\!\times\!10^{-6}$
+respectively, confirming the issue is the root-finding step itself.
+We then describe an "Option 3" regularisation --- explicit boundary corrections
+with smooth cutoff weights --- that is the next thing to try.
+\end{abstract}
+
+\tableofcontents
+
+\section{Problem statement}
+The K=3 CRRA REE operator $\Phi$ in $S_3$-symmetric Lobatto--Chebyshev coordinates
+at $N{=}7$ has 40 free degrees of freedom in the symmetric subspace (down from
+$7^3=343$ in the full cube). Given a conjecture $P(u_1,u_2,u_3)$, one step of
+$\Phi$ does:
+\begin{enumerate}
+  \item For each Lobatto signal $u_k$, extract the level set
+        $\{(u_a,u_b) : P(u_a,u_b,u_k) = p\}$ by Chebyshev root-finding;
+  \item integrate $f_v\,f_v / \|\nabla P\|$ along that curve to get
+        co-area weights $A_v(p,u_k)$;
+  \item Bayes-update to $\mu_k(p,u_k) = f_1 A_1 / (f_0 A_0 + f_1 A_1)$;
+  \item solve the per-cell CRRA market clearing for the new price $p'$.
+\end{enumerate}
+The fixed point $\Phi(P) = P$ is the rational-expectations equilibrium.
+\textbf{The goal of this note is $\|F\|_\infty = \|\Phi(P)-P\|_\infty
+\lesssim 10^{-13}$.} We do not achieve it. This document explains why.
+
+\section{All five solvers floor near $3\!\times\!10^{-3}$}
+
+We ran the symmetric operator from the same warm start $P_0 = \sigma(0.5\,T)$
+(with $T=\tau\sum_k u_k$) and recorded $\|F\|_\infty$ at every iteration.
+
+\begin{center}
+\includegraphics[width=0.97\linewidth]{fp_analysis_solvers.png}
+\end{center}
+
+\begin{itemize}
+  \item \textbf{Picard (chebroots, $\omega{=}0.3$)} --- drops to $\sim 4\!\times\!10^{-3}$
+        by iteration 20, then \emph{cycles} between $5\!\times\!10^{-3}$ and
+        $7\!\times\!10^{-2}$ without ever crossing below the floor.
+  \item \textbf{Picard (bisect, $\omega{=}0.4$)} --- monotone descent
+        to $\|F\|_\infty \approx 1.2\!\times\!10^{-3}$ around iteration 50, then
+        wanders inside a $[1\!-\!3]\!\times\!10^{-3}$ band.
+  \item \textbf{Anderson (bisect, $m{=}8$)} --- the fastest descender,
+        crosses $10^{-2}$ by iteration 6, but stalls at $2.3\!\times\!10^{-3}$.
+  \item \textbf{Anderson (chebroots, $m{=}8$)} --- similar trajectory,
+        stalls at $3.0\!\times\!10^{-3}$.
+  \item \textbf{Levenberg--Marquardt} --- nonlinear least-squares on $F$,
+        runs out of progress at $\|F\|_\infty = 2.70\!\times\!10^{-3}$
+        ($\|F\|_2^2 = 5.5\!\times\!10^{-4}$). This is the smallest residual
+        any algorithm achieves.
+\end{itemize}
+
+Lev--Marq is the diagnostic that matters. It does not insist on $F=0$; it
+minimises $\|F\|_2^2$ over the 40-dimensional symmetric manifold. If the
+residual could be driven to zero by \emph{some} $P^*$ in this space, LM would
+find that $P^*$. It does not. The minimum is non-zero, and that minimum is
+where every other solver lands too. \textbf{The floor is not a tolerance bug:
+it is the smallest residual the operator architecture admits at $N{=}7$.}
+
+\section{Why: the operator is repelling at its near-fixed-point}
+
+To check whether the residual floor is a local-minimum issue or a structural one,
+we linearise $\Phi$ at the best LM iterate by finite differences ($\varepsilon=10^{-6}$)
+and look at the spectrum of the $40{\times}40$ Jacobian.
+
+\begin{center}
+\includegraphics[width=0.97\linewidth]{fp_analysis_eigvals.png}
+\end{center}
+
+\begin{itemize}
+  \item \textbf{Spectral radius $\rho(J) = 4.58$.}
+  \item \textbf{Four eigenvalues outside the unit circle:}
+        $|\lambda| \in \{4.58,\;4.51,\;1.77,\;1.08\}$.
+  \item The remaining 36 eigenvalues sit inside or on $|\lambda|=1$.
+\end{itemize}
+
+The implication is clean and unforgiving:
+
+\begin{quote}
+The operator has \emph{no attracting fixed point} in the $S_3$-symmetric
+subspace at $N{=}7$. Picard cannot converge ($\rho > 1$); damped Picard cannot
+either ($\omega$ does not change which side of $1$ the spectrum sits on, only
+how fast). Anderson and Newton-Krylov can sometimes succeed against repelling
+spectra, but only when the FP exists and the basin of attraction in the
+modified iteration map is non-empty --- here, LM tells us there \emph{is no
+zero}, so the iteration is being pushed toward a curve in residual space, not
+a point.
+\end{quote}
+
+This explains every observation: oscillation in Picard, premature stall in
+Anderson, no improvement past iteration 50, and a non-zero LM minimum.
+
+\section{Architecture comparison: where machine $\varepsilon$ \emph{does} work}
+
+To prove the issue is the contour-extraction operator and not something
+fundamental about the equilibrium, we compare floors across operator architectures
+that share the same underlying economics but differ in how they evaluate $\mu_k$.
+
+\begin{center}
+\includegraphics[width=0.97\linewidth]{fp_analysis_floors.png}
+\end{center}
+
+\begin{tabular}{lcc}
+\toprule
+Operator architecture & root-finding required? & best $\|F\|_\infty$ \\
+\midrule
+Rank-1 ($P = \sigma(\alpha T)$, $\alpha$-invariant)            & no  & $\sim 10^{-16}$ \\
+1D-in-$T$ ($m{=}10$ Chebyshev along $T$ only)                  & no  & $4.2\!\times\!10^{-6}$ \\
+Levenberg--Marquardt on full Chebyshev (bisect contour)        & yes & $2.7\!\times\!10^{-3}$ \\
+Anderson on full Chebyshev (bisect contour)                    & yes & $2.3\!\times\!10^{-3}$ \\
+Picard on full Chebyshev (chebroots contour)                   & yes & $4.3\!\times\!10^{-3}$ \\
+Lifted-coordinate + Newton (prior overnight run)               & yes & $5.3\!\times\!10^{-3}$ \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.5em}
+The pattern is exactly what the eigenvalue analysis predicts: \emph{closed-form}
+operators that never extract roots reach machine precision; \emph{root-finding}
+operators floor at $\sim 3\!\times\!10^{-3}$ regardless of solver. The
+1D-in-$T$ floor at $4\!\times\!10^{-6}$ comes not from any roots --- it has none ---
+but from the residual misfit between the true 3D fixed point and the 1D-in-$T$
+ansatz manifold.
+
+\section{Why root extraction is the obstruction}
+
+The co-area weights $A_v(p, u_k)$ are computed by extracting the curve
+\[
+  \{(u_a, u_b) : P(u_a, u_b, u_k) = p\}
+\]
+in the $(u_a, u_b)$ square. Operationally:
+\begin{enumerate}
+  \item Pick Gauss--Legendre nodes $\xi_a^{(q)}$ along the $u_a$ axis;
+  \item at each $\xi_a^{(q)}$, extract roots in $\xi_b$ of the
+        univariate polynomial $P(u_a(\xi_a^{(q)}),\,u_b(\xi_b),\,u_k) = p$;
+  \item sum the integrand at each root, weighted by GL weights.
+\end{enumerate}
+
+The root count along the contour is a \emph{discrete} function of $P$. As $P$
+deforms by an infinitesimal amount, individual roots are \emph{created or
+destroyed} at the box boundary --- inducing a jump in the integrand
+contribution proportional to the value of the dropped/added integrand at the
+boundary. In particular:
+\begin{itemize}
+  \item Newton/Anderson/Picard all see a piecewise-smooth operator with $O(1)$
+        jumps in $\partial \Phi / \partial P$ at parameter values where roots
+        cross the box edge;
+  \item Levenberg--Marquardt's residual surface contains $C^0$ creases along
+        the same loci, so its minimiser pins on a crease.
+\end{itemize}
+
+This is the structural reason for the $\sim 3\!\times\!10^{-3}$ floor. The
+closed-form architectures (rank-1, 1D-in-$T$) never extract roots, so they
+have no creases, so they hit machine $\varepsilon$ (rank-1) or the deficit of
+their ansatz manifold (1D-in-$T$, $4\!\times\!10^{-6}$ at $m{=}10$).
+
+\section{Path forward: Option 3 --- boundary corrections}
+
+Two principled remedies exist; we already know one works (rank-1 / 1D-in-$T$)
+and we propose to implement the other now.
+
+\paragraph{Option 1 (already implemented).}
+Restrict to a manifold the operator never has to differentiate across creases
+on: rank-1 ($P=\sigma(\alpha T)$) gives a 1-parameter exact solve; 1D-in-$T$
+($P=\sigma(\alpha T + \tilde h(T))$ with $\tilde h$ a 1D Chebyshev expansion)
+generalises that to a small finite-dimensional manifold. Both reach machine
+$\varepsilon$ on \emph{their own} residual, but they cannot represent
+genuinely 3D structure outside the 1D-in-$T$ manifold.
+
+\paragraph{Option 3 (the next thing to implement).}
+Modify the co-area integral to handle root births / deaths \emph{smoothly}
+rather than discretely. The construction:
+\begin{enumerate}
+  \item In each $\xi_b$-bisection, when the level set is tangent to or just
+        outside the integration box, replace the "no root, contribute 0"
+        branch with an explicit boundary correction: the polynomial value
+        $P(\xi_a^{(q)},\,\pm 1,\,u_k)$ contributes a weighted "near-root"
+        endpoint term;
+  \item the weight uses a smooth cutoff in
+        $\delta := P(\xi_a^{(q)},\,\pm 1,\,u_k) - p$
+        (the gap from the target) --- e.g.\ $w(\delta)=
+        \tfrac{1}{2}\,\mathrm{erfc}(\delta / h_{\mathrm{bw}})$
+        with $h_{\mathrm{bw}}$ chosen to be a few times the polynomial slope
+        at the boundary;
+  \item this makes $A_v(p, u_k)$ a $C^1$ function of $P$ everywhere,
+        including at root-birth events, killing the creases.
+\end{enumerate}
+Effort estimate: $\sim$200 LOC inside \texttt{cheby\_numba\_bisect.py} and
+\texttt{cheby\_numba\_tab.py}, plus a one-parameter sweep over $h_{\mathrm{bw}}$
+to confirm the floor drops monotonically until $h_{\mathrm{bw}}$ becomes so
+small that float64 truncation reintroduces a jump.
+
+\paragraph{Expected outcome.} If the diagnosis above is correct, the floor
+should drop from $\sim 3\!\times\!10^{-3}$ to $\sim 10^{-8}$ or better, limited
+by the smoothness order of the cutoff and the polynomial accuracy of
+$P(\xi_a^{(q)}, \pm 1, u_k)$. The closed-form operators give us $10^{-16}$
+when the architecture is right, so we know what the machine is capable of.
+
+\paragraph{What this would NOT fix.}
+Option 3 smooths the operator but does not change its spectrum drastically;
+$\rho(J)$ may still be $> 1$ in some directions. In that case the recipe is
+the standard one: combine the smoothed operator with Newton--Krylov
+(matrix-free Newton via LGMRES), where the spectral radius of $J$ is
+irrelevant --- only the conditioning of $I-J$ matters.
+
+\section{Reproducibility}
+
+All numbers in this note come from
+\texttt{/tmp/cheby\_h0/plot\_fp\_analysis.py} and
+\texttt{/tmp/cheby\_h0/fp\_analysis.json}; the script runs in $\sim$2 minutes
+on a single core. Inputs:
+\begin{itemize}
+  \item $N{=}7$, Lobatto--Chebyshev with stretching $c{=}2.0$, $\tau{=}\gamma{=}1$;
+  \item warm start $P_0 = \sigma(0.5\sum u_k)$;
+  \item operator backend variants: \texttt{cheby\_numba.phi} (chebroots),
+        \texttt{cheby\_numba\_bisect.phi\_bisect} (1D bisection on the
+        univariate polynomial), \texttt{cheby\_sym2.\{expand,contract\}}
+        (symmetric subspace projection);
+  \item Jacobian by forward difference at $\varepsilon = 10^{-6}$, dense
+        $40\!\times\!40$, \texttt{numpy.linalg.eigvals}.
+\end{itemize}
+
+\end{document}
