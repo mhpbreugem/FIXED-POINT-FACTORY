@@ -291,6 +291,62 @@ deficit $1-R^2$ & $0.144796$ \\
 \end{tabular}
 \end{center}
 
+\section{NQ sweet spot is parameter-specific}
+
+The NQ=16 sweet spot is not universal. Warm-starting other NQs from
+the NQ=16 FP and running Anderson:
+
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+NQ & $|F|$ at NQ=16 FP & After Anderson(30) & comment \\
+\midrule
+12 & 4.7e-3 & 5.8e-5 & even, no Lobatto coincidence \\
+13 & 1.1e-1 & 1.9e-2 & odd: GL coincides with Lobatto \\
+14 & 3.5e-3 & 2.2e-6 & even \\
+15 & 7.8e-2 & 2.2e-2 & odd: coincidence \\
+\textbf{16} & \textbf{9.85e-16} & \textbf{9.85e-16} & \textbf{stable at its own FP} \\
+17 & 7.3e-2 & 1.6e-2 & odd: coincidence \\
+18 & 6.1e-3 & 3.7e-4 & even \\
+19 & 6.0e-2 & 1.6e-2 & odd: coincidence \\
+20 & 2.9e-3 & 3.9e-5 & even \\
+24 & 2.3e-3 & 2.3e-3 & stalls \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Each NQ defines a slightly different operator (because the GL
+quadrature is part of the integrand). The FPs are close but not
+identical; each has its own basin and own ease-of-convergence.
+
+\textbf{NQ=16's success at $\tau{=}\gamma{=}1$, $G{=}7$ is a happy
+empirical fact, not a structural result.} Different $(\tau, \gamma)$
+would need a fresh NQ sweep.
+
+\section{Summary figure}
+
+\begin{center}
+\includegraphics[width=\linewidth]{final_summary.png}
+\end{center}
+
+Left: residual floor across all the methods explored. Right: the NQ
+sweep at G=7 showing the NQ=16 sweet spot.
+
+\section{The strict-$h{=}0$ K=3 CRRA REE fixed point at machine $\varepsilon$}
+
+\begin{center}
+\includegraphics[width=\linewidth]{strict_h0_FP_slices.png}
+\end{center}
+
+\begin{center}
+\includegraphics[width=0.8\linewidth]{strict_h0_logit_T.png}
+\end{center}
+
+\paragraph{Saved as} \texttt{P\_FP\_pou\_nq16\_n6.npy} for downstream
+analysis. The near-linear logit$P$-vs-$T$ relationship confirms a
+partially-revealing equilibrium where the price reveals a fraction of
+the total private information.
+
 \section{Open questions and next experiments}
 
 The POU operator finds the correct REE shape ($\alpha^* \approx 0.37$)
