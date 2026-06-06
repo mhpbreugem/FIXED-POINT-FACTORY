@@ -238,7 +238,60 @@ sensitive to where GL nodes fall relative to the contour. Failed
 Anderson at small $h$ confirms operator ill-conditioning. \emph{POU
 side-steps this by evaluating the contour exactly via root extraction.}
 
-\section{Path forward to machine $\varepsilon$ at strict $h=0$}
+\section{Breakthrough: NQ=16 sweet spot reaches machine $\varepsilon$ at strict $h=0$}
+
+The breakthrough was simple in hindsight: \textbf{$N_Q = 16$ Gauss--Legendre
+quadrature order} (the outer-axis quadrature in the POU integrand,
+distinct from $G_p$ and $G$) hits a sweet spot where the operator
+becomes smooth enough for Newton--Krylov to converge to machine
+$\varepsilon$.
+
+\begin{center}
+\begin{tabular}{cccccc}
+\toprule
+$N_Q$ & Anderson floor & + NK & slope & deficit & wall time \\
+\midrule
+13 & $1.4\!\times\!10^{-2}$ & $8.9\!\times\!10^{-1}$ \emph{div} & 0.323 & 0.148 & 507 ms \\
+14 & $2.3\!\times\!10^{-3}$ & $2.3\!\times\!10^{-3}$ & 0.339 & 0.137 & 490 ms \\
+15 & $8.5\!\times\!10^{-3}$ & $7.2\!\times\!10^{-1}$ \emph{div} & 0.337 & 0.132 & 547 ms \\
+\textbf{16} & $\mathbf{2.5\!\times\!10^{-8}}$ & $\mathbf{8.9\!\times\!10^{-16}}$ & \textbf{0.345} & \textbf{0.145} & 560 ms \\
+17 & $1.6\!\times\!10^{-2}$ & $2.2\!\times\!10^{-1}$ \emph{div} & 0.331 & 0.137 & 597 ms \\
+18 & $2.9\!\times\!10^{-3}$ & $5.2\!\times\!10^{-3}$ & 0.341 & 0.144 & 632 ms \\
+19 & $7.2\!\times\!10^{-3}$ & $6.8\!\times\!10^{-1}$ \emph{div} & 0.348 & 0.122 & 667 ms \\
+20 & $3.5\!\times\!10^{-3}$ & $8.3\!\times\!10^{-3}$ & 0.336 & 0.138 & 724 ms \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Hypothesis.} The POU integrand is exact along the contour
+(roots found by chebroots), but the outer GL sum over $\xi_a$ (or
+$\xi_b$) reads the integrand at the GL nodes. At "bad" $N_Q$ values,
+one or more GL nodes fall close to critical $\xi_a$ values where the
+1D polynomial $P(\xi_a, \cdot)$ has a near-double root (contour
+tangent to the $\xi_b$ axis). Near such points the partition-of-unity
+weight $w_b = d_b^2/(d_a^2+d_b^2)$ varies rapidly with $P$, and the
+operator becomes non-smooth there. At $N_Q = 16$, none of the GL nodes
+happen to sit near such configurations and the operator is smooth.
+
+This explains the previous floors: the default $N_Q = 12$ (from the
+chebroots prototype, chosen for spectral exactness of a degree-12
+integrand) lands at one of the "bad" configurations.
+
+\paragraph{Saved FP.} \texttt{P\_FP\_pou\_nq16\_n6.npy} is a
+verified-to-machine-$\varepsilon$ K=3 CRRA strict-$h{=}0$ REE FP on
+the Lobatto-atanh $G{=}7$ grid at $\tau{=}\gamma{=}1$:
+\begin{center}
+\begin{tabular}{rl}
+\toprule
+$\|F\|_\infty$ & $9.85\!\times\!10^{-16}$ \\
+slope $\alpha^*$ & $0.344748$ \\
+intercept & $0.000000$ (perfectly $\mathbb{Z}_2$-symmetric) \\
+deficit $1-R^2$ & $0.144796$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Open questions and next experiments}
 
 The POU operator finds the correct REE shape ($\alpha^* \approx 0.37$)
 but generic Anderson/Newton-Krylov/FD-Newton all floor near
