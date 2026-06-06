@@ -1,0 +1,122 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{graphicx,amsmath,amssymb,booktabs,hyperref,xcolor}
+\graphicspath{{/tmp/cheby_h0/figs/orders_report/}}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlength{\parskip}{6pt}
+\title{Lin-CDF Richardson order sweep:\\
+       R2 vs R3 vs R4 vs R5 across 100 $\gamma$ values}
+\author{Fixed-Point Factory --- order vs accuracy vs robustness}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Headline}
+
+Same architecture (Lin-CDF + Richardson + tabulated $\mu$), four orders
+of Richardson extrapolation on the lookup table:
+
+\begin{center}
+\begin{tabular}{cccccc}
+\toprule
+order & $h$ values & $\sum |w_i|$ & machine $\varepsilon$ & slope @ asymptote & def$_{1{-}1}$ @ asymptote \\
+\midrule
+R2 & $\{0.5, 0.3\}$ & 2.12 & \textbf{100/100} & 0.508 & 0.001 \\
+R3 & $\{0.5, 0.4, 0.3\}$ & 8.14 & 91/100 & 0.652 & 0.014 \\
+R4 & $\{0.5, 0.4, 0.3, 0.2\}$ & 7.10 & \textbf{99/100} & 0.739 & 0.0001 \\
+R5 & $\{0.6, 0.5, 0.4, 0.3, 0.2\}$ & 9.87 & 90/100 & 0.761 & \textbf{0.21}* \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+(* R5 deficit at high $\gamma$ jumps to $0.21$ --- numerical
+amplification from large weights, not a real economic effect.)
+
+\paragraph{Reading.}
+\begin{itemize}
+  \item \textbf{R2}: bullet-proof, $100/100$ machine $\varepsilon$ at
+        machine $\varepsilon$, but the deepest h-bias remains ($O(h^4)$).
+  \item \textbf{R3}: slope jumps significantly (0.51 $\to$ 0.65) — the
+        extra Richardson point pulls the FP toward a more
+        T-revealing limit. Loses 9 gammas to numerical noise.
+  \item \textbf{R4}: best practical sweet spot. 99/100 converged,
+        slope rises further to 0.74, deficit collapses to $\sim 0$.
+  \item \textbf{R5}: weights amplify too much, instability at high $\gamma$.
+        Slope only marginally above R4 (0.76 vs 0.74) but deficit
+        explodes to 0.21 at large $\gamma$.
+\end{itemize}
+
+\section{Slope $\alpha^*$ across orders}
+
+\begin{center}
+\includegraphics[width=\linewidth]{01_slope_orders.png}
+\end{center}
+
+Higher Richardson order pulls $\alpha^*$ up — each extra cancellation
+removes more kernel bias from the lookup table. R2 plateaus around
+$0.5$; R3 around $0.65$; R4/R5 around $0.74$--$0.76$. R4 and R5 essentially
+agree on the slope, suggesting the Richardson series has converged.
+
+\section{One-to-one deficit across orders}
+
+\begin{center}
+\includegraphics[width=\linewidth]{02_deficit_orders.png}
+\end{center}
+
+R2, R3, R4 all show \emph{decaying} deficit with $\gamma$ — the FP
+approaches a function of $T$ at high $\gamma$. R5 has good behaviour
+at low $\gamma$ but \emph{explodes} at high $\gamma$ (numerical
+instability from amplification).
+
+\section{Convergence floor}
+
+\begin{center}
+\includegraphics[width=\linewidth]{03_floor_orders.png}
+\end{center}
+
+R2 achieves 100/100 at machine $\varepsilon$; R4 nails 99/100. R3 and R5
+have more failures (mostly in mid-$\gamma$).
+
+\section{Why higher orders are unstable: Richardson weight magnitudes}
+
+\begin{center}
+\includegraphics[width=\linewidth]{04_weights.png}
+\end{center}
+
+\paragraph{The trade-off.} Each additional Richardson point cancels an
+extra factor of $h^2$ in the bias, but the Vandermonde-derived weights
+grow with order. The bilinear-interpolation error in each individual
+$\mu^{h_i}$ table is amplified by $\sum |w_i|$ in the final extrapolation.
+
+For Lin-CDF with bilinear interp:
+\begin{itemize}
+  \item R2: $\sum|w|=2.1$ — safe, but only $O(h^4)$ residual.
+  \item R3: $\sum|w|=8.1$ — already amplifying. 9 failures.
+  \item R4: $\sum|w|=7.1$ (h-spacing matters more than count). Best
+        balance — only 1 failure, $O(h^8)$ residual.
+  \item R5: $\sum|w|=9.9$ — too aggressive. 10 failures and instability
+        at large $\gamma$.
+\end{itemize}
+
+For Chebyshev with polynomial interp (much smaller per-table error),
+higher Richardson orders are tolerated.
+
+\section{Recommendation}
+
+\paragraph{For paper-level economics:} Use \textbf{R2} (most robust,
+100\% machine $\varepsilon$, modest $h$-bias residual) OR \textbf{R4}
+(best deeper-canceling order before instability hits).
+
+\paragraph{The Richardson series HAS converged:} R4 and R5 agree on
+slope ($0.74$ vs $0.76$) to within $\sim 3\%$, and R4 has a stable
+near-zero deficit. So R4 is the recommended choice for high-fidelity
+strict-$h{=}0$ on Lin-CDF.
+
+\paragraph{Compare to Cheb:} Cheb tolerates 10-point Richardson because
+polynomial interp has near-machine-precision error per $\mu^{h_i}$.
+Lin-CDF's bilinear interp limits us to R4 at most. The trade-off is the
+opposite of the speed comparison: Lin-CDF needs more careful Richardson
+order tuning, but each individual operator call is faster.
+
+\end{document}
