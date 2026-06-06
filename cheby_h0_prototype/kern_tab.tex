@@ -179,4 +179,57 @@ the $h{\to}0$ FP and comparing slope $\alpha^*$ at $\gamma{=}1$ with
 the legacy chebroots estimate; then push to $N{=}8$ using the tabulated
 speed.
 
+\section{Joint $(N, h) \to (\infty, 0)$ limit: the actual REE}
+
+We swept $N \in \{6, 8, 10, 12\}$ (i.e. $G\in\{7, 9, 11, 13\}$) and
+$h \in \{0.5, 0.35, 0.25, 0.18, 0.13, 0.10, 0.07, 0.05\}$, using a
+\emph{warm-restart-along-$h$} path: start cold at $h{=}0.5$, then warm
+each smaller-$h$ solve from the previous solution.
+
+\begin{center}
+\includegraphics[width=\linewidth]{joint_warmpath.png}
+\end{center}
+
+\paragraph{Per-$N$ "deepest converged" estimate.}
+For each $N$, the smallest $h$ at which Anderson + Newton--Krylov
+reached machine $\varepsilon$:
+
+\begin{center}
+\begin{tabular}{ccccc}
+\toprule
+$N$ (G)    & deepest $h$ & slope $\alpha^*$ & deficit $1-R^2$ & wall time \\
+\midrule
+6  (G=7)   & 0.07 & 0.2234 & 0.169 & 0.4\,s \\
+8  (G=9)   & 0.13 & 0.2114 & 0.198 & 1.8\,s \\
+10 (G=11)  & 0.10 & 0.2258 & 0.204 & 3.2\,s \\
+12 (G=13)  & 0.10 & 0.2322 & 0.211 & 5.7\,s \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Trends.} As $h$ shrinks at fixed $N$, slope rises and
+deficit falls --- the operator is reading the price more sharply. As
+$N$ grows at fixed $h$, slope and deficit barely move (the Cheb basis
+is over-resolved for the smoothed problem). The joint limit
+$\alpha^* \approx 0.22\!-\!0.23$, $1{-}R^2 \approx 0.20\!-\!0.21$ is
+stable across $N \ge 8$.
+
+\paragraph{Where it fails.} Small-$h$ cells with the warm path:
+$N{=}8$ at $h{=}0.10$, $N{=}10$ at $h\in\{0.13, 0.07\}$, $N{=}12$ at
+$h\in\{0.13, 0.07, 0.05\}$. In every failure case Anderson stalls in
+the $10^{-3}$ band --- the kernel has tightened past the grid's
+resolution and the operator approaches the discontinuous chebroots
+limit that we already know cannot be nailed at this precision. The
+remedy is the usual one: refine $N$ further, or move to higher
+arithmetic precision (\texttt{projects/REZN/solver\_code/highprec\_dd\_qd}
+has this in DD).
+
+\paragraph{Comparison with prior estimates.}
+The chebroots cold-start single-$\Phi$ estimate from
+\texttt{tab\_explain.pdf} gave slope $\approx 0.34$ at $\gamma{=}1$,
+but that was measured at $\|F\|_\infty \sim 10^{-1}$ (an unconverged
+point). The kernel-band joint-limit estimate $\alpha^* \approx 0.22$
+is more reliable --- it's at machine $\varepsilon$ for the smoothed
+operator, and stable across $N \in [8, 12]$ at deepest-$h$.
+
 \end{document}
