@@ -1,0 +1,248 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{graphicx,amsmath,amssymb,booktabs,hyperref,xcolor,tabularx}
+\graphicspath{{/tmp/dd_k3_overnight_figs/}}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlength{\parskip}{6pt}
+\title{The K=3 CRRA lookup function:\\
+       a comparative study of kernel-band Richardson,\\
+       higher-order extrapolation, alternative interpolation,\\
+       and strict-h=0 ground truth}
+\author{Fixed-Point Factory --- overnight comparison report}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+We set out to ``be as sure as possible'' about the K=3 CRRA lookup function
+$\mu(p, u_k)$. Five independent stress tests, all at the same $G{=}11$
+saved double-double fixed points: (i) per-variant lookup-table comparator
+across PCHIP-p interp, Neville-Romberg Richardson R5, higher kernel
+quadrature $\mathrm{NQK}{=}24$, and higher price grid $G_p{=}241$;
+(ii) Richardson-order convergence U-curve from R2 through R7;
+(iii) progressively-smaller kernel bandwidth (down to $h{\sim}0.02$ with
+$\mathrm{NQK}{=}64$); (iv) cross-validation against direct
+strict-$h{=}0$ co-area with partition-of-unity;
+(v) direct strict-$h{=}0$ FP solve from the R4 warm-start, comparing
+$|P_{\rm strict} - P_{R4}|$ and the resulting slope/deficit shifts.
+
+\textbf{Main result.} The kernel-band Richardson lookup we have been using
+\emph{does not converge to strict-h=0} \-\- not at R4, not at R5, and not as
+$h \to 0$ with matched $\mathrm{NQK}$. The lookup discrepancy is
+$\sim 0.6$ in $\mu$ at the $\tau{=}1$ regime and $\sim 0.18$ at $\tau{=}0.2$,
+and \emph{stays} that way as the kernel bandwidth shrinks from 0.5 to 0.02.
+The most plausible mechanism: the kernel-band integral is not analytic
+in $h^2$ for the piecewise-linear $P$ representation \-\- the level set
+has kinks; the band edges hit them at unpredictable $h$ values
+\-\- so Richardson extrapolation, which assumes a Taylor expansion in $h^2$,
+cannot bridge the gap. Strict-$h{=}0$ via direct co-area + POU is the
+right algorithm.
+
+\textbf{Quantitative consequence.} At the strict-$h{=}0$ FP (Anderson-solved
+from the R4 warm to $|F| \sim 10^{-2}\!\dots\!10^{-3}$), the
+\emph{deficit collapses by a factor $\sim 40$}: e.g.\ at $\gamma{=}100, \tau{=}1$
+the R4-FP deficit is $0.255$, the strict-FP deficit is $0.0065$. The
+``deficit ridge'' the K=3 paper reported at intermediate $\gamma$ and high
+$\tau$ appears to be predominantly a kernel-band-Richardson artifact.
+\end{abstract}
+
+\section{What we tested}
+
+\begin{tabularx}{\linewidth}{lXr}
+\toprule
+Test & Script & Compute \\
+\midrule
+Variant comparator (V1\!-\!V8) & \texttt{dd\_k3\_compare.py} & 8 FPs $\times$ 7 var $\sim$ 13\,min \\
+Richardson U-curve (R2\!-\!R7) & \texttt{dd\_k3\_rconverge.py} & 3 FPs $\times$ 12 R\,$\sim$2\,min \\
+Smaller-$h$ test (4 scales) & \texttt{dd\_k3\_small\_h.py} & 4 FPs $\times$ 4 scales $\sim$10\,s \\
+Strict-$h{=}0$ cross-validation & \texttt{dd\_k3\_strict\_xv.py} & 6 FPs $\sim$1\,s \\
+Strict-$h{=}0$ FP solve + bias & \texttt{dd\_k3\_strict\_solve.py} & 8 FPs $\sim$2\,min \\
+\bottomrule
+\end{tabularx}
+
+\section{Finding 1: Richardson order has a U-curve sweet spot}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig1_richardson_ucurve.png}
+\end{center}
+
+We compute $\Phi(P_{\rm FP})$ at the saved R4 baseline FP under
+Richardson orders $R{=}2 \dots 7$ with both arithmetic and geometric
+$h$-spacing. Since $P_{\rm FP}$ is the FP for R4, the R4 column hits zero
+by construction. The U-curve around R4 is the relevant signal:
+\textbf{R3 under-cancels bias, R5 over-extrapolates (noise amplification).}
+The Vandermonde weight $L^1$-norm grows as $1.4 \to 2.9 \to 7.1 \to 18.6$
+across R2\!-\!R5 \-\- noise inflation roughly doubles per added $h$-point.
+
+\textbf{Take-away.} R4 is a defensible operator-level choice
+\emph{conditional on kernel-band being the right base method}. R5 is worse.
+But the underlying question \-\- is kernel-band the right base method? \-\- is
+addressed in Finding~3.
+
+\section{Finding 2: PCHIP-p, hi NQK, hi $G_p$ barely change the lookup}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig2_variant_compare.png}
+\end{center}
+
+Per-variant lookup-table discrepancy vs the truth-proxy V8
+(PCHIP-p + Neville-R5 + $\mathrm{NQK}{=}24$ + $G_p{=}241$):
+\begin{itemize}
+  \item V2 (PCHIP-p): $\sim 1$\,e-4 \-\- linear-p interp is already accurate.
+  \item V6 (hi $\mathrm{NQK}{=}24$): $\sim 1$\,e-2 \-\- kernel quadrature has a
+        modest residual.
+  \item V7 (hi $G_p{=}241$): $\sim 1$\,e-4 \-\- $G_p{=}121$ is plenty.
+  \item V3, V4 (Neville-R5): $\sim 0.03$ \-\- this is what dominates V8 vs V1.
+\end{itemize}
+
+\textbf{Take-away.} The lookup-table approximation choices we control
+\emph{within} kernel-band Richardson (interp, $G_p$, $\mathrm{NQK}$) are
+already tight. The dominant ``error'' inside the kernel-band family is the
+choice of Richardson order, and per Finding~1 that's a wash (R4 sweet spot).
+
+\section{Finding 3: smaller $h$ does \emph{not} bring kernel-band to strict-h=0}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig3_smallh.png}
+\end{center}
+
+We test Richardson R4 with four progressively-smaller $h$-scales,
+each with matched $\mathrm{NQK}$ to keep the kernel band well-resolved:
+\begin{center}
+\begin{tabular}{lrr}
+\toprule
+scale & $h$ values & $\mathrm{NQK}$ \\
+\midrule
+0 (current) & $\{0.5, 0.4, 0.3, 0.2\}$ & 16 \\
+1 & $\{0.25, 0.20, 0.15, 0.10\}$ & 24 \\
+2 & $\{0.10, 0.08, 0.06, 0.04\}$ & 32 \\
+3 (fine) & $\{0.05, 0.04, 0.03, 0.02\}$ & 64 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Result: the kernel-band lookup does \emph{not} converge to strict-$h{=}0$
+as $h \to 0$.} The discrepancy $\max|\mu_{R4} - \mu_{\rm strict}|$ stays
+near $0.50$ at $\tau{=}1$ and $0.20$\!-\!$0.30$ at $\tau{=}0.2$ for every
+scale tested.
+
+\textbf{Mechanism (proposed).} The kernel-band integrand,
+\[
+A_v^h(p, u_k) = \int\!\!\int K_h(P_{\rm pwl}(u_k, u_a, u_b) - p)\, f_v f_v\,
+                  du_a\, du_b,
+\]
+with our piecewise-linear $P_{\rm pwl}$ has level sets that are piecewise-linear
+\emph{with kinks at the grid lines}. As $h$ decreases the band edges sweep
+across these kinks one by one. Each kink crossing contributes a non-analytic
+jump in $A_v^h(h)$. Richardson extrapolation assumes a Taylor expansion
+$A_v^h = A_v^0 + c_1 h^2 + c_2 h^4 + \dots$, which fails when the integrand
+is only $C^0$ in $h$. No Richardson order recovers $A_v^0$ in that case.
+
+\section{Finding 4: the strict-$h{=}0$ FP is far from the R4 FP}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig4_strict_vs_R4.png}
+\end{center}
+
+Anderson-accelerated Picard on the strict-$h{=}0$ operator, warm-started
+from each R4 baseline FP (8 cells, 80\!-\!100 Anderson iters each, residual
+reached $10^{-3}$\!-\!$10^{-1}$ \-\- the strict operator does not converge to
+machine $\varepsilon$ because its Jacobian is non-smooth at kinks).
+
+\textbf{Quantitative bias.}
+\begin{itemize}
+  \item $\|P_{\rm strict} - P_{R4}\|_\infty \sim 0.12$ at $\tau{=}0.2$,
+        $\sim 0.36$ at $\tau{=}1.0$.
+  \item $\max|\mu_{R4}(P_{\rm strict}) - \mu_{\rm strict}(P_{\rm strict})|
+        \sim 0.18$ at $\tau{=}0.2$, $\sim 0.62$ at $\tau{=}1.0$.
+  \item Slope $\alpha^*$: shifts by $\sim 0.02$\!-\!$0.07$ at $\tau{=}1$ (modest);
+        \emph{shifts by $\sim 0.11$ at $\tau{=}0.2$} (the kernel-band slope
+        is more than halved relative to the strict-$h{=}0$ value).
+  \item \textbf{Deficit: shifts by an order of magnitude.} At
+        $\gamma{=}100, \tau{=}1$: R4 deficit $= 0.255$, strict deficit
+        $= 0.0065$. The ``ridge'' across $\gamma$ is essentially flattened
+        by switching to strict-$h{=}0$.
+\end{itemize}
+
+\section{Finding 5: lookup curves \-\- the bias is structural, not noise}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig5_mu_curves.png}
+\end{center}
+
+For each cell, the top row shows the strict-$h{=}0$ lookup curves
+$\mu_{\rm strict}(p, u_k)$ for several $u_k$. The bottom row shows the
+\emph{signed} discrepancy $\mu_{R4} - \mu_{\rm strict}$. The discrepancy is:
+\begin{itemize}
+  \item \textbf{Smooth in $p$} (not jitter) \-\- a systematic functional shape.
+  \item \textbf{Anti-symmetric around $p{=}0.5$}: the Bayesian symmetry
+        $\mu(p, u_k) = 1{-}\mu(1{-}p, {-}u_k)$ holds in both lookups, so the
+        bias must respect it.
+  \item \textbf{Largest in the tails} ($p$ near 0 or 1) where $\partial^2_p \mu$
+        is largest \-\- consistent with the kernel-band band integral
+        coarse-graining away the sharpest features.
+\end{itemize}
+
+\section{Recommendations}
+
+\begin{enumerate}
+  \item \textbf{Use strict-$h{=}0$ as the production lookup-table builder.}
+        The kernel-band Richardson should not be the production code path.
+        It under-resolves the level-set integral and Richardson cannot fix it.
+  \item \textbf{Solve the strict-$h{=}0$ FP with Anderson + Newton--Krylov.}
+        The Newton path is non-smooth at kink crossings, but
+        Anderson/Picard handles non-smooth operators well. Where it stalls
+        ($10^{-3}$ in the current test), continue with a small Trust-region
+        or Levenberg-Marquardt step on a regularised Jacobian.
+  \item \textbf{Use kernel-band Richardson \emph{only} as a smooth
+        warm-start to land near the strict FP basin}, then refine with
+        strict-$h{=}0$. This combines the two strengths.
+  \item \textbf{Re-do the deficit-ridge figure} with strict-$h{=}0$ FPs.
+        The current paper figure $\sim 0.27$ at the ridge centre may
+        collapse to $\sim 0.01$.
+  \item \textbf{Open question.} The strict-$h{=}0$ operator at piecewise-linear
+        $P$ uses POU to handle the kink singularities; this is exact in the
+        co-area sense but the resulting $\mu$ still depends on the
+        piecewise-linear $P$ representation. A clean follow-up: re-test
+        with a higher-order $P$ representation (Chebyshev or cubic
+        spline-interpolated $P$) and check whether the strict-$h{=}0$ result
+        is robust to that choice. If it is, the new deficit numbers stand;
+        if not, we have a different (representation-bias) problem to address.
+\end{enumerate}
+
+\section{Cell-by-cell numbers}
+
+\begin{center}
+\small
+\begin{tabular}{lrrrrrr}
+\toprule
+cell & $\|P_s\!-\!P_{R4}\|$ & $\|\mu_{R4}\!-\!\mu_s\|$ &
+$\alpha^*_{R4}$ & $\alpha^*_s$ & def$_{R4}$ & def$_s$ \\
+\midrule
+$\gamma$=10, $\tau$=0.2  & 0.117 & 0.175 & 0.073 & 0.181 & 0.0000 & 0.0022 \\
+$\gamma$=10, $\tau$=1.0  & 0.374 & 0.619 & 0.722 & 0.763 & 0.1287 & 0.0067 \\
+$\gamma$=30, $\tau$=0.2  & 0.117 & 0.175 & 0.073 & 0.181 & 0.0000 & 0.0022 \\
+$\gamma$=30, $\tau$=1.0  & 0.389 & 0.624 & 0.737 & 0.727 & 0.2157 & 0.0074 \\
+$\gamma$=100, $\tau$=0.2 & 0.117 & 0.175 & 0.073 & 0.181 & 0.0000 & 0.0023 \\
+$\gamma$=100, $\tau$=1.0 & 0.356 & 0.611 & 0.744 & 0.764 & 0.2552 & 0.0065 \\
+$\gamma$=1000, $\tau$=0.2 & 0.117 & 0.175 & 0.073 & 0.181 & 0.0000 & 0.0023 \\
+$\gamma$=1000, $\tau$=1.0 & 0.339 & 0.637 & 0.747 & 0.820 & 0.2711 & 0.0063 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Reproducibility}
+
+All code in \texttt{/tmp/}, will be copied to
+\texttt{projects/REZN/solver\_code/highprec\_dd\_qd/} and saved-FPs
+to \texttt{projects/REZN/solved\_fixed\_points/dd\_k3\_overnight/}.
+JSON summaries:
+\texttt{dd\_k3\_compare.json},
+\texttt{dd\_k3\_rconverge.json},
+\texttt{dd\_k3\_small\_h.json},
+\texttt{dd\_k3\_strict\_xv.json},
+\texttt{dd\_k3\_strict\_solve.json}.
+
+\end{document}
