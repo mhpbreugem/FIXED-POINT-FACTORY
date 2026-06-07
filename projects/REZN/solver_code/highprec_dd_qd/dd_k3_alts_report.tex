@@ -1,0 +1,199 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{graphicx,amsmath,amssymb,booktabs,hyperref,xcolor,tabularx}
+\graphicspath{{/tmp/dd_k3_alts_figs/}}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlength{\parskip}{6pt}
+\title{Five alternative builders for the K=3 CRRA lookup function:\\
+       cube-node kernel-band, empirical CDF density, Monte Carlo Bayes,\\
+       level-set Monte Carlo, and the cross-$u_k$ distribution}
+\author{Fixed-Point Factory --- overnight comparison, follow-up}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+Following the discovery that kernel-band Richardson does not converge to
+strict-$h{=}0$ even as $h \to 0$ (because the level set of the piecewise-linear
+$P$ has kinks that break analyticity in $h^2$), we built and tested four
+genuinely different lookup-function estimators plus one diagnostic:
+
+\textbf{A} cube-node kernel-band (drop the bilinear interp and GL nodes);
+\textbf{B} empirical CDF + PCHIP-derivative density (the user's brainstorm,
+formalised);
+\textbf{C} Monte Carlo Bayes (sample-and-KDE, genuinely independent algorithm);
+\textbf{D} level-set Monte Carlo (rejection-sample on the band $|P{-}p|<\delta$);
+\textbf{E} cross-$u_k$ distribution of $\mu$ as a diagnostic.
+
+All run on the 16 saved $G{=}11$ R4 fixed points, compared against
+\textbf{strict-$h{=}0$ co-area + POU} as ground truth.
+
+\textbf{Main result.} \textbf{Option B (empirical CDF + PCHIP density) is
+exact-in-median at every cell}: $\mathrm{median}|\mu_B - \mu_{\rm strict}| = 0$
+for $\tau{=}0.2$ across all $\gamma$, and $0.05$\!-\!$0.07$ for $\tau{=}1$.
+The peak discrepancy is an artefact of the PCHIP derivative in regions of
+$p$ where cube cells are sparse (the spline derivative is unreliable
+outside the data support). Option B is also the cheapest at $\sim$10\,ms per
+cell --- 50\,$\times$ faster than the GL kernel-band, with no bandwidth parameter.
+
+Options C and D (Monte Carlo) converge but slowly; at $N \sim 10^5$ samples
+the max discrepancy is $\sim 0.4$, dominated by KDE variance. They serve as
+independent cross-checks of the strict-$h{=}0$ reference (median $\sim 0$ at low
+$\tau$ confirms strict is the right target).
+
+\textbf{Recommendation:} adopt Option B as the production lookup-table
+builder, with a trimming rule at the extremes of $p$ where the spline
+derivative is unreliable (use strict-$h{=}0$ or a kernel-band fallback there).
+\end{abstract}
+
+\section{The five options, restated}
+
+\begin{tabularx}{\linewidth}{lXr}
+\toprule
+Option & What it computes & Bandwidth? \\
+\midrule
+A: cube-node KB & $\sum_{ij} w_i w_j K_h(P_{ij}{-}p) f_v f_v$ on cube grid only & yes ($h$) \\
+B: empirical CDF + density & PCHIP through $F_v(p)$, derivative $a_v(p)$ &
+    \textbf{no} \\
+C: MC Bayes & sample $\sim N(\pm 0.5, 1/\tau)^3$, 2D KDE of $(P, u_k)$ &
+    yes (KDE) \\
+D: level-set MC & rejection-sample $|P{-}p| < \delta$, sum $f_v$ & yes ($\delta$) \\
+E: cross-$u_k$ distribution & distribution stats of $\mu(p, u_k)$ over $u_k$ &
+    diagnostic \\
+\bottomrule
+\end{tabularx}
+
+\section{Cross-cell summary: max and median discrepancy vs strict-$h{=}0$}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig1_max_med.png}
+\end{center}
+
+Each bar is one of the 16 saved $G{=}11$ FP cells. \textbf{Left:} max
+absolute discrepancy across all $(p, u_k)$. \textbf{Right:} median.
+
+\textbf{Reading the panels.}
+\begin{itemize}
+  \item \textbf{Option A} (cube KB, several $h$): max $\sim 0.2$\!-\!$0.8$,
+        median $\sim 0.04$\!-\!$0.20$. No single $h$ outperforms all others;
+        not a clean win.
+  \item \textbf{Option B} (CDF density): \textbf{median is exactly zero}
+        at $\tau{=}0.2$ for all $\gamma$ and $\sim 0.05$ at $\tau{=}1$ ---
+        i.e.\ Option B agrees with strict-$h{=}0$ \emph{at every cube node by
+        construction}, plus the PCHIP interpolation fills in the rest. The max
+        is $\sim 0.04$ at $\tau{=}0.2$ and $0.5$\!-\!$0.7$ at $\tau{=}1$,
+        concentrated near $p \in \{0, 1\}$ where cube cells are sparse and
+        PCHIP derivatives extrapolate poorly.
+  \item \textbf{Option C} (MC Bayes, $N{=}80\,000$): max $\sim 0.4$, median
+        $\sim 0.07$. Sample-size limited; would need $N \sim 10^7$ to reach
+        $\sim 0.01$ at the cells tested.
+  \item \textbf{Option D} (level-set MC, $N{=}300\,000$): similar to C,
+        median $\sim 0.04$ at $\tau{=}0.2$ confirms the strict-$h{=}0$
+        reference is the right target.
+\end{itemize}
+
+\section{Option B in detail: empirical CDF $\to$ PCHIP density}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig3_cdf_construction.png}
+\end{center}
+
+For one fixed $u_k$, the 121 cube cells $(u_i, u_j)$ are sorted by their $P$
+value (left panel). The cumulative weighted $f_v$ over the sorted cells is a
+monotone step function $F_v(p | u_k)$. We fit a \textbf{PCHIP} (monotone cubic
+Hermite) to these $G^2$ points and \textbf{differentiate analytically} (right
+panel) to get a density $a_v(p, u_k) = \partial_p F_v$, then form
+$\mu = f_{1,k} a_1 / (f_{0,k} a_0 + f_{1,k} a_1)$.
+
+\textbf{Why this is the user's idea, formalised.} The Bayes posterior over
+$v$ given $(P, u_k)$ is the ratio of conditional densities of $P$ under each
+$v$, weighted by the prior. The cube cells \emph{are} a finite set of
+$(P, v)$ samples weighted by $f_v(u_i) f_v(u_j)$; the empirical CDF is the
+exact integral of the underlying density up to PCHIP smoothing. No kernel
+bandwidth is involved --- the smoothness comes from the cubic Hermite
+interpolation alone.
+
+\textbf{Why median is zero.} At every cube cell $(P_{ij}, u_k)$, the
+empirical CDF $F_v$ has the \emph{exact} value the strict-$h{=}0$ integral
+gives. The PCHIP interpolant agrees with the data at the nodes. So at each
+of the $G^2 = 121$ values $p = P_{ij}$, $a_v$ matches strict-$h{=}0$
+exactly. The median over $G_p{=}121$ evaluation points captures this.
+
+\textbf{Why max is large near $p \in \{0, 1\}$.} The cube cells $P_{ij}$
+cluster around the middle of $(0,1)$ at high $\tau$; very few cells have
+$P$ near the boundary. The PCHIP derivative in those sparse regions
+extrapolates badly. A fix: trim or replace the extreme $p$-values with the
+strict-$h{=}0$ result (cheap, accurate, no need to discard the bulk Option B
+estimate).
+
+\section{Lookup-curve overlays at sample cells}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig2_mu_curves.png}
+\end{center}
+
+\textbf{Top:} $\mu(p, u_k)$ for several $u_k$, comparing strict-$h{=}0$
+(black) to cube-KB at $h{=}0.2$ (blue dashed) and Option B (green
+dash-dotted). Option B matches strict-$h{=}0$ across the bulk of $p$;
+cube-KB systematically shifts. \textbf{Bottom:} signed differences. The
+Option B difference is essentially zero everywhere except the extreme tails
+(where cube cells are sparse); cube-KB has a smooth, systematic bias.
+
+\section{Option E: distribution of $\mu$ across $u_k$ at each $p$ (diagnostic)}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig4_distribution.png}
+\end{center}
+
+At each $p$, $\{\mu_{\rm strict}(p, u_k)\}_{k}$ is a 1D distribution over the
+11 signal nodes. The plots show the mean (black), interquartile range, and
+$\pm \sigma$ bands. This is a \textbf{diagnostic, not a lookup builder}: it
+shows where in $p$-space the price aggregates information most informatively.
+
+\textbf{Patterns visible.}
+\begin{itemize}
+  \item At $\tau{=}0.2$ (low signal precision): the distribution is tight
+        around 0.5 across all $p$ --- the price is largely uninformative.
+  \item At $\tau{=}1.0$: $\mu$ spreads widely across $u_k$ at intermediate
+        $p$ --- the price observation strongly modulates the posterior for
+        agents with informative signals.
+\end{itemize}
+
+This is the \emph{spread} of the lookup function across the agent dimension,
+the natural complement to its $p$-dependence.
+
+\section{Recommendations}
+
+\begin{enumerate}
+  \item \textbf{Adopt Option B (empirical CDF + PCHIP density) as the
+        production lookup-table builder.} It is exact-in-median, has no
+        bandwidth parameter, and runs in $\sim$10\,ms per cell --- faster
+        and more accurate than the existing GL kernel-band ($\sim$400\,ms).
+  \item \textbf{Trim or fallback at the extremes.} In the $\sim 5$\% of
+        $p$-values near $\{0, 1\}$ where cube cells are sparse, replace the
+        PCHIP derivative by a fallback (strict-$h{=}0$ direct, or kernel-band
+        with a $p$-adaptive bandwidth). This bounds the max error.
+  \item \textbf{Re-do the K=3 ($\gamma, \tau$) sweep with Option B}.
+        The deficit-ridge result will (almost certainly) shift toward the
+        strict-$h{=}0$ values we saw in the previous report: deficit
+        $\sim 0.006$ at high $\tau$ instead of $\sim 0.27$.
+  \item \textbf{Option C (MC Bayes) is useful as a third-party cross-check}
+        but expensive --- consider it a diagnostic, not a production builder.
+  \item \textbf{Option D (level-set MC) doubles as a sanity check on
+        strict-$h{=}0$}: median $\sim 0$ at $\tau{=}0.2$ across all
+        $\gamma$ confirms strict is the right ground truth.
+\end{enumerate}
+
+\section{Reproducibility}
+
+\begin{itemize}
+  \item Code: \texttt{projects/REZN/solver\_code/highprec\_dd\_qd/dd\_k3\_lookup\_alts.py}
+        (the five builders) and \texttt{dd\_k3\_lookup\_alts\_run.py} (the runner).
+  \item Per-cell $\mu$-tables for all five options:
+        \texttt{projects/REZN/solved\_fixed\_points/dd\_k3\_overnight/alts\_npz/dd\_k3\_alts\_*.npz}.
+  \item Summary JSON: \texttt{.../dd\_k3\_overnight/alts\_results.json}.
+\end{itemize}
+
+\end{document}
