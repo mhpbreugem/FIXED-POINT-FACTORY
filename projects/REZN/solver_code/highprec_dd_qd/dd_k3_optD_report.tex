@@ -1,0 +1,129 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{graphicx,amsmath,amssymb,booktabs,hyperref,xcolor,tabularx}
+\graphicspath{{/tmp/dd_k3_optD_figs/}}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlength{\parskip}{6pt}
+\title{Option \textit{d}: endogenous (equidistributed) p-grid for the K=3 lookup table}
+\author{Fixed-Point Factory --- adaptive-grid follow-up}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+Following the brainstorm, we test endogenous p-grids that equidistribute the
+121 grid points by a monitor function $m(p)$ instead of the current
+logit-uniform spacing. Four monitors compared at 16 saved $G{=}11$ R4
+fixed points:
+\begin{itemize}
+  \item \textbf{uniform\_logit} (baseline): $m(p) = 1$, i.e.\ logit-uniform.
+  \item \textbf{alpha\_a\_v}: $m(p) = a_v(p)$, the lookup density itself
+        (averaged over $u_k$). Equal-mass bins.
+  \item \textbf{beta\_dmu}: $m(p) = |\partial \mu_{\rm avg} / \partial p|$,
+        the average $\mu$-slope (equal $\mu$-variation per bin).
+  \item \textbf{gamma\_arc}: $m(p) = \sqrt{1 + |\partial \mu|^2}$, arc-length.
+\end{itemize}
+Each monitor's grid is built once from a reference run (strict-$h{=}0$ at
+1001 fine pts), the lookup is recomputed on the adaptive grid, linearly
+interpolated back to the reference grid, and the error vs the reference
+measured.
+
+\textbf{Result.} \emph{Alpha and beta} (effectively the same monitor: the
+lookup density $\propto |\partial \mu /\partial p|$) cut the average max
+interpolation error \textbf{from 0.312 to 0.234, a 25\% reduction} at the
+same G\textsubscript{p}=121. Arc-length is similar (-23\%). Median error is
+essentially zero for all monitors (the lookup is exact at the grid points
+themselves; the residual is purely between-point interp).
+
+\textbf{Where do the 121 points go?} The alpha monitor places \textbf{51 of
+121 points} in the central region $|p - 0.5| < 0.05$ for $\tau{=}0.2$
+(vs the baseline's 3), reflecting that the lookup is steepest at p=0.5
+in the low-$\tau$ regime. At $\tau{=}1$ alpha keeps a few central points
+and spreads the rest toward the tails where the lookup has features.
+
+\textbf{Practical recommendation.} Adopt the alpha-monitor adaptive p-grid
+as the production tabulation choice. Easy retrofit: compute the lookup once
+on a reference grid, build the adaptive grid via cumulative-density
+inversion, tabulate on the adaptive grid going forward. 25\% accuracy
+improvement at zero extra runtime per Phi.
+\end{abstract}
+
+\section{Monitor comparison}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig1_monitor_compare.png}
+\end{center}
+
+\textbf{Left}: max interpolation error vs the reference (G\textsubscript{p}=1001 logit-uniform)
+for each monitor across the 16 saved R4 FPs.
+\textbf{Right}: median error. The bars for alpha and beta are visually
+identical because both monitors are proportional to the lookup density
+at the FP (the density IS the derivative of $\mu$ in the relevant sense).
+
+\section{Average improvement}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig2_avg.png}
+\end{center}
+
+Average max interpolation error across all 16 cells:
+\begin{center}
+\begin{tabular}{lrr}
+\toprule
+monitor & avg max$|d|$ & improvement vs uniform\\
+\midrule
+uniform\_logit & 0.312 & --- \\
+alpha\_a\_v & 0.234 & \textbf{-25\%} \\
+beta\_dmu & 0.234 & \textbf{-25\%} \\
+gamma\_arc & 0.239 & -23\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Where the points go}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig3_density.png}
+\end{center}
+
+Average number of grid points the monitor places in the narrow band
+$|p - 0.5| < 0.05$. The alpha monitor reconcentrates: from 3 baseline
+points to $\sim 27$ adaptive points in the central region (averaged
+over all cells, including high-$\tau$ where the central region matters
+less).
+
+\section{How to deploy}
+
+\begin{enumerate}
+  \item At the start of a sweep cell, solve to convergence on the current
+        (logit-uniform) p-grid.
+  \item At the FP, compute $a_v(p)$ on a dense reference (e.g.\ 1001 pts)
+        via strict-$h{=}0$ or Option B+.
+  \item Build the cumulative $A(p) = \int_0^p a_v(p') dp'$; pick new
+        grid points $p_i = A^{-1}(i/G_p \cdot A(1))$.
+  \item Re-tabulate the lookup on the new grid and re-feed Phase B
+        clearing. Re-solve if you want a fully self-consistent FP.
+\end{enumerate}
+
+For repeated FP evaluations at nearby $(\gamma, \tau)$ (e.g.\ a sweep),
+the adaptive grid can be reused across neighbors --- the monitor varies
+slowly with parameters.
+
+\section{Why median is zero}
+
+The lookup is computed strict-$h{=}0$ \emph{exactly at the grid points}
+$p_i$. The error comes only from linear interpolation between them. For
+any monitor that places at least one grid point near each peak/feature of
+$\mu(p, u_k)$, the median over the dense reference is effectively zero
+(the median p-value is between two grid points, where linear interp is
+sharp). The max error captures the worst-case between-grid-point feature.
+
+\section{Reproducibility}
+\texttt{projects/REZN/solver\_code/highprec\_dd\_qd/dd\_k3\_optD\_adaptive\_p.py}
+(builder + tester) and \texttt{dd\_k3\_optD\_figs.py} (figures).
+Results in
+\texttt{projects/REZN/solved\_fixed\_points/dd\_k3\_overnight/optD/}.
+
+\end{document}
