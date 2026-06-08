@@ -1,0 +1,100 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{graphicx,amsmath,amssymb,booktabs,hyperref,xcolor}
+\graphicspath{{/tmp/dd_k3_cheby_cusp_figs/}}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlength{\parskip}{6pt}
+\title{Cusps in the strict-$h{=}0$ lookup:\\
+       why Cheby coefs don't reach machine $\varepsilon$ at high $\tau$}
+\author{Fixed-Point Factory --- visual diagnostic}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\section{Cheby decay: smooth vs FP}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig3_decay.png}
+\end{center}
+
+Dashed: known smooth functions. All converge to machine $\varepsilon$
+(poly deg=4 is exact; sigmoid$(0.5T)$ at $G{=}21$; sigmoid$(2T)$ at $4\times 10^{-10}$
+by $G{=}31$). The Cheby fit IS mechanically correct.
+
+Solid red: the Lin-CDF R4 FP at $\gamma{=}100, \tau{=}1$. Decay is slow,
+$\sim 1/G^{0.8}$. The Cheby-native FP edge coef (blue horizontal line) at
+$G{=}11$ floors at $\sim 3 \times 10^{-4}$ --- 150$\times$ smoother than R4
+but doesn't go to zero.
+
+\section{Regime map: where is the FP smooth?}
+
+\begin{center}
+\includegraphics[width=0.95\linewidth]{fig4_regime.png}
+\end{center}
+
+The FP edge Cheby coef at the largest tested $G$, across the
+$(\gamma, \tau)$ grid. \textbf{$\tau{=}0.2$} (bottom row): $\log_{10}\text{edge} \leq -8$
+across all $\gamma$ --- FP is fully smooth, Cheby converges to machine
+$\varepsilon$. \textbf{$\tau \geq 0.5$}: $\log_{10}\text{edge} \approx -3$
+to $-2$ --- slow convergence, intrinsic cusps.
+
+\textbf{Sharp regime boundary at $\tau \approx 0.5$.}
+
+\section{Look at the lookup function: where are the cusps?}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig1_mu_cusps.png}
+\end{center}
+
+\textbf{Left} (smooth regime $\tau{=}0.2$): $\mu(p, u_k)$ is a smooth
+S-curve in $p$ for each $u_k$. No cusps, no kinks. The lookup is
+$C^\infty$ in this regime.
+
+\textbf{Right} (kinky regime $\tau{=}1$): $\mu(p, u_k)$ has multiple
+visible kinks/wiggles in $p$, especially near $p \in \{0, 1\}$.
+These are the $C^0$ cusps from critical-point passages of the level set
+$\{P = p\}$.
+
+\section{Where do the cusps come from?}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig2_grad_critical.png}
+\end{center}
+
+$|\nabla P|^2$ on the 2D slice $u_1 = 0$ (varying $u_2, u_3$).
+
+\textbf{Left} ($\tau{=}0.2$ smooth): $|\nabla P|^2$ is large and varies
+smoothly; no critical points in the interior. The level set
+$\{P = p\}$ is a smooth closed curve at each $p$; the
+lookup integrand $1/|\nabla P|$ is bounded everywhere.
+
+\textbf{Right} ($\tau{=}1$ kinky): $|\nabla P|^2$ has \emph{several
+near-zero regions} (dark blue) marking critical points
+(red crosses). At $p$ values where the level set $\{P = p\}$ passes
+through such a critical point, the integrand $1/|\nabla P|$ blows up.
+The lookup integral $A_v(p, u_k)$ has integrable but singular structure
+$\to$ $C^0$ cusps in $\mu(p, u_k)$ at those $p^*$ values.
+
+\section{The diagnosis, in one paragraph}
+
+The strict-$h{=}0$ lookup
+$A_v(p, u_k) = \int_{P=p} f_v f_v / |\nabla P|\, d\sigma$ has an
+integrable singularity at critical points of $P$ (where $\nabla P = 0$).
+At $p$ values where the level set passes through a critical point, the
+integral has a $C^0$ cusp. At low $\tau$ the equilibrium has no
+interior critical points (gradient is everywhere bounded away from 0);
+the lookup is $C^\infty$ and Cheby converges to machine $\varepsilon$.
+At high $\tau$ ($\tau \geq 0.5$) the equilibrium has multiple
+interior critical points, the lookup has multiple cusps in $p$, and
+Cheby spectral expansion converges algebraically (Gibbs-like) rather
+than exponentially.
+
+\textbf{The fix} is cusp-aware quadrature: locate critical points
+$\nabla P = 0$ (zeros of a 2D polynomial system, solvable by resultants
+from the Cheby coefs); split the contour integral into
+\textbf{smooth piece + analytic singular kink residual}. Standard
+treatment in spectral shock-fitting and conical-refraction methods. Not
+implemented here; substantial follow-up.
+
+\end{document}
