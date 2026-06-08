@@ -1,0 +1,186 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{graphicx,amsmath,amssymb,booktabs,hyperref,xcolor,tabularx}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlength{\parskip}{6pt}
+\title{Chebyshev fit + analytic 1D contour root-finding\\
+       for the K=3 lookup function:\\
+       prototype, convergence study, and verdict}
+\author{Fixed-Point Factory --- brainstorm prototype}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+We prototype your idea: fit a 3D Chebyshev polynomial to the price function
+$P(u_1, u_2, u_3)$, then compute the lookup $\mu(p, u_k)$ analytically by
+\textbf{1D root-finding on the polynomial level set}. No kernel, no
+Richardson, no cube-cell sort: the contour is the algebraic variety of a
+polynomial; numpy's \texttt{chebroots} (companion matrix) finds its
+intersections with each GL quadrature ray; the lookup integral becomes a
+clean 1D quadrature.
+
+\textbf{Two findings.}
+\begin{itemize}
+  \item \textbf{The CDF-uniform $u$-grid is incompatible with Chebyshev
+        fitting at high degree.} Tried $G{=}11$ saved FPs with Cheby degrees
+        10\!-\!15: edge coefficients oscillate (Runge phenomenon),
+        lookup error diverges to $\sim 0.7$ at high degree.
+  \item \textbf{The Lobatto $u$-grid fixes the conditioning} but
+        \emph{Cheby convergence is algebraic, not exponential.}
+        Re-solving the FP at Lobatto grids $G{=}11, 15, 21$ (at
+        $\gamma{=}100, \tau{=}1$): the largest top-edge Cheby coef decays
+        $0.049 \to 0.020 \to 0.011$ (factor $\sim 2$ per $1.5\times$ in $G$,
+        i.e.\ $\sim 1/G^2$ decay). Lookup median error decays similarly.
+        \emph{Cheby does not reach machine $\varepsilon$.}
+\end{itemize}
+
+\textbf{Verdict.} The fixed-point $P$ is \emph{not analytic} in $(u_1, u_2, u_3)$ at
+high $\tau$: it is C\textsuperscript{k} for some small finite $k$. Cheby
+expansion captures it at algebraic rate, not the exponential rate that
+``add nodes until $\varepsilon$'' would require. The brainstorm idea works
+in principle but the binding constraint isn't fit quality --- it is the
+intrinsic non-smoothness of the equilibrium price function in this regime.
+
+\textbf{Where the idea \emph{does} pay off.} At low $\tau$ (smooth FP),
+Cheby would converge faster --- worth re-testing. The Hermite-Cheby
+extension (value + first partials at each node) doubles the per-evaluation
+information, so it gives at most a factor-2 better convergence rate, not
+a regime change.
+
+\textbf{Practical recommendations.}
+\begin{enumerate}
+  \item For \emph{smooth-regime} cells (low $\tau$, low $\gamma$): the
+        Cheby-Lobatto-analytic-contour pipeline is a reasonable production
+        path; expect $\sim 1/G^4$ for sufficiently smooth $P$.
+  \item For \emph{sharp-regime} cells (high $\tau$ near 1, intermediate $\gamma$):
+        Cheby gives algebraic convergence only. Strict-h=0 + POU (existing
+        path) is at the same accuracy class with $O(G^3)$ work per Phi
+        instead of root-finding overhead.
+  \item For pursuing machine-eps lookups in the sharp regime, the deepest
+        approach would be \textbf{detect the smoothness barrier} (locate
+        the kinks/cusps of the level set) and integrate the kink
+        contribution separately (Gauss-Kronrod adaptive quadrature, or
+        analytic kink residuals). Substantial follow-up; not in this report.
+\end{enumerate}
+\end{abstract}
+
+\section{Pipeline}
+
+\begin{enumerate}
+  \item Choose Lobatto u-grid: $u_i = -U_{\max} \cos(\pi i / (G-1))$, $i=0..G-1$,
+        with $U_{\max} = 2.33$ (covering the practical signal range).
+  \item Solve the FP with the existing Lin-CDF R4 operator on this grid.
+        Solve reaches $|F|_\infty \sim 10^{-14}$ at $G{=}11, 15, 21$.
+  \item Fit 3D Cheby polynomial: exact interpolation at Lobatto nodes
+        (Vandermonde inversion or FFT).
+  \item Lookup $\mu(p, u_k)$:
+        \begin{itemize}
+          \item Form 2D Cheby slice $\tilde P(u_a, u_b) = \tilde P(u_k, u_a, u_b)$.
+          \item For each Gauss-Legendre $u_a$ node, eval the 1D Cheby in $u_b$,
+                subtract $p$.
+          \item Companion-matrix roots of the 1D Cheby (numpy
+                \texttt{chebroots}) give the level-set intersection with
+                the $u_a$ ray.
+          \item Analytic derivative $\partial \tilde P / \partial u_b$ at each
+                root.
+          \item Sum $f_v(u_a) f_v(u_b)/|\partial_b \tilde P|$ weighted by
+                $w_a$ across all roots.
+        \end{itemize}
+\end{enumerate}
+
+\section{Convergence at $\gamma{=}100, \tau{=}1$}
+
+\begin{center}
+\begin{tabular}{rrrrr}
+\toprule
+$G$ & FP $|F|_\infty$ & top edge coef & lookup max$|d|$ & median$|d|$ \\
+\midrule
+11 & 6.8e-14 & 0.0491 & 0.434 & 0.251 \\
+15 & 2.4e-14 & 0.0198 & 0.407 & 0.127 \\
+21 & 4.3e-14 & 0.0110 & 0.380 & 0.081 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Edge coef $\sim 1/G^{0.8}$ in this range; lookup median $\sim 1/G^{1.6}$.
+Extrapolating: $G{=}30$ would give median $\sim 0.04$, $G{=}50 \sim 0.02$,
+$G{=}100 \sim 0.005$. \textbf{Machine $\varepsilon$ requires effectively
+infinite $G$ --- the FP is not analytic in this regime.}
+
+\section{What went wrong with the CDF-uniform grid attempt}
+
+The initial prototype fit Cheby to the existing G=11 FPs (saved on
+CDF-uniform $u$-grid). At degree 10 the lookup max was 0.18; at degree 13
+it grew to 0.29; at degree 15, edge coefs $> 10^6$ at $\tau{=}1$. Classical
+Runge phenomenon: equispaced (or CDF-uniform) nodes are not interpolation
+nodes for Cheby; high-degree LSQ fit oscillates.
+
+Fixed by re-solving on Lobatto nodes (where Cheby fit is exact, no
+conditioning issues).
+
+\section{Comparison to existing approaches}
+
+\begin{center}
+\begin{tabular}{lrrr}
+\toprule
+method & lookup max$|d|$ & median$|d|$ & per-Phi cost \\
+       &                 &              & (G=11) \\
+\midrule
+kernel-band R4 (current) & 0.5--0.7 & 0.05 & 400 ms \\
+Option B+ (cube CDF + PCHIP) & 0.4 & 5e-5 & 50 ms \\
+strict-h=0 (POU + linear) & --- (reference) & --- & 30 ms \\
+\textbf{Cheby-Lobatto + analytic contour ($G{=}21$)} & 0.38 & 0.08 & $\sim$10 s \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+At equal $G$, Cheby-Lobatto is similar in max accuracy to existing
+methods, but $\sim 100\times$ slower due to the root-finding overhead.
+\textbf{It is not yet competitive as a production builder.}
+
+\section{Why the FP has limited smoothness}
+
+The K=3 Hellwig FP is the solution of a self-consistent Bayesian system.
+At high $\tau$ the lookup $\mu(p, u_k)$ has sharp features near $p = 0$ and
+$p = 1$ (heavy-tailed posterior). These sharp features in $\mu$ feed back
+through CRRA clearing into corresponding sharp features in $P$. The price
+function is smooth (C\textsuperscript{$\infty$}) almost everywhere, but
+has \textbf{C\textsuperscript{k} ridges} along certain submanifolds in
+$(u_1, u_2, u_3)$ space where the Bayes ratio transitions.
+
+A global Cheby expansion is dominated by the slowest-decaying mode
+across these ridges, hence the algebraic convergence.
+
+\textbf{Possible cure (not implemented here):} \emph{piecewise} Cheby
+patches separated by the ridge submanifolds, each patch C\textsuperscript{$\infty$}.
+This is the \emph{multi-element spectral method}. Substantial code;
+deferred.
+
+\section{Recommendation}
+
+\begin{enumerate}
+  \item \textbf{Do not} adopt Cheby-Lobatto + analytic contours as the
+        primary lookup builder. Performance is below existing alternatives.
+  \item \textbf{Do} keep this prototype in the toolbox for the
+        \emph{smooth-regime cells} (low $\tau$, $\gamma$); verify
+        on those cells in a follow-up.
+  \item \textbf{For machine-$\varepsilon$ lookups}, the path is not Cheby
+        refinement --- it is to \emph{find and treat the FP's
+        non-smoothness directly} (multi-element spectral, kink-aware
+        Gauss-Kronrod, or POU on the offending submanifolds).
+\end{enumerate}
+
+\section{Reproducibility}
+
+\begin{itemize}
+  \item Code:
+        \texttt{projects/REZN/solver\_code/highprec\_dd\_qd/dd\_k3\_cheby\_h0.py}
+        (CDF-uniform attempt, demonstrates Runge problem) and
+        \texttt{dd\_k3\_cheby\_lobatto.py} (Lobatto convergence study).
+  \item Log: \texttt{dd\_k3\_overnight/cheby/dd\_k3\_cheby\_lobatto.log}.
+\end{itemize}
+
+\end{document}
