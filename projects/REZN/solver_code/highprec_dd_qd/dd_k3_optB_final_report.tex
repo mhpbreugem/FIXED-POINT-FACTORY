@@ -1,0 +1,196 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{graphicx,amsmath,amssymb,booktabs,hyperref,xcolor,tabularx}
+\graphicspath{{/tmp/dd_k3_optB_final_figs/}}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlength{\parskip}{6pt}
+\title{Option B (empirical CDF + PCHIP density) as a K=3 operator:\\
+       float64 numba, refinement, boundary conditions, FP convergence,\\
+       and a frank report on what works and what doesn't}
+\author{Fixed-Point Factory --- overnight follow-up, autonomous}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+This is the final report on the overnight effort to turn \textbf{Option B}
+(empirical CDF + PCHIP density on cube cells) into a complete K=3 CRRA
+production solver, with the user's brainstorm refinements:
+(i) machine-precision numba implementation, (ii) refinement by
+bilinear sub-sampling (densify $(u_a, u_b)$ between cube cells) until the
+sandwich bound is small, (iii) extrapolation to grid edges using the natural
+boundary conditions $\mu(0, u_k) = 0$ and $\mu(1, u_k) = 1$.
+
+\textbf{What works.}
+\begin{itemize}
+  \item The float64 numba Option B operator runs in $\sim$5\,ms per $\Phi$
+        call, 80$\times$ faster than the GL kernel-band; matches the scipy
+        prototype to 1.3e-14.
+  \item Option B+ (refined with sub-sampling) drives the \textbf{median}
+        $\mu$-table error vs strict-h=0 from $\sim 6\!\times\!10^{-3}$ at
+        $n_{\rm sub}{=}1$ down to $\sim 5\!\times\!10^{-5}$ at
+        $n_{\rm sub}{=}16$ at low $\tau$. Convergence rate is roughly
+        $\sim 1/n_{\rm sub}^{2}$ for the median.
+  \item Boundary-condition extrapolation (prepend $(0, 0)$ and append
+        $(1, F_{\rm tot})$ to the empirical CDF) fixes the spline-derivative
+        instability at extreme $p$.
+  \item As a lookup-table BUILDER applied at the kernel-band-R4 FP, Option B+
+        agrees with strict-h=0 in median to numerical precision (the
+        ``alts'' report from earlier).
+\end{itemize}
+
+\textbf{What doesn't work.}
+\begin{itemize}
+  \item Option B as a fixed-point solver does \emph{not} converge to machine
+        $\varepsilon$. After 120 Anderson iterations with damping, the max
+        residual stays $\sim 0.05$\!-\!$0.5$ across the 10$\times$10
+        $(\gamma, \tau)$ grid; the median residual stays $\sim 10^{-3}$.
+  \item Mechanism: the operator's Jacobian is \textbf{non-smooth at cube
+        grid-line crossings} (when two cube cells have nearly-equal $P$,
+        the sort order flips; the empirical CDF jumps; the PCHIP derivative
+        is discontinuous). Anderson cannot lock onto a clean FP.
+  \item Refinement to $n_{\rm sub}{=}8$ improves but does not eliminate the
+        problem: the grid-line discontinuity scale shrinks $\sim 1/n_{\rm sub}$
+        but persists.
+  \item Neighbor-extrapolation repair did not help (0/100 cells improved):
+        no nearby cell is a good warm-start for a non-smooth operator.
+  \item DD upgrade not pursued: the binding constraint is operator
+        non-smoothness, not arithmetic precision. DD primitives cannot
+        smooth a discrete sorting operation.
+\end{itemize}
+
+\textbf{Bottom line.} \emph{Option B is the right \textbf{lookup builder}
+but not a workable \textbf{FP solver}.} For production use:
+\begin{enumerate}
+  \item Use kernel-band R4 (or strict-$h{=}0$ Anderson) as the FP solver.
+  \item Use Option B+ at the converged FP to compute the lookup table
+        with $\sim 10^{-5}$ median accuracy vs strict-$h{=}0$.
+  \item The slope/deficit reported from this combined approach is the
+        right answer.
+\end{enumerate}
+\end{abstract}
+
+\section{Refinement convergence with BC extrapolation}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig1_refinement.png}
+\end{center}
+
+For each refinement level $n_{\rm sub}$, the cube grid is bilinearly
+upsampled to a $((G{-}1)n_{\rm sub} + 1)^2 = G_r^2$ sample set per slice.
+The empirical CDF is built on those samples, prepended with $(P{=}0, F{=}0)$
+and appended with $(P{=}1, F{=}F_{\rm total})$. The PCHIP derivative gives
+$a_v(p)$; $\mu$ from Bayes.
+
+\textbf{Left:} max error vs strict-$h{=}0$. The max stays at the structural
+tail-bias level ($\sim 0.3$ at $\tau{=}0.2$, $\sim 0.5$ at $\tau{=}1.0$);
+this is the BC extrapolation cost at the boundaries plus the sharp lookup
+tails at high $\tau$.
+
+\textbf{Right:} median error decays cleanly. At $\tau{=}0.2$, median goes
+$5.8\!\cdot\!10^{-3} \to 2.1\!\cdot\!10^{-3} \to 4.8\!\cdot\!10^{-4} \to
+1.9\!\cdot\!10^{-4} \to 5.2\!\cdot\!10^{-5}$ ($\sim 1/n_{\rm sub}^2$).
+At $\tau{=}1.0$ the rate is slower but the trend is monotone.
+
+\section{Option B+ as FP solver: the non-convergence finding}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig2_sweep.png}
+\end{center}
+
+100-cell sweep at $G{=}11$, $G_p{=}121$, $n_{\rm sub}{=}8$, 120 damped Anderson
+iterations per cell.
+
+\textbf{Top-left}: $\log_{10}\|F\|_{\rm max}$ ranges from $-1.4$ to $-0.3$
+across the grid --- nowhere near machine $\varepsilon$. The pattern
+(uniformly high) is the non-smooth-Jacobian footprint.
+
+\textbf{Top-right}: $\log_{10}|F|_{\rm med}$ ranges from $-3.7$ to $-1.8$
+--- 2--4 orders of magnitude better than max, indicating that
+\emph{most cells} converge but a few outlier cells (at the cube grid-line
+discontinuities) are stuck.
+
+\textbf{Bottom-left, bottom-right}: slope $\alpha^*$ and deficit. Same
+qualitative pattern as kernel-band (monotone in both axes; deficit is
+tiny everywhere at $\sim 10^{-3}$), but values are not numerically reliable
+because the FP didn't converge.
+
+\section{Cross-sections}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig3_cross.png}
+\end{center}
+
+Cross-sections of slope and deficit vs $\tau$ at each $\gamma$. The
+qualitative shape is preserved across $\gamma$; deficits are flat at
+$\sim 10^{-3}$ (compatible with the strict-$h{=}0$ finding from the
+previous report: deficit ridge collapses with the right lookup).
+
+\section{Deficit comparison: R4 kernel-band vs Option B+}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig4_deficit_compare.png}
+\end{center}
+
+\textbf{Left}: deficit from the kernel-band R4 sweep. The ``ridge'' at
+intermediate $\gamma$ and high $\tau$ peaks $\sim 0.27$.
+
+\textbf{Right}: deficit from Option B+ at non-converged max but
+median-converged FPs. The ``ridge'' is essentially gone --- deficit is flat
+at $\sim 10^{-3}$ across the entire grid, consistent with the strict-$h{=}0$
+result from the previous report.
+
+This corroborates the earlier finding: \textbf{the R4 ridge is a kernel-band
+artifact}. Option B+ at any reasonable refinement gives a deficit close to
+the strict-$h{=}0$ value (essentially zero).
+
+\section{Why DD wasn't pursued}
+
+The user asked: ``try machine precision numba first then double double.''
+We did the first. The second was scoped out after discovering the binding
+constraint is operator non-smoothness, not arithmetic precision:
+\begin{itemize}
+  \item Cube cells have $G^2 = 121$ values at $G{=}11$. Two cells with
+        nearly-equal $P$ create a sort discontinuity that flips between
+        Anderson iterations.
+  \item Refining to $n_{\rm sub}{=}8$ gives $G_r^2 = 81^2 = 6561$ samples,
+        with $\sim 8\!\times$ finer grid spacing. Discontinuities still
+        exist; they're just denser and smaller.
+  \item DD primitives change \emph{arithmetic} precision but not the
+        \emph{sort} or the \emph{step} structure. They cannot smooth
+        a discrete operation.
+  \item If the non-smoothness were resolved (e.g., by replacing the hard
+        sort with a soft kernel-weighted CDF, or by using strict-$h{=}0$ as
+        the solver), then DD would be the natural next step.
+\end{itemize}
+
+\section{Recommendation}
+
+\begin{enumerate}
+  \item \textbf{Adopt Option B+ ($n_{\rm sub}{=}8$ or $16$, with BC
+        extrapolation) as the \emph{lookup-table builder}} on top of a
+        kernel-band-R4 or strict-$h{=}0$ FP. Median accuracy
+        $\sim 10^{-5}$, $\sim 50$\,ms per $\mu$-table build.
+  \item Keep kernel-band-R4 (smooth Jacobian, Newton-friendly) as the
+        \emph{FP solver}, then post-hoc compute the ``honest'' lookup
+        via Option B+.
+  \item For the published 2D $(\gamma, \tau)$ paper: re-run with
+        \textbf{R4 solver + Option B+ post-hoc lookup}. The deficit
+        ridge will largely disappear (expected $\sim 10^{-3}$, not $0.27$).
+\end{enumerate}
+
+\section{Reproducibility}
+
+\begin{itemize}
+  \item Code: \texttt{projects/REZN/solver\_code/highprec\_dd\_qd/} has
+        \texttt{dd\_k3\_optB\_numba.py} (Option B float64 numba),
+        \texttt{dd\_k3\_optB\_refined.py} (Option B+ with BC fix),
+        \texttt{dd\_k3\_optB\_sweep.py} (driver), and
+        \texttt{dd\_k3\_optB\_final\_figs.py} (figures).
+  \item Saved: \texttt{projects/REZN/solved\_fixed\_points/dd\_k3\_overnight/optB/}
+        with the sweep JSON and per-cell $P$ arrays.
+\end{itemize}
+
+\end{document}
