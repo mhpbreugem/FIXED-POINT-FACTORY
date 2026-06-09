@@ -68,8 +68,9 @@ contour root-finding) and one structural ansatz
         $\tau u_k$ prediction (the price at $K{=}3$ already aggregates
         the signal so well that the agent's own $u_k$ adds little
         marginal information).
-  \item \textbf{New, this revision.} Extended deficit-ridge sweep (29
-        cells over $\gamma \in [1, 1000]$) confirms the ``ridge'' from
+  \item \textbf{New, this revision.} Extended deficit-ridge sweep
+        (full $6 \times 6 = 36$ cells over $\gamma \in [1, 1000]$,
+        $\tau \in [0.1, 1.0]$) confirms the ``ridge'' from
         the K=3 paper is an R4-operator artifact. Under strict-$h{=}0$
         the deficit is flat in $\tau$ at $\sim 10^{-2}$; R4 grows from
         $10^{-9}$ to $10^{-1}$ over the same range and crosses strict
@@ -849,12 +850,11 @@ order of magnitude.
 \section{Finding 6 (new): the deficit ridge is an R4 artifact (extended sweep)}
 % =====================================================================
 
-We re-solved a $5 \times 6 = 30$-cell $(\gamma, \tau)$ grid
-($\gamma \in \{1, 10, 30, 100, 300\}$ plus partial $\gamma = 1000$,
-$\tau \in \{0.1, 0.2, 0.3, 0.5, 0.7, 1.0\}$) at $G = 11$ under both
-the kernel-band R4 operator and the strict-$h{=}0$ operator, and
-computed the deficit (1-$R^2$ of $\log P$ regressed on tilt
-$T = u_1 + u_2 + u_3$) at each FP. 29 cells completed.
+We re-solved the full $6 \times 6 = 36$-cell $(\gamma, \tau)$ grid
+($\gamma \in \{1, 10, 30, 100, 300, 1000\}$, $\tau \in \{0.1, 0.2, 0.3,
+0.5, 0.7, 1.0\}$) at $G = 11$ under both the kernel-band R4 operator
+and the strict-$h{=}0$ operator, and computed the deficit (1-$R^2$ of
+$\log P$ regressed on tilt $T = u_1 + u_2 + u_3$) at each FP.
 
 \begin{figure}[H]\centering
   \includegraphics[width=\linewidth]{ridge_figs/slice_per_gamma.png}
@@ -886,9 +886,8 @@ $T$ than previously thought, especially in the sharp regime.
 
 \textbf{Caveats.} (i) The strict-$h{=}0$ operator is not Lipschitz-smooth;
 Anderson stalls at $|F|_\infty \sim 0.03$--$0.15$. Changes of order
-$10^{-3}$ in deficit are noise-level. (ii) The $\gamma = 1000$ row is
-only partial (2 of 6 cells). (iii) Best-iterate semantics throughout
---- no machine-eps FPs at high $\gamma$.
+$10^{-3}$ in deficit are noise-level. (ii) Best-iterate semantics
+throughout --- no machine-eps FPs at high $\gamma$.
 
 % =====================================================================
 \section{The non-additivity at $\tau \to 1$: what the ansatz misses}
