@@ -7,9 +7,10 @@
 \setlength{\parskip}{6pt}
 
 \title{Computing the K=3 CRRA REE lookup function $\mu(p, u_k)$:\\
-       a session-long study of operators, biases, and ansatzes}
+       a session-long study of operators, biases, and ansatzes\\
+       \large{(revised, with $(L_{\rm priv}, L_{\rm pub})$ test and extended ridge sweep)}}
 \author{Fixed-Point Factory --- consolidated summary}
-\date{June 2026}
+\date{June 2026 (r2)}
 
 \begin{document}
 \maketitle
@@ -57,6 +58,22 @@ contour root-finding) and one structural ansatz
         At high $\tau$ it underfits ($\|F\|_\infty \sim 0.05$) --- there is
         a genuinely non-additive correction. Mapping that correction is
         the natural next step.
+  \item \textbf{New, this revision.} The $(L_{\rm priv}, L_{\rm pub})$
+        coordinate transformation (Bayes-natural change of variables)
+        absorbs $\sim$50\% of the lookup magnitude into the additive
+        bulk, but the Cheby-coefficient decay rate of the residual
+        $\delta$ is identical to that of $L$ directly --- the cusps
+        survive any global coordinate change. The empirical
+        $u_k$-effect is $\sim 10{\times}$ smaller than the textbook
+        $\tau u_k$ prediction (the price at $K{=}3$ already aggregates
+        the signal so well that the agent's own $u_k$ adds little
+        marginal information).
+  \item \textbf{New, this revision.} Extended deficit-ridge sweep (29
+        cells over $\gamma \in [1, 1000]$) confirms the ``ridge'' from
+        the K=3 paper is an R4-operator artifact. Under strict-$h{=}0$
+        the deficit is flat in $\tau$ at $\sim 10^{-2}$; R4 grows from
+        $10^{-9}$ to $10^{-1}$ over the same range and crosses strict
+        near $\tau \approx 0.4$.
 \end{enumerate}
 \end{abstract}
 
@@ -732,6 +749,146 @@ non-additive correction saturates the residual to $\sim 0.05$--$0.10$.
     factorization $\|F\|_\infty(\gamma, \tau) \approx \|F\|_\infty(\tau)$
     in this ansatz.}
 \end{figure}
+
+% =====================================================================
+\section{Finding 5 (new): the $(L_{\rm priv}, L_{\rm pub})$ coordinate test}
+% =====================================================================
+
+\textbf{Hypothesis.} If we transform $u_k \to L_{\rm priv}(u_k) := \tau u_k$
+(the closed-form private log-odds in the Gaussian-signal limit) and
+$p \to L_{\rm pub}(p) := \log [f_1(p)/f_0(p)]$ (the public-only log-odds
+from the marginal price densities), then Bayes suggests
+\[
+  \operatorname{logit} \mu(p, u_k) \;=\; L_{\rm priv}(u_k) + L_{\rm pub}(p) + \delta(p, u_k),
+\]
+with $\delta$ a small smooth $K{=}3$ conditional-overlap correction. If so,
+Cheby in the new coordinates would converge spectrally with very few
+coefficients.
+
+\textbf{Test.} On four strict-$h{=}0$ FPs ($\gamma \in \{10, 100, 1000\}$,
+$\tau \in \{0.2, 1.0\}$), apply two additive decompositions:
+\begin{itemize}\itemsep1pt
+  \item \textbf{ANOVA additive}: $L = \bar L + a(p) + b(u_k) + \delta$ with
+        row/column means (minimizes $\|\delta\|_2$).
+  \item \textbf{Cheby-h additive}: same form but $b(u_k)$ is a degree-8
+        Cheby polynomial; iterate.
+\end{itemize}
+
+\textbf{Result: bulk absorbed, cusps preserved.}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=\linewidth]{lpub_figs/fig2_heat.png}
+  \caption{Heatmaps of $L(p, u_k)$ (left), $\delta_{\rm ANOVA}$ (middle),
+    $\delta_{\rm Cheby-h}$ (right). The smooth bulk gradient in $L$
+    is removed in $\delta$, but the sharp horizontal bands at the
+    critical-value $p$'s --- the cusps --- are preserved unchanged.}
+\end{figure}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=\linewidth]{lpub_figs/fig1_tail_decay.png}
+  \caption{Cumulative Cheby coefficient tail norm:
+    $\bigl(\sum_{i+j \ge N} c_{ij}^2\bigr)^{1/2}$ vs $N$. The three
+    curves overlap: direct fit of $L$, fit of $\delta_{\rm ANOVA}$, fit
+    of $\delta_{\rm Cheby-h}$ all decay at the same algebraic rate.
+    \textbf{The coordinate transformation does not improve the
+    per-coefficient convergence rate.}}
+\end{figure}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=\linewidth]{lpub_figs/fig4_svd.png}
+  \caption{Singular value spectrum of $\delta$ vs $L$. They track
+    each other through $k \approx 9$; both are effectively full-rank
+    ($G = 11$). Rank-1 truncation captures only 30--45\% of $\delta$;
+    rank-5 captures 65--80\%. A low-rank multiplicative correction
+    would not close the gap either.}
+\end{figure}
+
+\begin{center}\begin{tabular}{lrrrr}\toprule
+$(\gamma, \tau)$ & $\|L\|_{\rm RMS}$ & $\|\delta\|_{\rm RMS}$ & ratio & rank-1 capture \\
+\midrule
+$(100, 0.2)$  & 0.112 & 0.056 & 50\% & 44.6\% \\
+$(100, 1.0)$  & 0.836 & 0.366 & 44\% & 34.8\% \\
+$(10, 1.0)$   & 0.820 & 0.377 & 46\% & 33.1\% \\
+$(1000, 1.0)$ & 1.138 & 0.570 & 50\% & 30.6\% \\
+\bottomrule\end{tabular}\end{center}
+
+The additive decomposition reduces L\textsuperscript{2} magnitude by
+$\sim$50\% across cells, but max-norm reduction is only $\sim$30\% and
+the Cheby coefficient decay rate is unchanged --- the cusps live on
+the algebraic variety $\{|\nabla P| = 0\}$ which is intrinsic to $P$
+and survives any global linear coordinate change.
+
+\textbf{Bonus economic finding: empirical $b(u_k) \ll \tau u_k$.}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=0.7\linewidth]{lpub_figs/fig3_effects.png}
+  \caption{Left: row-effect $a(p)$. Right: column-effect $b(u_k)$.
+    The dotted black line is the textbook prediction $\tau u_k$; the
+    fitted green line is $\sim 10{\times}$ smaller in magnitude. At
+    $\tau = 1$ the closed-form $L_{\rm priv}$ would range $[-2.33, +2.33]$
+    but the empirical $b(u_k)$ only ranges $[-0.22, +0.22]$.}
+\end{figure}
+
+The interpretation is economic, not numerical: at $K = 3$, the price
+already aggregates the three signals so effectively that conditional
+on $p$, the agent's own $u_k$ adds little marginal information. The
+naive ``private log-odds'' over-estimates $u_k$'s contribution by an
+order of magnitude.
+
+\textbf{What the test does and doesn't deliver.}
+\begin{itemize}\itemsep1pt
+  \item Useful: identifies the dominant additive structure
+        explicitly; halves L\textsuperscript{2} representation
+        magnitude; quantifies the K=3 information-overlap effect.
+  \item Does not help: spectral convergence remains blocked by
+        intrinsic cusps. Smart coordinates can't fix cusps;
+        only piecewise/multi-element representations can.
+\end{itemize}
+
+% =====================================================================
+\section{Finding 6 (new): the deficit ridge is an R4 artifact (extended sweep)}
+% =====================================================================
+
+We re-solved a $5 \times 6 = 30$-cell $(\gamma, \tau)$ grid
+($\gamma \in \{1, 10, 30, 100, 300\}$ plus partial $\gamma = 1000$,
+$\tau \in \{0.1, 0.2, 0.3, 0.5, 0.7, 1.0\}$) at $G = 11$ under both
+the kernel-band R4 operator and the strict-$h{=}0$ operator, and
+computed the deficit (1-$R^2$ of $\log P$ regressed on tilt
+$T = u_1 + u_2 + u_3$) at each FP. 29 cells completed.
+
+\begin{figure}[H]\centering
+  \includegraphics[width=\linewidth]{ridge_figs/slice_per_gamma.png}
+  \caption{Deficit vs $\tau$ per $\gamma$. \textbf{Under R4 (red)} the
+    deficit grows monotonically with $\tau$, spanning $10^{-9}$ at
+    $\tau = 0.1$ to $10^{-1}$ at $\tau = 1$. \textbf{Under strict-$h{=}0$
+    (blue)} the deficit is essentially flat at $\sim 10^{-2}$ across the
+    entire $\tau$ range. The two operators cross near $\tau \approx 0.4$:
+    R4 \emph{under}-estimates at low $\tau$ and \emph{over}-estimates at
+    high $\tau$. The classic ``deficit ridge'' is the operator bias.}
+\end{figure}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=0.85\linewidth]{ridge_figs/ratio_per_gamma.png}
+  \caption{Collapse factor $\mathrm{def}_{R_4} / \mathrm{def}_{\rm strict}$
+    per cell. Reaches $\sim 30{\times}$ at $\tau \in [0.7, 1]$,
+    consistent with the $40{\times}$ collapse seen in the original
+    8-cell strict spot-check. The sign-flip (ratio $< 1$ at low $\tau$)
+    suggests two distinct R4 failure modes: under-smoothing of
+    smooth cells, over-smoothing of cuspy ones.}
+\end{figure}
+
+\textbf{Verdict.} The deficit ridge from the K=3 paper does \emph{not}
+survive under the corrected operator. The qualitative story changes
+from ``deficit rises with $\tau$ at intermediate $\gamma$'' to
+``deficit is essentially $\tau$-flat at $\sim 10^{-2}$, with weak
+$\gamma$-dependence''. The K=3 equilibrium is closer to one-to-one in
+$T$ than previously thought, especially in the sharp regime.
+
+\textbf{Caveats.} (i) The strict-$h{=}0$ operator is not Lipschitz-smooth;
+Anderson stalls at $|F|_\infty \sim 0.03$--$0.15$. Changes of order
+$10^{-3}$ in deficit are noise-level. (ii) The $\gamma = 1000$ row is
+only partial (2 of 6 cells). (iii) Best-iterate semantics throughout
+--- no machine-eps FPs at high $\gamma$.
 
 % =====================================================================
 \section{The non-additivity at $\tau \to 1$: what the ansatz misses}
