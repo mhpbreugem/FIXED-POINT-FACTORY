@@ -80,7 +80,9 @@ os.makedirs(f"{OUT_DIR}/figs", exist_ok=True)
 G = 11
 G_P = 121
 NQ_STRICT = 16
-DEG_IN = 6           # in-support Cheby degree per segment
+DEG_IN = 8           # in-support Cheby degree per segment (deg=8, mss=2
+                     # reaches machine eps in-support per Finding 10)
+MIN_SAMPLES_PER_SEG = 2
 TAIL_EPS = 1e-9
 SUPPORT_LO = 1e-6    # lower threshold to call mu "in support"
 SUPPORT_HI = 1 - 1e-6
@@ -199,72 +201,70 @@ def _eval_segment_vec(seg, p_arr):
 
 
 def build_zero_h_lookup_slice(p_grid, mu_slice, p_cs, deg_in=DEG_IN,
-                              tail_eps=TAIL_EPS):
+                              tail_eps=TAIL_EPS,
+                              min_samples_per_seg=MIN_SAMPLES_PER_SEG):
     """Build the per-slice (u_k fixed) zero-h pipeline lookup.
+
+    Strategy
+    --------
+    1. Restrict to in-support samples (drop the 0.5 fallback plateau).
+    2. Filter p_cs to those inside (p_min_sup, p_max_sup).
+    3. MERGE adjacent p_c knots that produce segments with < min_samples_per_seg
+       interior raw samples -- merging guarantees each fit has enough data.
+       The largest knot of a merged group is kept as the segment boundary.
+    4. Per-segment LSQ Cheby with degree min(deg_in, n_samples - 1).
+    5. Lower & upper tail Cheby with BCs (mu->0 / mu->1).
 
     Returns
     -------
     info : dict
         keys = ('knots', 'segs', 'lower', 'upper', 'p_min_sup', 'p_max_sup')
-
-    Robust empty-segment handling: segments with <2 interior samples borrow
-    samples from neighboring segments (so the per-segment Cheby always has
-    enough data); this means narrow segments effectively share a single fit
-    with their wider neighbours -- which is correct since the fit
-    interpolates the cusp endpoints exactly.
     """
     p_min_sup, p_max_sup = _detect_support(p_grid, mu_slice)
     if p_min_sup is None:
         return None
-    # only keep p_cs strictly inside (and only where mu is meaningfully
-    # changing -- skip cusps falling on the fallback 0.5 plateau)
-    p_cs_used = sorted(pc for pc in p_cs if p_min_sup < pc < p_max_sup)
-    knots = np.array([p_min_sup] + p_cs_used + [p_max_sup])
-    # Restrict mu samples to in-support, contiguous in-support window
+    # restrict to in-support samples
     in_sup = (p_grid >= p_min_sup) & (p_grid <= p_max_sup) & \
                 (np.abs(mu_slice - 0.5) > 1e-14)
     p_sup = p_grid[in_sup]
     mu_sup = mu_slice[in_sup]
-    # Per-segment Cheby (borrow neighbour samples when sparse)
+    if len(p_sup) < 2:
+        return None
+    # candidate knots (only those strictly inside)
+    p_cs_used = sorted(pc for pc in p_cs if p_min_sup < pc < p_max_sup)
+    candidates = [p_min_sup] + p_cs_used + [p_max_sup]
+    # MERGE: walk through candidates, dropping inner knots so that every
+    # resulting segment has >= min_samples_per_seg interior samples.
+    merged = [candidates[0]]
+    for c in candidates[1:]:
+        # how many samples between merged[-1] and c?
+        n_in = int(np.sum((p_sup >= merged[-1]) & (p_sup <= c)))
+        if n_in >= min_samples_per_seg or c == candidates[-1]:
+            merged.append(c)
+        # else: drop this knot, accumulate into next
+    # If the LAST segment has too few samples, drop the second-to-last knot
+    while len(merged) >= 3:
+        a, b = merged[-2], merged[-1]
+        n_in = int(np.sum((p_sup >= a) & (p_sup <= b)))
+        if n_in < min_samples_per_seg:
+            del merged[-2]
+        else:
+            break
+    knots = np.array(merged)
     segs = []
     for k in range(len(knots) - 1):
         a, b = knots[k], knots[k + 1]
-        # interior samples
         mask = (p_sup >= a) & (p_sup <= b)
         p_seg = p_sup[mask]
         mu_seg = mu_sup[mask]
-        # if too few, expand to include closest 2 from each side
-        if len(p_seg) < deg_in + 1:
-            # find indices in p_sup that bracket the segment and extend
-            n_need = max(deg_in + 1, 4)
-            # all indices of p_sup, sorted
-            idx_in_sup = np.where(mask)[0]
-            if len(idx_in_sup) == 0:
-                # no interior samples -- pull from nearest neighbours
-                # find the closest p_sup indices to (a, b)
-                lo_idx = int(np.searchsorted(p_sup, a))
-                # candidates: lo_idx-1, lo_idx, lo_idx+1, ...
-                candidates = set()
-                for n in range(-n_need // 2 - 1, n_need // 2 + 2):
-                    cand = lo_idx + n
-                    if 0 <= cand < len(p_sup):
-                        candidates.add(cand)
-                if not candidates:
-                    segs.append(None)
-                    continue
-                idx_use = sorted(candidates)[:n_need]
-            else:
-                lo_extra = max(0, idx_in_sup[0] - n_need)
-                hi_extra = min(len(p_sup), idx_in_sup[-1] + 1 + n_need)
-                idx_use = list(range(lo_extra, hi_extra))
-            p_seg = p_sup[idx_use]
-            mu_seg = mu_sup[idx_use]
-            # but still fit relative to (a, b) so segment evaluation is in
-            # the local cheb basis
-            seg = _fit_segment_cheby_bounds(p_seg, mu_seg, a, b, deg_in)
-            segs.append(seg)
+        if len(p_seg) < 2:
+            segs.append(None)
             continue
-        segs.append(_fit_segment_cheby(p_seg, mu_seg, deg_in))
+        # Fit Cheby with domain = (a, b) so neighbouring segments meet
+        # exactly at the knot. (LSQ in the local Cheb basis; degree
+        # auto-limited by n_samples - 1, capped at deg_in.)
+        seg = _fit_segment_cheby_bounds(p_seg, mu_seg, a, b, deg_in)
+        segs.append(seg)
     # Tails
     lower = None
     if p_min_sup > tail_eps:
@@ -295,7 +295,8 @@ def eval_lookup_vec(info, p_arr):
         return np.full_like(p_arr, 0.5)
     knots = info["knots"]
     placed = np.zeros_like(p_arr, dtype=bool)
-    # interior segments
+    # Order matters: interior segments FIRST so a point exactly at a knot
+    # gets claimed by the segment on either side (no fall-through to tail).
     for k in range(len(knots) - 1):
         a, b = knots[k], knots[k + 1]
         seg = info["segs"][k]
@@ -306,34 +307,33 @@ def eval_lookup_vec(info, p_arr):
             continue
         out[mask] = _eval_segment_vec(seg, p_arr[mask])
         placed |= mask
-    # tails
+    # tails (only for points strictly outside the interior knot range)
     if info["lower"] is not None:
         a, b = info["lower"][1], info["lower"][2]
-        mask = (p_arr >= a) & (p_arr <= b) & (~placed)
+        # strictly below knots[0]
+        mask = (p_arr < knots[0]) & (p_arr >= a) & (~placed)
         if np.any(mask):
             out[mask] = _eval_segment_vec(info["lower"], p_arr[mask])
             placed |= mask
     if info["upper"] is not None:
         a, b = info["upper"][1], info["upper"][2]
-        mask = (p_arr >= a) & (p_arr <= b) & (~placed)
+        mask = (p_arr > knots[-1]) & (p_arr <= b) & (~placed)
         if np.any(mask):
             out[mask] = _eval_segment_vec(info["upper"], p_arr[mask])
             placed |= mask
-    # below lower-tail or above upper-tail or no lookup -> asymptote
+    # very-far asymptotes (p < tail_eps or p > 1 - tail_eps)
     if not placed.all():
         leftover = ~placed
-        # below tail_eps -> 0; above 1 - tail_eps -> 1; else nearest in-support
         below = leftover & (p_arr < knots[0])
         above = leftover & (p_arr > knots[-1])
-        other = leftover & (~below) & (~above)
         out[below] = 0.0
         out[above] = 1.0
-        # for "other" points (shouldn't happen), use linear interp on
-        # nearest segment-end values.
+        other = leftover & (~below) & (~above)
         if np.any(other):
             out[other] = 0.5
-    # clamp to (eps, 1-eps) so CRRA clearing is well-defined
-    eps = 1e-12
+    # Clamp to (eps, 1-eps) -- but with a LARGER eps so we don't crush
+    # legitimate ~0.99 values (CRRA clear needs strict (0,1)).
+    eps = 1e-9
     np.clip(out, eps, 1.0 - eps, out=out)
     return out
 
