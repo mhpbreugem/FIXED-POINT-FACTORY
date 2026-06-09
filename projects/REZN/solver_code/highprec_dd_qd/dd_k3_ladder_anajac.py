@@ -87,32 +87,30 @@ class SymRed3:
 def solve_with_anajac(P_warm, tau, u_grid, p_grid, gl_u, gl_du,
                           red, mu_R4_buf, dmu_dP_buf, P_new_buf, J_full_buf,
                           target=TARGET_DD, max_iters=MAX_NEWTON, verbose=False):
-    """Newton with analytic Jacobian. P_warm is float64 (close to FP)."""
+    """True Newton with analytic Jacobian rebuilt each iter (~5ms each)."""
     G_ = u_grid.size
     th, tl = split(mp.mpf(repr(tau)))
     gh, gl = split(mp.mpf(repr(GAMMA)))
     w_arr = DK.richardson_weights(HS)
     w_R4 = richardson_weights(HS)
-    # Build analytic Jacobian at warm point
-    AJ.phi_and_jac(P_warm, u_grid, p_grid, gl_u, gl_du, float(tau), float(GAMMA),
-                       NQK, np.array(HS), w_R4, mu_R4_buf, dmu_dP_buf, P_new_buf, J_full_buf)
-    # F_F: residual P_new - P (note: Phi - I, so Newton uses J - I)
-    G3 = G_*G_*G_
-    JmI = J_full_buf - np.eye(G3)
-    J_red = red.reduce_jac(JmI)
-    try:
-        lu, piv = sla.lu_factor(J_red)
-    except Exception:
-        return P_warm, float('inf'), False
-    # DD nail
     x_H = red.reduce(P_warm).astype(np.float64)
     x_L = np.zeros(red.n_red)
     F0_H, F0_L = DKS.F_dd_red(red, x_H, x_L, u_grid, p_grid, gl_u, gl_du,
                                       th, tl, gh, gl, HS, w_arr)
     F_inf = float(np.max(np.abs(F0_H + F0_L)))
     best_F = F_inf; best_x_H = x_H.copy(); best_x_L = x_L.copy()
+    G3 = G_*G_*G_
     for it in range(max_iters):
         if F_inf < target: break
+        # Rebuild analytic Jacobian at current iterate (x_H is float64 approx)
+        P_now = red.expand(x_H)
+        AJ.phi_and_jac(P_now, u_grid, p_grid, gl_u, gl_du, float(tau),
+                            float(GAMMA), NQK, np.array(HS), w_R4, mu_R4_buf,
+                            dmu_dP_buf, P_new_buf, J_full_buf)
+        JmI = J_full_buf - np.eye(G3)
+        J_red = red.reduce_jac(JmI)
+        try: lu, piv = sla.lu_factor(J_red)
+        except Exception: break
         F = F0_H + F0_L
         dx = sla.lu_solve((lu, piv), -F)
         for i in range(red.n_red):
