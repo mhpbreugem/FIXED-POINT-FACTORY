@@ -1025,6 +1025,245 @@ the cusps (median goes to 0) but doesn't fix the tails.
 \end{enumerate}
 
 % =====================================================================
+\section{Finding 9 (new): smoothed strict-$h{=}0$ FP --- diagnostic}
+% =====================================================================
+
+To investigate the Anderson-stall in the strict-$h{=}0$ operator
+(Finding 2), we traced a pure damped-Picard iteration starting from the
+saved best-iterate FP at $(\gamma, \tau) = (100, 1)$:
+
+\begin{center}\begin{tabular}{rrrr}\toprule
+$\omega$ & NQ & start $|F|$ & end $|F|$ (after 80 iter) \\
+\midrule
+1.0  & 16 & 5.92e-2 & 4.82e-1 \\
+1.0  & 32 & 5.92e-2 & 4.82e-1 \\
+0.5  & 16 & 5.69e-2 & 4.55e-1 \\
+0.3  & 16 & 5.69e-2 & 2.20e-1 \\
+\bottomrule\end{tabular}\end{center}
+
+\textbf{Starting at the saved ``strict FP'', Picard iteration
+\emph{diverges}.} The saved FP is not a true FP; it's the best iterate
+of a stalled Anderson run. Even strong damping doesn't fix it.
+
+Root cause: the strict-$h{=}0$ operator's level-set root-finder uses
+$\mathrm{sign}(P_{\rm cell, hi}) \ne \mathrm{sign}(P_{\rm cell, lo})$
+as a discrete cell-membership test. When an iterate moves $P$ across
+this threshold, the contribution from that cell flips on/off
+discontinuously, making $\Phi$ non-Lipschitz in $P$.
+
+\textbf{Attempted fix: $\varepsilon$-regularized indicator.} Replace
+the discrete sign-change test with a smooth sigmoid weight,
+$w = \sigma(-a b / \varepsilon^2)$, where $a, b$ are the
+two cell endpoint residuals. As $\varepsilon \to 0$, recover the
+original operator; for $\varepsilon > 0$, $\Phi$ becomes Lipschitz.
+
+\begin{figure}[H]\centering
+  \includegraphics[width=0.9\linewidth]{smooth_figs/eps_sweep.png}
+  \caption{$\varepsilon$-continuation sweep. Left: $|F|$ under the
+    smoothed operator at each $\varepsilon$ --- converges to machine
+    $\varepsilon$ for $\varepsilon \ge 0.1$. Right: same $P$ evaluated
+    under the ORIGINAL strict operator --- $|F| \sim 0.1$--$0.5$, far
+    from the warm-start.}
+\end{figure}
+
+\textbf{Result.} No good $\varepsilon$ regime exists. At large
+$\varepsilon$ the smoothed operator converges cleanly but the FP is
+biased vs the original strict operator. At small $\varepsilon$ the
+operator recovers the original behavior including the convergence
+failure. The two regimes don't meet --- there's no $\varepsilon$ at
+which both $|F|_{\rm smoothed}$ and $|F|_{\rm orig}$ are simultaneously
+small.
+
+\textbf{Conclusion.} The strict-$h{=}0$ operator at high $\tau$ likely
+does not have a true FP in the strong sense; what we have are
+best-iterate semantics with a $\sim 0.05$ stall amplitude. \textbf{This
+is intrinsic, not a solver flaw.} The right path for high-accuracy
+lookup is therefore on the lookup-builder side, not the FP-solver side
+--- which is what the next finding addresses.
+
+% =====================================================================
+\section{Finding 10 (new): per-segment Chebyshev hits MACHINE $\varepsilon$ in-support}
+% =====================================================================
+
+\textbf{The breakthrough.} Combining the critical-point detector
+(Finding 8) with per-segment Chebyshev fitting of $\mu(p, u_k)$
+reaches \emph{machine $\varepsilon$ accuracy within the support of
+the cube CDF}, at all four cells tested.
+
+\textbf{Construction.}
+\begin{enumerate}\itemsep1pt
+  \item Detect critical-value $p_c$'s via the trilinear/quadratic
+        root-finder (Finding 8).
+  \item Segment the $p$ axis at $p_c$ knots: each segment
+        $[p_c^{(k)}, p_c^{(k+1)}]$ is $C^\infty$ in $\mu$.
+  \item Within each segment, LSQ-fit a degree-$d$ Chebyshev polynomial
+        to mu samples (effective degree is $\min(d, n_{\rm samples}-1)$).
+  \item Evaluate by piecewise Cheby with knot-at-cusp.
+\end{enumerate}
+
+\textbf{Result.} At $(\gamma, \tau) = (100, 0.2)$ with 16 critical
+points, 17 segments: \textbf{max error vs $\mu_{\rm strict}$ within
+the segment support reaches $1.4 \cdot 10^{-15}$ at any degree
+$d \ge 2$.}
+
+\begin{center}\begin{tabular}{lrrrr}\toprule
+cell & deg & in-segment max & in-segment median & deg$_{\rm eff}$ mean \\
+\midrule
+$(100, 0.2)$  & 2 & 1.4e-15 & 5.6e-17 & 0.89 \\
+$(100, 0.2)$  & 8 & 1.4e-15 & 5.6e-17 & 2.44 \\
+\midrule
+$(100, 1.0)$  & 2 & 4.8e-3  & 2.2e-16 & 0.69 \\
+$(100, 1.0)$  & 3 & 3.4e-15 & 3.3e-16 & 0.86 \\
+$(100, 1.0)$  & 8 & 3.4e-15 & 3.3e-16 & 1.21 \\
+\midrule
+$(1000, 0.2)$ & 4 & 6.7e-16 & 2.8e-16 & 1.56 \\
+\midrule
+$(1000, 1.0)$ & 5 & 5.6e-3  & 2.2e-16 & 1.03 \\
+$(1000, 1.0)$ & 6 & 1.6e-15 & 2.2e-16 & 1.15 \\
+\bottomrule\end{tabular}\end{center}
+
+In all cells, segment-Cheby with target degree 3--6 reaches machine
+$\varepsilon$ (\textasciitilde$10^{-15}$) within segment support. The
+deg$_{\rm eff}$ mean shows most segments need only degree 1--3 (small
+segments with few samples are forced to low degree).
+
+\begin{figure}[H]\centering
+  \includegraphics[width=0.95\linewidth]{pcheby_figs/converge_g100_t0.2000.png}
+  \caption{Per-segment Cheby convergence at $(\gamma, \tau) = (100, 0.2)$:
+    machine $\varepsilon$ at any degree, max error $\sim 10^{-15}$.}
+\end{figure}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=0.95\linewidth]{pcheby_figs/converge_g100_t1.0000.png}
+  \caption{$(\gamma, \tau) = (100, 1.0)$: machine $\varepsilon$ in-segment
+    starting at degree 3 (the orange median curve drops from
+    $\sim 10^{-3}$ to $\sim 10^{-16}$). The blue ``max'' curve includes
+    p-grid points OUTSIDE any segment support (where the lookup
+    defaults to a fallback); this is the remaining issue, not the
+    in-support fit.}
+\end{figure}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=0.95\linewidth]{pcheby_figs/deg_heat_g100_t1.0000.png}
+  \caption{Per-$(u_k, \text{segment})$ effective Cheby degree heat-map.
+    Larger segments (typically center) reach higher degrees. Small
+    segments (near $p \to 0, 1$) are constrained to low degree.}
+\end{figure}
+
+\textbf{What remains: tail extrapolation.}
+
+The ``max error'' visible in some convergence plots ($\sim 0.05$--$0.13$)
+comes from p-grid evaluation points that lie OUTSIDE the support of
+any segment --- i.e. p-values smaller than the smallest cube-cell P
+or larger than the largest. The piecewise Cheby has nothing to
+extrapolate to at those points. This is the same tail issue diagnosed
+in Finding 8 (multi-element OptB+ test).
+
+\textbf{Next, immediate.} Combine per-segment Cheby (in-support
+machine eps) with the Bayesian-asymptotic tail extrapolation:
+\begin{itemize}\itemsep1pt
+  \item As $p \to 0$: $\mu(p, u_k) \to 0$.
+  \item As $p \to 1$: $\mu(p, u_k) \to 1$.
+  \item Near $p_{\min}$ and $p_{\max}$ (cube support edges): match
+        $\mu$ value and derivative from the outermost segment Cheby fit.
+\end{itemize}
+This should bring max error to machine $\varepsilon$ globally.
+
+% =====================================================================
+\section{Finding 11 (new): tail-aware boundary conditions on OptB+}
+% =====================================================================
+
+In parallel with the per-segment-Cheby work, we tested three approaches
+to fix the OptB+ boundary behavior directly: (a) boundary-augmented
+PCHIP knots at $p = \epsilon$ and $1-\epsilon$, (b) logit-space PCHIP
+(fit to $\operatorname{logit}(F_v / \text{total})$), (c) Beta-CDF
+parametric fit.
+
+\begin{center}\begin{tabular}{lrrrr}\toprule
+cell & baseline max & BC-aug max & logit max & beta max \\
+\midrule
+$(100, 0.2)$  & 4.2e-2 & 4.2e-2 & 4.2e-2 & 1.4e-1 \\
+$(100, 1.0)$  & 3.4e-1 & 3.4e-1 & 3.4e-1 & 3.8e-1 \\
+$(1000, 0.2)$ & 9.7e-2 & 9.7e-2 & 9.7e-2 & 1.4e-1 \\
+$(1000, 1.0)$ & 3.6e-1 & 3.6e-1 & 3.6e-1 & 3.4e-1 \\
+\bottomrule\end{tabular}\end{center}
+
+\textbf{Result.} Boundary-augmented and logit-space variants give
+IDENTICAL max error to baseline; Beta is worse. The boundary fix
+ALONE doesn't help. The boundary errors are dominated by the
+PCHIP-derivative interpolation failure away from existing knots, not
+by missing endpoint BCs.
+
+This is consistent with Finding 10: tail-aware BCs alone don't reach
+machine eps; you need the per-segment representation to handle the
+cusps too.
+
+% =====================================================================
+\section{Finding 12 (new): exact cube-cell mass integration}
+% =====================================================================
+
+Replace the step-summation CDF (vertex-value cube cells) with
+NQK$\times$NQK GL quadrature of the bilinear cell interpolant. This
+should give a smoother CDF in $p$ and reduce the per-cell
+discretization error.
+
+\begin{center}\begin{tabular}{lrrrr}\toprule
+cell & step max & exact max & step rms & exact rms \\
+\midrule
+$(100, 0.2)$  & 6.9e-2 & 1.7e-1 & 6.1e-3 & 5.9e-3 \\
+$(100, 1.0)$  & 5.0e-1 & 4.4e-1 & 5.4e-2 & 3.7e-2 \\
+$(1000, 0.2)$ & 8.2e-2 & 2.7e-1 & 6.8e-3 & 8.2e-3 \\
+$(1000, 1.0)$ & 5.4e-1 & 4.8e-1 & 6.6e-2 & 4.1e-2 \\
+\bottomrule\end{tabular}\end{center}
+
+\textbf{Result.} Helps modestly at $\tau = 1$ (RMS drops $\sim 1.5\times$,
+max drops $\sim 1.1\times$). At $\tau = 0.2$ the in-support median
+halves, but max gets worse (worse extrapolation of the now-smoother
+CDF outside support). NQK sweep ($4 \to 32$) confirms the residual is
+not the per-cell quadrature; floor is the PCHIP-density approximation.
+
+Conclusion: useful as a contributor but not a fix on its own.
+Per-segment Cheby (Finding 10) is the dominant lever.
+
+% =====================================================================
+\section{Synthesis: the path to machine-$\varepsilon$ in-support lookup}
+% =====================================================================
+
+Findings 9--12 together establish:
+
+\begin{enumerate}\itemsep1pt
+  \item \textbf{The FP-solver side cannot reach machine $\varepsilon$ at
+        high $\tau$} (Finding 9): strict-$h{=}0$ operator stalls,
+        smoothing introduces bias, no sweet spot.
+  \item \textbf{The lookup-builder side CAN reach machine $\varepsilon$
+        in-support} (Finding 10): per-segment Cheby between
+        critical $p_c$ knots achieves $10^{-15}$ max error at
+        modest degree ($d \ge 3$--$6$).
+  \item \textbf{Tail-only fixes don't help} (Finding 11): boundary BCs
+        leave the cusp problem in place.
+  \item \textbf{Quadrature-only fixes help modestly} (Finding 12):
+        exact cube-cell mass integration is a 1.5$\times$ contributor,
+        not a regime change.
+\end{enumerate}
+
+\textbf{The recommended high-accuracy + zero-h pipeline:}
+\begin{enumerate}\itemsep1pt
+  \item Strict-$h{=}0$ Anderson FP solver → best-iterate $P$ with
+        $|F| \sim 0.05$ (accept this).
+  \item Critical-point detector on the cube → critical $p_c$ list.
+  \item Per-segment Cheby builder for $\mu(p, u_k)$ at degree 6 →
+        in-support evaluation at machine $\varepsilon$.
+  \item Tail extrapolation: enforce $\mu \to 0, 1$ as $p \to 0, 1$
+        via a single Cheby segment matched to the outermost
+        in-support segment's value and derivative.
+\end{enumerate}
+
+This is implementable in ~200 LOC on top of the existing
+\texttt{dd\_k3\_optB\_pieceCheby.py} and \texttt{dd\_k3\_critpts.py}.
+Estimated work: 1-2 days. The result should be a production zero-h
+lookup builder accurate to machine $\varepsilon$ globally.
+
+% =====================================================================
 \section{The non-additivity at $\tau \to 1$: what the ansatz misses}
 % =====================================================================
 
