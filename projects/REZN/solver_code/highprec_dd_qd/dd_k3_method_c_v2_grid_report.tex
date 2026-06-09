@@ -1,0 +1,71 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{graphicx,amsmath,amssymb,booktabs,hyperref,xcolor}
+\graphicspath{{/tmp/dd_k3_method_c_v2_grid_figs/}}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlength{\parskip}{6pt}
+\title{Method C v2 (gamma, tau) grid:\\
+       structural-deficit map across the parameter plane}
+\author{Fixed-Point Factory}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Setup}
+10 $\times$ 10 grid: $\gamma \in \{0.1, 0.3, 1, 3, 10, 30, 100, 300, 1000, 3000\}$,
+$\tau \in \{0.001, 0.005, 0.01, 0.05, 0.1, 0.3, 0.5, 0.7, 0.85, 1.0\}$.
+100 cells, Method C v2 additive Bayesian-symmetric monotone ansatz fit
+against the Lin-CDF R4 operator. ~2 min total. Chain warm-start across
+$\tau$ within each $\gamma$ column.
+
+\section{Structural-deficit residual $|F|_\infty$}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig1_F.png}
+\end{center}
+
+This is the residual after fitting the best 5-parameter additive monotone
+ansatz. It measures \textbf{how much the equilibrium needs cross-signal
+joint structure beyond the additive form} (= the true "deficit").
+Smooth, monotone in $\tau$, weakly increasing in $\gamma$ above some
+threshold.
+
+\section{Slope $\alpha^*$}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig2_slope.png}
+\end{center}
+
+Monotone in both $\tau$ and $\gamma$. Same qualitative shape as in the
+R4 sweep but with no kernel-band bias.
+
+\section{P range}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig3_Prange.png}
+\end{center}
+
+\section{Cross-sections}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig4_cross.png}
+\end{center}
+
+\textbf{Left}: slope vs $\tau$ at each $\gamma$ --- monotone, asymptote
+near $\gamma \geq 30$.
+
+\textbf{Right}: residual vs $\tau$ at each $\gamma$ --- the
+structural non-additivity. Grows smoothly with $\tau$; relatively
+$\gamma$-independent at high $\gamma$, smaller at low $\gamma$.
+
+\section{Reproducibility}
+
+\texttt{projects/REZN/solver\_code/highprec\_dd\_qd/dd\_k3\_method\_c\_v2.py}
+(operator), \texttt{dd\_k3\_method\_c\_v2\_grid.py} (grid driver),
+\texttt{dd\_k3\_method\_c\_v2\_grid\_figs.py} (figures),
+\texttt{dd\_k3\_mu\_analytic.py} (analytic 1D lookup).
+Saved coefficients:
+\texttt{projects/REZN/solved\_fixed\_points/dd\_k3\_overnight/method\_c\_v2\_grid/coefs/}.
+
+\end{document}
