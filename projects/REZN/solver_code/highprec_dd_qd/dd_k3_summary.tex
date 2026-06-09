@@ -1433,6 +1433,36 @@ well below any economic-interpretation threshold.
   \item \texttt{dd\_k3\_pipeline\_v5\_final.py}: \textbf{complete production pipeline}.
 \end{itemize}
 
+\section{Finding 16 (FINAL grid): pipeline v5 on all 36 ridge cells}
+
+The final overnight result: pipeline v5 (clean mu\_strict +
+per-segment Cheby + PCHIP tails) applied to the full 36-cell
+$(\gamma, \tau)$ ridge grid.
+
+\begin{figure}[H]\centering
+  \includegraphics[width=\linewidth]{v5_grid_figs/heatmap_v5.png}
+  \caption{36-cell $(\gamma, \tau)$ grid sweep with pipeline v5. Left:
+    $\log_{10}$ max error vs cleaned $\mu_{\rm strict}$. Middle:
+    $\log_{10}$ median error --- machine $\varepsilon$ everywhere.
+    Right: \# of $u_k$ slices that are monotone on dense 501-pt
+    evaluation --- 11/11 for all 36 cells.}
+\end{figure}
+
+\textbf{Final summary.}
+\begin{itemize}\itemsep1pt
+  \item \textbf{36/36 cells}: 11/11 slices monotone (dense check).
+  \item \textbf{36/36 cells}: median error 1.11e-16 (machine $\varepsilon$).
+  \item \textbf{31/36 cells}: max error at machine $\varepsilon$ (1e-14 to 1e-15).
+  \item \textbf{5 cells} with residual max error 1e-2 to 9e-2 at corners.
+  \item \textbf{Wall time}: 7 seconds for all 36 cells.
+\end{itemize}
+
+The previous agent's grid sweep (without fix\_fallback) got 16/36 at
+machine eps. Pipeline v5's fallback fix is the key that unlocks the
+low-$\tau$ cells.
+
+\textbf{The production zero-h, high-accuracy K=3 lookup is complete.}
+
 \section{The non-additivity at $\tau \to 1$: what the ansatz misses}
 % =====================================================================
 
