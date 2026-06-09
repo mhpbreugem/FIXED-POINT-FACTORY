@@ -1326,6 +1326,58 @@ Estimated work: 1-2 days. The result should be a production zero-h
 lookup builder accurate to machine $\varepsilon$ globally.
 
 % =====================================================================
+\section{Finding 14 (new): Pipeline v3/v4 with tail extrapolation + monotonicity diagnostic}
+
+V2 leaves out-of-support evaluation at the 0.5 fallback. V3 adds Cheby
+tail extrapolation with BCs $\mu(\epsilon) = 0$, $\mu(1-\epsilon) = 1$
+matching value+derivative at in-support endpoints. V4 replaces V3's
+degree-2 Cheby tails (which can be non-monotone) with PCHIP
+shape-preserving tails.
+
+Results (V4):
+
+\begin{center}\begin{tabular}{lrrrrrr}\toprule
+cell & deg & cusps & in-support max & BC mu(0)$\sim$0 & BC mu(1)$\sim$1 & monotone \\
+\midrule
+$(100, 0.2)$  & 6 & 8  & 1.3e-15 & 11/11 & 11/11 & 11/11 \\
+$(100, 1.0)$  & 6 & 28 & 6.7e-16 & 11/11 & 11/11 & 2/11 \\
+$(1000, 0.2)$ & 6 & 8  & 1.2e-15 & 11/11 & 11/11 & 11/11 \\
+$(1000, 1.0)$ & 8 & 32 & 1.2e-15 & 11/11 & 11/11 & 1/11 \\
+\bottomrule\end{tabular}\end{center}
+
+\textbf{Monotonicity diagnostic, important.} At high $\tau$ the
+pipeline reports only 1--3/11 slices as monotone, but this is NOT a
+pipeline failure: $\mu_{\rm strict}$ itself is non-monotone at high $\tau$,
+with $\min(\Delta\mu) = -0.48$. The cause is the strict-$h{=}0$
+operator's \textbf{no-roots fallback}: when the co-area integral finds
+zero roots at some $p$ (e.g., $p$ outside the cube's empirical
+$P$-range), the operator returns $\mu = 0.5$, causing a $-0.5$ jump.
+The pipeline correctly inherits this artifact; the bug is on the
+operator side.
+
+\textbf{Production recommendation: Pipeline v4 = the zero-h, machine-eps
+lookup.}
+\begin{itemize}\itemsep1pt
+  \item In-support: per-segment Cheby at degree 6--8, machine $\varepsilon$.
+  \item Out-of-support: PCHIP shape-preserving tail with Bayesian BCs.
+  \item Monotone where $\mu_{\rm strict}$ is monotone.
+  \item Wall time: $\sim 1$ second per FP cell.
+  \item Implementation:
+        \texttt{projects/REZN/solver\_code/highprec\_dd\_qd/dd\_k3\_zero\_h\_pipeline\_v4.py}.
+\end{itemize}
+
+\textbf{Outstanding work for full machine-eps globally:}
+\begin{enumerate}\itemsep1pt
+  \item Fix the no-roots fallback in the strict-$h{=}0$ builder. When
+        the integration finds zero roots at $p$, instead of returning
+        $0.5$, extrapolate from the nearest in-support $p$'s using
+        Bayesian-asymptotic continuity. This is a $\sim 50$-line patch
+        to \texttt{lin\_cdf\_strict.py}.
+  \item After fixing, regenerate $\mu_{\rm strict}$ on all 36+8 strict
+        FPs and re-run pipeline v4. Expected: full monotonicity, full
+        machine $\varepsilon$.
+\end{enumerate}
+
 \section{The non-additivity at $\tau \to 1$: what the ansatz misses}
 % =====================================================================
 
