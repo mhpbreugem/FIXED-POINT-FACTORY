@@ -31,12 +31,11 @@ That left open the central qualitative question:
 \emph{does the ridge survive, qualitatively, when the operator bias is removed?}
 
 This appendix answers that. We re-solve a $(\gamma,\tau)$ grid covering
-$\gamma\in\{1,10,30\}\times\tau\in\{0.1,0.2,0.3,0.5,0.7,1.0\}$ (18 cells)
-at G=11 under \emph{both} operators and compare deficits on the same FPs.
-The higher $\gamma$ rows (100, 300, 1000) were started but the
-strict-$h{=}0$ Anderson stalls at the 30-cell time budget; for those
-values we keep the existing 8 strict FPs from the main study as
-spot-checks.
+$\gamma\in\{1,10,30,100,300\}\times\tau\in\{0.1,0.2,0.3,0.5,0.7,1.0\}$
+(29 of 30 cells completed) at G=11 under \emph{both} operators and
+compare deficits on the same FPs. The $\gamma{=}1000$ row was not
+completed in the time budget; we rely on the existing 4 strict FPs
+from the main study for spot-checks at that value.
 
 \section{Method}
 
@@ -90,7 +89,7 @@ should be treated as noise-level.
 \begin{figure}[h]
   \centering
   \includegraphics[width=\textwidth]{figs/slice_per_gamma.png}
-  \caption{Deficit vs $\tau$ for $\gamma \in \{1, 10, 30\}$. Under R4 (red)
+  \caption{Deficit vs $\tau$ for $\gamma \in \{1, 10, 30, 100, 300\}$. Under R4 (red)
     the deficit grows almost monotonically with $\tau$, spanning
     $\sim\!10^{-9}$ at $\tau{=}0.1$ to $\sim\!10^{-1}$ at $\tau{=}1$.
     Under strict-$h{=}0$ (blue) the deficit is essentially flat across $\tau$
@@ -150,7 +149,7 @@ should be treated as noise-level.
         seen at $(\gamma, \tau) = (100, 1)$ in the original 8-cell strict
         comparison.
   \item \textbf{Magnitude.}
-        At all 18 completed cells the strict-$h{=}0$ deficit stays
+        At all 29 completed cells the strict-$h{=}0$ deficit stays
         below $\sim 2 \cdot 10^{-2}$, consistent with the FP being
         nearly one-to-one in $T$ across the entire $\gamma \in [1, 30]$,
         $\tau \in [0.1, 1]$ region.
