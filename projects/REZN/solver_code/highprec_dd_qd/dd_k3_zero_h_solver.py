@@ -669,6 +669,9 @@ def main():
     parser.add_argument("--freeze_after", type=int, default=10)
     parser.add_argument("--target", type=float, default=1e-10)
     parser.add_argument("--quiet", action="store_true")
+    parser.add_argument("--no_nk", action="store_true",
+                        help="Skip Newton-Krylov polish (NK is slow due to "
+                             "4.5s/Phi from per-call find_critical_points).")
     parser.add_argument("--out", default=None)
     args = parser.parse_args()
 
@@ -688,7 +691,8 @@ def main():
         try:
             r = solve_cell(gamma, tau, mode=args.mode, n_iter=args.n_iter,
                             m_mem=args.m_mem, deg_in=args.deg_in,
-                            verbose=not args.quiet, do_nk=True,
+                            verbose=not args.quiet,
+                            do_nk=(not args.no_nk),
                             target=args.target,
                             freeze_after=args.freeze_after)
         except Exception as e:
