@@ -1463,6 +1463,68 @@ low-$\tau$ cells.
 
 \textbf{The production zero-h, high-accuracy K=3 lookup is complete.}
 
+\section{Finding 17 (NEGATIVE): smoother lookup does NOT solve the FP convergence}
+
+The natural next hypothesis: if the Anderson stall in the strict-$h{=}0$
+FP comes from cell-membership flips making $\Phi$ non-Lipschitz in $P$
+(Finding 9), then using the machine-eps zero-h pipeline as the inner
+lookup should make $\Phi$ smooth and let Anderson converge.
+
+We tested this by replacing the kernel-band lookup inside the
+strict-$h{=}0$ FP iteration with the per-segment Cheby pipeline
+(\texttt{dd\_k3\_zero\_h\_solver.py}, 3 modes):
+\begin{itemize}\itemsep1pt
+  \item \textbf{recompute}: re-detect critical points every iteration.
+  \item \textbf{frozen}: lock critical points after warm-up.
+  \item \textbf{pchip}: use PCHIP segments instead of Cheby.
+\end{itemize}
+
+\begin{center}\begin{tabular}{lrr}\toprule
+mode & $\|F\|_\infty$ best ($\gamma{=}100, \tau{=}1$) & vs baseline \\
+\midrule
+kernel-band strict (baseline) & 5.69e-2 & --- \\
+zero-h recompute & 1.49e-2 & 3.8$\times$ \\
+zero-h \textbf{frozen} & 1.12e-2 & 5.1$\times$ \\
+zero-h pchip & 4.0e-1 & worse (diverges) \\
+\bottomrule\end{tabular}\end{center}
+
+\textbf{Hypothesis rejected.} The smoother lookup gives a 3--5$\times$
+improvement but doesn't reach machine epsilon. Crucially, the
+\emph{frozen} mode --- which by construction eliminates the
+cusp-drift non-Lipschitzness --- plateaus at essentially the same
+$\|F\| \approx 1.1 \times 10^{-2}$ as recompute mode.
+
+\begin{figure}[H]\centering
+  \includegraphics[width=\linewidth]{zhsolver_figs/fig1_convergence.png}
+  \caption{Zero-h FP solver convergence. Left ($\tau = 1$): zero-h
+    modes (green/blue) plateau at $\|F\| \sim 10^{-2}$ while
+    kernel-band baseline diverges to $0.5$. Right ($\tau = 0.2$):
+    zero-h oscillates around $\|F\| \sim 10^{-1}$ with no convergence
+    trend.}
+\end{figure}
+
+\textbf{Interpretation.} The stall is \emph{not} operator
+non-smoothness; it is intrinsic to the K=3 equilibrium on the $G = 11$
+grid. The co-area integrand has truncation error of magnitude
+$\sim 10^{-2}$ at this $G$, which translates directly into the FP
+residual floor. The lookup smoothing makes $\Phi$ continuous in $P$
+(confirmed: Cheby pipeline matches mu\_strict to 2.2e-15) but cannot
+remove the underlying $G$-discretization error in the strict-$h{=}0$
+operator itself.
+
+\textbf{Path to true FP convergence:} finer cube ($G \ge 13$, ideally
+$G = 21$ where the Cheby coefficient decay starts looking clean per
+Finding 3), and/or Newton with analytic Jacobian (the chain-rule
+derivative through the per-segment Cheby pipeline IS computable
+analytically). Both are substantial projects beyond this session's
+scope.
+
+\textbf{The lookup-side and FP-side problems are now cleanly
+separated.} The lookup achieves machine $\varepsilon$; the FP residual
+floor of $\sim 10^{-2}$ is the strict-$h{=}0$ operator's discretization
+error on $G = 11$, with the pipeline reducing it $\sim 5\times$ from
+the kernel-band baseline.
+
 \section{The non-additivity at $\tau \to 1$: what the ansatz misses}
 % =====================================================================
 
