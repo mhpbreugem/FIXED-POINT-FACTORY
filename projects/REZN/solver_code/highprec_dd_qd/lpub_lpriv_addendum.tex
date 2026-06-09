@@ -1,0 +1,237 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{graphicx,amsmath,amssymb,booktabs,hyperref,xcolor,tabularx,float}
+\graphicspath{{./}}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlength{\parskip}{6pt}
+
+\title{$(L_{\rm priv}, L_{\rm pub})$ coordinate transformation:\\
+       test of the brainstorm hypothesis\\
+       \large{Addendum to the K=3 study summary}}
+\author{Fixed-Point Factory}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+The hypothesis: transform $u_k$ to ``private-only log-odds''
+$L_{\rm priv}(u_k) = \tau u_k$ and $p$ to ``public-only log-odds''
+$L_{\rm pub}(p) = \log[f_1(p)/f_0(p)]$. Bayes then suggests
+$\operatorname{logit}\mu(p, u_k) = L_{\rm priv} + L_{\rm pub} + \delta$
+with $\delta$ a small smooth $K=3$ conditional-overlap correction.
+If so, fitting Cheby in $(L_{\rm priv}, L_{\rm pub})$ coordinates
+would converge spectrally with very few coefficients.
+
+\smallskip
+\textbf{Verdict: partially confirmed.} The additive decomposition
+correctly identifies the dominant structure --- $\delta_{\rm RMS}$ is
+$\sim$50\% smaller than $L_{\rm RMS}$ at every $(\gamma, \tau)$ tested.
+\textbf{But the Cheby coefficient decay rate of $\delta$ is essentially
+identical to that of $L$:} the cusps in $\mu(p, u_k)$ (induced by
+critical points of $P$, see main report \S 18) are preserved unchanged
+in $\delta$, so the smoothness barrier survives the coordinate
+transformation. The SVD rank of $\delta$ stays close to full ($\sim G$)
+just like $L$.
+
+\smallskip
+\textbf{Useful upshot.} The decomposition is useful for storage and
+interpretation (we now have explicit closed-form expressions for the
+dominant additive structure) but does not unlock spectral convergence.
+The remaining $\sim$50\% of variation is intrinsically high-rank
+cuspy structure that requires \emph{piecewise/multi-element} treatment
+to resolve --- consistent with the main report's earlier conclusion
+about the smoothness barrier.
+
+\smallskip
+\textbf{Concrete economic finding.} The fitted $b(u_k)$ effect is
+$\sim 10{\times}$ smaller than the textbook closed-form $\tau \cdot u_k$
+prediction at $\tau = 1$, $\gamma = 100$. This is itself meaningful:
+at high $\tau$, the price already aggregates the agent's signal so
+well that $u_k$'s marginal information contribution to $\mu(p, u_k)$
+is much smaller than the linear-Gaussian limit suggests.
+\end{abstract}
+
+\section{Test methodology}
+
+We loaded the strict-$h{=}0$ fixed point at four $(\gamma, \tau)$ cells
+saved in \texttt{dd\_k3\_strict\_fp\_g\{10,100,1000\}\_t\{0.2,1.0\}.npz}
+and extracted the lookup matrix
+$\mu_{\rm strict}(p_i, u_{k,j})$ on the $(G_p, G) = (121, 11)$ grid.
+We then computed
+\[
+  L(p_i, u_{k,j}) \;:=\; \operatorname{logit}\mu_{\rm strict}(p_i, u_{k,j}),
+\]
+and tested two decompositions:
+
+\begin{itemize}\itemsep1pt
+  \item \textbf{ANOVA additive:} $L = \bar L + a(p) + b(u_k) + \delta$
+        with $\bar a = \bar b = 0$, minimizing $\|\delta\|_2$ in
+        closed form via row/column means.
+  \item \textbf{Cheby-h additive:} same form but $b(u_k)$ constrained
+        to a degree-8 Cheby polynomial in $u_k$; $a(p)$ free per node.
+        Solved by alternating LSQ.
+\end{itemize}
+
+For each decomposition we computed the Cheby coefficient tail-norm
+profile $\|c\|_2(\text{order} \ge N)$, the SVD spectrum of $\delta$,
+and the rank-$k$ truncation error.
+
+\section{Result 1: bulk absorbed, cusps preserved}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=\linewidth]{lpub_figs/fig2_heat.png}
+  \caption{Heatmaps of $L(p, u_k)$, $\delta_{\rm ANOVA}$, and
+    $\delta_{\rm Cheby-h}$ across four cells. The smooth bulk
+    (visible in $L$ as a vertical gradient) is removed in $\delta$,
+    but the sharp horizontal bands at the critical-value $p$'s
+    (cusps) are preserved unchanged. The two decompositions give
+    visually identical residuals.}
+\end{figure}
+
+The key visual: in the $\delta$ panels (middle and right columns),
+the smooth blue-to-red gradient that dominates $L$ is gone, but the
+sharp horizontal bands at $p \approx 0.34$ and $p \approx 0.66$
+(at $\tau = 1$, $\gamma = 100$) survive. Those bands are where
+$|\nabla P|$ vanishes at critical points of $P$; they generate the
+$\log$-cusps in the co-area integral.
+
+\section{Result 2: identical Cheby decay rates}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=\linewidth]{lpub_figs/fig1_tail_decay.png}
+  \caption{Cumulative Cheby-coefficient tail norm:
+    $\bigl(\sum_{i+j \ge N} c_{ij}^2\bigr)^{1/2}$ vs $N$, for the
+    direct Cheby fit of $L$ (blue), of $\delta_{\rm ANOVA}$ (red),
+    and of $\delta_{\rm Cheby-h}$ (green). Across all four cells
+    the three curves are essentially indistinguishable. The
+    coordinate transformation does not improve the per-coefficient
+    convergence rate.}
+\end{figure}
+
+If the cusps had been absorbed into the coordinate change, the red
+curve would lie a decade or two below the blue. They don't: the
+slow algebraic decay is preserved.
+
+\section{Result 3: SVD rank of $\delta$ matches $L$}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=\linewidth]{lpub_figs/fig4_svd.png}
+  \caption{Singular values of $\delta$ vs $L$ (both normalized to
+    $\sigma_1$). The two spectra overlap through $k \approx 9$. The
+    cusps make $L$ effectively full-rank ($G = 11$), and $\delta$
+    inherits the same rank. Rank-1 truncation captures only 30--45\%
+    of the Frobenius norm of $\delta$; rank-5 captures 65--80\%; you
+    need essentially all of the singular vectors to reach
+    machine $\varepsilon$.}
+\end{figure}
+
+\begin{center}\begin{tabular}{lrrrr}\toprule
+$(\gamma, \tau)$ & rank-1 & rank-2 & rank-3 & rank-5 \\
+\midrule
+$(100, 0.2)$  & 0.446 & 0.556 & 0.671 & 0.878 \\
+$(100, 1.0)$  & 0.348 & 0.515 & 0.617 & 0.770 \\
+$(10, 1.0)$   & 0.331 & 0.489 & 0.576 & 0.757 \\
+$(1000, 1.0)$ & 0.306 & 0.452 & 0.527 & 0.665 \\
+\bottomrule\end{tabular}\end{center}
+
+Fraction of Frobenius norm captured by rank-$k$ truncation of
+$\delta_{\rm ANOVA}$. A clean low-rank correction would need rank 1
+or 2 to capture $>$95\%; we get $<$45\%. So a multiplicative-rank-1
+extension like $L \approx a(u_k) + b(p) + c(u_k) \cdot d(p)$ would
+not close the gap either.
+
+\section{Result 4: the empirical $b(u_k)$ effect is much smaller than $\tau u_k$}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=0.85\linewidth]{lpub_figs/fig3_effects.png}
+  \caption{Row-effect $a(p)$ (left column) and column-effect $b(u_k)$
+    (right column). The dotted black line in the right panels is the
+    naive textbook prediction $L_{\rm priv}(u_k) = \tau u_k$. The
+    fitted effect (solid green) is $\sim 10{\times}$ smaller in
+    magnitude. The Cheby-h fit recovers essentially the same shape as
+    the ANOVA effect.}
+\end{figure}
+
+At $(\gamma, \tau) = (100, 1)$: the textbook $L_{\rm priv}(u_k)$
+ranges $[-2.33, +2.33]$ (since $u_k \in [-2.33, +2.33]$ and $\tau = 1$),
+but the empirical $b(u_k)$ ranges only $[-0.22, +0.22]$. The ``naive
+private log-odds'' over-estimates the $u_k$ contribution to $\mu$ by
+an order of magnitude.
+
+\textbf{Economic interpretation.} At high $\tau$ the equilibrium
+price aggregates the signals so effectively that, conditional on $p$,
+each agent's own $u_k$ adds little marginal information. The
+posterior $\mu(p, u_k)$ is dominated by $p$. This is consistent with
+the convergence of K-agent CRRA REE to the perfect-information limit
+as $K \to \infty$: $K = 3$ already does most of the aggregation work.
+
+\section{Why the brainstorm didn't quite work}
+
+The hypothesis was: in the right coordinates, the lookup is affine +
+a small smooth correction, so Cheby converges spectrally on the
+correction.
+
+What's actually true: in the right coordinates, the lookup is affine
+$+$ a smooth correction $+$ \emph{the cusps}. The cusps are
+preserved by any global linear change of coordinates --- they live on
+the algebraic variety where $|\nabla P| = 0$, which is intrinsic to
+$P$ and survives any pre-composition. To remove them you have to
+either (i) detect them and use piecewise representations (multi-element
+spectral), or (ii) use a representation like PCHIP that's natively
+$C^1$-not-$C^\infty$ (what Option B+ does).
+
+The decomposition is still useful for two things:
+\begin{enumerate}\itemsep1pt
+  \item \textbf{Storage / serialization.} Store the additive parts
+        $a(p)$ and $b(u_k)$ as 1D arrays (much smaller than the 2D
+        $\mu(p, u_k)$ table) and reconstruct on the fly; the
+        residual $\delta$ is still 2D but with lower magnitude, so
+        a coarser PCHIP grid for $\delta$ might suffice.
+  \item \textbf{Diagnostic / interpretation.} The empirical
+        $b(u_k) \ll \tau u_k$ is an interesting finding about K=3
+        information aggregation; useful for the economics writeup
+        even if not for the numerics.
+\end{enumerate}
+
+\section{Implication for Method C v3 design}
+
+The non-additive correction we were planning to add as
+$P = \sigma(h(u_1) + h(u_2) + h(u_3) + \kappa \cdot g(u_1, u_2, u_3))$
+is for $P$, not $\mu$. The cusps in $\mu$ would still emerge under
+v3 because they come from $|\nabla P|^{-1}$ in the co-area integral
+--- they're a property of the level-set geometry of $P$, regardless
+of how smooth $P$ itself is. So Method C v3 would lower
+$\|F\|_\infty$ at $\tau = 1$ (capturing more of the additive
+deviation from the linear-Gaussian limit) but would not eliminate
+the cusps in the resulting $\mu(p, u_k)$.
+
+This suggests two independent directions for the next step:
+\begin{enumerate}\itemsep1pt
+  \item \textbf{Method C v3 for $P$:} smooth, finite-parameter
+        ansatz, drives $F$ residual toward zero across the
+        $(\gamma, \tau)$ plane. Useful for fast continuation
+        studies; doesn't help lookup accuracy beyond what
+        Option B+ already does.
+  \item \textbf{Cusp-aware $\mu$ representation:} keep using
+        Option B+ (PCHIP density) which natively handles cusps, or
+        extend to piecewise Cheby with critical-value knots if
+        machine-$\varepsilon$ lookups are needed.
+\end{enumerate}
+
+These are complementary: (1) gives a fast smooth $P$ for continuation
+and the bulk of equilibrium analysis; (2) gives accurate $\mu$ where
+needed.
+
+\section{Reproducibility}
+
+Code: \texttt{/tmp/dd\_k3\_lpub\_lpriv\_v2.py} (and SVD diagnostic
+\texttt{/tmp/dd\_k3\_delta\_svd.py}). To re-run, you need the saved
+strict-$h{=}0$ FPs in
+\texttt{projects/REZN/solved\_fixed\_points/dd\_k3\_overnight/dd\_k3\_strict\_fp\_*.npz};
+all four-cell results take $\sim 5$\,seconds.
+
+Output: \texttt{lpub\_lpriv\_v2/figs/} and \texttt{results.json}.
+
+\end{document}
