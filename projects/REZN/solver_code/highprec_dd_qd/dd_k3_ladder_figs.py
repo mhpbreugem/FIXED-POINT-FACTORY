@@ -9,7 +9,7 @@ sys.path.insert(0, "/tmp/cheby_h0")
 
 OUT = "/tmp/dd_k3_ladder_figs"
 os.makedirs(OUT, exist_ok=True)
-d = json.load(open("/tmp/dd_k3_ladder_full.json"))
+d = json.load(open("/home/user/FIXED-POINT-FACTORY/projects/REZN/solved_fixed_points/dd_k3_overnight/full_ladder/ladder.json"))
 taus = sorted(float(k) for k in d.keys())
 Fs = np.array([d[f"{t:.4f}"]["F"] for t in taus])
 walls = np.array([d[f"{t:.4f}"]["wall"] for t in taus])
@@ -40,7 +40,7 @@ def fit(P):
     return s, w/ss
 slopes = []; deficits = []; tau_good = []
 for t in taus:
-    f = f"/tmp/dd_k3_ladder_full_fps/tau{t:.4f}.npy"
+    f = f"/home/user/FIXED-POINT-FACTORY/projects/REZN/solved_fixed_points/dd_k3_overnight/full_ladder/fps/tau{t:.4f}.npy"
     if os.path.exists(f):
         P = np.load(f)
         if P.shape == (7, 7, 7):
