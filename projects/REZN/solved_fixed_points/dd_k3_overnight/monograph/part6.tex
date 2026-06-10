@@ -1,0 +1,159 @@
+% =====================================================================
+\part{The equilibrium surface: log-odds coordinates, branches, and solvers}
+% =====================================================================
+
+\chapter{The log-odds configuration}
+
+\section{Specification}
+The final coordinate system, run at the user's direction:
+\begin{itemize}\itemsep2pt
+  \item \textbf{$u$-grid}: uniform in the no-learning private posterior
+        log-odds transform $\xi = \tanh(\tau u / 2)$,
+        $\xi \in [-0.85, 0.85]$, mapped back by
+        $u = (2/\tau)\operatorname{atanh}(\xi)$. No bounded cube: the
+        grid self-scales to $\approx \pm 5\sigma_{\rm signal}$ at every
+        $\tau$ (at $\tau = 0.005$ the cube spans $\pm 70$ in $u$; at
+        $\tau = 1$, $\pm 2.4$).
+  \item \textbf{$p$-grid}: uniform in public-only posterior log-odds
+        $\Lpub(p)$, bootstrap-computed from the cube empirical CDF and
+        \emph{antisymmetrized by construction}
+        ($\Lpub \mapsto \tfrac12(\Lpub - \Lpub^{\rm rev})$) after the
+        unsymmetrized bootstrap was caught breaking the equilibrium's
+        sign-flip symmetry at $O(0.4)$.
+  \item \textbf{Operator}: \strict{} co-area + POU (zero kernel).
+  \item \textbf{Clearing}: exact CRRA bisection (the linearized
+        clearing bug and its repair are recorded in Part I).
+  \item \textbf{Residual}: both raw $|F|_\infty$ and the
+        density-weighted $\Fw = \max |\Phi(P) - P| \cdot W_3$,
+        $W_3 \propto \prod_i \bar f(u_i)$ --- the raw max over an
+        unbounded cube is dominated by corner cells of vanishing
+        probability and is not the economically meaningful residual.
+  \item \textbf{Symmetry projection} (permutation + sign-flip) every
+        iteration; live per-iteration reporting.
+\end{itemize}
+
+\section{The $G$-ladder and $\gamma$-sweep}
+At $(\gamma, \tau) = (100, 0.1)$: $\Fw$ best of $1.3\times10^{-2}$
+($G{=}7$) down to $1.6\times10^{-3}$ ($G{=}9$), non-monotone across
+$G \in \{7..15\}$ --- the \strict{} stall manifests differently per
+grid. The $\gamma$-sweep at $G = 11$ spans
+$\Fw = 1.8\times10^{-2}$--$2.6\times10^{-2}$ across
+$\gamma \in [1, 1000]$: genuinely $\gamma$-dependent (after the clearing
+fix), all cells with sign-flip symmetry at $1.1\times10^{-16}$ and
+$P(\mathbf{0}) = \tfrac12$ exactly.
+
+\begin{figure}[H]\centering
+  \includegraphics[width=0.9\linewidth]{lo_figs/g100_t0.1000_G11.png}
+  \caption{The log-odds configuration at
+    $(\gamma, \tau, G) = (100, 0.1, 11)$: raw vs density-weighted
+    residual traces (left) and the equilibrium slice (right). The raw
+    residual is dominated by zero-density corners; the weighted
+    residual is the meaningful one.}
+\end{figure}
+
+\section{The 50-cell $\tau$-ladder}
+Fifty log-spaced $\tau \in [0.001, 1.2]$, chained warm-start,
+16 seconds total. Three regimes:
+\[
+  \underbrace{\tau \le 0.005}_{\Fw \approx 2.5\times10^{-15}}
+  \quad\longrightarrow\quad
+  \underbrace{0.005 \lesssim \tau \lesssim 0.02}_{\Fw: 10^{-7} \to 10^{-3}}
+  \quad\longrightarrow\quad
+  \underbrace{\tau \gtrsim 0.05}_{\Fw \approx 10^{-2} \text{ (stall)}}
+\]
+with perfect sign-flip symmetry everywhere and the price range opening
+monotonically with $\tau$.
+
+\begin{figure}[H]\centering
+  \includegraphics[width=\linewidth]{lol_figs/ladder_summary.png}
+  \caption{The 50-cell Picard $\tau$-ladder: residual regimes (left) and
+    equilibrium price range vs $\tau$ (right).}
+\end{figure}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=\linewidth]{lol_figs/logodds_contours.png}
+  \caption{Equilibrium log-odds contours
+    $\operatorname{logit}P(u_1, u_2 \mid u_3{=}0)$ on private-log-odds
+    axes across six $\tau$ values: a clean diagonal zero contour at low
+    $\tau$ deforming into the kinked high-$\tau$ structure whose
+    critical values generate the lookup cusps.}
+\end{figure}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=\linewidth]{lol_figs/logodds_contours_u.png}
+  \caption{The same surfaces on raw $u$ axes with $k\sigma$ density
+    rings: the unbounded-cube grid keeps the Gaussian mass interior at
+    every $\tau$.}
+\end{figure}
+
+\section{Anatomy of one lookup evaluation}
+For each $(p, u_k)$ query the \strict{} builder consumes: all $G^2$
+slice vertex values (linear interpolation backbone), $2 \times 16$
+Gauss--Legendre sweep nodes, and the level-set roots found per sweep
+line --- typically crossing 25--56 of the $(G{-}1)^2$ cells. One full
+table is $G_p \times G = 891$ such queries.
+
+\begin{figure}[H]\centering
+  \includegraphics[width=\linewidth]{lol_figs/lookup_points.png}
+  \caption{Which grid points the lookup uses: cube vertices (black), GL
+    sweep lines (light), level-set roots from each sweep (blue
+    $\times$ / orange $+$), and the cells crossed by the level set
+    (red). Top row: $\tau = 0.005$ --- the level set hugs the
+    antidiagonal and off-median prices find no roots (the fallback
+    region of Finding 14). Bottom: $\tau = 0.5$ --- well-resolved level
+    sets across the cube.}
+\end{figure}
+
+\chapter{Branches and Newton-type solvers}
+
+\section{The trivial branch is exact}
+$P \equiv \tfrac12$ satisfies the K=3 CRRA clearing identically (all
+posteriors equal the prior, all $R_i = 1$, zero demand): cold-started
+solvers of every type converge to it instantly, to $F = 0$ exactly.
+The equilibrium correspondence is multi-valued everywhere; \emph{branch
+identification is part of the computation's burden of proof}. The
+informative branch is reached only by continuation (warm-starting along
+the $\tau$-ladder from the analytic low-$\tau$ solution).
+
+\section{Newton--Krylov via the implicit function theorem}
+The IFT Newton direction
+$\delta P = -(\partial\Phi/\partial P - I)^{-1}(\Phi(P) - P)$,
+implemented matrix-free by LGMRES with finite-difference Jacobian-vector
+products and Wolfe line search, warm-started from the Picard ladder:
+\begin{itemize}\itemsep2pt
+  \item \textbf{Low $\tau$}: weighted residuals driven as deep as
+        $10^{-25}$--$10^{-50}$ on cells where the basin is locally
+        smooth --- far below the Picard floor.
+  \item \textbf{High $\tau$}: plateaus at $\Fw \sim 10^{-3}$--$10^{-2}$
+        with intermittent symmetry breaks --- the finite-difference
+        Jacobian inherits the operator's $C^0$-not-$C^1$ roughness.
+  \item \textbf{Cost}: 200--1400 $F$-evaluations per cell
+        ($50$--$100\times$ Picard); total ladder 207\,s vs 16\,s.
+\end{itemize}
+MINPACK HYBRD (explicit numerical Jacobian + Broyden updates) was also
+tried: in logit space it is captured by the trivial branch even from
+informative warm starts; in $P$-space it exits the unit cube
+(one cell reached $P \in [-1590, 1591]$) even with bound penalties.
+Newton--Krylov with continuation warm starts is the only stable Newton
+variant found.
+
+\begin{figure}[H]\centering
+  \includegraphics[width=\linewidth]{lon_figs/ladder_newton.png}
+  \caption{The IFT-Newton ladder vs Picard: deeper convergence at low
+    $\tau$, the same operator wall at high $\tau$, at $50$--$100\times$
+    the cost. Newton refines; it does not rescue.}
+\end{figure}
+
+\section{Synthesis of the surface-side evidence}
+Across Picard, Anderson, Newton--Krylov, HYBRD, smoothed-$\varepsilon$
+operators, frozen-knot inner loops, and the structural ansatz: every
+method that respects the \strict{} operator's discretization plateaus at
+the same $G$-dependent wall at high $\tau$, and every method that
+smooths past the wall pays in bias. Combined with the
+$C^0$-not-$C^1$ theorem and the success of the consistent-kernel joint
+limit at $10^{-14}$ (\texttt{k3\_coarea\_limit}), the conclusion is
+structural: \textbf{the high-resolution surface computation must use a
+consistent $C^\infty$ operator (kernel co-area in the central-path
+limit), with the bare \strict{} operator reserved for the role of
+unbiased cross-check at matched tolerance}. That division is the spine
+of the recommendation in Part VII.

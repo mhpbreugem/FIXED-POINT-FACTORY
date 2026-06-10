@@ -1,0 +1,396 @@
+\documentclass[11pt]{report}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx,amsmath,amssymb,booktabs,longtable,hyperref,xcolor,tabularx,float}
+\usepackage{caption}
+\graphicspath{{./}}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue}
+\setlength{\parskip}{5pt}
+\setcounter{tocdepth}{2}
+\newcommand{\Fw}{F_{\!w}}
+\newcommand{\Lpriv}{L_{\rm priv}}
+\newcommand{\Lpub}{L_{\rm pub}}
+\newcommand{\strict}{strict-$h{=}0$}
+
+\title{\textbf{Computing the K=3 CRRA Rational-Expectations Equilibrium:}\\
+A Complete Analysis of the Fixed-Point Factory Investigation\\[1ex]
+\large Economic problem, numerical operators, seventeen findings,\\
+and the recommended reproducible \strict{} gold-standard pipeline}
+\author{Fixed-Point Factory --- consolidated monograph}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+This monograph consolidates the complete investigation of the K=3 CRRA
+rational-expectations equilibrium (REE) with binary state and Gaussian
+private signals: the economic question (does a deterministic, noiseless
+CRRA economy support a \emph{partially revealing} equilibrium?), the
+numerical machinery built to answer it (seven operator families, five
+precision regimes, three coordinate systems), the seventeen numbered
+findings produced along the way --- both positive and negative --- and an
+extensive, step-by-step recommendation for the reproducible
+\strict{} computation that is closest to the truth.
+
+The headline economics: \textbf{the deterministic K=3 CRRA economy has a
+genuine, smooth, partially revealing equilibrium --- no noise traders
+needed.} The price equals the risk-weighted average belief plus a
+Jensen/curvature wedge $(\tfrac12 - p)\,\mathrm{Var}_W(m)/\gamma$ that
+is identically zero under full revelation and under CARA preferences.
+The headline numerics: the \emph{lookup side} of the fixed-point problem
+(the conditional posterior $\mu(p, u_k)$) is solved to machine epsilon by
+a per-segment Chebyshev construction with cusp-located knots, across the
+entire $(\gamma,\tau)$ grid tested; the \emph{equilibrium-surface side}
+is nailed to $10^{-14}$ at low signal precision and to $\sim 10^{-12}$
+with the consistent kernel co-area operator generally, while the bare
+co-area operator at high resolution is provably $C^0$-but-not-$C^1$ at
+Morse-critical prices --- a numerical fact about the operator, not an
+economic statement about the equilibrium.
+\end{abstract}
+
+\tableofcontents
+\listoffigures
+
+% =====================================================================
+\chapter*{Executive summary}
+\addcontentsline{toc}{chapter}{Executive summary}
+% =====================================================================
+
+\section*{The question}
+Since Grossman--Stiglitz (1980) and Hellwig (1980), the standard route to
+a partially revealing asset price has been exogenous noise: noise
+traders, random supply, or signal noise that prevents the price from
+fully aggregating private information. The question pursued here is
+whether a fully \emph{deterministic} economy --- $K$ CRRA traders, a binary
+asset value $v \in \{0,1\}$, Gaussian private signals, no noise of any
+kind --- can have an equilibrium price that does \emph{not} fully reveal
+the pooled information.
+
+\section*{The answer}
+Yes, for $K = 3$. The deterministic K=3 CRRA economy has a genuine,
+smooth, partially revealing (PR) equilibrium, computable to residual
+$10^{-12}$--$10^{-14}$, with a positive, grid-independent information
+deficit. The mechanism is the \emph{Jensen gap}: expanding CRRA demand in
+log-odds ($m = \operatorname{logit}\mu$, $\pi = \operatorname{logit}p$,
+$\delta = (m - \pi)/\gamma$) gives $x_i \approx W_i[\delta_i +
+(\tfrac12 - p)\delta_i^2]$, and market clearing yields, to second order,
+\[
+  \pi \;=\; \bar m_W \;+\; \Bigl(\tfrac12 - p\Bigr)\,
+            \frac{\mathrm{Var}_W(m)}{\gamma},
+\]
+price = average belief + a curvature wedge proportional to belief
+\emph{disagreement}. The wedge vanishes under full revelation (no
+disagreement) and under CARA ($\gamma \to \infty$ limit; linear demand,
+no curvature). It compresses the price toward $\tfrac12$ ---
+under-reaction, measured slope $\beta < \tau$. K=4 destroys the effect
+through aggregation (disagreement $\to$ 0 $\Rightarrow$ full revelation
+is globally attracting), unless extreme risk-aversion heterogeneity
+sidelines agents and resurrects PR through an effective-agent-count
+channel.
+
+\section*{The numerical journey, compressed}
+\begin{enumerate}\itemsep2pt
+  \item \textbf{The original sin: the naive contour scan.} The
+        equilibrium operator requires the level-set (co-area) integral
+        $A_v(p) = \int_{\{P = p\}} f_v / |\nabla P|\, d\sigma$. The
+        naive grid scan is inconsistent twice over: binary edge
+        inclusion creates $O(0.1)$ discontinuities, and the missing
+        $1/|\nabla P|$ weight biases the measure by $\sim$19\%. Years
+        of apparent ``non-smooth residual floors'' were this artifact.
+  \item \textbf{The kernel as consistent quadrature.} A Gaussian band
+        $\int K_h(P - p) f\, du$ converges to the correct co-area
+        integral as $h \to 0$ (verified to $1.5 \times 10^{-5}$); taken
+        in the joint limit $\Delta x \ll h \to 0$, it nails the PR
+        equilibrium to $10^{-14}$. The kernel is a numerical
+        convergence knob, \emph{not} hidden economic noise: the deficit
+        is invariant to $h$ once resolved.
+  \item \textbf{But fixed-$h$ kernel-band extrapolation fails.} The
+        kernel-band Richardson (R2--R7) lookup on a fixed grid does
+        \emph{not} converge to \strict{}: level-set kinks inject
+        non-integer powers of $h$ that even-power Richardson cannot
+        annihilate. Lookup bias up to 0.6 in $\mu$; the K=3
+        ``deficit ridge'' reported on that operator was an artifact
+        (36-cell recheck: deficit is flat in $\tau$ at $\sim 10^{-2}$
+        under \strict{}, with a sign-flipping bias crossing at
+        $\tau \approx 0.4$).
+  \item \textbf{The lookup problem is solved.} Detect the cusps of
+        $\mu(p, u_k)$ from $\mu$ itself (the 3D critical points of $P$
+        are \emph{not} the right knots --- slice criticality is), clean
+        the no-roots fallback with Bayesian PCHIP extrapolation, then
+        fit degree-6 Chebyshev per segment between cusp knots:
+        machine-$\varepsilon$ median across all 36 $(\gamma, \tau)$
+        cells, 11/11 monotone slices, correct boundary conditions, in
+        7 seconds total.
+  \item \textbf{The surface problem at high resolution is intrinsically
+        hard.} The bare co-area evidence is $C^0$-but-not-$C^1$ at
+        Morse-critical prices (proven on a controlled saddle: $A_v'(p)$
+        blows up $128\times$ while the kernel-band derivative stays
+        bounded). Newton needs $C^1$. Smoothed indicators introduce
+        bias with no sweet spot; Newton--Krylov, MINPACK HYBRD, and
+        frozen-cusp variants all plateau at the same
+        $\sim 10^{-2}$ wall on $G = 11$ at high $\tau$. The fix is
+        resolution + consistent kernel (the joint central-path limit),
+        not solver engineering.
+  \item \textbf{Multiplicity is real.} $P \equiv \tfrac12$ is an exact
+        fixed point of the K=3 CRRA clearing at every $(\gamma, \tau)$;
+        cold-started Newton finds it instantly. The informative PR
+        branch requires warm-starting along a continuation ladder. The
+        K=2 double-double work locates a fold at $\tau \approx 0.79$
+        ($\sigma_{\min}(I - J)$: $0.45 \to 0.31 \to 0.017$ for
+        $\tau = 1.0 \to 0.9 \to 0.8$) bounding its branch.
+\end{enumerate}
+
+\section*{The recommendation, compressed}
+Part~VII gives the full protocol. In one paragraph: \emph{represent} the
+equilibrium on a private-log-odds grid ($\xi = \tanh(\tau u/2)$ uniform,
+no hard cube truncation, $\pm 5\sigma$ coverage); \emph{solve} with the
+consistent kernel co-area operator in the joint limit
+$\Delta x \ll h \to 0$ (the only operator that is simultaneously
+consistent and $C^\infty$), warm-starting along a $\tau$-continuation
+ladder from the analytic low-$\tau$ solution, with permutation and
+sign-flip symmetry projection every iteration and a density-weighted
+residual as the acceptance metric; \emph{extract} the lookup
+$\mu(p, u_k)$ with the per-segment Chebyshev pipeline (v5) at degree 6;
+\emph{verify} with the five-test battery (symmetry, monotonicity,
+boundary conditions, operator cross-check against \strict{} co-area at
+matched tolerance, and deficit-measure invariance); and \emph{report}
+the deficit with its measure convention, the kernel-ladder evidence of
+$h$-invariance, and the residual floor with its provenance. Everything
+needed is committed on branch
+\texttt{claude/study-fixed-point-economics-y12PB}.
+
+% =====================================================================
+\part{The economic problem}
+% =====================================================================
+
+\chapter{Rational expectations and the revelation question}
+
+\section{The classical tension}
+A competitive asset price aggregates dispersed private information. If
+it aggregates \emph{perfectly} --- full revelation (FR) --- then no
+trader has an incentive to acquire costly information, and the
+equilibrium concept undermines itself (the Grossman--Stiglitz paradox).
+The classical resolution adds exogenous randomness: noise traders,
+stochastic asset supply, or unlearnable taste shocks. With noise in the
+price, observation of $p$ leaves residual uncertainty about $v$, prices
+are partially revealing (PR), and information acquisition can be
+rewarded in equilibrium.
+
+The price of that resolution is conceptual: the noise is an
+\emph{assumption}, not a derivation. The investigation documented here
+asks the sharper question: in a completely deterministic economy ---
+no noise traders, no random supply, nothing unlearnable --- can the
+equilibrium price still fail to reveal pooled information?
+
+\section{Why determinism seems to force full revelation}
+With finitely many signal profiles mapping to prices, a one-to-one price
+function would let every agent invert the price into the pooled signal
+vector (up to permutation, which is payoff-irrelevant under symmetric
+weights). The only way a deterministic price can hide information is to
+be \emph{many-to-one}: distinct signal profiles with distinct pooled
+implications must map to the same price. The question is whether such a
+many-to-one price can simultaneously clear the market at every signal
+profile when every trader conditions on it rationally --- a fixed-point
+requirement that is far from obviously satisfiable.
+
+\section{The answer in brief}
+For K=3 CRRA traders it is satisfiable. The equilibrium price function
+$P(u_1, u_2, u_3)$ is smooth and genuinely many-to-one: level sets of
+$P$ pool signal profiles with different posterior implications, and the
+market still clears identically. The wedge that makes this possible is
+the curvature (wealth-effect) term in CRRA demand --- absent under CARA,
+which is why the CARA benchmark fully reveals (the Hellwig closed form
+$p^* = \sigma(\tau \sum_i u_i)$ is the unique CARA equilibrium, verified
+numerically to deficit $\sim 10^{-4}$, shrinking with grid).
+
+\chapter{The model}
+
+\section{Primitives}
+\begin{itemize}\itemsep2pt
+  \item Binary state $v \in \{0, 1\}$, symmetric prior
+        $\mathbb{P}[v{=}1] = \tfrac12$.
+  \item $K$ traders, $i = 1..K$, with CRRA utility of terminal wealth,
+        risk-aversion parameter $\gamma$ and market weights $W_i$
+        (homogeneous $W_i = 1$ unless stated).
+  \item Private signals $u_i \mid v \sim \mathcal{N}(v - \tfrac12,\,
+        \tau^{-1})$: precision $\tau$ controls informativeness. At
+        $\tau \to 0$ signals are uninformative; at $\tau \gtrsim 1$
+        a single signal is strongly informative
+        ($\sigma_{\rm signal} = 1/\sqrt{\tau}$ vs the means gap of 1).
+  \item One risky asset paying $v$, zero net supply; a numeraire bond.
+\end{itemize}
+
+\section{Information and demands}
+Trader $i$ observes $(u_i, p)$ and forms the posterior
+$\mu_i = \mathbb{P}[v{=}1 \mid u_i, P(\mathbf{u}) = p]$. With binary
+payoff, the CRRA demand has the log-odds form: writing
+$m_i = \operatorname{logit}\mu_i$, $\pi = \operatorname{logit}p$ and
+$R_i = \exp((m_i - \pi)/\gamma)$, individual asset demand solves
+\[
+  x_i(p) \;=\; W_i\,\frac{R_i - 1}{(1 - p) + R_i\,p},
+\]
+which is the exact expression used in the production clearing solver
+(bisection on $p$; \texttt{dd\_k3\_ops.py:dd\_crra\_clear}).
+\textbf{A cautionary tale from this session}: the linearized
+($\gamma \to \infty$) clearing $p = \frac1K \sum_i \mu_i$ looks similar
+and is catastrophically wrong for the question at hand --- it removes
+$\gamma$ from the fixed-point problem entirely, which an early run
+exposed as the absurd result ``every $\gamma$ gives the identical
+equilibrium''. The exact CRRA clearing must be used.
+
+\section{Equilibrium as a fixed point}
+A rational-expectations equilibrium is a price function
+$P : \mathbb{R}^K \to (0,1)$ such that for every signal profile
+$\mathbf{u}$,
+\[
+  \sum_{i=1}^{K} W_i\,
+  \frac{R_i(\mathbf{u}) - 1}{(1 - P(\mathbf{u})) + R_i(\mathbf{u})\,P(\mathbf{u})}
+  \;=\; 0,
+  \qquad
+  R_i = \exp\!\Bigl(\tfrac{\operatorname{logit}\mu_i - \operatorname{logit}P(\mathbf{u})}{\gamma}\Bigr),
+\]
+where each $\mu_i$ is the \emph{Bayes-correct} posterior given $u_i$ and
+the event $\{P(\cdot) = P(\mathbf{u})\}$ computed under the same
+function $P$. Operationally this is the loop
+\[
+  P \;\xrightarrow{\;\text{co-area integral}\;}\; \mu(p, u_k)
+  \;\xrightarrow{\;\text{CRRA clearing}\;}\; \Phi(P),
+  \qquad \text{REE} \iff \Phi(P) = P .
+\]
+
+\section{The lookup function}
+The computational heart is the conditional posterior --- the
+\emph{lookup function}
+\[
+  \mu(p, u_k) \;=\;
+  \frac{ f_1(u_k)\, A_1(p, u_k) }
+       { f_0(u_k)\, A_0(p, u_k) + f_1(u_k)\, A_1(p, u_k) },
+  \qquad
+  A_w(p, u_k) \;=\; \int_{\{P(\cdot, u_k) = p\}}
+      \frac{f_w(u_a)\, f_w(u_b)}{|\nabla P|}\, d\sigma ,
+\]
+a Gaussian-weighted co-area integral over the level set of the
+\emph{slice} of $P$ at the trader's own signal $u_k$, where
+$f_w(u) = \mathcal{N}(u;\, w - \tfrac12, \tau^{-1})$. All seventeen
+findings of Parts III--VI are about how to compute $A_w$ and the fixed
+point accurately.
+
+\section{Symmetries}
+Four structural symmetries, used throughout both to halve unknowns and
+as free correctness tests:
+\begin{enumerate}\itemsep2pt
+  \item \textbf{Permutation}: $P(u_{\pi(1)}, u_{\pi(2)}, u_{\pi(3)}) =
+        P(\mathbf{u})$; reduces $G^3$ cube unknowns to
+        $\binom{G+2}{3}$ (e.g.\ $1331 \to 286$ at $G{=}11$).
+  \item \textbf{Sign flip}: $P(\mathbf{u}) + P(-\mathbf{u}) = 1$ (state
+        relabeling); pins $P(\mathbf{0}) = \tfrac12$.
+  \item \textbf{Axis monotonicity}: $\partial P/\partial u_i \ge 0$; a
+        violation flags an operator artifact (the kernel-band R4 FPs
+        violate it in 27\% of cells; \strict{} in 4\%; the structural
+        ansatz in 0\%).
+  \item \textbf{Lookup mirror}: $\mu(1 - p, -u_k) = 1 - \mu(p, u_k)$;
+        any asymmetry of the lookup about $p = \tfrac12$ measures
+        operator bias, not economics.
+\end{enumerate}
+
+\chapter{The Jensen gap: mechanism and closed form}
+
+\section{Second-order expansion}
+Expanding the CRRA demand in $\delta_i = (m_i - \pi)/\gamma$:
+\[
+  x_i \;\approx\; W_i\Bigl[\, \delta_i + \bigl(\tfrac12 - p\bigr)\,\delta_i^2 \,\Bigr].
+\]
+The quadratic term is the wealth-curvature effect, identically absent
+for CARA. Imposing $\sum_i x_i = 0$ and solving to second order:
+\[
+  \boxed{\;\pi \;=\; \bar m_W \;+\;
+  \Bigl(\tfrac12 - p\Bigr)\,\frac{\mathrm{Var}_W(m)}{\gamma}\;}
+\]
+the equilibrium log-odds price equals the weighted-average belief plus a
+wedge proportional to belief \emph{dispersion} and inversely proportional
+to risk aversion.
+
+\section{Verified consequences}
+All checked numerically on nailed equilibria (\texttt{k3\_jensen\_gap}):
+\begin{itemize}\itemsep2pt
+  \item \textbf{Gap $\equiv$ partial revelation.} Under FR all agents
+        share the pooled posterior, $\mathrm{Var}_W(m) = 0$, the wedge
+        vanishes --- so FR is always a clean fixed point, and any gap
+        \emph{is} partial revelation.
+  \item \textbf{Compression toward $\tfrac12$.} The sign factor
+        $(\tfrac12 - p)$ pulls the price toward even odds:
+        under-reaction; measured regression slope $\beta < \tau$.
+  \item \textbf{$\propto 1/\gamma$}: more risk aversion $\Rightarrow$
+        smaller wedge $\Rightarrow$ more revealing. CARA
+        ($\gamma \to \infty$) is the no-gap benchmark; verified
+        deficit $\sim \gamma^{-0.94} \to 0$ (\texttt{k3\_cara}).
+  \item \textbf{$\propto \mathrm{Var}(m)$}: sharper signals (larger
+        $\tau$) disperse beliefs and widen the wedge --- the deficit
+        rises with $\tau$ and falls with $\gamma$ across the definitive
+        $(\gamma, \tau)$ map (\texttt{k3\_coarea\_2dsweep}, $G{=}17$,
+        31/32 cells nailed to $10^{-12}$).
+  \item \textbf{K=4 collapse}: more agents aggregate beliefs, shrink
+        disagreement, kill the wedge --- FR is unique and globally
+        attracting at K=4 under homogeneous parameters (every seed
+        tested flows to FR; \texttt{k4\_sym}, \texttt{k4\_basin},
+        \texttt{k4\_extreme}).
+  \item \textbf{Effective-agent-count channel}: with extreme
+        heterogeneity $\gamma = [g, g, 1, 1]$, $g \to \infty$, the two
+        risk-averse traders stop trading, the price reveals only the
+        active pair, and genuine PR reappears (deficit $\to \sim 0.33$;
+        \texttt{k4\_riskaversion}).
+\end{itemize}
+
+\section{The CARA/Hellwig cross-check}
+The K=3 noiseless CARA model admits the sufficient statistic
+$\log[f_1/f_0] = \tau \sum_i u_i$, so the unique CARA equilibrium is the
+analytic fully-revealing price $p^* = \sigma(\tau \sum_i u_i)$. Direct
+numerical evaluation at $P_{\rm FR}$ gives deficit $\sim 10^{-4}$,
+shrinking with $G$ --- the Hellwig closed form is reproduced, and an
+earlier ``growing CARA deficit'' was traced to a self-inconsistent
+boundary halo, not economics
+(\texttt{k3\_cara/HELLWIG\_CLOSED\_FORM.md}).
+
+\chapter{What ``closest to the truth'' must mean}
+
+Because the investigation produced both genuine economics and a long
+catalogue of numerical artifacts that \emph{looked} like economics, the
+monograph adopts an explicit standard for ``truth-closeness'' that
+Part~VII operationalizes:
+
+\begin{enumerate}\itemsep2pt
+  \item \textbf{Consistency}: the discrete operator must converge to
+        the continuum co-area operator as resolution increases ---
+        including the $1/|\nabla P|$ weight (the naive scan's 19\% bias
+        is disqualifying) and without discrete include/exclude flips.
+  \item \textbf{Parameter-invariance of economics}: any auxiliary
+        numerical parameter (kernel bandwidth, grid, quadrature order)
+        must leave economic quantities (deficit, slope) invariant once
+        resolved. The kernel passes this test; the fixed-grid
+        Richardson extrapolation does not.
+  \item \textbf{Symmetry exactness}: permutation, sign-flip, and lookup
+        mirror must hold to within the arithmetic precision, not the
+        truncation error.
+  \item \textbf{Branch identification}: with multiple fixed points
+        (trivial $P \equiv \tfrac12$, PR branch, FR), the computation
+        must demonstrate \emph{which} branch it is on and how it got
+        there (continuation provenance).
+  \item \textbf{Honest residual reporting}: best-iterate semantics,
+        stall amplitudes, and measure conventions for the deficit must
+        be stated --- the difference between ``$|F| = 10^{-14}$'' and
+        ``best iterate of an oscillating sequence with amplitude
+        $0.05$'' decided several findings.
+\end{enumerate}
+
+\input{part2}
+\input{part3}
+\input{part4}
+\input{part5}
+\input{part6}
+\input{part7}
+\input{appendixA}
+\input{appendixB}
+\input{appendixC}
+
+\end{document}
