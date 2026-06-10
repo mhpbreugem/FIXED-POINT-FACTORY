@@ -55,10 +55,13 @@ def exact_sum_density(p, v, tau):
 
 def v1(G_cheb=(21, 41, 81, 161, 321), G_hat_extra=(641, 1281, 2561, 5121)):
     log('=== V1 density unit test: S = u2+u3, tau=%.1f ===' % TAU)
-    p_test = np.linspace(-2.0, 2.0, 41)
     rows = []
     for G in list(G_cheb) + list(G_hat_extra):
         du, u_full, lo, hi = build_grid(G)
+        # offset the test points by an irrational fraction of du so they
+        # do NOT align with the vertex-value lattice (alignment is
+        # superconvergent and would flatter the result).
+        p_test = np.linspace(-2.0, 2.0, 41) + du * 0.299792458
         S = u_full[:, None] + u_full[None, :]
         Wt = tri_weights(u_full, TAU, TAU, du)
         tri = make_tris(S)
@@ -66,8 +69,19 @@ def v1(G_cheb=(21, 41, 81, 161, 321), G_hat_extra=(641, 1281, 2561, 5121)):
         A_hat = hat_eval(tri, Wt, p_test)
         ex = np.stack([exact_sum_density(p_test, v, TAU) for v in (0, 1)],
                       axis=1)
-        rel_hat = float(np.max(np.abs(A_hat - ex) / ex))
-        row = dict(G_equiv=G, du=du, rel_hat=rel_hat)
+        rel = np.abs(A_hat - ex) / ex
+        bulk = np.abs(p_test) <= 1.0
+        rel_hat = float(np.max(rel))
+        rel_hat_bulk = float(np.max(rel[bulk]))
+        # aligned (vertex-lattice) points for the superconvergence note
+        p_al = np.linspace(-2.0, 2.0, 21)
+        snap = np.round(p_al / du) * du
+        A_al = hat_eval(tri, Wt, snap)
+        ex_al = np.stack([exact_sum_density(snap, v, TAU)
+                          for v in (0, 1)], axis=1)
+        rel_aligned = float(np.max(np.abs(A_al - ex_al) / ex_al))
+        row = dict(G_equiv=G, du=du, rel_hat=rel_hat,
+                   rel_hat_bulk=rel_hat_bulk, rel_aligned=rel_aligned)
         if G in G_cheb:
             A_cheb = slice_evidence(S, p_test, Wt)
             from cdf_slice_ops import boxcar_eval
@@ -77,7 +91,8 @@ def v1(G_cheb=(21, 41, 81, 161, 321), G_hat_extra=(641, 1281, 2561, 5121)):
             row['box_vs_hat'] = float(np.max(np.abs(A_box - A_hat) / ex))
         row['wall'] = time.time() - t0
         rows.append(row)
-        log('  G=%5d du=%.5f  hat-vs-exact %.3e' % (G, du, rel_hat),
+        log('  G=%5d du=%.5f  hat-vs-exact %.3e (bulk %.3e, aligned %.1e)'
+            % (G, du, rel_hat, rel_hat_bulk, rel_aligned),
             (' cheb-vs-exact %.3e  cheb-vs-hat %.3e'
              % (row['rel_cheb'], row['cheb_vs_hat'])) if 'rel_cheb' in row
             else '')
