@@ -76,10 +76,13 @@ for tau in taus:
     acc = [x for x in row if x['verdict'] == 'ACCEPT']
     res = [x for x in row if x['rescued']]
     fmax = max([x['F_ld'] for x in acc if x['F_ld'] is not None], default=np.nan)
-    rows.append(f"{tau:.1f} & {len(acc)}/20 & {len(res)} & "
-                f"{(f'{fmax:.1e}' if acc else '--')} & "
-                f"{(f'{min(x['deficit'] for x in acc):.2e}' if acc else '--')} & "
-                f"{(f'{max(x['deficit'] for x in acc):.3f}' if acc else '--')} \\\\")
+    if acc:
+        dmin = min(x['deficit'] for x in acc)
+        dmax = max(x['deficit'] for x in acc)
+        rows.append(f"{tau:.1f} & {len(acc)}/20 & {len(res)} & "
+                    f"{fmax:.1e} & {dmin:.2e} & {dmax:.3f} \\\\")
+    else:
+        rows.append(f"{tau:.1f} & 0/20 & {len(res)} & -- & -- & -- \\\\")
 table = "\n".join(rows)
 
 stats = dict(n_acc=n_acc, n_res=n_res,
