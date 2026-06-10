@@ -165,6 +165,46 @@ def hat_eval(tri: np.ndarray, Wt: np.ndarray, p: np.ndarray,
     return out
 
 
+def boxcar_eval(tri: np.ndarray, Wt: np.ndarray, p: np.ndarray,
+                dlt: float, chunk: int = 2_000_000) -> np.ndarray:
+    """Analytic boxcar average of the exact density:
+        A(p) = [G(p+dlt) - G(p-dlt)] / (2 dlt),
+    computed PER TRIANGLE as the difference of sub-level fractions
+    (each in [0,1]), so there is no catastrophic cancellation even
+    where the density is 1e-12 of the total mass.  Exact-tie atoms are
+    automatically included (the fraction jump is captured by the
+    difference).  At the slice extremes the window truncates
+    one-sidedly and the ratio across weight columns tends to the exact
+    one-sided limit ratio.  Returns (m, nw) >= 0."""
+    Ntri = tri.shape[0]
+    m = p.size
+    out = np.zeros((m, Wt.shape[1]))
+    step = max(1, chunk // max(m, 1))
+    for a in range(0, Ntri, step):
+        b = min(Ntri, a + step)
+        s1 = tri[a:b, 0:1]
+        s2 = tri[a:b, 1:2]
+        s3 = tri[a:b, 2:3]
+        d31 = s3 - s1
+        den_lo = np.maximum((s2 - s1) * d31, TINY)
+        den_hi = np.maximum((s3 - s2) * d31, TINY)
+
+        def _frac(P):
+            below = P <= s1
+            above = P >= s3
+            mid_lo = (P > s1) & (P < s2)
+            return np.where(
+                below, 0.0,
+                np.where(above, 1.0,
+                         np.where(mid_lo,
+                                  (P - s1) ** 2 / den_lo,
+                                  1.0 - (s3 - P) ** 2 / den_hi)))
+
+        df = _frac(p[None, :] + dlt) - _frac(p[None, :] - dlt)
+        out += df.T @ Wt[a:b]
+    return out / (2.0 * dlt)
+
+
 def atom_eval(tri: np.ndarray, Wt: np.ndarray, p: np.ndarray,
               dlt: float) -> np.ndarray:
     """Mass of near-atoms (triangles with total value spread <= dlt)
@@ -328,6 +368,7 @@ def slice_evidence(S: np.ndarray, p_targets: np.ndarray, Wt: np.ndarray,
                    min_seg: float = 1.0e-9, knot_tol: float = 1.0e-13,
                    transform: str = 'identity', qseg: float = 1.0,
                    mtol: float = 0.03, method: str = 'cheb',
+                   boxcar_delta: float = 1.0e-7,
                    stats: dict | None = None) -> np.ndarray:
     """Evidence A_v(p_targets) = dG_v/dp for one 2-D slice, h == 0.
 
@@ -361,6 +402,21 @@ def slice_evidence(S: np.ndarray, p_targets: np.ndarray, Wt: np.ndarray,
         # entirely flat slice (cannot happen for inner slices): the
         # pushforward is an atom; return zero density.
         return np.zeros((m, nw))
+
+    if method == 'boxcar':
+        # Analytic symmetric window average of width 2*boxcar_delta in
+        # working coordinates: the documented tiny-stencil epsilon.
+        # It equals the exact hat derivative wherever the density is
+        # linear over the window, averages exact-tie atoms and the
+        # sub-delta micro-kink structure, and gives the exact
+        # one-sided limit ratio at the slice extremes.
+        A = boxcar_eval(tri, Wt, np.asarray(pw, dtype=np.float64),
+                        boxcar_delta)
+        if jac is not None:
+            A *= jac[:, None]
+        if stats is not None:
+            stats['nslice'] = stats.get('nslice', 0) + 1
+        return A
 
     if method == 'hat':
         # The EXACT analytic derivative of the exact CDF: between
@@ -508,11 +564,12 @@ class CDFSliceOperator:
                  UMAX: float = 4.0, pad: int = 2,
                  deg: int = 12, nsub: int = 24, oversample: int = 4,
                  transform: str = 'logit', qseg: float = 1.0,
-                 method: str = 'cheb'):
+                 method: str = 'cheb', boxcar_delta: float = 1.0e-7):
         self.Gi = Gi
         self.transform = transform
         self.qseg = qseg
         self.method = method
+        self.boxcar_delta = boxcar_delta
         self.tau_vec = np.asarray(tau_vec, dtype=np.float64)
         self.gamma_vec = np.asarray(gamma_vec, dtype=np.float64)
         self.W_vec = np.asarray(W_vec, dtype=np.float64)
@@ -546,7 +603,7 @@ class CDFSliceOperator:
         kw = dict(deg=self.deg, nsub=self.nsub,
                   oversample=self.oversample, stats=st,
                   transform=self.transform, qseg=self.qseg,
-                  method=self.method)
+                  method=self.method, boxcar_delta=self.boxcar_delta)
 
         for i in range(lo, hi):                      # agent 0
             A = slice_evidence(P_full[i], P_full[i, inner, inner].ravel(),

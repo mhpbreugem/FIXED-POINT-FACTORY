@@ -70,8 +70,11 @@ def v1(G_cheb=(21, 41, 81, 161, 321), G_hat_extra=(641, 1281, 2561, 5121)):
         row = dict(G_equiv=G, du=du, rel_hat=rel_hat)
         if G in G_cheb:
             A_cheb = slice_evidence(S, p_test, Wt)
+            from cdf_slice_ops import boxcar_eval
+            A_box = boxcar_eval(tri, Wt, p_test, 1.0e-7)
             row['rel_cheb'] = float(np.max(np.abs(A_cheb - ex) / ex))
             row['cheb_vs_hat'] = float(np.max(np.abs(A_cheb - A_hat) / ex))
+            row['box_vs_hat'] = float(np.max(np.abs(A_box - A_hat) / ex))
         row['wall'] = time.time() - t0
         rows.append(row)
         log('  G=%5d du=%.5f  hat-vs-exact %.3e' % (G, du, rel_hat),
@@ -97,37 +100,44 @@ def v2():
     tv = np.full(3, TAU)
     gv = np.full(3, GAMMA)
     wv = np.full(3, 1.0)
-    op = CDFSliceOperator(G, tv, gv, wv)
     P_inner = np.load(os.path.join(WARM, 'P_inner_G9.npy'))
-    Pf = op.embed(P_inner.ravel())
-    s = (slice(op.lo, op.hi),) * 3
-
-    t0 = time.time()
-    P_cdf = op.phi(Pf)
-    t_phi = time.time() - t0
-    P_ker = phi_K3_halo_smooth(Pf, op.u_full, op.lo, op.hi, tv, gv, wv, 0.45)
-
-    d = (P_cdf - P_ker)[s]
-    d_fp = (P_cdf - Pf)[s]
-    res = dict(
-        max_abs_diff=float(np.max(np.abs(d))),
-        mean_abs_diff=float(np.mean(np.abs(d))),
-        rms_diff=float(np.sqrt(np.mean(d ** 2))),
-        median_abs_diff=float(np.median(np.abs(d))),
-        max_abs_diff_vs_warmstart=float(np.max(np.abs(d_fp))),
-        kernel_selfres=float(np.max(np.abs((P_ker - Pf)[s]))),
-        wall_phi_cdf=t_phi,
-        stats=op.last_stats,
-    )
-    log('  phi_cdf wall %.2fs  segments/slice avg %.1f max %d  '
-        'targets-at-knot %d'
-        % (t_phi, op.last_stats['nseg'] / op.last_stats['nslice'],
-           op.last_stats['max_nseg'], op.last_stats['n_at_knot']))
-    log('  |phi_cdf - phi_kernel| inner: max %.4e  mean %.4e  median %.4e'
-        % (res['max_abs_diff'], res['mean_abs_diff'],
-           res['median_abs_diff']))
-    log('  kernel self-residual at warm start: %.2e' % res['kernel_selfres'])
-    np.save(os.path.join(OUT, 'v2_diff_field.npy'), d)
+    ui = np.linspace(-4, 4, G)
+    U1, U2, U3 = np.meshgrid(ui, ui, ui, indexing='ij')
+    Tabs = np.abs(U1 + U2 + U3)
+    res = {}
+    P_ker = None
+    for method in ('cheb', 'boxcar'):
+        op = CDFSliceOperator(G, tv, gv, wv, method=method)
+        Pf = op.embed(P_inner.ravel())
+        s = (slice(op.lo, op.hi),) * 3
+        if P_ker is None:
+            P_ker = phi_K3_halo_smooth(Pf, op.u_full, op.lo, op.hi,
+                                       tv, gv, wv, 0.45)
+        t0 = time.time()
+        P_cdf = op.phi(Pf)
+        t_phi = time.time() - t0
+        d = (P_cdf - P_ker)[s]
+        shells = {}
+        for lim in ((0, 2), (2, 5), (5, 8), (8, 12.1)):
+            mm = (Tabs >= lim[0]) & (Tabs < lim[1])
+            shells['T%g-%g' % lim] = dict(
+                max=float(np.max(np.abs(d[mm]))),
+                mean=float(np.mean(np.abs(d[mm]))))
+        r = dict(max_abs_diff=float(np.max(np.abs(d))),
+                 mean_abs_diff=float(np.mean(np.abs(d))),
+                 median_abs_diff=float(np.median(np.abs(d))),
+                 rms_diff=float(np.sqrt(np.mean(d ** 2))),
+                 kernel_selfres=float(np.max(np.abs((P_ker - Pf)[s]))),
+                 wall_phi_cdf=t_phi, shells=shells,
+                 stats=op.last_stats)
+        log('  [%s] wall %.2fs |phi_cdf-phi_ker|: max %.4e mean %.4e '
+            'median %.4e' % (method, t_phi, r['max_abs_diff'],
+                             r['mean_abs_diff'], r['median_abs_diff']))
+        for k, v in shells.items():
+            log('      |T| shell %s: max %.3e mean %.3e'
+                % (k, v['max'], v['mean']))
+        np.save(os.path.join(OUT, 'v2_diff_field_%s.npy' % method), d)
+        res[method] = r
     save_json('v2_crosscheck.json', res)
     return res
 
@@ -196,33 +206,41 @@ def deficit_unweighted(P_inner, G, tau, UMAX=4.0):
             float(a[0]))
 
 
-def v3(G_list=(9, 13, 17, 21)):
-    log('=== V3 Newton at strict h=0: tau=%s gamma=%s ===' % (TAU, GAMMA))
+def v3(G_list=(9, 13, 17, 21), method='boxcar', boxcar_delta=1.0e-7,
+       tag=None):
+    tag = tag or method
+    log('=== V3 Newton at strict h=0 [%s]: tau=%s gamma=%s ==='
+        % (tag, TAU, GAMMA))
     tv = np.full(3, TAU)
     gv = np.full(3, GAMMA)
     wv = np.full(3, 1.0)
     rows = []
     prev = None
     for G in G_list:
-        op = CDFSliceOperator(G, tv, gv, wv)
+        op = CDFSliceOperator(G, tv, gv, wv, method=method,
+                              boxcar_delta=boxcar_delta)
         if prev is None:
             x0 = np.load(os.path.join(WARM, 'P_inner_G9.npy')).ravel()
+            if G != 9:
+                x0 = interp_inner(x0.reshape((9,) * 3), 9, G).ravel()
         else:
             x0 = interp_inner(prev[0], prev[1], G).ravel()
         F0 = float(np.max(np.abs(op.residual(x0))))
         log('  -- G=%d  initial ||F||inf=%.3e' % (G, F0))
-        sol, Finf, conv, wall, hist, nfev = _newton(op, x0, label='G%d' % G)
+        sol, Finf, conv, wall, hist, nfev = _newton(
+            op, x0, label='%s-G%d' % (tag, G))
         defi, slope = deficit_unweighted(sol.reshape((G,) * 3), G, TAU)
-        log('  G=%d  final ||F||inf=%.3e  conv=%s  wall=%.1fs  nfev=%d  '
-            'deficit=%.4f slope=%.4f' % (G, Finf, conv, wall, nfev,
-                                         defi, slope))
-        np.save(os.path.join(OUT, 'P_cdf_h0_G%d.npy' % G),
+        log('  G=%d [%s] final ||F||inf=%.3e  conv=%s  wall=%.1fs  '
+            'nfev=%d  deficit=%.4f slope=%.4f'
+            % (G, tag, Finf, conv, wall, nfev, defi, slope))
+        np.save(os.path.join(OUT, 'P_cdf_h0_%s_G%d.npy' % (tag, G)),
                 sol.reshape((G,) * 3))
-        rows.append(dict(G=G, F0=F0, Finf=Finf, converged=conv,
+        rows.append(dict(G=G, method=method, boxcar_delta=boxcar_delta,
+                         F0=F0, Finf=Finf, converged=conv,
                          wall=wall, nfev=nfev, deficit=defi, slope=slope,
-                         hist=hist))
+                         hist=hist[:200]))
         prev = (sol.reshape((G,) * 3), G)
-        save_json('v3_newton.json', rows)
+        save_json('v3_newton_%s.json' % tag, rows)
     return rows
 
 
