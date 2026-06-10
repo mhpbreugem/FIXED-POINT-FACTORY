@@ -4,7 +4,7 @@
 \graphicspath{{./}}
 \hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
 \setlength{\parskip}{6pt}
-\title{Newton--Krylov (IFT) on the strict-$h{=}0$ K=3 REE \\
+\title{Implicit-function-theorem (IFT) Newton on the strict-$h{=}0$ K=3 REE \\
        in private/public log-odds coordinates}
 \author{Fixed-Point Factory}
 \date{June 2026}
@@ -14,9 +14,17 @@
 \begin{abstract}
 We replace the damped-Picard/Anderson FP iteration on the strict-$h{=}0$
 K=3 operator (in $(L_{\rm priv}, L_{\rm pub})$ coordinates, unbounded
-cube, density-weighted residual) with a Newton--Krylov solver that
-uses the implicit function theorem: GMRES with finite-difference
-Jacobian-vector products on $F(P) = \Phi(P) - P$.
+cube, density-weighted residual) with an IFT-based Newton solver.
+The implicit function theorem gives the Newton direction
+$\delta P = -(\partial \Phi/\partial P - I)^{-1} (\Phi(P) - P)$.
+We use \texttt{scipy.optimize.newton\_krylov} (LGMRES + Wolfe line
+search; finite-diff Jacobian-vector products supply the implicit
+$\partial \Phi/\partial P$ without forming it). We also tested
+\texttt{scipy.optimize.root method='hybr'} (MINPACK HYBRD with explicit
+numerical Jacobian + Broyden updates); HYBRD was either captured by
+the trivial $P{=}0.5$ basin (logit-space variant) or wandered out of
+the unit interval (P-space, even with bound penalties), so the
+Newton-Krylov variant is the one reported.
 
 \smallskip
 \noindent\textbf{Setup.}
@@ -42,7 +50,7 @@ Picard FP.
 
 \section{Why Newton from a cold start fails}
 
-A naive Newton--Krylov from the symmetric init $P = \sigma(\tau \sum u)$
+A naive Newton-via-IFT from the symmetric init $P = \sigma(\tau \sum u)$
 converges to the \textbf{trivial $P \equiv 0.5$ FP} in $\sim 30$
 $F$-evaluations, for every $\tau$ in the ladder. Reason: $P = 0.5$
 exactly satisfies the K=3 CRRA clearing condition (all $\mu_k = 0.5$
@@ -59,12 +67,12 @@ Newton from the Picard FP found in the previous ladder run.
 
 \begin{figure}[H]\centering
   \includegraphics[width=\linewidth]{ladder_newton.png}
-  \caption{Newton--Krylov $\tau$-ladder, $\gamma = 100, G = 11$,
+  \caption{Newton-via-IFT $\tau$-ladder, $\gamma = 100, G = 11$,
     warm-started from Picard FPs.
     \textbf{Left}: residual norms vs $\tau$ ($F_\infty$,
     density-weighted $F_w$, sign-flip $sym_{\rm err}$).
     \textbf{Middle}: equilibrium price range $[P_{\min}, P_{\max}]$.
-    \textbf{Right}: Newton--Krylov $F$-eval count per cell.}
+    \textbf{Right}: Newton-via-IFT $F$-eval count per cell.}
 \end{figure}
 
 \section{Reading the result}
