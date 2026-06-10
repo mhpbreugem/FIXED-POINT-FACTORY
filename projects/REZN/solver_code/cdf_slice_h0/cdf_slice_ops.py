@@ -545,7 +545,8 @@ class CDFSliceOperator:
         st: dict = {}
         kw = dict(deg=self.deg, nsub=self.nsub,
                   oversample=self.oversample, stats=st,
-                  transform=self.transform, qseg=self.qseg)
+                  transform=self.transform, qseg=self.qseg,
+                  method=self.method)
 
         for i in range(lo, hi):                      # agent 0
             A = slice_evidence(P_full[i], P_full[i, inner, inner].ravel(),
