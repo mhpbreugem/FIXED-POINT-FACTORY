@@ -1,0 +1,39 @@
+20x5 (gamma x tau) joint-limit anchor sweep summary
+=======================================================
+
+Cells: 100 (20 gammas x 5 taus)
+Nailed (F < 1e-8): 81/100
+Stalled cells:
+  tau=1.50 gamma=3.9793  F=3.05e-02  deficit=0.0291
+  tau=1.50 gamma=5.5722  F=9.59e-04  deficit=0.0280
+  tau=1.50 gamma=7.8027  F=3.11e-02  deficit=0.0284
+  tau=1.50 gamma=10.9261  F=3.12e-02  deficit=0.0306
+  tau=1.50 gamma=15.2997  F=3.23e-02  deficit=0.0305
+  tau=1.50 gamma=21.4241  F=4.65e-02  deficit=0.0311
+  tau=1.50 gamma=30.0000  F=5.01e-02  deficit=0.0342
+  tau=2.00 gamma=0.7391  F=3.23e-02  deficit=0.1483
+  tau=2.00 gamma=1.0350  F=3.09e-02  deficit=0.2496
+  tau=2.00 gamma=1.4493  F=2.72e-02  deficit=0.0902
+  tau=2.00 gamma=2.0294  F=3.96e-02  deficit=0.0686
+  tau=2.00 gamma=2.8418  F=4.65e-01  deficit=0.2269
+  tau=2.00 gamma=3.9793  F=2.51e-02  deficit=0.0422
+  tau=2.00 gamma=5.5722  F=2.98e-02  deficit=0.0360
+  tau=2.00 gamma=7.8027  F=9.10e-02  deficit=0.0289
+  tau=2.00 gamma=10.9261  F=5.89e-02  deficit=0.0332
+  tau=2.00 gamma=15.2997  F=4.67e-02  deficit=0.0352
+  tau=2.00 gamma=21.4241  F=3.46e-02  deficit=0.0350
+  tau=2.00 gamma=30.0000  F=3.69e-02  deficit=0.0357
+
+Tau-row averages (over nailed cells only):
+  tau=0.20: nailed 20/20;  slope range [0.0686, 0.0766];  deficit range [0.0000, 0.1698]
+  tau=0.50: nailed 20/20;  slope range [0.1435, 0.1952];  deficit range [0.0005, 0.1860]
+  tau=1.00: nailed 20/20;  slope range [0.2186, 0.4084];  deficit range [0.0091, 0.2176]
+  tau=1.50: nailed 13/20;  slope range [0.2921, 0.5150];  deficit range [0.0333, 0.2553]
+  tau=2.00: nailed 8/20;  slope range [0.3638, 0.4515];  deficit range [0.1774, 0.2844]
+
+Jensen-wedge prediction: deficit ~ const/gamma at fixed tau.
+  tau=0.20: log-deficit ~ -2.071*log(gamma) -7.467  (slope -1 = perfect 1/gamma)
+  tau=0.50: log-deficit ~ -1.147*log(gamma) -4.723  (slope -1 = perfect 1/gamma)
+  tau=1.00: log-deficit ~ -0.615*log(gamma) -3.090  (slope -1 = perfect 1/gamma)
+  tau=1.50: log-deficit ~ -0.522*log(gamma) -2.536  (slope -1 = perfect 1/gamma)
+  tau=2.00: log-deficit ~ -0.190*log(gamma) -1.742  (slope -1 = perfect 1/gamma)
