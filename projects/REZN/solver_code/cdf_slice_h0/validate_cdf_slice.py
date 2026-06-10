@@ -248,13 +248,13 @@ def v3(G_list=(9, 13, 17, 21), method='boxcar', boxcar_delta=1.0e-7,
 # V4 truth check: revelation deficit vs immortal anchor + second point
 # ======================================================================
 
-def v4():
-    log('=== V4 truth check ===')
+def v4(tag='boxcar', method='boxcar', boxcar_delta=1.0e-7):
+    log('=== V4 truth check [%s] ===' % tag)
     res = {'anchor': [], 'second_point': None}
     # anchors from V3 solutions
     targets = {9: 0.2912, 13: 0.2838, 17: 0.2813, 21: 0.2793, 25: 0.2765}
     for G in (9, 13, 17, 21):
-        fn = os.path.join(OUT, 'P_cdf_h0_G%d.npy' % G)
+        fn = os.path.join(OUT, 'P_cdf_h0_%s_G%d.npy' % (tag, G))
         if not os.path.exists(fn):
             continue
         P = np.load(fn)
@@ -270,7 +270,8 @@ def v4():
     tv = np.full(3, 0.5)
     gv = np.full(3, 1.0)
     wv = np.full(3, 1.0)
-    op = CDFSliceOperator(9, tv, gv, wv)
+    op = CDFSliceOperator(9, tv, gv, wv, method=method,
+                          boxcar_delta=boxcar_delta)
     s = (slice(op.lo, op.hi),) * 3
     x = op.halo[s].ravel().copy()
     for it in range(8):                      # damped Picard warm-up
@@ -282,12 +283,12 @@ def v4():
     defi, slope = deficit_unweighted(sol.reshape((9,) * 3), 9, 0.5)
     log('  tau=0.5 gamma=1.0 G=9: ||F||inf=%.3e conv=%s deficit=%.5f '
         '(kernel sweep ~0.0070)' % (Finf, conv, defi))
-    np.save(os.path.join(OUT, 'P_cdf_h0_t0.5_g1.0_G9.npy'),
+    np.save(os.path.join(OUT, 'P_cdf_h0_%s_t0.5_g1.0_G9.npy' % tag),
             sol.reshape((9,) * 3))
     res['second_point'] = dict(tau=0.5, gamma=1.0, G=9, Finf=Finf,
                                converged=conv, deficit=defi, slope=slope,
                                target=0.0070)
-    save_json('v4_truth.json', res)
+    save_json('v4_truth_%s.json' % tag, res)
     return res
 
 
@@ -298,6 +299,12 @@ if __name__ == '__main__':
     if 'v2' in args or 'all' in args:
         v2()
     if 'v3' in args or 'all' in args:
-        v3()
+        v3(method='boxcar', boxcar_delta=1.0e-7, tag='boxcar')
+    if 'v3cheb' in args:
+        v3(G_list=(9, 13), method='cheb', tag='cheb')
+    if 'v3delta' in args:        # delta-robustness at G=9
+        for d in (1.0e-6, 1.0e-8):
+            v3(G_list=(9,), method='boxcar', boxcar_delta=d,
+               tag='boxcar%g' % d)
     if 'v4' in args or 'all' in args:
-        v4()
+        v4(tag='boxcar')
