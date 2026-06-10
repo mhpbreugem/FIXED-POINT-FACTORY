@@ -1180,5 +1180,17 @@
     "rescued": false,
     "verdict": "REJECT",
     "wall": 292.63088631629944
+  },
+  "t1.5_g30.0": {
+    "tau": 1.5,
+    "gamma": 30.0,
+    "F64": 0.050070843863284586,
+    "F_ld_hist": [],
+    "F_ld": null,
+    "slope": 0.5951685856782754,
+    "deficit": 0.034156975007235954,
+    "rescued": false,
+    "verdict": "REJECT",
+    "wall": 297.98603081703186
   }
 }

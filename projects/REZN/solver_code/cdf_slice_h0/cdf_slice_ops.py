@@ -242,6 +242,43 @@ def build_edges(knot_vals: np.ndarray, smin: float, smax: float,
 # per-segment Chebyshev evidence
 # ----------------------------------------------------------------------
 
+def refine_edges(edges0: np.ndarray, cdf_fn, lmax: float,
+                 min_len: float, mtol: float,
+                 maxdepth: int = 60) -> np.ndarray:
+    """Mass-adaptive bisection of the knot intervals.
+
+    A segment is split while it is longer than lmax, or while it
+    carries more than mtol of the total CDF mass of EITHER weight
+    column and is longer than 2*min_len.  This resolves near-atomic
+    value concentrations (e.g. demand-cap plateaus of the price
+    surface) that have no critical vertices, down to width min_len."""
+    G0 = cdf_fn(edges0)
+    Gtot = np.maximum(G0[-1] - G0[0], TINY)
+    cur = [(edges0[i], edges0[i + 1], G0[i], G0[i + 1])
+           for i in range(len(edges0) - 1)]
+    final = []
+    for _ in range(maxdepth):
+        split = []
+        for seg in cur:
+            a, b, Ga, Gb = seg
+            L = b - a
+            need = (L > lmax) or (L > 2.0 * min_len
+                                  and float(np.max((Gb - Ga) / Gtot)) > mtol)
+            (split if need else final).append(seg)
+        if not split:
+            cur = []
+            break
+        mids = np.array([0.5 * (s[0] + s[1]) for s in split])
+        Gm = cdf_fn(mids)
+        cur = []
+        for s, m, gm in zip(split, mids, Gm):
+            cur.append((s[0], m, s[2], gm))
+            cur.append((m, s[1], gm, s[3]))
+    final.extend(cur)                       # depth-capped leftovers
+    final.sort(key=lambda s: s[0])
+    return np.array([s[0] for s in final] + [final[-1][1]])
+
+
 PCLIP = 1.0e-13          # clip for the logit transform (price slices)
 _FIT_CACHE: dict = {}
 
@@ -270,6 +307,7 @@ def slice_evidence(S: np.ndarray, p_targets: np.ndarray, Wt: np.ndarray,
                    deg: int = 12, nsub: int = 24, oversample: int = 4,
                    min_seg: float = 1.0e-9, knot_tol: float = 1.0e-13,
                    transform: str = 'identity', qseg: float = 1.0,
+                   mtol: float = 0.03,
                    stats: dict | None = None) -> np.ndarray:
     """Evidence A_v(p_targets) = dG_v/dp for one 2-D slice, h == 0.
 
@@ -305,8 +343,10 @@ def slice_evidence(S: np.ndarray, p_targets: np.ndarray, Wt: np.ndarray,
         return np.zeros((m, nw))
 
     knots = detect_knots(Sw)
-    edges = build_edges(knots, smin, smax, min_seg=min_seg,
-                        lmax=lmax, nsub=nsub)
+    edges0 = build_edges(knots, smin, smax, min_seg=min_seg, lmax=np.inf)
+    lmax_val = lmax if lmax is not None else (smax - smin) / nsub
+    edges = refine_edges(edges0, lambda x: cdf_eval(tri, Wt, np.asarray(x)),
+                         lmax_val, min_seg, mtol)
     nseg = edges.size - 1
 
     # sample exact CDF at Chebyshev-Lobatto points of every segment
@@ -319,6 +359,19 @@ def slice_evidence(S: np.ndarray, p_targets: np.ndarray, Wt: np.ndarray,
     C = np.einsum('dn,snw->sdw', PINV, Gv)           # (nseg, deg+1, nw)
     dcoefs = np.einsum('ek,skw->sew', D, C)          # (nseg, deg, nw)
     dcoefs *= (2.0 / seg_len)[:, None, None]
+
+    # minimum-length segments still carrying > mtol of the mass are
+    # unresolvable near-atoms (value ties below the 1e-9 scale): use
+    # the atom-average density (centered finite difference of the
+    # EXACT CDF across the segment).  Documented epsilon ~ min_seg.
+    segmass = Gv[:, -1, :] - Gv[:, 0, :]
+    Gtot = np.maximum(Gv[-1, -1, :] - Gv[0, 0, :], TINY)
+    atomic = ((seg_len <= 2.05 * min_seg)
+              & ((segmass / Gtot).max(axis=1) > mtol))
+    n_atomic = int(np.sum(atomic))
+    if n_atomic:
+        dcoefs[atomic] = 0.0
+        dcoefs[atomic, 0, :] = segmass[atomic] / seg_len[atomic, None]
 
     # evaluate targets
     p = np.clip(pw, smin, smax)
@@ -379,6 +432,7 @@ def slice_evidence(S: np.ndarray, p_targets: np.ndarray, Wt: np.ndarray,
         stats['n_at_knot'] = stats.get('n_at_knot', 0) + n_at_knot
         stats['n_endpoint'] = stats.get('n_endpoint', 0) + n_end
         stats['n_hatfix'] = stats.get('n_hatfix', 0) + n_fix
+        stats['n_atomic'] = stats.get('n_atomic', 0) + n_atomic
         stats['max_nseg'] = max(stats.get('max_nseg', 0), nseg)
     return A
 
