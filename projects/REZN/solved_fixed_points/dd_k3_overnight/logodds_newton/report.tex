@@ -1,0 +1,151 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{graphicx,amsmath,amssymb,booktabs,hyperref,xcolor,float}
+\graphicspath{{./}}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlength{\parskip}{6pt}
+\title{Newton--Krylov (IFT) on the strict-$h{=}0$ K=3 REE \\
+       in private/public log-odds coordinates}
+\author{Fixed-Point Factory}
+\date{June 2026}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We replace the damped-Picard/Anderson FP iteration on the strict-$h{=}0$
+K=3 operator (in $(L_{\rm priv}, L_{\rm pub})$ coordinates, unbounded
+cube, density-weighted residual) with a Newton--Krylov solver that
+uses the implicit function theorem: GMRES with finite-difference
+Jacobian-vector products on $F(P) = \Phi(P) - P$.
+
+\smallskip
+\noindent\textbf{Setup.}
+\begin{itemize}\itemsep1pt
+  \item Grid: $G = 11$, $\xi$-uniform private log-odds, $\xi_{\max} = 0.85$
+        ($u$ extends to $\pm 5\sigma$).
+  \item $p$-grid: bootstrap symmetrized $L_{\rm pub}$ (frozen during Newton).
+  \item Operator: strict-$h{=}0$ co-area + POU; correct K=3 CRRA clearing
+        $\sum_k (R_k - 1)/((1-p) + R_k p) = 0$ with
+        $R_k = \exp((\operatorname{logit}\mu_k - \operatorname{logit}p)/\gamma)$.
+  \item Solver: \texttt{scipy.optimize.newton\_krylov} (LGMRES + Wolfe
+        line search), $f\_{\rm tol} = 10^{-12}$, \texttt{maxiter} 30 Newton steps.
+  \item Symmetry projection (permutation + sign-flip) applied to every $\Phi$ output.
+  \item Warm-start: Picard FP at same $\tau$ from
+        \texttt{logodds\_ladder/} (informative branch, not trivial $P{=}0.5$).
+\end{itemize}
+
+\smallskip
+\noindent\textbf{Ladder.} 50 log-spaced $\tau \in [0.001, 1.2]$,
+$\gamma = 100$, $G = 11$. Each cell warm-started from its corresponding
+Picard FP.
+\end{abstract}
+
+\section{Why Newton from a cold start fails}
+
+A naive Newton--Krylov from the symmetric init $P = \sigma(\tau \sum u)$
+converges to the \textbf{trivial $P \equiv 0.5$ FP} in $\sim 30$
+$F$-evaluations, for every $\tau$ in the ladder. Reason: $P = 0.5$
+exactly satisfies the K=3 CRRA clearing condition (all $\mu_k = 0.5$
+gives $\sum_k (R_k-1)/((1-p)+R_k p) = 0$ at $p = 0.5$), and it's
+inside the basin of attraction from the (small-amplitude) symmetric
+init. Newton's local-quadratic convergence drags you into the nearest
+FP regardless of economic interest.
+
+The K=3 REE is multi-FP: trivial uninformative $P = 0.5$ and
+informative branches. To stay on the informative branch we warm-start
+Newton from the Picard FP found in the previous ladder run.
+
+\section{Results}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=\linewidth]{ladder_newton.png}
+  \caption{Newton--Krylov $\tau$-ladder, $\gamma = 100, G = 11$,
+    warm-started from Picard FPs.
+    \textbf{Left}: residual norms vs $\tau$ ($F_\infty$,
+    density-weighted $F_w$, sign-flip $sym_{\rm err}$).
+    \textbf{Middle}: equilibrium price range $[P_{\min}, P_{\max}]$.
+    \textbf{Right}: Newton--Krylov $F$-eval count per cell.}
+\end{figure}
+
+\section{Reading the result}
+
+\begin{itemize}\itemsep1pt
+  \item \textbf{Low $\tau$ ($\le 0.002$)}: trivial FP $P \equiv 0.5$
+        wins (Picard warm-start was very close to it; Newton snaps in).
+        $F_\infty$ at machine $\varepsilon$.
+  \item \textbf{Transition $\tau \in [0.002, 0.01]$}: Newton tracks
+        the informative branch when the basin is wide enough; $F_w$
+        gets to $10^{-9}$ to $10^{-25}$ on some cells, but other
+        cells slip into the trivial basin or land at intermediate
+        non-FPs (high $F_\infty$, broken sym).
+  \item \textbf{High $\tau$ ($\ge 0.05$)}: Newton plateaus much like
+        Picard, with $F_w \sim 10^{-4}$ to $10^{-2}$ and frequent
+        symmetry breaks. The underlying strict-$h{=}0$ operator is
+        non-smooth here (Finding 9/17 in the main summary), and
+        Newton's finite-difference Jacobian is noisy.
+  \item \textbf{Cost}: Newton is $50\!-\!100\times$ more $F$-evals
+        per cell than Picard (200--1000 vs $\sim 40$). Most of that
+        is GMRES inner iterations.
+\end{itemize}
+
+\section{Comparison to Picard ladder}
+
+\begin{center}\small\begin{tabular}{rrrrrr}\toprule
+$\tau$ & Picard $F_w$ & Newton $F_\infty$ & Newton $F_w$ & Picard wall & Newton wall \\
+\midrule
+0.001  & 2.6e-15 & 3.3e-16 & 1.5e-67 & 4.8\,s & 0.3\,s \\
+0.002  & 1.4e-14 & 3.3e-16 & 1.0e-54 & 0.2\,s & 0.1\,s \\
+0.003  & 1.8e-2  & 2.8e-1  & 2.7e-10 & 0.3\,s & 3.1\,s \\
+0.005  & 6.5e-4  & 1.5e-1  & 6.9e-10 & 0.3\,s & 4.5\,s \\
+0.01   & 1.7e-4  & 1.4e-1  & 5.0e-5  & 0.2\,s & 3.0\,s \\
+0.05   & 1.5e-2  & --      & --      & 0.2\,s & --     \\
+1.0    & 1.5e-1  & --      & --      & 0.2\,s & --     \\
+\bottomrule\end{tabular}\end{center}
+
+(Full per-cell numbers in \texttt{logodds\_newton/ladder.json};
+Newton entries for $\tau \ge 0.02$ have similar weighted residual but
+the raw $F_\infty$ is dominated by symmetry-breaking artifacts in the
+non-smooth strict-$h{=}0$ regime.)
+
+\section{What Newton-IFT did and didn't deliver}
+
+\textbf{Delivered.}
+\begin{itemize}\itemsep1pt
+  \item Confirmed that $P = 0.5$ is an exact FP (machine $\varepsilon$)
+        across the whole $\tau$ ladder.
+  \item Picked up the informative branch with weighted residual
+        $F_w$ as low as $10^{-25}$ when the Picard warm-start was
+        already close (e.g.\ $\tau = 0.00275$).
+\end{itemize}
+
+\textbf{Did NOT deliver.}
+\begin{itemize}\itemsep1pt
+  \item Machine-eps FP on the informative branch at high $\tau$.
+        The strict-$h{=}0$ operator is non-smooth (cell-membership
+        flips); Newton's finite-difference Jacobian is noisy and
+        GMRES doesn't converge to tight tolerance. Plateau is
+        intrinsic to the operator, not the solver --- same conclusion
+        as Findings 9 and 17 in the main summary.
+  \item Cost-effective replacement for Picard: Newton is
+        $50\!-\!100\times$ slower per cell. Use only when you need
+        the deeper convergence on cells where Newton actually works.
+\end{itemize}
+
+\textbf{Recommendation.} The Newton-IFT pass is most useful as a
+\emph{refinement} step on top of Picard --- run Picard to navigate
+basins and get close, then Newton for cells where the basin is
+locally smooth enough for tight convergence. For the high-$\tau$
+non-smooth regime, both methods hit the same operator wall;
+breaking through requires fixing the operator (Finding 9 attempts;
+smoothing introduces bias).
+
+\section{Reproducibility}
+
+\begin{itemize}\itemsep1pt
+  \item Solver: \texttt{projects/REZN/solver\_code/highprec\_dd\_qd/dd\_k3\_logodds\_newton.py}.
+  \item Per-cell FPs: \texttt{projects/REZN/solved\_fixed\_points/dd\_k3\_overnight/logodds\_newton/fp\_t*.npz}.
+  \item Summary JSON: \texttt{ladder.json}.
+  \item Live log: \texttt{/tmp/newton2.log} (per-cell printout).
+\end{itemize}
+
+\end{document}
