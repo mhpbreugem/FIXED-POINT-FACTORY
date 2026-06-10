@@ -138,10 +138,11 @@ def cdf_eval(tri: np.ndarray, Wt: np.ndarray, p: np.ndarray,
 
 
 def hat_eval(tri: np.ndarray, Wt: np.ndarray, p: np.ndarray,
-             chunk: int = 2_000_000) -> np.ndarray:
-    """Exact analytic derivative A(p) = dG/dp (piecewise-linear hat
-    sums).  Degenerate (flat) triangles contribute 0 (their exact
-    contribution is an atom; see module docstring).  Returns (m, nw)."""
+             flat_tol: float = 0.0, chunk: int = 2_000_000) -> np.ndarray:
+    """Exact analytic derivative A(p) = dG/dp (piecewise-linear,
+    continuous hat sums) -- computed DIRECTLY, no cancellation.
+    Triangles flatter than flat_tol are excluded (their exact
+    contribution is a near-atom; see atom_eval).  Returns (m, nw)."""
     Ntri = tri.shape[0]
     m = p.size
     out = np.zeros((m, Wt.shape[1]))
@@ -153,14 +154,33 @@ def hat_eval(tri: np.ndarray, Wt: np.ndarray, p: np.ndarray,
         s3 = tri[a:b, 2:3]
         P = p[None, :]
         d31 = s3 - s1
+        keep = d31 > flat_tol
         den_lo = np.maximum((s2 - s1) * d31, TINY)
         den_hi = np.maximum((s3 - s2) * d31, TINY)
-        mid_lo = (P > s1) & (P < s2)
-        mid_hi = (P >= s2) & (P < s3)
+        mid_lo = (P > s1) & (P < s2) & keep
+        mid_hi = (P >= s2) & (P < s3) & keep
         g = np.where(mid_lo, 2.0 * (P - s1) / den_lo,
                      np.where(mid_hi, 2.0 * (s3 - P) / den_hi, 0.0))
         out += g.T @ Wt[a:b]
     return out
+
+
+def atom_eval(tri: np.ndarray, Wt: np.ndarray, p: np.ndarray,
+              dlt: float) -> np.ndarray:
+    """Mass of near-atoms (triangles with total value spread <= dlt)
+    whose value lies within dlt of each target.  Returns (m, nw); the
+    caller divides by the window width to convert to a density.  This
+    is the canonical h=0 evaluation for exact-tie plateaus (e.g. the
+    CRRA demand-cap values), where the level set has positive area."""
+    s1 = tri[:, 0]
+    s3 = tri[:, 2]
+    flat = (s3 - s1) <= dlt
+    if not np.any(flat):
+        return np.zeros((p.size, Wt.shape[1]))
+    smid = 0.5 * (s1[flat] + s3[flat])[:, None]
+    Wf = Wt[flat]
+    hit = np.abs(smid - p[None, :]) <= dlt
+    return hit.T.astype(np.float64) @ Wf
 
 
 # ----------------------------------------------------------------------
@@ -307,7 +327,7 @@ def slice_evidence(S: np.ndarray, p_targets: np.ndarray, Wt: np.ndarray,
                    deg: int = 12, nsub: int = 24, oversample: int = 4,
                    min_seg: float = 1.0e-9, knot_tol: float = 1.0e-13,
                    transform: str = 'identity', qseg: float = 1.0,
-                   mtol: float = 0.03,
+                   mtol: float = 0.03, method: str = 'cheb',
                    stats: dict | None = None) -> np.ndarray:
     """Evidence A_v(p_targets) = dG_v/dp for one 2-D slice, h == 0.
 
@@ -341,6 +361,28 @@ def slice_evidence(S: np.ndarray, p_targets: np.ndarray, Wt: np.ndarray,
         # entirely flat slice (cannot happen for inner slices): the
         # pushforward is an atom; return zero density.
         return np.zeros((m, nw))
+
+    if method == 'hat':
+        # The EXACT analytic derivative of the exact CDF: between
+        # distinct vertex values G is exactly quadratic, so A = dG/dp
+        # is the continuous piecewise-linear hat sum -- closed form,
+        # no fitting, no cancellation.  Targets at the slice extremes
+        # are inset by min_seg (one-sided limit ratio); exact-tie
+        # atoms within +-min_seg of a target are added as
+        # mass / (2 min_seg).
+        dlt = min_seg
+        pe = np.clip(pw, smin + dlt, smax - dlt)
+        A = hat_eval(tri, Wt, pe, flat_tol=dlt)
+        A += atom_eval(tri, Wt, np.asarray(pw, dtype=np.float64),
+                       dlt) / (2.0 * dlt)
+        n_end = int(np.sum((pw <= smin + knot_tol)
+                           | (pw >= smax - knot_tol)))
+        if jac is not None:
+            A *= jac[:, None]
+        if stats is not None:
+            stats['nslice'] = stats.get('nslice', 0) + 1
+            stats['n_endpoint'] = stats.get('n_endpoint', 0) + n_end
+        return A
 
     knots = detect_knots(Sw)
     edges0 = build_edges(knots, smin, smax, min_seg=min_seg, lmax=np.inf)
@@ -382,46 +424,35 @@ def slice_evidence(S: np.ndarray, p_targets: np.ndarray, Wt: np.ndarray,
         t = 2.0 * (p[msk] - edges[s]) / seg_len[s] - 1.0
         A[msk] = Cheb.chebval(t, dcoefs[s]).T
 
-    # targets at interior segment edges: average left/right derivative
+    # --- exact-hat handling of special targets -------------------------
+    # The fitted derivative is replaced by the EXACT analytic hat
+    # density (+ atom term, see method='hat' above) for targets that
+    # are (1) at the slice min/max (fit gives 0; the hat at a min_seg
+    # inset gives the exact one-sided limit ratio), (2) exactly at an
+    # interior segment edge / knot (the hat is continuous there and
+    # equals the prescribed average of left/right derivatives), or
+    # (3) where a fitted density column is <= 0 (fit wiggle in
+    # near-zero-density regions; the fit cannot resolve densities
+    # below ~1e-15 * total mass / segment length, the hat can).
+    is_lo = p <= smin + knot_tol
+    is_hi = p >= smax - knot_tol
     j = np.searchsorted(edges, p)
-    n_at_knot = 0
+    at_knot = np.zeros(m, dtype=bool)
     for q in range(m):
         for e in (j[q] - 1, j[q]):
             if 1 <= e <= nseg - 1 and abs(p[q] - edges[e]) <= knot_tol:
-                left = Cheb.chebval(1.0, dcoefs[e - 1])
-                right = Cheb.chebval(-1.0, dcoefs[e])
-                A[q] = 0.5 * (left + right)
-                n_at_knot += 1
+                at_knot[q] = True
                 break
-
-    # --- exact-hat fallback -------------------------------------------
-    # (a) targets at the slice min/max: the true density vanishes there
-    #     (generic extremum), so Bayes would hit 0/0.  The correct h->0
-    #     posterior uses the one-sided LIMIT ratio, obtained exactly
-    #     from the piecewise-linear hat density evaluated a relative
-    #     1e-9 inside the support (the hat is linear there, so the
-    #     ratio is the exact limit).
-    # (b) targets where the fitted density is <= 0 in some column
-    #     (fit wiggle in near-zero-density regions): replace both
-    #     columns by the exact hat density.
-    rng = smax - smin
-    dlt = 1.0e-9 * rng
-    is_lo = p <= smin + knot_tol
-    is_hi = p >= smax - knot_tol
-    need = (A <= 0.0).any(axis=1) | is_lo | is_hi
+    n_at_knot = int(np.sum(at_knot))
     n_end = int(np.sum(is_lo | is_hi))
-    n_fix = int(np.sum(need)) - n_end
+    need = (A <= 0.0).any(axis=1) | at_knot | is_lo | is_hi
+    n_fix = int(np.sum(need)) - int(np.sum(at_knot | is_lo | is_hi))
     if np.any(need):
         idx = np.nonzero(need)[0]
-        q_eval = p[idx].copy()
-        q_eval[is_lo[idx]] = smin + dlt
-        q_eval[is_hi[idx]] = smax - dlt
-        Ah = hat_eval(tri, Wt, q_eval)
-        zero = ~(Ah > 0.0).any(axis=1)
-        if np.any(zero):       # genuine zero-density point: two-sided
-            qz = q_eval[zero]
-            Ah[zero] = 0.5 * (hat_eval(tri, Wt, qz - dlt)
-                              + hat_eval(tri, Wt, qz + dlt))
+        dlt = min_seg
+        pe = np.clip(p[idx], smin + dlt, smax - dlt)
+        Ah = hat_eval(tri, Wt, pe, flat_tol=dlt)
+        Ah += atom_eval(tri, Wt, p[idx], dlt) / (2.0 * dlt)
         A[idx] = Ah
 
     if jac is not None:
@@ -476,10 +507,12 @@ class CDFSliceOperator:
     def __init__(self, Gi: int, tau_vec, gamma_vec, W_vec,
                  UMAX: float = 4.0, pad: int = 2,
                  deg: int = 12, nsub: int = 24, oversample: int = 4,
-                 transform: str = 'logit', qseg: float = 1.0):
+                 transform: str = 'logit', qseg: float = 1.0,
+                 method: str = 'cheb'):
         self.Gi = Gi
         self.transform = transform
         self.qseg = qseg
+        self.method = method
         self.tau_vec = np.asarray(tau_vec, dtype=np.float64)
         self.gamma_vec = np.asarray(gamma_vec, dtype=np.float64)
         self.W_vec = np.asarray(W_vec, dtype=np.float64)
