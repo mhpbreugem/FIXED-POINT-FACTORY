@@ -1144,5 +1144,17 @@
     "rescued": true,
     "verdict": "ACCEPT",
     "wall": 258.41726899147034
+  },
+  "t1.5_g10.9261": {
+    "tau": 1.5,
+    "gamma": 10.9261,
+    "F64": 0.03115310760327461,
+    "F_ld_hist": [],
+    "F_ld": null,
+    "slope": 0.5775841933534983,
+    "deficit": 0.03055867959156842,
+    "rescued": false,
+    "verdict": "REJECT",
+    "wall": 240.0819787979126
   }
 }
