@@ -211,11 +211,15 @@ def _boundary_indices(Gf: int, Hf: int):
 
 
 def build_edges(knot_vals: np.ndarray, smin: float, smax: float,
-                min_seg: float = 1.0e-9, nsub: int = 24) -> np.ndarray:
+                min_seg: float = 1.0e-9, lmax: float | None = None,
+                nsub: int = 24) -> np.ndarray:
     """Segment edges: sorted knots in (smin, smax), short segments
     (< min_seg) merged, long segments subdivided so no segment exceeds
-    (smax-smin)/nsub (keeps the per-segment Chebyshev fits local)."""
+    lmax (default (smax-smin)/nsub) -- keeps the per-segment Chebyshev
+    fits local."""
     rng = smax - smin
+    if lmax is None:
+        lmax = rng / nsub
     k = np.unique(knot_vals)
     k = k[(k > smin + min_seg) & (k < smax - min_seg)]
     edges = [smin]
@@ -226,7 +230,6 @@ def build_edges(knot_vals: np.ndarray, smin: float, smax: float,
         edges[-1] = smax
     else:
         edges.append(smax)
-    lmax = rng / nsub
     out = []
     for a, b in zip(edges[:-1], edges[1:]):
         n = max(1, int(np.ceil((b - a) / lmax)))
@@ -239,44 +242,86 @@ def build_edges(knot_vals: np.ndarray, smin: float, smax: float,
 # per-segment Chebyshev evidence
 # ----------------------------------------------------------------------
 
+PCLIP = 1.0e-13          # clip for the logit transform (price slices)
+_FIT_CACHE: dict = {}
+
+
+def _fit_mats(deg: int, oversample: int):
+    """Precomputed (sample nodes xi in [0,1], least-squares operator
+    PINV mapping samples -> Chebyshev coefficients on [-1,1], and the
+    Chebyshev differentiation matrix D)."""
+    key = (deg, oversample)
+    if key not in _FIT_CACHE:
+        npts = oversample * deg + 1
+        xi = 0.5 * (1.0 - np.cos(np.pi * np.arange(npts) / (npts - 1)))
+        tcheb = 2.0 * xi - 1.0
+        V = Cheb.chebvander(tcheb, deg)              # (npts, deg+1)
+        PINV = np.linalg.pinv(V)                     # (deg+1, npts)
+        D = np.zeros((deg, deg + 1))
+        for k in range(deg + 1):
+            e = np.zeros(deg + 1)
+            e[k] = 1.0
+            D[:, k] = Cheb.chebder(e)
+        _FIT_CACHE[key] = (xi, PINV, D)
+    return _FIT_CACHE[key]
+
+
 def slice_evidence(S: np.ndarray, p_targets: np.ndarray, Wt: np.ndarray,
                    deg: int = 12, nsub: int = 24, oversample: int = 4,
                    min_seg: float = 1.0e-9, knot_tol: float = 1.0e-13,
+                   transform: str = 'identity', qseg: float = 1.0,
                    stats: dict | None = None) -> np.ndarray:
-    """Evidence A_v(p_targets) for one 2-D slice, h identically zero.
+    """Evidence A_v(p_targets) = dG_v/dp for one 2-D slice, h == 0.
 
-    One exact-CDF build + per-segment Chebyshev fit serves all targets.
-    Targets exactly at a segment edge (within knot_tol) get the average
-    of the left/right segment derivatives.  Returns (m, nw)."""
-    tri = make_tris(S)
-    smin = float(S.min())
-    smax = float(S.max())
+    One exact-CDF build + per-segment Chebyshev fit (analytic
+    derivative) serves all targets.  With transform='logit' the CDF is
+    fitted as a function of q = logit(p) (price surfaces concentrate
+    their value distribution near 0/1; in q the structure is well
+    spread); the exact Jacobian dq/dp is applied afterwards (it cancels
+    in the Bayes ratio anyway).  Targets exactly at a segment edge
+    (within knot_tol) get the average of the left/right segment
+    derivatives.  Returns (m, nw)."""
     nw = Wt.shape[1]
     m = p_targets.size
+    if transform == 'logit':
+        Sc = np.clip(S, PCLIP, 1.0 - PCLIP)
+        Sw = np.log(Sc) - np.log1p(-Sc)
+        pc = np.clip(p_targets, PCLIP, 1.0 - PCLIP)
+        pw = np.log(pc) - np.log1p(-pc)
+        jac = 1.0 / (pc * (1.0 - pc))
+        lmax = qseg
+    else:
+        Sw = S
+        pw = p_targets
+        jac = None
+        lmax = None
+
+    tri = make_tris(Sw)
+    smin = float(Sw.min())
+    smax = float(Sw.max())
     if smax - smin < 1.0e-12:
         # entirely flat slice (cannot happen for inner slices): the
         # pushforward is an atom; return zero density.
         return np.zeros((m, nw))
 
-    knots = detect_knots(S)
-    edges = build_edges(knots, smin, smax, min_seg=min_seg, nsub=nsub)
+    knots = detect_knots(Sw)
+    edges = build_edges(knots, smin, smax, min_seg=min_seg,
+                        lmax=lmax, nsub=nsub)
     nseg = edges.size - 1
 
     # sample exact CDF at Chebyshev-Lobatto points of every segment
-    npts = oversample * deg + 1
-    xi = 0.5 * (1.0 - np.cos(np.pi * np.arange(npts) / (npts - 1)))
+    xi, PINV, D = _fit_mats(deg, oversample)
     seg_len = edges[1:] - edges[:-1]
     Xs = edges[:-1, None] + seg_len[:, None] * xi[None, :]
-    Gv = cdf_eval(tri, Wt, Xs.ravel()).reshape(nseg, npts, nw)
+    Gv = cdf_eval(tri, Wt, Xs.ravel()).reshape(nseg, xi.size, nw)
 
-    tcheb = 2.0 * xi - 1.0
-    dcoefs = np.empty((nseg, deg, nw))
-    for s in range(nseg):
-        c = Cheb.chebfit(tcheb, Gv[s], deg)          # (deg+1, nw)
-        dcoefs[s] = Cheb.chebder(c) * (2.0 / seg_len[s])
+    # batch least-squares fit + analytic differentiation
+    C = np.einsum('dn,snw->sdw', PINV, Gv)           # (nseg, deg+1, nw)
+    dcoefs = np.einsum('ek,skw->sew', D, C)          # (nseg, deg, nw)
+    dcoefs *= (2.0 / seg_len)[:, None, None]
 
     # evaluate targets
-    p = np.clip(p_targets, smin, smax)
+    p = np.clip(pw, smin, smax)
     sidx = np.clip(np.searchsorted(edges, p, side='right') - 1, 0, nseg - 1)
     A = np.empty((m, nw))
     for s in np.unique(sidx):
@@ -295,10 +340,45 @@ def slice_evidence(S: np.ndarray, p_targets: np.ndarray, Wt: np.ndarray,
                 A[q] = 0.5 * (left + right)
                 n_at_knot += 1
                 break
+
+    # --- exact-hat fallback -------------------------------------------
+    # (a) targets at the slice min/max: the true density vanishes there
+    #     (generic extremum), so Bayes would hit 0/0.  The correct h->0
+    #     posterior uses the one-sided LIMIT ratio, obtained exactly
+    #     from the piecewise-linear hat density evaluated a relative
+    #     1e-9 inside the support (the hat is linear there, so the
+    #     ratio is the exact limit).
+    # (b) targets where the fitted density is <= 0 in some column
+    #     (fit wiggle in near-zero-density regions): replace both
+    #     columns by the exact hat density.
+    rng = smax - smin
+    dlt = 1.0e-9 * rng
+    is_lo = p <= smin + knot_tol
+    is_hi = p >= smax - knot_tol
+    need = (A <= 0.0).any(axis=1) | is_lo | is_hi
+    n_end = int(np.sum(is_lo | is_hi))
+    n_fix = int(np.sum(need)) - n_end
+    if np.any(need):
+        idx = np.nonzero(need)[0]
+        q_eval = p[idx].copy()
+        q_eval[is_lo[idx]] = smin + dlt
+        q_eval[is_hi[idx]] = smax - dlt
+        Ah = hat_eval(tri, Wt, q_eval)
+        zero = ~(Ah > 0.0).any(axis=1)
+        if np.any(zero):       # genuine zero-density point: two-sided
+            qz = q_eval[zero]
+            Ah[zero] = 0.5 * (hat_eval(tri, Wt, qz - dlt)
+                              + hat_eval(tri, Wt, qz + dlt))
+        A[idx] = Ah
+
+    if jac is not None:
+        A *= jac[:, None]
     if stats is not None:
         stats['nseg'] = stats.get('nseg', 0) + nseg
         stats['nslice'] = stats.get('nslice', 0) + 1
         stats['n_at_knot'] = stats.get('n_at_knot', 0) + n_at_knot
+        stats['n_endpoint'] = stats.get('n_endpoint', 0) + n_end
+        stats['n_hatfix'] = stats.get('n_hatfix', 0) + n_fix
         stats['max_nseg'] = max(stats.get('max_nseg', 0), nseg)
     return A
 
@@ -341,8 +421,11 @@ class CDFSliceOperator:
 
     def __init__(self, Gi: int, tau_vec, gamma_vec, W_vec,
                  UMAX: float = 4.0, pad: int = 2,
-                 deg: int = 12, nsub: int = 24, oversample: int = 4):
+                 deg: int = 12, nsub: int = 24, oversample: int = 4,
+                 transform: str = 'logit', qseg: float = 1.0):
         self.Gi = Gi
+        self.transform = transform
+        self.qseg = qseg
         self.tau_vec = np.asarray(tau_vec, dtype=np.float64)
         self.gamma_vec = np.asarray(gamma_vec, dtype=np.float64)
         self.W_vec = np.asarray(W_vec, dtype=np.float64)
@@ -374,7 +457,8 @@ class CDFSliceOperator:
         mu = np.empty((Gi, Gi, Gi, 3))
         st: dict = {}
         kw = dict(deg=self.deg, nsub=self.nsub,
-                  oversample=self.oversample, stats=st)
+                  oversample=self.oversample, stats=st,
+                  transform=self.transform, qseg=self.qseg)
 
         for i in range(lo, hi):                      # agent 0
             A = slice_evidence(P_full[i], P_full[i, inner, inner].ravel(),
