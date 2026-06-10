@@ -82,7 +82,11 @@ def compute_L_pub_from_P(P_cube, u_grid, tau, G_p=121, eps=1e-12):
     f0_p = np.gradient(F_0_n, p_eval)
     f1_p = np.gradient(F_1_n, p_eval)
     L_pub = np.log(np.clip(f1_p, eps, None) / np.clip(f0_p, eps, None))
-    return p_eval, L_pub
+    # Enforce sign-flip symmetry: L_pub(1-p) = -L_pub(p).
+    # Achieved by averaging L_pub(p) and -L_pub(1-p) on a symmetric eval grid.
+    # The p_eval grid is constructed sigmoid-symmetric already.
+    L_pub_sym = 0.5 * (L_pub - L_pub[::-1])
+    return p_eval, L_pub_sym
 
 
 def make_p_grid_Lpub(L_pub_vals, p_arr_for_Lpub, G_p, L_pub_max=None):
@@ -120,6 +124,40 @@ def interp_mu_at(mu_table, p_grid, p, k):
     return (1.0 - w) * mu_table[lo, k] + w * mu_table[hi, k]
 
 
+@njit(cache=True)
+def crra_clear_float(m0, m1, m2, gamma, steps=80):
+    """K=3 binary-state CRRA bisection on p. Solves
+       sum_k (R_k - 1) / ((1-p) + R_k*p) = 0
+    where R_k = exp((logit(mu_k) - logit(p)) / gamma).
+    Matches dd_k3_ops.py:dd_crra_clear (float64 version).
+    """
+    eps = 1e-15
+    m0c = max(min(m0, 1.0 - eps), eps)
+    m1c = max(min(m1, 1.0 - eps), eps)
+    m2c = max(min(m2, 1.0 - eps), eps)
+    lm0 = np.log(m0c / (1.0 - m0c))
+    lm1 = np.log(m1c / (1.0 - m1c))
+    lm2 = np.log(m2c / (1.0 - m2c))
+    a = 1e-12; b = 1.0 - 1e-12
+    for _ in range(steps):
+        m = 0.5 * (a + b)
+        lp = np.log(m / (1.0 - m))
+        e = 0.0
+        for k in range(3):
+            if k == 0: lmk = lm0
+            elif k == 1: lmk = lm1
+            else: lmk = lm2
+            ar = (lmk - lp) / gamma
+            if ar > 60.0: ar = 60.0
+            if ar < -60.0: ar = -60.0
+            R = np.exp(ar)
+            den = (1.0 - m) + R * m
+            e += (R - 1.0) / den
+        if e > 0.0: a = m
+        else: b = m
+    return 0.5 * (a + b)
+
+
 @njit(cache=True, parallel=True)
 def phi_cube_logodds(P_cube, mu_table, p_grid, u_grid, gamma, G):
     """Cube clearing: for each (i,j,k), compute new P from mu lookups."""
@@ -131,7 +169,7 @@ def phi_cube_logodds(P_cube, mu_table, p_grid, u_grid, gamma, G):
                 m0 = interp_mu_at(mu_table, p_grid, p_cell, i)
                 m1 = interp_mu_at(mu_table, p_grid, p_cell, j)
                 m2 = interp_mu_at(mu_table, p_grid, p_cell, k)
-                P_new[i, j, k] = (m0 + m1 + m2) / 3.0
+                P_new[i, j, k] = crra_clear_float(m0, m1, m2, gamma)
     return P_new
 
 
@@ -213,8 +251,14 @@ def solve_logodds(gamma, tau, G, G_p=81, n_iter=80, target=1e-10,
             except Exception:
                 P = 0.5 * P + 0.5 * P_new
         P = np.clip(P, 1e-12, 1 - 1e-12)
-        # Refresh L_pub every 10 iters for first 30 iters, then freeze
-        if (it % 10 == 9) and (it < 30):
+        # Permutation symmetry (operator preserves but Anderson may not)
+        Psym = (P + np.transpose(P, (0,2,1)) + np.transpose(P, (1,0,2))
+                + np.transpose(P, (1,2,0)) + np.transpose(P, (2,0,1))
+                + np.transpose(P, (2,1,0))) / 6.0
+        # Sign-flip symmetry P(u) + P(-u) = 1
+        P = 0.5 * (Psym + (1.0 - Psym[::-1, ::-1, ::-1]))
+        # Refresh L_pub once at iter 5 only (using symmetrized L_pub)
+        if it == 5:
             p_eval, L_pub = compute_L_pub_from_P(P, u_grid, tau)
             p_grid = make_p_grid_Lpub(L_pub, p_eval, G_p)
             if verbose:
