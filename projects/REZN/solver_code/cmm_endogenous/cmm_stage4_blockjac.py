@@ -187,20 +187,26 @@ def solve_cmm(P_full, uf, lo, hi, tau, gamma, p_levels,
         else:
             if verbose:
                 print(f"  iter {it}: retry lam={lam:.2e}", flush=True)
-        # Solve per-surface LM normal equations independently (block diag)
+        # Solve per-surface LM normal equations (Levenberg uniform damping)
         dx = np.zeros(3*total_v)
         for m in range(M):
             if J_blocks[m] is None: continue
             Jm = J_blocks[m]; rm = r_blocks[m]
             JtJ = Jm.T @ Jm
             Jtr = Jm.T @ rm
-            # LM damping with diag(J^T J)
-            dlam = lam * np.diag(JtJ)
-            A = JtJ + np.diag(np.maximum(dlam, 1e-12))
+            # Uniform Levenberg damping: lam * I_(3*N_m). Caps step in
+            # tangential gauge directions where diag(JtJ) is ~0.
+            n_col = JtJ.shape[0]
+            A = JtJ + lam * np.eye(n_col)
             try:
                 step = -np.linalg.solve(A, Jtr)
             except np.linalg.LinAlgError:
                 step = -np.linalg.lstsq(A, Jtr, rcond=None)[0]
+            # Hard step-size cap as second safety net
+            STEP_CAP = 0.05
+            sn = np.max(np.abs(step))
+            if sn > STEP_CAP:
+                step = step * (STEP_CAP / sn)
             dx[3*v_off[m]:3*v_off[m+1]] = step
         # try step
         V_new = [v.copy() for v in V]
@@ -262,7 +268,8 @@ def main():
 
     t_start = time.time()
     out = solve_cmm(P_full, uf, lo, hi, tau, gamma, p_levels,
-                     max_iter=30, fd_eps=1e-5, tol=1e-7, verbose=True)
+                     max_iter=30, fd_eps=1e-5, tol=1e-7, verbose=True,
+                     lam0=0.1)
     wall = time.time() - t_start
     print(f"\nTotal {wall/60:.1f} min", flush=True)
     print(f"Converged: {out['converged']}  final max|r|={out['final_max']:.3e}",
