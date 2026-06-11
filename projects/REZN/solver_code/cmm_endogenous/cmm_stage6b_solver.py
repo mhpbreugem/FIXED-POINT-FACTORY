@@ -203,6 +203,103 @@ def solve_c(Hp, a0, da, Na, b0, db, Nb, X, eak, ebk, dask, dbsk, s,
 
 
 @njit(cache=True, fastmath=False)
+def trace_evidence(Hp, a0, da, Na, b0, db, Nb, X, eak, ebk, dask, dbsk,
+                    s0, c0, tau, h_step, max_steps, w_cut):
+    """Pseudo-arclength trace of the slice curve through the vertex.
+
+    WHY: the graph-in-s premise (unique c(s)) requires the surface's
+    directional tilt to stay below sqrt(2); the kernel-FP surfaces hit
+    and exceed that bound in the one-signal-dominance regions, so the
+    curve FOLDS in s. The tracer parametrizes by arclength in the (s,c)
+    plane instead — no parametrization singularity at folds, smooth in H.
+
+    Geometry: curve F(s,c)=0 with
+        F = (X+2c)/sqrt3 - H(a,b),  a = eak (X-c) + dask s,
+                                    b = ebk (X-c) + dbsk s
+        grad F = (Fs, Fc),  Fs = -(Ha dask + Hb dbsk),
+                            Fc = 2/sqrt3 + Ha eak + Hb ebk
+        tangent T = (Fc, -Fs)/|grad F|
+    Physical metric: (u_j,u_l)=(c+s,c-s) -> dsigma = sqrt2 * dl_(s,c).
+    Start: the vertex itself, (s0,c0), exactly on the curve.
+    Stop: pair-density weight < w_cut, or loop closure, or max_steps.
+    Returns (A0, A1, ok)."""
+    F0, Ha, Hb = _F_of_c(Hp, a0, da, Na, b0, db, Nb, X, eak, ebk,
+                          dask, dbsk, s0, c0)
+    Fs = -(Ha*dask + Hb*dbsk)
+    Fc = 2.0/SQ3 + Ha*eak + Hb*ebk
+    gn = np.sqrt(Fs*Fs + Fc*Fc)
+    if gn < 1e-12:
+        return 0.0, 0.0, False
+    T0s = Fc/gn; T0c = -Fs/gn
+    g0_v = np.exp(-0.5*tau*((c0+s0+0.5)**2 + (c0-s0+0.5)**2))
+    g1_v = np.exp(-0.5*tau*((c0+s0-0.5)**2 + (c0-s0-0.5)**2))
+    A0 = 0.0; A1 = 0.0
+    ok = True
+    closed = False
+    for d in range(2):
+        if closed:
+            break
+        sgn = 1.0 if d == 0 else -1.0
+        s = s0; c = c0
+        Ts = sgn*T0s; Tc = sgn*T0c
+        gp0 = g0_v; gp1 = g1_v
+        for step in range(max_steps):
+            # predictor + corrector with step halving on trouble
+            success = False
+            h_try = h_step
+            sn = s; cn = c; Tns = Ts; Tnc = Tc
+            for halve in range(7):
+                sn = s + h_try*Ts
+                cn = c + h_try*Tc
+                conv = False
+                Fs = 0.0; Fc = 1.0; g2 = 1.0
+                for itc in range(10):
+                    F, Ha, Hb = _F_of_c(Hp, a0, da, Na, b0, db, Nb, X,
+                                         eak, ebk, dask, dbsk, sn, cn)
+                    Fs = -(Ha*dask + Hb*dbsk)
+                    Fc = 2.0/SQ3 + Ha*eak + Hb*ebk
+                    g2 = Fs*Fs + Fc*Fc
+                    if g2 < 1e-24:
+                        break
+                    if abs(F) < 1e-12:
+                        conv = True
+                        break
+                    sn -= F*Fs/g2
+                    cn -= F*Fc/g2
+                if conv:
+                    # reject corrector solutions that jumped backwards
+                    dls = sn - s; dlc = cn - c
+                    if dls*Ts + dlc*Tc > 0.0:
+                        success = True
+                        break
+                h_try *= 0.5
+            if not success:
+                ok = False
+                break
+            gn = np.sqrt(g2)
+            Tns = Fc/gn; Tnc = -Fs/gn
+            if Tns*Ts + Tnc*Tc < 0.0:
+                Tns = -Tns; Tnc = -Tnc
+            # integrate segment (trapezoid, physical arclength = sqrt2*dl)
+            dl = np.sqrt((sn - s)**2 + (cn - c)**2)
+            g0 = np.exp(-0.5*tau*((cn+sn+0.5)**2 + (cn-sn+0.5)**2))
+            g1 = np.exp(-0.5*tau*((cn+sn-0.5)**2 + (cn-sn-0.5)**2))
+            seg = SQ2*dl
+            A0 += 0.5*(gp0 + g0)*seg
+            A1 += 0.5*(gp1 + g1)*seg
+            s = sn; c = cn; Ts = Tns; Tc = Tnc
+            gp0 = g0; gp1 = g1
+            # loop closure (first pass only; then skip second pass)
+            if d == 0 and step > 10:
+                if (s - s0)**2 + (c - c0)**2 < (0.75*h_step)**2:
+                    closed = True
+                    break
+            if g0 < w_cut and g1 < w_cut:
+                break
+    return A0, A1, ok
+
+
+@njit(cache=True, fastmath=False)
 def clear_crra_jit(mu, gamma):
     """Bisection CRRA clearing (W=1, common gamma) — mirrors
     reznsrc.demand.clear_crra; cross-validated in validate_clear()."""
@@ -295,6 +392,72 @@ def surface_residual_jit(H, a0, da, Na, b0, db, Nb, p_m, tau, gamma,
                 mu[k] = val
         r[v] = clear_crra_jit(mu, gamma) - p_m
     return r, n_fail
+
+
+@njit(cache=True, fastmath=False)
+def surface_residual_tracer_jit(H, a0, da, Na, b0, db, Nb, p_m, tau,
+                                 gamma, va, vb, active, h_step):
+    """Residual via the pseudo-arclength tracer. Inactive (dead-density)
+    vertices get r=0 and are skipped. Returns (r, n_fail)."""
+    Nv = va.size
+    r = np.zeros(Nv)
+    n_fail = 0
+    Hp = build_pad(H)
+    JL0 = np.array([1, 2, 0]); JL1 = np.array([2, 0, 1])
+    eav = np.array([E_A[0], E_A[1], E_A[2]])
+    ebv = np.array([E_B[0], E_B[1], E_B[2]])
+    dasv = np.array([DAS[0], DAS[1], DAS[2]])
+    dbsv = np.array([DBS[0], DBS[1], DBS[2]])
+    etv = np.array([E_T[0], E_T[1], E_T[2]])
+    for v in range(Nv):
+        if not active[v]:
+            continue
+        av = va[v]; bv = vb[v]
+        tv, _, _ = heval(Hp, a0, da, Na, b0, db, Nb, av, bv)
+        uu = np.empty(3)
+        for q in range(3):
+            uu[q] = av*eav[q] + bv*ebv[q] + tv*etv[q]
+        mu = np.empty(3)
+        for k in range(3):
+            X = uu[k]
+            uj = uu[JL0[k]]; ul = uu[JL1[k]]
+            s0 = 0.5*(uj - ul); c0 = 0.5*(uj + ul)
+            A0, A1, ok = trace_evidence(Hp, a0, da, Na, b0, db, Nb, X,
+                                         eav[k], ebv[k], dasv[k], dbsv[k],
+                                         s0, c0, tau, h_step, 600, 1e-13)
+            if not ok:
+                n_fail += 1
+            f0X = np.exp(-0.5*tau*(X + 0.5)**2)
+            f1X = np.exp(-0.5*tau*(X - 0.5)**2)
+            num = f1X*A1; den = f0X*A0 + num
+            if den <= 0.0:
+                mu[k] = 0.5
+            else:
+                val = num/den
+                if val < 1e-12: val = 1e-12
+                elif val > 1.0 - 1e-12: val = 1.0 - 1e-12
+                mu[k] = val
+        r[v] = clear_crra_jit(mu, gamma) - p_m
+    return r, n_fail
+
+
+@njit(cache=True, fastmath=False, parallel=True)
+def surface_jacobian_tracer_jit(H, a0, da, Na, b0, db, Nb, p_m, tau,
+                                 gamma, va, vb, active, h_step, r0, eps):
+    """Dense FD Jacobian of the tracer residual (Nv x Na*Nb)."""
+    n = Na*Nb
+    Nv = va.size
+    J = np.empty((Nv, n))
+    for col in prange(n):
+        i = col // Nb; jn = col % Nb
+        Hpert = H.copy()
+        Hpert[i, jn] += eps
+        r1, _ = surface_residual_tracer_jit(Hpert, a0, da, Na, b0, db, Nb,
+                                             p_m, tau, gamma, va, vb,
+                                             active, h_step)
+        for v in range(Nv):
+            J[v, col] = (r1[v] - r0[v]) / eps
+    return J
 
 
 @njit(cache=True, fastmath=False, parallel=True)
@@ -412,6 +575,36 @@ class Problem:
                                      self.tau, self.gamma, self.va,
                                      self.vb, self.s_arr, c_base, r0, eps)
 
+    H_STEP = 0.04   # tracer arclength step in the (s,c) plane
+
+    def residual_tr(self, H_m, p_m, active):
+        return surface_residual_tracer_jit(
+            H_m, self.a0, self.da, self.Na, self.b0, self.db, self.Nb,
+            p_m, self.tau, self.gamma, self.va, self.vb, active,
+            self.H_STEP)
+
+    def jacobian_tr(self, H_m, p_m, active, r0, eps=1e-6):
+        return surface_jacobian_tracer_jit(
+            H_m, self.a0, self.da, self.Na, self.b0, self.db, self.Nb,
+            p_m, self.tau, self.gamma, self.va, self.vb, active,
+            self.H_STEP, r0, eps)
+
+    def density_mask(self, H_m, rho_cut):
+        """Active-vertex mask from the ex-ante signal density at the
+        lifted vertices (frozen at the warm start; excludes vertices in
+        regions with no data — the analog of the cube solver's halo)."""
+        Hp = build_pad(np.ascontiguousarray(H_m))
+        act = np.zeros(self.va.size, dtype=np.bool_)
+        sc = (self.tau/(2*np.pi))**1.5
+        for i in range(self.va.size):
+            tv, _, _ = heval(Hp, self.a0, self.da, self.Na, self.b0,
+                              self.db, self.Nb, self.va[i], self.vb[i])
+            u = self.va[i]*E_A + self.vb[i]*E_B + tv*E_T
+            r1 = np.exp(-0.5*self.tau*np.sum((u - 0.5)**2))
+            r0 = np.exp(-0.5*self.tau*np.sum((u + 0.5)**2))
+            act[i] = 0.5*sc*(r1 + r0) >= rho_cut
+        return act
+
 
 def lm_solve_surface(pb, H0, p_m, tag, max_iter=80, tol=1e-9,
                      lam0=1e-3, log=print):
@@ -463,6 +656,63 @@ def lm_solve_surface(pb, H0, p_m, tag, max_iter=80, tol=1e-9,
         log(f"    [{tag}] it={it:3d} max|r|={traj[-1]['max_r']:.3e} "
             f"med|r|={traj[-1]['med_r']:.3e} lam={lam:.1e} "
             f"acc={accepted} ({traj[-1]['wall']:.1f}s)")
+        if not accepted:
+            log(f"    [{tag}] LM stuck (lam={lam:.1e}) — stop")
+            break
+    return H, r, traj
+
+
+def lm_solve_surface_tr(pb, H0, p_m, active, tag, max_iter=60, tol=1e-9,
+                        lam0=1e-3, alpha=1e-6, log=print):
+    """LM with tracer residual + Tikhonov anchor alpha*||H - H0||^2
+    (pins the LM null space — nodes with no influence on any active
+    vertex stay at the warm start instead of drifting)."""
+    H = H0.copy()
+    r, nf = pb.residual_tr(H, p_m, active)
+    nact = int(active.sum())
+    def stats(rv):
+        ra = np.abs(rv[active])
+        return float(ra.max()), float(np.median(ra))
+    mx, md = stats(r)
+    cost = 0.5*float(r @ r) + 0.5*alpha*float(np.sum((H - H0)**2))
+    lam = lam0
+    traj = [dict(it=0, max_r=mx, med_r=md, cost=cost, lam=lam, nfail=int(nf))]
+    n = pb.Na*pb.Nb
+    it = 0
+    while it < max_iter and mx > tol:
+        it += 1
+        t0 = time.time()
+        J = pb.jacobian_tr(H, p_m, active, r)
+        JtJ = J.T @ J
+        g = J.T @ r + alpha*(H - H0).ravel()
+        A0_ = JtJ + alpha*np.eye(n)
+        D = np.diag(A0_).copy()
+        accepted = False
+        for trial in range(25):
+            A = A0_ + lam*np.diag(D)
+            try:
+                d = np.linalg.solve(A, -g)
+            except np.linalg.LinAlgError:
+                lam *= 10; continue
+            Hn = H + d.reshape(pb.Na, pb.Nb)
+            rn, nf = pb.residual_tr(Hn, p_m, active)
+            costn = 0.5*float(rn @ rn) + 0.5*alpha*float(np.sum((Hn - H0)**2))
+            if nf == 0 and costn < cost:
+                H = Hn; r = rn; cost = costn
+                lam = max(lam/3.0, 1e-12)
+                accepted = True
+                break
+            lam *= 4.0
+            if lam > 1e13:
+                break
+        mx, md = stats(r)
+        traj.append(dict(it=it, max_r=mx, med_r=md, cost=cost, lam=lam,
+                         accepted=accepted, nfail=int(nf),
+                         dH_max=float(np.max(np.abs(H - H0))),
+                         wall=time.time() - t0))
+        log(f"    [{tag}] it={it:3d} max|r|={mx:.3e} med|r|={md:.3e} "
+            f"lam={lam:.1e} dH={traj[-1]['dH_max']:.2f} acc={accepted} "
+            f"({traj[-1]['wall']:.1f}s)")
         if not accepted:
             log(f"    [{tag}] LM stuck (lam={lam:.1e}) — stop")
             break
@@ -668,26 +918,55 @@ def run(args):
           f"({s['wall']:.1f}s, {s['n_vert']} vertices)  "
           f"gate V1 (med in [0.06,0.54] vs mesh 0.18): "
           f"{'PASS' if gate else 'FAIL'}")
+    # T2b: tracer residual at initial H (fold-aware evidence) — compare
+    print("T2b: tracer residual at initial H (all vertices) ...")
+    all_act = np.ones(pb.va.size, dtype=np.bool_)
+    t0 = time.time()
+    tr_stats = []
+    for m in range(pb.M):
+        r, nf = pb.residual_tr(np.ascontiguousarray(H0[m]), p_levels[m],
+                                all_act)
+        tr_stats.append(r)
+        if nf:
+            print(f"  m={m}: {nf} trace failures")
+    r_all = np.concatenate(tr_stats)
+    results['T2b_tracer'] = dict(max=float(np.max(np.abs(r_all))),
+                                  med=float(np.median(np.abs(r_all))),
+                                  p90=float(np.percentile(np.abs(r_all), 90)),
+                                  wall=time.time() - t0)
+    print(f"  tracer: max={results['T2b_tracer']['max']:.3e} "
+          f"med={results['T2b_tracer']['med']:.3e} "
+          f"({results['T2b_tracer']['wall']:.1f}s)")
     save()
     if args.t12_only:
         return
 
+    # active-vertex masks (frozen at warm start): drop vertices with no
+    # data support — the analog of the cube solver's halo exclusion
+    masks = []
+    for m in range(pb.M):
+        masks.append(pb.density_mask(H0[m], args.rho_cut))
+        print(f"  m={m}: active {int(masks[m].sum())}/{pb.va.size} vertices")
+    results['active_counts'] = [int(mk.sum()) for mk in masks]
+
     # T3: LM per surface (surfaces are independent)
-    print("T3: LM solve per surface ...")
+    print("T3: LM solve per surface (tracer residual, anchored) ...")
     Hs = H0.copy()
     results['T3'] = {}
     finals = []
     for m in range(pb.M):
         t0 = time.time()
-        Hm, rm, traj = lm_solve_surface(pb, np.ascontiguousarray(H0[m]),
-                                         p_levels[m], tag=f"m={m}",
-                                         max_iter=args.max_iter,
-                                         tol=args.tol)
+        Hm, rm, traj = lm_solve_surface_tr(pb, np.ascontiguousarray(H0[m]),
+                                            p_levels[m], masks[m],
+                                            tag=f"m={m}",
+                                            max_iter=args.max_iter,
+                                            tol=args.tol,
+                                            alpha=args.alpha)
         Hs[m] = Hm
-        finals.append(rm)
+        finals.append(rm[masks[m]])
         results['T3'][f"m{m}"] = dict(p=float(p_levels[m]), traj=traj,
-                                       final_max=float(np.max(np.abs(rm))),
-                                       final_med=float(np.median(np.abs(rm))),
+                                       final_max=float(np.max(np.abs(rm[masks[m]]))),
+                                       final_med=float(np.median(np.abs(rm[masks[m]]))),
                                        wall=time.time() - t0)
         print(f"  surface m={m} (p={p_levels[m]:.3f}): "
               f"final max|r|={results['T3'][f'm{m}']['final_max']:.3e} "
@@ -732,6 +1011,8 @@ def main():
     ap.add_argument('--margin', type=int, default=1)
     ap.add_argument('--max-iter', type=int, default=80)
     ap.add_argument('--tol', type=float, default=1e-9)
+    ap.add_argument('--rho-cut', type=float, default=1e-8)
+    ap.add_argument('--alpha', type=float, default=1e-6)
     ap.add_argument('--t12-only', action='store_true')
     ap.add_argument('--fresh', action='store_true')
     run(ap.parse_args())
