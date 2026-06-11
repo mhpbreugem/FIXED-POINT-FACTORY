@@ -205,6 +205,65 @@ def boxcar_eval(tri: np.ndarray, Wt: np.ndarray, p: np.ndarray,
     return out / (2.0 * dlt)
 
 
+def gauss_eval(tri: np.ndarray, Wt: np.ndarray, p: np.ndarray,
+               dlt: float, chunk: int = 400_000) -> np.ndarray:
+    """EXACT Gaussian-kernel smoothing of the exact co-area density:
+
+        A_delta(p) = integral A_exact(s) phi_delta(p - s) ds,
+
+    computed in CLOSED FORM (Phi/phi terms) for every linear piece of
+    every triangle's hat density, with narrow pieces (< 0.01 delta)
+    treated as point masses at their centroid (relative switch error
+    < 1e-8).  Unlike the pointwise kernel quadrature of the reference
+    operator (which needs h >~ grid spacing), this is exact for ANY
+    delta: the bandwidth is fully decoupled from the grid.  A_delta is
+    C-infinity in p AND in the surface values.  Returns (m, nw) > 0."""
+    from scipy.special import ndtr
+    SQRT2PI = np.sqrt(2.0 * np.pi)
+    Ntri = tri.shape[0]
+    m = p.size
+    out = np.zeros((m, Wt.shape[1]))
+    step = max(1, chunk // max(m, 1))
+    wnarrow = 0.01 * dlt
+    for a in range(0, Ntri, step):
+        b = min(Ntri, a + step)
+        s1 = tri[a:b, 0:1]
+        s2 = tri[a:b, 1:2]
+        s3 = tri[a:b, 2:3]
+        P = p[None, :]
+        d21 = s2 - s1
+        d32 = s3 - s2
+        d31 = np.maximum(s3 - s1, TINY)
+
+        def phi(z):
+            return np.exp(-0.5 * z * z) / SQRT2PI
+
+        def piece(lo, hi, wid, amp_at_p, c1, mass):
+            """closed form for a linear piece, or point mass if narrow.
+            amp_at_p = c0 + c1*p evaluated stably; mass = integral of
+            the piece (for the narrow branch)."""
+            zlo = (lo - P) / dlt
+            zhi = (hi - P) / dlt
+            full = (amp_at_p * (ndtr(zhi) - ndtr(zlo))
+                    + c1 * dlt * (phi(zlo) - phi(zhi)))
+            zmid = (0.5 * (lo + hi) - P) / dlt
+            narrow = mass * phi(zmid) / dlt
+            return np.where(wid < wnarrow, narrow, full)
+
+        flat = d31 <= np.maximum(wnarrow, TINY * 1e10)
+        # whole-triangle atom for flat triangles
+        zmid = (0.5 * (s1 + s3) - P) / dlt
+        atom = phi(zmid) / dlt
+
+        alpha = 2.0 / np.maximum(d21 * d31, TINY)
+        beta = 2.0 / np.maximum(d32 * d31, TINY)
+        lo_part = piece(s1, s2, d21, alpha * (P - s1), alpha, d21 / d31)
+        hi_part = piece(s2, s3, d32, beta * (s3 - P), -beta, d32 / d31)
+        g = np.where(flat, atom, lo_part + hi_part)
+        out += g.T @ Wt[a:b]
+    return out
+
+
 def atom_eval(tri: np.ndarray, Wt: np.ndarray, p: np.ndarray,
               dlt: float) -> np.ndarray:
     """Mass of near-atoms (triangles with total value spread <= dlt)
