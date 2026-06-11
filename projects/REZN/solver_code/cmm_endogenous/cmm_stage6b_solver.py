@@ -154,6 +154,33 @@ def _F_of_c(Hp, a0, da, Na, b0, db, Nb, X, eak, ebk, dask, dbsk, s, c):
     return (X + 2.0*c)/SQ3 - H, Ha, Hb
 
 
+@njit(cache=True, fastmath=False, inline='always')
+def heval_lin(Hp, a0, da, Na, b0, db, Nb, a, b):
+    """Value + gradient; UNCLAMPED linear extension outside the grid —
+    exactly C1 across the grid edge (the tilt-clamped version kinks
+    there whenever |grad| > TILT, which stalls the tracer's corrector
+    at linear rate). Used by the tracer only."""
+    amax = a0 + (Na - 1)*da
+    bmax = b0 + (Nb - 1)*db
+    ac = a; bc = b
+    if ac < a0: ac = a0
+    elif ac > amax: ac = amax
+    if bc < b0: bc = b0
+    elif bc > bmax: bc = bmax
+    H, Ha, Hb = _heval_in(Hp, a0, da, Na, b0, db, Nb, ac, bc)
+    if ac != a or bc != b:
+        H += Ha*(a - ac) + Hb*(b - bc)
+    return H, Ha, Hb
+
+
+@njit(cache=True, fastmath=False, inline='always')
+def _F_lin(Hp, a0, da, Na, b0, db, Nb, X, eak, ebk, dask, dbsk, s, c):
+    aa = eak*(X - c) + dask*s
+    bb = ebk*(X - c) + dbsk*s
+    H, Ha, Hb = heval_lin(Hp, a0, da, Na, b0, db, Nb, aa, bb)
+    return (X + 2.0*c)/SQ3 - H, Ha, Hb
+
+
 @njit(cache=True, fastmath=False)
 def solve_c(Hp, a0, da, Na, b0, db, Nb, X, eak, ebk, dask, dbsk, s,
             c_init, max_newton):
@@ -223,8 +250,8 @@ def trace_evidence(Hp, a0, da, Na, b0, db, Nb, X, eak, ebk, dask, dbsk,
     Start: the vertex itself, (s0,c0), exactly on the curve.
     Stop: pair-density weight < w_cut, or loop closure, or max_steps.
     Returns (A0, A1, ok)."""
-    F0, Ha, Hb = _F_of_c(Hp, a0, da, Na, b0, db, Nb, X, eak, ebk,
-                          dask, dbsk, s0, c0)
+    F0, Ha, Hb = _F_lin(Hp, a0, da, Na, b0, db, Nb, X, eak, ebk,
+                         dask, dbsk, s0, c0)
     Fs = -(Ha*dask + Hb*dbsk)
     Fc = 2.0/SQ3 + Ha*eak + Hb*ebk
     gn = np.sqrt(Fs*Fs + Fc*Fc)
@@ -253,9 +280,9 @@ def trace_evidence(Hp, a0, da, Na, b0, db, Nb, X, eak, ebk, dask, dbsk,
                 cn = c + h_try*Tc
                 conv = False
                 Fs = 0.0; Fc = 1.0; g2 = 1.0
-                for itc in range(10):
-                    F, Ha, Hb = _F_of_c(Hp, a0, da, Na, b0, db, Nb, X,
-                                         eak, ebk, dask, dbsk, sn, cn)
+                for itc in range(40):
+                    F, Ha, Hb = _F_lin(Hp, a0, da, Na, b0, db, Nb, X,
+                                        eak, ebk, dask, dbsk, sn, cn)
                     Fs = -(Ha*dask + Hb*dbsk)
                     Fc = 2.0/SQ3 + Ha*eak + Hb*ebk
                     g2 = Fs*Fs + Fc*Fc
@@ -264,8 +291,14 @@ def trace_evidence(Hp, a0, da, Na, b0, db, Nb, X, eak, ebk, dask, dbsk,
                     if abs(F) < 1e-12:
                         conv = True
                         break
-                    sn -= F*Fs/g2
-                    cn -= F*Fc/g2
+                    dxs = F*Fs/g2; dxc = F*Fc/g2
+                    sn -= dxs
+                    cn -= dxc
+                    # converged in position (|F| may stall just above
+                    # 1e-12 at C1 kinks of the interpolant — accept)
+                    if dxs*dxs + dxc*dxc < 1e-18:
+                        conv = True
+                        break
                 if conv:
                     # reject corrector solutions that jumped backwards
                     dls = sn - s; dlc = cn - c
@@ -274,7 +307,12 @@ def trace_evidence(Hp, a0, da, Na, b0, db, Nb, X, eak, ebk, dask, dbsk,
                         break
                 h_try *= 0.5
             if not success:
-                ok = False
+                # harmless if the trace already left the data region
+                ujx = c + s; ulx = c - s
+                gx0 = np.exp(-0.5*tau*((ujx+0.5)**2 + (ulx+0.5)**2))
+                gx1 = np.exp(-0.5*tau*((ujx-0.5)**2 + (ulx-0.5)**2))
+                if gx0 > 1e3*w_cut or gx1 > 1e3*w_cut:
+                    ok = False
                 break
             gn = np.sqrt(g2)
             Tns = Fc/gn; Tnc = -Fs/gn
@@ -662,14 +700,26 @@ def lm_solve_surface(pb, H0, p_m, tag, max_iter=80, tol=1e-9,
     return H, r, traj
 
 
-def lm_solve_surface_tr(pb, H0, p_m, active, tag, max_iter=60, tol=1e-9,
-                        lam0=1e-3, alpha=1e-6, log=print):
-    """LM with tracer residual + Tikhonov anchor alpha*||H - H0||^2
-    (pins the LM null space — nodes with no influence on any active
-    vertex stay at the warm start instead of drifting)."""
+def lm_solve_surface_tr(pb, H0, p_m, active0, tag, max_iter=60, tol=1e-9,
+                        lam0=1e-3, alpha=1e-3, jcap=100.0, jfloor=0.05,
+                        dmax=1.0, log=print):
+    """LM with tracer residual.
+
+    - Tikhonov anchor alpha*||H - H0||^2 pins the LM null space (nodes
+      with no influence stay at the warm start instead of drifting).
+    - Rows with any initial |J| > jcap are NON-SMOOTH (sqrt-singular /
+      jump sensitivities at slice-curve tangencies — the saturation
+      band where the surface tilt is critical). They are dropped from
+      the active set ONCE (frozen objective); during the solve any
+      remaining |J|>jcap entries are zeroed (phantom suppression), and
+      the cost-decrease acceptance guards descent.
+    - Step cap ||d||_inf <= dmax (heights move at most O(1)/iter).
+    Returns (H, r, traj, active, n_dropped_rows)."""
     H = H0.copy()
+    active = active0.copy()
     r, nf = pb.residual_tr(H, p_m, active)
-    nact = int(active.sum())
+    n = pb.Na*pb.Nb
+    n_dropped = -1
     def stats(rv):
         ra = np.abs(rv[active])
         return float(ra.max()), float(np.median(ra))
@@ -677,12 +727,27 @@ def lm_solve_surface_tr(pb, H0, p_m, active, tag, max_iter=60, tol=1e-9,
     cost = 0.5*float(r @ r) + 0.5*alpha*float(np.sum((H - H0)**2))
     lam = lam0
     traj = [dict(it=0, max_r=mx, med_r=md, cost=cost, lam=lam, nfail=int(nf))]
-    n = pb.Na*pb.Nb
     it = 0
     while it < max_iter and mx > tol:
         it += 1
         t0 = time.time()
         J = pb.jacobian_tr(H, p_m, active, r)
+        if n_dropped < 0:
+            rowmax = np.max(np.abs(J), axis=1)
+            badrow = (rowmax > jcap) | (active & (rowmax < jfloor))
+            n_dropped = int((badrow & active).sum())
+            if n_dropped:
+                nsing = int(((rowmax > jcap) & active).sum())
+                ndead = int(((rowmax < jfloor) & active).sum())
+                active = active & ~badrow
+                J[badrow, :] = 0.0
+                r = r.copy(); r[badrow] = 0.0
+                mx, md = stats(r)
+                cost = 0.5*float(r @ r) + 0.5*alpha*float(np.sum((H - H0)**2))
+                log(f"    [{tag}] dropped {n_dropped} ill-posed rows "
+                    f"({nsing} singular |J|>{jcap:g}, {ndead} insensitive "
+                    f"|J|<{jfloor:g}); active={int(active.sum())}")
+        J[np.abs(J) > jcap] = 0.0
         JtJ = J.T @ J
         g = J.T @ r + alpha*(H - H0).ravel()
         A0_ = JtJ + alpha*np.eye(n)
@@ -694,6 +759,10 @@ def lm_solve_surface_tr(pb, H0, p_m, active, tag, max_iter=60, tol=1e-9,
                 d = np.linalg.solve(A, -g)
             except np.linalg.LinAlgError:
                 lam *= 10; continue
+            if np.max(np.abs(d)) > dmax:
+                lam *= 4.0
+                if lam > 1e13: break
+                continue
             Hn = H + d.reshape(pb.Na, pb.Nb)
             rn, nf = pb.residual_tr(Hn, p_m, active)
             costn = 0.5*float(rn @ rn) + 0.5*alpha*float(np.sum((Hn - H0)**2))
@@ -716,7 +785,7 @@ def lm_solve_surface_tr(pb, H0, p_m, active, tag, max_iter=60, tol=1e-9,
         if not accepted:
             log(f"    [{tag}] LM stuck (lam={lam:.1e}) — stop")
             break
-    return H, r, traj
+    return H, r, traj, active, max(n_dropped, 0)
 
 
 def signflip_diag(Hs, p_levels):
@@ -941,6 +1010,30 @@ def run(args):
     if args.t12_only:
         return
 
+    # tilt-bound audit of the initial surfaces: the slice-curve graph/
+    # uniqueness premise needs Fc = 2/sqrt3 + Ha e_a[k] + Hb e_b[k] > 0;
+    # supercritical tilt (dir. slope >= sqrt2) = one-signal-dominance band
+    print("Tilt audit of initial H (61x61 sample) ...")
+    fine = np.linspace(-4.5, 4.5, 61)
+    AA, BB = np.meshgrid(fine, fine, indexing='ij')
+    audit = []
+    for m in range(pb.M):
+        Hp = build_pad(np.ascontiguousarray(H0[m]))
+        minFc = 1e9; gmax = 0.0; nbad = 0
+        for aa, bb in zip(AA.ravel(), BB.ravel()):
+            _, Ha, Hb = heval(Hp, pb.a0, pb.da, pb.Na, pb.b0, pb.db,
+                               pb.Nb, aa, bb)
+            gmax = max(gmax, float(np.hypot(Ha, Hb)))
+            worst = min(2.0/SQ3 + Ha*E_A[k] + Hb*E_B[k] for k in range(3))
+            minFc = min(minFc, float(worst))
+            if worst < 0.05: nbad += 1
+        audit.append(dict(m=m, p=float(p_levels[m]), max_gradH=gmax,
+                          min_Fc=minFc, frac_supercrit=nbad/AA.size))
+        print(f"  m={m}: max|gradH|={gmax:.2f} minFc={minFc:+.3f} "
+              f"frac(Fc<0.05)={nbad/AA.size:.3f}")
+    results['tilt_audit_initial'] = audit
+    save()
+
     # active-vertex masks (frozen at warm start): drop vertices with no
     # data support — the analog of the cube solver's halo exclusion
     masks = []
@@ -954,19 +1047,21 @@ def run(args):
     Hs = H0.copy()
     results['T3'] = {}
     finals = []
+    final_masks = []
     for m in range(pb.M):
         t0 = time.time()
-        Hm, rm, traj = lm_solve_surface_tr(pb, np.ascontiguousarray(H0[m]),
-                                            p_levels[m], masks[m],
-                                            tag=f"m={m}",
-                                            max_iter=args.max_iter,
-                                            tol=args.tol,
-                                            alpha=args.alpha)
+        Hm, rm, traj, mfin, ndrop = lm_solve_surface_tr(
+            pb, np.ascontiguousarray(H0[m]), p_levels[m], masks[m],
+            tag=f"m={m}", max_iter=args.max_iter, tol=args.tol,
+            alpha=args.alpha)
         Hs[m] = Hm
-        finals.append(rm[masks[m]])
+        final_masks.append(mfin)
+        finals.append(rm[mfin])
         results['T3'][f"m{m}"] = dict(p=float(p_levels[m]), traj=traj,
-                                       final_max=float(np.max(np.abs(rm[masks[m]]))),
-                                       final_med=float(np.median(np.abs(rm[masks[m]]))),
+                                       n_dropped_nonsmooth=int(ndrop),
+                                       n_active_final=int(mfin.sum()),
+                                       final_max=float(np.max(np.abs(rm[mfin]))),
+                                       final_med=float(np.median(np.abs(rm[mfin]))),
                                        wall=time.time() - t0)
         print(f"  surface m={m} (p={p_levels[m]:.3f}): "
               f"final max|r|={results['T3'][f'm{m}']['final_max']:.3e} "
@@ -981,6 +1076,20 @@ def run(args):
     results['final']['converged_1e-6'] = bool(converged)
     print(f"FINAL: max|r|={results['final']['max']:.3e} "
           f"med|r|={results['final']['med']:.3e} converged(<1e-6)={converged}")
+    np.save(f"{OUT}/stage6b_masks.npy", np.stack(final_masks))
+
+    # plateau localization: worst active vertices per surface
+    plateau = {}
+    for m in range(pb.M):
+        rm, _ = pb.residual_tr(np.ascontiguousarray(Hs[m]), p_levels[m],
+                                final_masks[m])
+        ra = np.abs(rm)
+        order = np.argsort(ra)[::-1][:3]
+        plateau[f"m{m}"] = [dict(a=float(pb.va[i]), b=float(pb.vb[i]),
+                                  absr=float(ra[i])) for i in order
+                             if final_masks[m][i]]
+    results['plateau_worst_vertices'] = plateau
+    save()
     dH, dp = signflip_diag(Hs, p_levels)
     results['signflip_final'] = dict(dH=dH, dp=dp)
     print(f"  sign-flip diag (final): {dH:.3e}")
@@ -1012,7 +1121,7 @@ def main():
     ap.add_argument('--max-iter', type=int, default=80)
     ap.add_argument('--tol', type=float, default=1e-9)
     ap.add_argument('--rho-cut', type=float, default=1e-8)
-    ap.add_argument('--alpha', type=float, default=1e-6)
+    ap.add_argument('--alpha', type=float, default=1e-3)
     ap.add_argument('--t12-only', action='store_true')
     ap.add_argument('--fresh', action='store_true')
     run(ap.parse_args())
