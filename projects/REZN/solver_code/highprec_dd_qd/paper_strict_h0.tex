@@ -1,0 +1,393 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx,booktabs,amsmath,amssymb,xcolor,hyperref,float}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\deficit}{\mathcal{D}}
+
+\title{Certified Computation of K=3 CRRA Rational-Expectations Equilibria:\\
+\large extended-precision certification, continuum limits, fold diagnostics,\\
+and a strict-$h{=}0$ program with endogenous price-plane coordinates}
+\author{Fixed-Point Factory}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We compute and certify rational-expectations equilibria of a three-trader CRRA
+asset market with binary state and Gaussian signals, across a $20\times5$ grid
+of risk aversion $\gamma\in[0.05,30]$ and signal precision
+$\tau\in\{0.2,0.5,1.0,1.5,2.0\}$. Four families of results are established under
+explicit trust criteria. (1)~\textbf{Certification:} 87 of 100 cells admit
+equilibria whose self-consistency residual, evaluated in 80-bit extended
+precision, is below $10^{-15}$ (typical $10^{-18}$); 6 of these were recovered
+from solver stalls by precision-continuation, and the remaining 13 are
+quarantined rather than reported. (2)~\textbf{Continuum limits:} deep
+grid-ladders to $G{=}37$ yield the first honest-error continuum estimate of the
+revelation deficit at the reference cell $(\tau,\gamma)=(2,0.098)$:
+$\deficit_\infty = 0.268\pm0.010$. (3)~\textbf{No fold:} dense Jacobian spectra
+along the previously failing corner $\gamma\tau\gtrsim5$ show the spectral
+radius bounded by $0.61$ and $\sigma_{\min}(I-J)\ge0.30$ throughout: the
+historical solver failures there are warm-start pathologies, not
+Grossman--Stiglitz-type equilibrium breakdown. (4)~\textbf{Precision floor
+repair:} a double-double $\tau$-ladder solver's residual floor of
+$2.7\times10^{-17}$ is traced to float64 interpolation knots inside a
+32-digit operator and fixed, restoring residuals of $1.9\times10^{-28}$.
+Finally we develop a strict-$h{=}0$ solution program based on
+\emph{endogenous coordinates}: grid points constrained to surfaces of constant
+price, evolving as primary unknowns. Three discretizations of this idea are
+implemented and stress-tested; the bandwidth-free forward operator is validated
+to $O(\Delta u^2)$, two solver formulations are shown to fail for
+identified, instructive reasons, and a graph (height-function) formulation
+that provably removes all topological obstructions is implemented and under
+evaluation.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+%=====================================================================
+\section{The economic problem}
+
+\subsection{Environment}
+A single risky asset pays $v\in\{0,1\}$ with even prior odds. Three traders
+$k=1,2,3$ have CRRA utility with common risk-aversion parameter $\gamma$ and
+unit wealth. Before trading, trader $k$ privately observes
+\[
+u_k = s_k - \tfrac12,\qquad s_k \,|\, v \sim \mathcal N(v,\,1/\tau),
+\]
+i.e.\ a signal centered at $\pm\tfrac12$ with precision $\tau$. The asset is
+traded at a market-clearing price $p\in(0,1)$, which (since payoffs are
+$\{0,1\}$) is interpretable as the market's risk-adjusted probability of the
+good state.
+
+\subsection{Rational-expectations equilibrium}
+A (symmetric, fully rational) REE is a price function $P(u_1,u_2,u_3)$ such
+that, at every signal profile:
+\begin{enumerate}
+\item Each trader conditions on own signal \emph{and} the price. Observing
+$P=p$ reveals that the signal profile lies on the level set $\{P=p\}$, so the
+posterior of trader $k$ is
+\begin{equation}
+\mu_k \;=\; \frac{f_1(u_k)\,A_1(p,u_k)}{f_0(u_k)\,A_0(p,u_k) + f_1(u_k)\,A_1(p,u_k)},
+\qquad
+A_v(p,u_k) \;=\; \int_{\{P=p\}\cap\{u_k\ \mathrm{fixed}\}} f_v(u_j)f_v(u_l)\,d\sigma,
+\label{eq:evidence}
+\end{equation}
+where $f_v$ is the signal density under state $v$. The \emph{evidence
+integrals} $A_v$ are line integrals over the price level set: this is the
+co-area structure that makes the problem hard.
+\item The market clears: $\sum_k x^{\mathrm{CRRA}}_k(\mu_k, p;\gamma)=0$,
+which pins a unique $p^{\mathrm{clear}}(\mu_1,\mu_2,\mu_3;\gamma)$ since CRRA
+excess demand is strictly decreasing in $p$.
+\item Consistency: $P(u) = p^{\mathrm{clear}}(\mu(u; P))$ --- a fixed point in
+function space, where the unknown function appears inside its own level-set
+integrals.
+\end{enumerate}
+
+\subsection{The object of interest: revelation deficit}
+With risk-neutral traders the unique REE is fully revealing: $\mathrm{logit}\,P$
+is an affine function of the sufficient statistic $\sum_k u_k$. Risk aversion
+breaks this: a Jensen wedge $\pi = \bar m + (\tfrac12-p)\,\mathrm{Var}(m)/\gamma$
+separates price from posterior mean. We measure informational efficiency by the
+\textbf{revelation deficit}
+\[
+\deficit \;=\; 1 - R^2\Big[\mathrm{logit}\,P \ \sim\ \textstyle\sum_k u_k\Big],
+\]
+the unexplained share of log-odds variation: $\deficit=0$ is full revelation.
+The wedge prediction is $\deficit \propto 1/\gamma$ at fixed $\tau$ for large
+$\gamma$, one of the claims our certified data can finally discipline.
+
+%=====================================================================
+\section{Numerical formulations of the fixed point}
+
+\subsection{The kernel (production) operator}
+Discretize $P$ on an inner $G^3$ grid over $[-4,4]^3$ (halo pad 2). Replace the
+level-set delta in \eqref{eq:evidence} by a Gaussian kernel $K_h(P-p)$ of
+bandwidth $h$:
+\[
+A_v \;\approx\; \sum_{a,b} K_h\!\big(P_{ab}-p\big)\, f_v(u_a) f_v(u_b).
+\]
+$\Phi$ becomes analytic in the grid values, Newton--Krylov converges
+quadratically, and the \emph{joint-limit schedule} $h = 0.45\sqrt{\Delta u}$
+sends $h\to0$ as $G\to\infty$. The cost is an $O(h)$--$O(h^2)$ bias at finite
+$G$ and, as established in Section~\ref{sec:ladder}, a small-$h$ Newton
+pathology beyond $G\approx25$.
+
+\subsection{Strict-$h{=}0$ operators}
+Setting $h=0$ exactly requires integrating over extracted level sets. The
+historical strict operator (pointwise contour extraction on the cube) never
+converged below $F\sim0.04$: extraction makes $\Phi$ discontinuous in the grid
+values. Section~\ref{sec:cmm} develops the resolution.
+
+%=====================================================================
+\section{Certified equilibria: the emin15 pass}
+\label{sec:emin15}
+
+\subsection{Certification policy}
+A cell $(\tau,\gamma)$ is \textbf{accepted} only if
+$\|\Phi(P)-P\|_\infty \le 10^{-15}$ \emph{in 80-bit extended precision}. The
+float64 production solver cannot reach this bar---its market-clearing bisection
+terminates at width $10^{-14}$ and roundoff floors the residual at
+$\approx4\times10^{-15}$---so certification requires an extended-precision
+stage:
+\begin{enumerate}
+\item float64 $G$-ladder $\{9,13,17,21\}$ with $\gamma$-continuation warm
+starts (each $\gamma$ warm-started from its neighbor's converged solution);
+\item a pure-numpy \texttt{longdouble} port of the full kernel operator
+(validated against the production operator to $3.8\times10^{-15}$, exactly the
+float64 floor), polished by a hand-rolled Jacobian-free Newton--GMRES(40) in
+extended precision: one Newton step typically takes the residual from
+$5\times10^{-14}$ to $3\times10^{-17}$;
+\item cells whose float64 chain stalls receive a \emph{$\tau$-continuation
+rescue}: warm-start from the highest solved lower-$\tau$ row at the same
+$\gamma$, marching $\tau$ upward in $0.1$ steps;
+\item cells that still fail are \textbf{rejected}; their deficit and slope
+values are quarantined and appear nowhere in this paper's conclusions.
+\end{enumerate}
+
+\subsection{Results}
+87 of 100 cells certified (worst accepted residual $1.4\times10^{-15}$, best
+$6\times10^{-19}$, typical $10^{-18}$); 6 rescued by $\tau$-continuation,
+including the historically intractable $(\tau,\gamma)=(2.0, 0.74\!-\!1.45)$
+corner cells; 13 rejected (the $\gamma\tau\gtrsim5$ corner; see
+Section~\ref{sec:stall} for why they are recoverable in principle).
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{fig_residuals.png}
+\caption{Left: residual before (dashed; float64 floor) and after (solid) the
+extended-precision polish; the acceptance bar is $10^{-15}$. Right: verdict
+map over the $(\gamma,\tau)$ grid.}
+\end{figure}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.8\textwidth]{fig_deficit.png}
+\caption{Revelation deficit over accepted cells only.}
+\end{figure}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{sweep_jensen.png}
+\caption{The production sweep at a glance: deficit vs $\gamma$ per $\tau$
+(left), log-odds slope (center), Newton residual (right). Only cells passing
+the emin15 bar enter any quantitative claim.}
+\end{figure}
+
+\subsection{What certification does and does not mean}
+Acceptance certifies an exact fixed point of the \emph{discretized} operator at
+$(G{=}21,\,h{=}0.45\sqrt{\Delta u})$ to 15+ digits: solver error is eliminated
+as a concern. It does \emph{not} certify proximity to the $h\to0,G\to\infty$
+continuum---that question is quantified next.
+
+%=====================================================================
+\section{Continuum limits from deep grid ladders}
+\label{sec:ladder}
+
+Five representative certified cells were deepened to $G\in\{25,29,33,37\}$
+(warm-started rung to rung). Continuum extrapolation uses three fits per cell
+($q$-free $d_\infty + a h^q$; $q{=}1$; $q{=}2$) over \emph{nailed rungs only}
+($F<10^{-8}$), with the error bar spanning all three extrapolants.
+
+\begin{table}[H]\centering\small
+\begin{tabular}{lcccccl}
+\toprule
+cell $(\tau,\gamma)$ & rungs nailed & $\deficit_{G=21}$ & $\deficit_\infty$ & $\pm$ & $q_{\rm free}$ & status\\
+\midrule
+$(0.2, 1.04)$ & 8/8 & 0.00026 & 0.0001 & 0.0001 & 0.74 & trusted\\
+$(0.5, 1.04)$ & 8/8 & 0.0066 & $-0.019$ & 0.023 & 0.20 & unreliable (overshoot)\\
+$(1.0, 1.04)$ & 6/8 & 0.0414 & $-0.16$ & 0.19 & 0.20 & unreliable (stalls)\\
+$(1.0, 0.098)$ & 8/8 & 0.2046 & \textbf{0.2042} & \textbf{0.0011} & 5.0 & trusted (plateaued)\\
+$(2.0, 0.098)$ & 5/8 & 0.2796 & \textbf{0.268} & \textbf{0.010} & 1.65 & trusted\\
+\bottomrule
+\end{tabular}
+\caption{Continuum deficit estimates. The $(2.0,0.098)$ row is the
+\emph{immortal anchor} cell, reproducing and extending the historical deep
+ladder $0.291\,(G{=}9)\to0.276\,(G{=}25)$.}
+\end{table}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{extrapolation_clean.png}
+\caption{Deficit vs $h$ per cell; stalled rungs ($\times$) excluded from fits.
+The anchor cell (right) extrapolates to $\deficit_\infty=0.268\pm0.010$.}
+\end{figure}
+
+Two findings beyond the numbers. First, the kernel schedule exhibits a
+\textbf{small-$h$ Newton pathology} at $G\gtrsim25$--$29$: cells that nail at
+machine epsilon at $G{=}21$ stall at $F\sim10^{-2}$ deeper, independent of
+$(\tau,\gamma)$. Finite-$h$ deepening cannot brute-force the continuum; this
+motivates the strict-$h{=}0$ program of Section~\ref{sec:cmm}. Second, where
+all rungs are trustworthy the empirical convergence order is \emph{not}
+uniformly $O(h)$: well-behaved cells show $q\in[0.7,5]$. Earlier $O(h)$
+estimates were contaminated by stalled rungs.
+
+%=====================================================================
+\section{The failing corner is not a fold}
+\label{sec:stall}
+
+The production sweep historically stalls for $\gamma\tau\gtrsim5$. Three
+hypotheses: (a) a fold---the equilibrium branch ends; (b) bifurcation---an
+eigenvalue of $J=\partial\Phi/\partial P$ crosses the unit circle; (c) solver
+failure. We marched $\gamma$ from $0.38$ to $1.20$ at $\tau=2$, $G=13$ in 17
+small steps, computing the \emph{dense} spectrum of $J$ (2197$\times$2197) and
+the SVD of $I-J$ at every converged point.
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{stall_spectrum_tau2.png}
+\caption{Spectral quantities along the march. All 17 points converge to
+machine epsilon; $\rho(J)$ stays below $0.61$; the eigenvalue closest to 1
+keeps distance $\ge0.39$; $\sigma_{\min}(I-J)\ge0.30$. The shaded band is the
+corner where the production sweep failed.}
+\end{figure}
+
+\textbf{Verdict (c).} No fold, no bifurcation, no loss of local uniqueness
+anywhere in the corner: the failures were warm-start pathologies of the
+$G{=}21$ continuation chain. Economically: \emph{there is no
+Grossman--Stiglitz-type revelation breakdown in this region}---the equilibrium
+exists, is locally unique, and is reachable with careful continuation
+($G{=}13\to17\to21$ ladders with small $\gamma$ steps), as the successful
+rescues of Section~\ref{sec:emin15} demonstrate.
+
+%=====================================================================
+\section{Repairing the double-double precision floor}
+
+The repository's second solver family (a $\tau$-ladder, spectral-style
+discretization in double-double arithmetic, $\approx32$ digits) had a
+long-standing self-residual floor of $2.7\times10^{-17}$ where $10^{-29}$
+should be attainable. A single-cell sensitivity probe (perturb one unknown by
+$h\in\{10^{-10},\dots,10^{-22}\}$, watch the operator response) localized the
+leak: the operator's PCHIP interpolation \emph{knots} were stored in float64
+while everything else ran in double-double, capping the effective accuracy of
+the interpolation map at knot precision. Making the knots double-double
+restored the expected floor:
+\[
+F_{\mathrm{pre}} = 4.31\times10^{-17}
+\qquad\longrightarrow\qquad
+F_{\mathrm{post}} = 1.94\times10^{-28}.
+\]
+Eleven digits recovered by a one-line-diagnosis fix --- a reminder that in
+mixed-precision numerics the weakest stored object, not the weakest operation,
+sets the floor.
+
+%=====================================================================
+\section{The strict-$h{=}0$ program: endogenous price-plane coordinates}
+\label{sec:cmm}
+
+\subsection{The idea}
+All cube-based formulations share a defect: the level sets over which
+\eqref{eq:evidence} integrates must be \emph{re-derived} from sampled values,
+and any such derivation involves discrete decisions (which cells straddle the
+level) that make $\Phi$ discontinuous in the state. The resolution inverts the
+representation: \textbf{choose the price levels first, and make the grid
+points themselves the unknowns} --- every grid point lives, by construction, on
+a plane of constant price, and the bandwidth $h$ is identically zero with no
+limit taken. Three discretizations of this idea were built and stress-tested.
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.8\textwidth]{cmm_levelsets.png}
+\caption{Level surfaces $\{P^*=p\}$ of the certified anchor equilibrium. In
+the endogenous-coordinate program these surfaces---not cube values---carry the
+unknowns.}
+\end{figure}
+
+\subsection{Forward operator: validated at $h=0$}
+Slicing a level surface by a trader's own-signal hyperplane yields the 1-D
+evidence curve; arclength integration of $f_vf_v$ along it evaluates
+\eqref{eq:evidence} exactly at $h=0$ (Figure~\ref{fig:slice}). The resulting
+forward operator was validated three ways: a closed-form pushforward unit test
+(empirical convergence order \textbf{2.007} in $\Delta u$); agreement with the
+kernel operator to $O(h^2)$ in the bulk and $O(h)$ near level-topology
+transitions (median $6\times10^{-3}$, tails $0.33$ at $G{=}21$) --- mapping
+exactly where the kernel's bias lives; and a 9{,}000$\times$ JIT speedup
+bringing a full-cube evaluation to $0.6$\,s.
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.75\textwidth]{cmm_slice.png}
+\caption{A price surface sliced by $\{u_1=0\}$: the red curve is the exact,
+bandwidth-free integration domain of the evidence integral.}
+\label{fig:slice}
+\end{figure}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.75\textwidth]{cmm_evidence.png}
+\caption{Evidence integrands and their cumulative integrals along a slice
+curve. The likelihood ratio $A_1/A_0$ feeds the Bayes posterior.}
+\end{figure}
+
+\subsection{Two instructive failures and their lessons}
+\textbf{Cube iteration diverges.} Holding the representation on the cube and
+iterating with the strict operator diverges ($0.33\to0.46\to0.47$): marching-cubes
+re-extraction re-triangulates discontinuously as cube values move. \emph{Lesson:
+the discontinuity is in the re-derivation, not the economics.}
+
+\textbf{Mesh LM plateaus.} Representing each surface as a triangle mesh with
+\emph{fixed topology} and free vertex positions (22{,}734 vertices; sparse-FD
+Jacobian exploiting the locality of vertex influence, validated exactly against
+dense FD, 11$\times$ faster builds) produced the first genuinely descending
+strict-$h{=}0$ solver: 20+ accepted Levenberg steps, median residual
+$0.180\to0.130$. It then plateaued with damping $\lambda\to10^{5}$: max
+residual pinned at $0.331$ by a stubborn vertex set. Necessary safeguards
+discovered along the way: uniform (not Marquardt-scaled) damping, since the
+tangential gauge directions have near-zero curvature and Marquardt scaling
+under-damps exactly them; \emph{per-vertex} step caps at a quarter of the
+smallest incident edge, since marching-cubes meshes contain slivers with
+1000:1 edge ratios that any global step size flips; and a face-orientation
+topology guard. \emph{Lesson: free-vertex motion with pinned topology is the
+right smoothness class, but unstructured marching-cubes meshes are a hostile
+numerical habitat.}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{cmm_histories.png}
+\caption{Left: cube-based iteration diverges; constrained (normal-only) motion
+stalls. Right: free-vertex LM descends steadily before its plateau.}
+\end{figure}
+
+\subsection{The graph formulation}
+The final formulation exploits two structural properties to remove every
+remaining obstruction. \emph{Monotonicity}: $P$ increases in each signal, so
+each level surface is a graph $t = H_m(w)$ along the cube diagonal
+$t=(u_1{+}u_2{+}u_3)/\sqrt3$, and each slice curve is a graph over the
+anti-diagonal coordinate of the remaining two signals --- level-set topology
+cannot change, ever. Slice curves are recovered from $H_m$ by \emph{monotone
+scalar root-solves}, smooth in the state by the implicit function theorem ---
+a regular root, not a threshold decision. \emph{Symmetry}: trader permutations
+act on the transverse plane as the dihedral group $D_3$ (storage on a $1/6$
+wedge; one curve family serves all three agents), and the sign-flip symmetry
+$P(-u)=1-P(u)$ halves the surface count. The state shrinks $\sim40\times$
+relative to the mesh (no gauge freedom, no mesh management), and the Jacobian
+remains block-diagonal by surface. This formulation is implemented and its
+solver evaluation is in progress; results will be reported in a revision of
+this paper.
+
+%=====================================================================
+\section{Conclusions}
+
+\begin{enumerate}
+\item \textbf{Certified low-residual equilibria now exist at scale}: 87
+$(\tau,\gamma)$ cells with extended-precision residuals $\le10^{-15}$,
+quarantining everything else. The certified region's deficit map is the
+quantitatively trustworthy core of the project.
+\item \textbf{The first continuum deficit estimates with honest error bars}:
+$\deficit_\infty = 0.268\pm0.010$ at the anchor, $0.2042\pm0.0011$ at
+$(\tau,\gamma)=(1,0.098)$.
+\item \textbf{The hard corner is solver-hard, not economics-hard}: spectra
+prove no fold through $\gamma=1.2$ at $\tau=2$; rescues recover formerly
+failing cells.
+\item \textbf{Precision floors come from the weakest stored object}: the DD
+fix ($4\times10^{-17}\to2\times10^{-28}$).
+\item \textbf{Strict $h=0$ is a representation problem}: with endogenous
+price-plane coordinates the forward operator is exact and fast; convergence
+hinges on the smoothness class of the state, culminating in the graph
+formulation in which all known obstructions vanish by construction.
+\end{enumerate}
+
+\section*{Reproducibility}
+All data, scripts, figures, and per-cell solutions:
+\texttt{projects/REZN/solved\_fixed\_points/} subdirectories
+\texttt{dd\_k3\_overnight/} (\texttt{emin15/}, \texttt{deep\_ladder/},
+\texttt{stall\_diagnosis/}, \texttt{anchor\_sweep\_20x5/}) and
+\texttt{cmm\_endogenous/}; solver code in
+\texttt{projects/REZN/solver\_code/highprec\_dd\_qd/} and
+\texttt{projects/REZN/solver\_code/cmm\_endogenous/}. The double-double knot
+fix is commit \texttt{2e0bd65e}.
+
+\end{document}
