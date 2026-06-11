@@ -85,8 +85,8 @@ def main():
 
     print("\n=== Levenberg-Marquardt (trf, sparse Jacobian) ===", flush=True)
     t0 = time.time()
-    # Aggressive bounds: each vertex coord stays within [-UMAX, UMAX]
-    lb = np.full(3*total_v, -4.0); ub = np.full(3*total_v, 4.0)
+    # Bounds wider than halo (uf in [-4.8, +4.8] with pad=2 du=0.4)
+    lb = np.full(3*total_v, -5.0); ub = np.full(3*total_v, 5.0)
     res = least_squares(F, x0, method='trf', jac='2-point',
                           jac_sparsity=jac_sparsity, bounds=(lb, ub),
                           xtol=1e-8, ftol=1e-8, max_nfev=20, verbose=2)
