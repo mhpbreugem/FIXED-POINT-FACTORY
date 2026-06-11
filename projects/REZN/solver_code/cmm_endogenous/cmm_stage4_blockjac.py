@@ -141,6 +141,19 @@ def face_normals(V_m, F_m):
 
 # ---------------- Solver ----------------
 
+def per_vertex_min_edge(V_m, F_m):
+    """For each vertex, the minimum length of any incident edge."""
+    N_m = V_m.shape[0]
+    min_edge = np.full(N_m, np.inf)
+    for f in range(F_m.shape[0]):
+        i0, i1, i2 = F_m[f, 0], F_m[f, 1], F_m[f, 2]
+        for (a, b) in [(i0, i1), (i1, i2), (i2, i0)]:
+            d = float(np.linalg.norm(V_m[a] - V_m[b]))
+            if d < min_edge[a]: min_edge[a] = d
+            if d < min_edge[b]: min_edge[b] = d
+    return min_edge
+
+
 def solve_cmm(P_full, uf, lo, hi, tau, gamma, p_levels,
                max_iter=50, fd_eps=1e-5, tol=1e-7, verbose=True,
                lam0=10.0):
@@ -149,6 +162,8 @@ def solve_cmm(P_full, uf, lo, hi, tau, gamma, p_levels,
     V = [s[0].copy() if s else np.zeros((0,3)) for s in surfs]
     F = [s[1].astype(np.int64) if s else np.zeros((0,3), np.int64) for s in surfs]
     ref_normals = [face_normals(V[m], F[m]) if V[m].size else None for m in range(M)]
+    min_edges = [per_vertex_min_edge(V[m], F[m]) if V[m].size else None
+                  for m in range(M)]
     n_v = np.array([v.shape[0] for v in V])
     total_v = int(n_v.sum())
     v_off = np.concatenate(([0], np.cumsum(n_v)))
@@ -202,12 +217,17 @@ def solve_cmm(P_full, uf, lo, hi, tau, gamma, p_levels,
                 step = -np.linalg.solve(A, Jtr)
             except np.linalg.LinAlgError:
                 step = -np.linalg.lstsq(A, Jtr, rcond=None)[0]
-            # Hard step-size cap as second safety net
-            STEP_CAP = 0.05
-            sn = np.max(np.abs(step))
-            if sn > STEP_CAP:
-                step = step * (STEP_CAP / sn)
-            dx[3*v_off[m]:3*v_off[m+1]] = step
+            # Per-vertex local cap: each vertex's |step| <= min_edge/4
+            step3 = step.reshape(-1, 3)
+            v_step_norm = np.linalg.norm(step3, axis=1)  # (N_m,)
+            limit = 0.25 * min_edges[m]
+            scale = np.minimum(1.0, limit / np.maximum(v_step_norm, 1e-30))
+            step3 = step3 * scale[:, None]
+            # Global cap for extra safety
+            sn = float(np.max(np.linalg.norm(step3, axis=1)))
+            if sn > 0.02:
+                step3 = step3 * (0.02 / sn)
+            dx[3*v_off[m]:3*v_off[m+1]] = step3.ravel()
         # try step
         V_new = [v.copy() for v in V]
         for m in range(M):
