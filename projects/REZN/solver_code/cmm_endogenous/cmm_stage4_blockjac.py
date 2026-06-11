@@ -142,7 +142,8 @@ def face_normals(V_m, F_m):
 # ---------------- Solver ----------------
 
 def solve_cmm(P_full, uf, lo, hi, tau, gamma, p_levels,
-               max_iter=50, fd_eps=1e-5, tol=1e-7, verbose=True):
+               max_iter=50, fd_eps=1e-5, tol=1e-7, verbose=True,
+               lam0=10.0):
     surfs = extract_surfaces_marching_cubes(P_full, uf, p_levels)
     M = len(p_levels)
     V = [s[0].copy() if s else np.zeros((0,3)) for s in surfs]
@@ -158,27 +159,34 @@ def solve_cmm(P_full, uf, lo, hi, tau, gamma, p_levels,
     surface_residual(V[0], F[0], p_levels[0], tau, gamma)
     surface_jacobian_fd(V[0], F[0], p_levels[0], tau, gamma, fd_eps)
 
-    # LM trust-region damping
-    lam = 1e-3
+    # LM trust-region damping (start with large lam => small steps; LM expands as it can)
+    lam = lam0
     history = []
+    need_rebuild = True
+    r_blocks = None; J_blocks = None; r = None
+    Fmax = Fmed = float('inf')
     for it in range(max_iter):
-        t0 = time.time()
-        # compute global residual + per-surface Jacobian blocks
-        r_blocks = []; J_blocks = []
-        for m in range(M):
-            if V[m].size == 0:
-                r_blocks.append(np.zeros(0)); J_blocks.append(None); continue
-            r_m = surface_residual(V[m], F[m], p_levels[m], tau, gamma)
-            J_m = surface_jacobian_fd(V[m], F[m], p_levels[m], tau, gamma, fd_eps)
-            r_blocks.append(r_m); J_blocks.append(J_m)
-        r = np.concatenate(r_blocks)
-        t_eval = time.time() - t0
-        Fmax = float(np.max(np.abs(r))); Fmed = float(np.median(np.abs(r)))
-        if verbose:
-            print(f"  iter {it}: max|r|={Fmax:.3e} med|r|={Fmed:.3e} "
-                  f"lam={lam:.2e} eval={t_eval:.0f}s", flush=True)
-        history.append((Fmax, Fmed, lam))
-        if Fmax < tol: break
+        if need_rebuild:
+            t0 = time.time()
+            r_blocks = []; J_blocks = []
+            for m in range(M):
+                if V[m].size == 0:
+                    r_blocks.append(np.zeros(0)); J_blocks.append(None); continue
+                r_m = surface_residual(V[m], F[m], p_levels[m], tau, gamma)
+                J_m = surface_jacobian_fd(V[m], F[m], p_levels[m], tau, gamma, fd_eps)
+                r_blocks.append(r_m); J_blocks.append(J_m)
+            r = np.concatenate(r_blocks)
+            t_eval = time.time() - t0
+            Fmax = float(np.max(np.abs(r))); Fmed = float(np.median(np.abs(r)))
+            need_rebuild = False
+            if verbose:
+                print(f"  iter {it}: max|r|={Fmax:.3e} med|r|={Fmed:.3e} "
+                      f"lam={lam:.2e} build={t_eval:.0f}s", flush=True)
+            history.append((Fmax, Fmed, lam))
+            if Fmax < tol: break
+        else:
+            if verbose:
+                print(f"  iter {it}: retry lam={lam:.2e}", flush=True)
         # Solve per-surface LM normal equations independently (block diag)
         dx = np.zeros(3*total_v)
         for m in range(M):
@@ -222,10 +230,12 @@ def solve_cmm(P_full, uf, lo, hi, tau, gamma, p_levels,
             accept = False; rho = -1.0; r_new = r
         if accept:
             V = V_new
+            need_rebuild = True
             if rho > 0.75: lam *= 0.3
             elif rho < 0.25: lam *= 2.0
         else:
             lam *= 4.0
+            # need_rebuild stays False -- reuse the Jacobian at the same V
         if verbose:
             tag = 'ok' if topo_ok else 'TOPO_FLIP'
             print(f"    step rho={rho:+.2f} "
