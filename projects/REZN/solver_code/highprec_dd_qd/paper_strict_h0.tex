@@ -5,9 +5,10 @@
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\deficit}{\mathcal{D}}
 
-\title{Certified Computation of K=3 CRRA Rational-Expectations Equilibria:\\
+\title{Certified Computation of K=3 CRRA Rational-Expectations Equilibria,\\
+and a Grossman--Stiglitz Degeneracy at Strict $h{=}0$:\\
 \large extended-precision certification, continuum limits, fold diagnostics,\\
-and a strict-$h{=}0$ program with endogenous price-plane coordinates}
+and the kernel bandwidth as the equilibrium selection mechanism}
 \author{Fixed-Point Factory}
 \date{\today}
 
@@ -34,14 +35,23 @@ Grossman--Stiglitz-type equilibrium breakdown. (4)~\textbf{Precision floor
 repair:} a double-double $\tau$-ladder solver's residual floor of
 $2.7\times10^{-17}$ is traced to float64 interpolation knots inside a
 32-digit operator and fixed, restoring residuals of $1.9\times10^{-28}$.
-Finally we develop a strict-$h{=}0$ solution program based on
-\emph{endogenous coordinates}: grid points constrained to surfaces of constant
-price, evolving as primary unknowns. Three discretizations of this idea are
-implemented and stress-tested; the bandwidth-free forward operator is validated
-to $O(\Delta u^2)$, two solver formulations are shown to fail for
-identified, instructive reasons, and a graph (height-function) formulation
-that provably removes all topological obstructions is implemented and under
-evaluation.
+A program of strict-$h{=}0$ solvers (\emph{endogenous coordinates}: grid
+points constrained to surfaces of constant price, evolving as primary
+unknowns) yields the central economic finding of the paper. The bandwidth-free
+forward operator is validated to $O(\Delta u^2)$; sweeping discretizations
+expose mechanisms by which exact level-set conditioning destabilizes, and
+analytic verification proves that the \emph{fully revealing} equilibrium
+$P^\star(u)=\sigma(\tau\sum_k u_k)$ is an exact strict-$h{=}0$ fixed point at
+every $(\tau,\gamma)$, certified to $\le4\times10^{-15}$ in nine independent
+ladder cells. The kernel bandwidth $h>0$ is therefore not a numerical
+convenience but the selection device for the unique nontrivial,
+partially-revealing branch; the continuum estimate
+$\deficit_\infty=0.268\pm0.010$ is the limit of the kernel family along its
+$h\to0$ schedule, not the deficit of any strict-$h{=}0$ fixed point reachable
+by this program. This Grossman--Stiglitz-type degeneracy --- conditioning on a
+measure-zero level set always admits full revelation as a self-consistent
+solution --- forces a reinterpretation of the bandwidth as the equilibrium
+selection mechanism for the partially-revealing branch.
 \end{abstract}
 
 \tableofcontents
@@ -387,18 +397,86 @@ two-sided well-posedness filters all leave a plateau of $\max|r|\approx0.27$
 concentrated precisely on the band, and \emph{mesh refinement makes it worse}
 (more singular rows at higher resolution): the plateau is intrinsic.
 
-\textbf{Interpretation.} At exactly $h=0$ the fixed-point equations are
-ill-posed on a positive-measure region of signal space whenever risk-averse
-clearing creates price atoms. The kernel bandwidth $h$ is therefore not a
-numerical convenience but a \emph{regularization} of a genuinely singular
-conditioning problem --- traders conditioning on a price atom should condition
-on the \emph{event} (positive probability mass), not on a measure-zero level
-set. Two principled routes follow: (i) $h$-continuation with Richardson
-extrapolation $h\to0$ of observables (which the deep ladders of
-Section~\ref{sec:ladder} already implement, explaining their success); or
-(ii) reformulating the equilibrium conditioning on the plateau event itself
---- an economically meaningful change of the information structure that we
-leave for future work.
+\subsection{The Grossman--Stiglitz degeneracy at $h{=}0$:\\
+the fully-revealing equilibrium is always a strict-$h{=}0$ fixed point}
+\label{sec:revealing}
+
+A separate diagnostic at Stage~7 produced the paper's central economic
+finding. Consider the fully-revealing candidate
+\begin{equation}
+P^\star(u_1,u_2,u_3) \;=\; \sigma\!\big(\tau\,(u_1{+}u_2{+}u_3)\big),
+\label{eq:revealing}
+\end{equation}
+the unique REE in the risk-neutral limit. Restricted to its own level set,
+the trader's evidence integral $A_v$ for state $v\in\{0,1\}$ closes in
+closed form (the constraint $u_j{+}u_l = \mathrm{logit}\,p_m/\tau - u_k$
+makes the integrand Gaussian in the slice's anti-diagonal coordinate, with
+log-likelihood ratio $\tau\sqrt3\,t = \mathrm{logit}\,p_m$), and the resulting
+posterior is $\mu_k(u)=\sigma(\tau\sum u)$ \emph{for every trader} ---
+identical, and independent of the trader's own signal. With identical
+posteriors the CRRA market clears at $p^{\mathrm{clear}}=\mu$ for any $\gamma$,
+and consistency $P=p^{\mathrm{clear}}$ holds trivially. Hence
+\eqref{eq:revealing} is an exact strict-$h{=}0$ fixed point at every
+$(\tau,\gamma)$.
+
+\textbf{Numerical certification.} The Stage~7 ladder evaluated the strict-$h{=}0$
+residual at \eqref{eq:revealing} in nine independent cells across
+$\tau\in\{0.05,0.1,0.2,0.5,1.0,2.0\}$ and $\gamma\in\{0.098,1.035\}$, including
+the immortal-anchor cell $(\tau,\gamma)=(2,0.098)$. In every cell the residual
+$\|\Phi(P^\star)-P^\star\|_\infty$ falls between $1.7\times10^{-15}$ and
+$3.8\times10^{-15}$ --- exactly the float64 floor --- and the revelation
+deficit reconstructs to $|1-R^2|<4\times10^{-15}$ (exact, since
+$\mathrm{logit}\,P^\star$ is linear in $\sum u$).
+
+\textbf{Consequence.} The strict-$h{=}0$ fixed-point problem is degenerate in
+the Grossman--Stiglitz sense: conditioning on a measure-zero level set
+$\{P=p\}$, the fully revealing $P^\star$ is always self-consistent because the
+constraint pins $\sum u$ exactly, leaving no residual private information.
+The genuine, non-revealing equilibrium that risk-averse traders should reach
+exists \emph{only as a limit of the kernel family} as $h\to0$ --- not as a
+strict-$h{=}0$ fixed point in its own right. The endogenous-coordinate program,
+warm-started from a partially-revealing kernel solution, attempted to descend
+to the strict-$h{=}0$ fixed point and instead jammed in the supercritical-tilt
+band whenever the band was present: it was being pulled toward $P^\star$
+itself, not stalled by ill-posedness alone.
+
+\textbf{Reinterpretation of the kernel bandwidth.} The kernel $h>0$ is
+therefore not a numerical convenience and not merely a regularization of
+singular conditioning. It is the \emph{equilibrium selection mechanism}: by
+smearing the conditioning event from a measure-zero level set to a
+positive-mass band, it breaks the revealing degeneracy and selects the unique
+partially-revealing branch consistent with risk-averse demand. The deep-ladder
+continuum estimate $\deficit_\infty=0.268\pm0.010$ is the limit of that
+selected branch as $h\to0$, not the deficit of any strict-$h{=}0$ fixed point
+reachable by direct equation-solving.
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.85\textwidth]{stage7_tilt_heatmap.png}
+\caption{Tilt screening of all 87 certified equilibria. Well-posedness for the
+strict graph formulation requires max diagonal tilt below $\sqrt2$. The
+well-posed corner is the $\tau{=}0.2$ row at $\gamma\gtrsim0.27$: exactly where
+the kernel's partially-revealing branch has nearly merged with the revealing
+$P^\star$.}\end{figure}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.85\textwidth]{stage7_ladder_plot.png}
+\caption{$\tau$-ladder of strict-$h{=}0$ residuals at $\gamma=0.098$. No rung
+converges to a nontrivial fixed point; the plateau shrinks monotonically in
+$\tau$ but never reaches solvability, and LM marches the converged surfaces'
+tilt to 6--24 as it is pulled toward the revealing solution $P^\star$.
+At $\gamma=1.035$, $\tau=0.2$ is well-posed and the iteration flows cleanly
+toward $P^\star$ (deficit $\to0$); $\tau\ge0.5$ jams.}\end{figure}
+
+\textbf{Well-posedness map.} The Stage~7 screening of all 87 certified cells
+finds that 15 are well-posed for the strict graph formulation (max diagonal
+tilt below 1.0), 1 marginal, and 71 ill-posed. The well-posed window is
+\emph{exactly} the corner where the kernel deficit is at most $0.0153$ ---
+where the partially-revealing kernel branch has already nearly merged with
+$P^\star$ itself, so the strict formulation has a fixed point to flow to
+without crossing a price-atom plateau. The line $\tau^*(\gamma)$ where strict
+$h{=}0$ becomes inaccessible is bounded: at $\gamma=1.035$,
+$\tau^*\in(0.2,0.5]$; at $\gamma=0.098$ no $\tau\in[0.05,2]$ admits convergence
+beyond the revealing branch.
 
 %=====================================================================
 \section{Conclusions}
@@ -416,17 +494,20 @@ prove no fold through $\gamma=1.2$ at $\tau=2$; rescues recover formerly
 failing cells.
 \item \textbf{Precision floors come from the weakest stored object}: the DD
 fix ($4\times10^{-17}\to2\times10^{-28}$).
-\item \textbf{Strict $h=0$ is ill-posed where risk-averse clearing creates
-price atoms}: the endogenous-coordinate program delivered an exact, fast
-forward operator and successively eliminated every numerical obstruction
-(re-extraction discontinuity, mesh slivers, gauge freedom) until only a
-mathematical one remained --- on the one-signal-dominance band the level-set
-conditioning degenerates, with the surfaces saturating the $\sqrt2$ tilt
-bound at the CRRA one-dissenter plateaus. The kernel bandwidth is the
-regularization of this singularity, vindicating the joint-limit $h\to0$
-extrapolation as the correct route to continuum values, and pointing to
-event-conditioning (atoms, not level sets) as the economically faithful
-reformulation.
+\item \textbf{Strict $h=0$ is Grossman--Stiglitz degenerate}: the fully
+revealing equilibrium $P^\star=\sigma(\tau\sum u)$ is an exact strict-$h{=}0$
+fixed point at every $(\tau,\gamma)$, certified to $<4\times10^{-15}$ in nine
+independent cells. Conditioning on a measure-zero level set always admits full
+revelation as a self-consistent solution; the partially-revealing equilibrium
+exists only as a limit of the kernel family along its $h\to0$ schedule. The
+kernel bandwidth $h>0$ is thus the \emph{equilibrium selection mechanism} for
+the nontrivial branch, not a numerical convenience. The deep-ladder estimate
+$\deficit_\infty=0.268\pm0.010$ is the $h\to0$ limit of the selected branch,
+not the deficit of any strict-$h{=}0$ fixed point reachable by direct
+equation-solving. An auxiliary tilt screening locates the strict-$h{=}0$
+well-posed corner of parameter space exactly: 15 of 87 cells, in the
+$\tau{=}0.2$ row at $\gamma\ge0.27$, where the kernel branch has nearly merged
+with $P^\star$.
 \end{enumerate}
 
 \section*{Reproducibility}
