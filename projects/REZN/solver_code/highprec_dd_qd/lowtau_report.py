@@ -144,7 +144,7 @@ def main():
         ax.plot(g[m], d[m], 'o-', color=cmap[tau], label=label[tau], markersize=7, linewidth=2)
     ax.set_xlabel(r'$\gamma$ (linear)', fontsize=13)
     ax.set_ylabel(r'revelation deficit  $1 - R^2$  (linear)', fontsize=13)
-    ax.set_title(r'F1c -- Zoom on $\gamma \le 3$ (both axes linear)',
+    ax.set_title(r'F1c -- Zoom on $\gamma \leq 3$ (both axes linear)',
                  fontsize=12)
     ax.legend(loc='upper right', fontsize=10, ncol=2)
     ax.grid(alpha=0.3)
