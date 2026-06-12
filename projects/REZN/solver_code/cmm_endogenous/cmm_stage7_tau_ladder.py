@@ -309,6 +309,7 @@ def run_ladder(args):
             Hm, rm, traj = lm_masked(pb, np.ascontiguousarray(H0[m]),
                                      p_levels[m], masks[m], tag=f"t{tau} m={m}",
                                      max_iter=args.max_iter, tol=args.tol,
+                                     dmax=args.dmax,
                                      time_cap=args.time_cap_surface)
             Hs[m] = Hm
             finals.append(np.abs(rm[masks[m]]))
@@ -371,6 +372,7 @@ def main():
     ap.add_argument('--max-iter', type=int, default=30)
     ap.add_argument('--tol', type=float, default=1e-6)
     ap.add_argument('--rho-cut', type=float, default=1e-8)
+    ap.add_argument('--dmax', type=float, default=1.0)
     ap.add_argument('--time-cap-surface', type=float, default=420.0)
     ap.add_argument('--fresh', action='store_true')
     ap.add_argument('--redo', action='store_true')
