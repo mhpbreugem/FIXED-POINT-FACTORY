@@ -47,12 +47,13 @@ def load_all():
                                  F_ld=v['F_ld']))
     except FileNotFoundError:
         pass
-    # emin15 tau=0.2 row
+    # emin15: tau=0.2 and tau=0.5 rows already certified there
     try:
         d = json.load(open(f"{EMIN15}/emin15.json"))
         for v in d.values():
-            if v.get('verdict') == 'ACCEPT' and float(v['tau']) == 0.2:
-                rows.append(dict(tau=0.20, gamma=float(v['gamma']),
+            tau_v = float(v['tau'])
+            if v.get('verdict') == 'ACCEPT' and tau_v in (0.2, 0.5):
+                rows.append(dict(tau=tau_v, gamma=float(v['gamma']),
                                  deficit=float(v['deficit']),
                                  slope=float(v['slope']),
                                  F_ld=float(v['F_ld']) if v.get('F_ld') else 0.0))
@@ -93,78 +94,106 @@ def main():
     taus = sorted(set(round(x['tau'], 4) for x in rows))
     print(f"taus available: {taus}", flush=True)
 
-    cmap = {0.05: 'C0', 0.10: 'C1', 0.20: 'C2'}
-    label = {0.05: r'$\tau=0.05$', 0.10: r'$\tau=0.10$', 0.20: r'$\tau=0.20$'}
+    cmap = {0.05: 'C0', 0.10: 'C1', 0.20: 'C2', 0.30: 'C3', 0.40: 'C4', 0.50: 'C5'}
+    label = {t: rf'$\tau={t:.2f}$' for t in cmap}
 
     pdf = PdfPages(PDF_PATH)
 
-    # ---------- F1 combined deficit vs gamma ----------
+    tau_show = [t for t in [0.05, 0.10, 0.20, 0.30, 0.40, 0.50] if t in taus]
+
+    # ---------- F1 combined deficit vs gamma (log-log) ----------
     fig, ax = plt.subplots(figsize=(8.5, 6))
-    for tau in [0.05, 0.10, 0.20]:
-        if tau not in taus: continue
+    for tau in tau_show:
         g, d, _, _ = per_tau(rows, tau)
         if g.size == 0: continue
-        # Clip deficits below 1e-16 for log plot
         d_plot = np.where(d > 0, d, 1e-16)
         ax.loglog(g, d_plot, 'o-', color=cmap[tau], label=label[tau], markersize=7, linewidth=2)
-    # 1/gamma reference
     gg = np.logspace(-1.5, 1.6, 50)
     ax.loglog(gg, 0.01/gg, 'k--', alpha=0.4, label=r'$\propto 1/\gamma$ ref')
     ax.set_xlabel(r'$\gamma$ (risk aversion)', fontsize=13)
     ax.set_ylabel(r'revelation deficit  $1 - R^2$', fontsize=13)
-    ax.set_title('F1 -- Certified deficit vs $\\gamma$ at low $\\tau$\n'
-                 '(no noise traders; deficit > 0 and $\\to 0$ as $\\gamma \\to \\infty$)',
+    ax.set_title('F1 -- Certified deficit vs $\\gamma$ (log-log)\n'
+                 'no noise traders; deficit $> 0$ and $\\to 0$ as $\\gamma \\to \\infty$',
                  fontsize=12)
-    ax.legend(loc='lower left', fontsize=11)
+    ax.legend(loc='lower left', fontsize=10, ncol=2)
     ax.grid(alpha=0.3, which='both')
     fig.tight_layout(); pdf.savefig(fig); plt.close(fig)
 
-    # ---------- F2 / F3 / F4: per-tau detail ----------
-    for fid, tau in [('F2', 0.20), ('F3', 0.10), ('F4', 0.05)]:
-        if tau not in taus:
-            fig, ax = plt.subplots(figsize=(8.5, 6))
-            ax.text(0.5, 0.5, f'tau={tau} not yet certified', ha='center')
-            ax.axis('off'); pdf.savefig(fig); plt.close(fig); continue
+    # ---------- F1b combined deficit vs gamma (linear y, semilogx) ----------
+    fig, ax = plt.subplots(figsize=(8.5, 6))
+    for tau in tau_show:
         g, d, _, _ = per_tau(rows, tau)
-        fig, ax = plt.subplots(figsize=(8.5, 6))
+        if g.size == 0: continue
+        ax.semilogx(g, d, 'o-', color=cmap[tau], label=label[tau], markersize=7, linewidth=2)
+    ax.axhline(0, color='k', alpha=0.3, linewidth=0.6)
+    ax.set_xlabel(r'$\gamma$ (risk aversion, log scale)', fontsize=13)
+    ax.set_ylabel(r'revelation deficit  $1 - R^2$  (linear)', fontsize=13)
+    ax.set_title('F1b -- Certified deficit vs $\\gamma$ (linear $y$ axis)\n'
+                 'the asymptotic-to-zero behaviour at large $\\gamma$',
+                 fontsize=12)
+    ax.legend(loc='upper right', fontsize=10, ncol=2)
+    ax.grid(alpha=0.3)
+    fig.tight_layout(); pdf.savefig(fig); plt.close(fig)
+
+    # ---------- F1c combined deficit vs gamma (linear x, linear y) low-gamma zoom ----------
+    fig, ax = plt.subplots(figsize=(8.5, 6))
+    for tau in tau_show:
+        g, d, _, _ = per_tau(rows, tau)
+        if g.size == 0: continue
+        m = g <= 3.0
+        ax.plot(g[m], d[m], 'o-', color=cmap[tau], label=label[tau], markersize=7, linewidth=2)
+    ax.set_xlabel(r'$\gamma$ (linear)', fontsize=13)
+    ax.set_ylabel(r'revelation deficit  $1 - R^2$  (linear)', fontsize=13)
+    ax.set_title(r'F1c -- Zoom on $\gamma \le 3$ (both axes linear)',
+                 fontsize=12)
+    ax.legend(loc='upper right', fontsize=10, ncol=2)
+    ax.grid(alpha=0.3)
+    fig.tight_layout(); pdf.savefig(fig); plt.close(fig)
+
+    # ---------- F2..F4: per-tau detail with both log-log AND linear-y twin ----------
+    per_tau_pairs = [('F2', 0.05), ('F3', 0.10), ('F4', 0.20)]
+    if 0.30 in taus: per_tau_pairs.append(('F4a', 0.30))
+    if 0.40 in taus: per_tau_pairs.append(('F4b', 0.40))
+    if 0.50 in taus: per_tau_pairs.append(('F4c', 0.50))
+    for fid, tau in per_tau_pairs:
+        g, d, _, _ = per_tau(rows, tau)
+        if g.size == 0: continue
+        fig, (axL, axR) = plt.subplots(1, 2, figsize=(13, 5.5))
         d_plot = np.where(d > 0, d, 1e-16)
-        ax.loglog(g, d_plot, 'o-', color=cmap[tau], markersize=8, linewidth=2)
-        # tail fit on the last few points
+        axL.loglog(g, d_plot, 'o-', color=cmap[tau], markersize=8, linewidth=2)
         if g.size >= 4:
             tail = slice(-5, None)
             coef = np.polyfit(np.log(g[tail]), np.log(d_plot[tail]), 1)
-            ax.loglog(g[tail], np.exp(coef[1]) * g[tail]**coef[0], 'k--',
-                      label=f'tail slope = {coef[0]:.3f}')
-            ax.legend(fontsize=11)
-        ax.set_xlabel(r'$\gamma$', fontsize=13)
-        ax.set_ylabel(r'$1 - R^2$', fontsize=13)
-        ax.set_title(f'{fid} -- Certified deficit at $\\tau$={tau}, '
-                     f'{g.size} cells, $\\gamma\\in[{g.min():.2f},{g.max():.1f}]$',
-                     fontsize=12)
-        ax.grid(alpha=0.3, which='both')
+            axL.loglog(g[tail], np.exp(coef[1]) * g[tail]**coef[0], 'k--',
+                       label=f'tail slope = {coef[0]:.3f}')
+            axL.legend(fontsize=11)
+        axL.set_xlabel(r'$\gamma$', fontsize=12); axL.set_ylabel(r'$1 - R^2$', fontsize=12)
+        axL.set_title(f'log--log, tail $1/\\gamma$ fit'); axL.grid(alpha=0.3, which='both')
+        axR.semilogx(g, d, 'o-', color=cmap[tau], markersize=8, linewidth=2)
+        axR.axhline(0, color='k', alpha=0.3, linewidth=0.6)
+        axR.set_xlabel(r'$\gamma$ (log)', fontsize=12); axR.set_ylabel(r'$1-R^2$ (linear)', fontsize=12)
+        axR.set_title('linear $y$ axis: emphasizes large-$\\gamma$ vanishing')
+        axR.grid(alpha=0.3)
+        fig.suptitle(f'{fid} -- $\\tau={tau}$, {g.size} certified cells, $\\gamma\\in[{g.min():.2f},{g.max():.1f}]$',
+                     fontsize=13, weight='bold')
         fig.tight_layout(); pdf.savefig(fig); plt.close(fig)
 
     # ---------- F5 slope of logit P on sum u vs gamma ----------
     fig, ax = plt.subplots(figsize=(8.5, 6))
-    for tau in [0.05, 0.10, 0.20]:
-        if tau not in taus: continue
+    for tau in tau_show:
         g, _, s, _ = per_tau(rows, tau)
         ax.semilogx(g, s, 'o-', color=cmap[tau], label=label[tau], markersize=7, linewidth=2)
-    # Reference: under full revelation, logit P = tau*sum u; slope = tau
-    for tau in [0.05, 0.10, 0.20]:
-        if tau not in taus: continue
         ax.axhline(tau, color=cmap[tau], ls=':', alpha=0.5)
     ax.set_xlabel(r'$\gamma$', fontsize=13)
     ax.set_ylabel(r'slope of $\mathrm{logit}\,P$ on $\sum_k u_k$', fontsize=13)
-    ax.set_title('F5 -- Log-odds slope (dotted = revealing $\\tau$)', fontsize=12)
-    ax.legend(loc='center right', fontsize=11)
+    ax.set_title('F5 -- Log-odds slope; dotted = revealing benchmark $\\tau$', fontsize=12)
+    ax.legend(loc='center right', fontsize=10, ncol=2)
     ax.grid(alpha=0.3)
     fig.tight_layout(); pdf.savefig(fig); plt.close(fig)
 
     # ---------- F6 certified residuals ----------
     fig, ax = plt.subplots(figsize=(8.5, 6))
-    for tau in [0.05, 0.10, 0.20]:
-        if tau not in taus: continue
+    for tau in tau_show:
         g, _, _, F = per_tau(rows, tau)
         Fp = np.where(F > 0, F, 1e-19)
         ax.loglog(g, Fp, 'o-', color=cmap[tau], label=label[tau], markersize=7, linewidth=2)
@@ -172,7 +201,7 @@ def main():
     ax.set_xlabel(r'$\gamma$', fontsize=13)
     ax.set_ylabel(r'$\|\Phi(P)-P\|_\infty$ (longdouble)', fontsize=13)
     ax.set_title('F6 -- Certification: all cells under the $10^{-15}$ bar', fontsize=12)
-    ax.legend(loc='upper right', fontsize=11)
+    ax.legend(loc='upper right', fontsize=10, ncol=2)
     ax.grid(alpha=0.3, which='both')
     fig.tight_layout(); pdf.savefig(fig); plt.close(fig)
 
@@ -260,23 +289,37 @@ def main():
 
     # ---------- F12 1/gamma tail fit per tau ----------
     fig, ax = plt.subplots(figsize=(8.5, 6))
-    for tau in [0.05, 0.10, 0.20]:
-        if tau not in taus: continue
+    for tau in tau_show:
         g, d, _, _ = per_tau(rows, tau)
         if g.size < 4: continue
         d_plot = np.where(d > 0, d, 1e-16)
-        tail = g >= 1.0  # asymptotic regime
+        tail = g >= 1.0
         if tail.sum() < 3: continue
         coef = np.polyfit(np.log(g[tail]), np.log(d_plot[tail]), 1)
-        ax.loglog(g, d_plot, 'o', color=cmap[tau], markersize=7, label=label[tau]+f' (tail slope {coef[0]:.3f})')
+        ax.loglog(g, d_plot, 'o', color=cmap[tau], markersize=7,
+                  label=label[tau]+f' (tail slope {coef[0]:.3f})')
         gg = np.logspace(np.log10(g[tail].min()), np.log10(g[tail].max()), 30)
         ax.loglog(gg, np.exp(coef[1]) * gg**coef[0], '-', color=cmap[tau], alpha=0.5)
     ax.set_xlabel(r'$\gamma$', fontsize=13)
     ax.set_ylabel(r'$1-R^2$', fontsize=13)
     ax.set_title('F12 -- Asymptotic $1/\\gamma^p$ scaling of the deficit\n'
-                 '(theory: $p=1$ from the Jensen wedge)', fontsize=12)
-    ax.legend(loc='lower left', fontsize=11)
+                 '(Jensen-wedge theory predicts $p=1$)', fontsize=12)
+    ax.legend(loc='lower left', fontsize=10, ncol=2)
     ax.grid(alpha=0.3, which='both')
+    fig.tight_layout(); pdf.savefig(fig); plt.close(fig)
+
+    # ---------- F13 linear-y per-tau (one panel each) showing vanishing ----------
+    fig, axes = plt.subplots(2, 3, figsize=(15, 8))
+    for ax, tau in zip(axes.flat, [0.05, 0.10, 0.20, 0.30, 0.40, 0.50]):
+        if tau not in taus:
+            ax.axis('off'); continue
+        g, d, _, _ = per_tau(rows, tau)
+        ax.semilogx(g, d, 'o-', color=cmap[tau], markersize=7, linewidth=2)
+        ax.axhline(0, color='k', alpha=0.3, linewidth=0.6)
+        ax.set_xlabel(r'$\gamma$ (log)'); ax.set_ylabel(r'deficit (linear)')
+        ax.set_title(label[tau] + f' (max d = {d.max():.3g})')
+        ax.grid(alpha=0.3)
+    fig.suptitle('F13 -- Per-$\\tau$ panels, linear $y$ axis', fontsize=13, weight='bold')
     fig.tight_layout(); pdf.savefig(fig); plt.close(fig)
 
     pdf.close()

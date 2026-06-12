@@ -16,12 +16,18 @@ import ld_polish as P  # imports ld_ops, defines chain64, polish_ld, etc.
 OUT = '/home/user/FIXED-POINT-FACTORY/projects/REZN/solved_fixed_points/lowtau'
 os.makedirs(OUT, exist_ok=True)
 
-TAUS_LOW = [0.05, 0.10]
+TAUS_LOW = [0.30, 0.40]
 GAMMAS = list(np.round(np.logspace(np.log10(0.05), np.log10(30.0), 20), 4))
 
 def main():
     t_start = time.time()
-    results = {}
+    # Start from existing results so reruns add cells rather than overwrite
+    results_path = f"{OUT}/lowtau.json"
+    if os.path.exists(results_path):
+        results = json.load(open(results_path))
+        print(f"Loaded {len(results)} pre-existing cells", flush=True)
+    else:
+        results = {}
     for tau in TAUS_LOW:
         print(f"\n=== TAU = {tau} ===", flush=True)
         P_cross = None
