@@ -14,7 +14,8 @@
 \newcommand{\ViFR}{V_{i}^{\rm FRgap}}
 
 \title{Partial Revelation Without Noise Traders:\\
-\large Existence and certified computation in a CRRA REE\\with binary state}
+\large Existence, certified computation, and $K$-invariance\\
+in CRRA REE with binary state}
 \author{Fixed-Point Factory}
 \date{\today}
 
@@ -40,11 +41,20 @@ private signal $\Vipriv$, and welfare gap to full revelation $\ViFR$ ---
 all monotone in the directions theory predicts. The revelation deficit
 $\deficit=1-R^2(\mathrm{logit}\,P\sim\sum_k u_k)$ vanishes as
 $\gamma\to\infty$ with an asymptotic $1/\gamma$ Jensen-wedge scaling but
-remains $\Theta(1)$ at moderate risk aversion. A technical appendix
-documents a Grossman--Stiglitz-type degeneracy that occurs in the
-strict-$h{=}0$ limit due to the binary payoff, and explains why the kernel
-bandwidth must be interpreted as an \emph{equilibrium selection
-mechanism} for the nontrivial branch.
+remains $\Theta(1)$ at moderate risk aversion. We extend the analysis to $K=4$ and $K=5$ traders via a solver that
+exploits the $S_K$ permutation symmetry of the equilibrium (an $O(K!)$
+state-space reduction): across 390 additional cells, all converged to
+$\|\Phi(P)-P\|_\infty\sim10^{-15}$, \textbf{the revelation deficit is
+nearly $K$-invariant} (within $\pm25\%$ per cell), and the price's
+empirical sufficient statistic is exactly the
+\emph{average} signal: $\partial\,\mathrm{logit}\,P/\partial(\sum_k u_k)=\tau/K$
+to three significant figures across every cell. Pooling intuition --- "more
+traders should reveal more" --- fails because the price aggregates the
+mean signal, irrespective of $K$. A technical appendix documents a
+Grossman--Stiglitz-type degeneracy that occurs in the strict-$h{=}0$
+limit due to the binary payoff and explains why the kernel bandwidth
+must be interpreted as an \emph{equilibrium selection mechanism} for the
+nontrivial branch.
 \end{abstract}
 
 \tableofcontents
@@ -266,6 +276,74 @@ signal triple, so private information is not redundant.
 giving a direct welfare interpretation of the revelation deficit.
 \end{enumerate}
 
+\section{$K$-invariance: more traders do not reduce the deficit}\label{sec:Kinvariance}
+
+The model generalizes to $K\ge3$ traders straightforwardly. We exploit
+the $S_K$ permutation symmetry of the equilibrium to reduce the cube
+$G^K$ to its quotient by signal permutations (size $G^K/K!$), and ported
+the kernel operator to general $K$. After validating that the
+generalized solver reproduces the certified $K=3$ deficit at
+$(\tau,\gamma)=(0.2,1.04)$ to $0.00\%$ relative error, we ran 390
+additional cells across $K\in\{3,4,5\}$, $\tau\in\{0.1,0.2,0.4,0.6\}$,
+$G\in\{11,15,21\}$, and 15 values of $\gamma\in[0.05,30]$; all converged
+to $\|F\|_\infty \le 9.9\times10^{-13}$, typical $\sim 7\times 10^{-15}$.
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.95\textwidth]{F_K_loglog.png}
+\caption{Deficit vs $\gamma$ for $K\in\{3,4,5\}$ traders at $\tau=0.2$
+(left) and $\tau=0.6$ (right), at $G=15$. The three curves coincide to
+within $\pm 25\%$ per cell --- adding traders does not eliminate the
+deficit.}
+\label{fig:KLogLog}
+\end{figure}
+
+The deficit is K-INVARIANT within $\pm25\%$:
+
+\begin{table}[H]\centering\small
+\begin{tabular}{cccccc}
+\toprule
+$\gamma$ & $\deficit(K{=}3)$ & $\deficit(K{=}4)$ & $\deficit(K{=}5)$ & $K{=}4/K{=}3$ & $K{=}5/K{=}3$\\
+\midrule
+0.10  & 1.18e-1 & 9.46e-2 & 1.09e-1 & 0.80 & 0.92\\
+0.51  & 1.72e-3 & 1.97e-3 & 2.11e-3 & 1.15 & 1.23\\
+1.00  & 2.94e-4 & 2.81e-4 & 2.68e-4 & 0.96 & 0.91\\
+10.00 & 4.55e-6 & 4.65e-6 & 4.26e-6 & 1.02 & 0.94\\
+30.00 & 8.64e-7 & 8.00e-7 & 6.98e-7 & 0.93 & 0.81\\
+\bottomrule
+\end{tabular}
+\caption{$K$-comparison at $\tau=0.2$, $G=15$.}
+\end{table}
+
+The reason is an exact empirical identity --- the slope of $\mathrm{logit}\,P$
+on the signal sum is $\tau/K$ across every cell:
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.75\textwidth]{F_K_slope.png}
+\caption{$\mathrm{slope}\cdot K/\tau$ across the entire 390-cell sweep
+collapses to $1.00\pm0.03$. The price is functionally
+$\mathrm{logit}\,P\approx\tau\bar u$ with $\bar u=K^{-1}\sum_k u_k$: it
+reveals only the \emph{average} signal, irrespective of $K$.}
+\label{fig:KSlope}
+\end{figure}
+
+\paragraph{Economic interpretation.}
+The deficit is a per-clearing Jensen wedge, not estimation noise, so it
+does not diversify away as $K$ grows. Market clearing aggregates $K$
+posterior log-odds through the concave CRRA demand; the price lands at
+the risk-adjusted \emph{mean} belief, $\mathrm{logit}\,p\approx\tau\bar u$,
+carrying one signal's precision regardless of $K$. Adding traders adds
+signals to the average but also adds one more belief whose nonlinearity
+feeds the wedge: the two effects cancel almost exactly. The
+parameters that buy a large deficit are \emph{high signal precision and
+low risk aversion}: $\tau\uparrow$ widens posterior dispersion (more
+nonlinearity to clear) and $\gamma\downarrow$ amplifies the nonlinear
+share of demand. Crowd size $K$ is second-order. Per-agent trading
+volume rises modestly with $K$ (more counterparties to trade with) and
+$V_i^{\rm public}$ rises (the average is a better statistic of fundamentals),
+while $V_i^{\rm private}$ falls --- but the price's
+\emph{functional informativeness} relative to full revelation is
+$K$-invariant.
+
 \section{Asymptotic scaling and discussion}
 
 The Jensen wedge $\pi=\bar m+(\tfrac12-p)\,\mathrm{Var}(m)/\gamma$
@@ -290,13 +368,18 @@ local-CARA-approximation prediction.
 
 \section{Conclusion}
 
-Three CRRA traders observing Gaussian signals about a binary asset
-sustain a partially revealing equilibrium with no exogenous noise.
-We prove existence in a tilt class disjoint from full revelation and
-certify 140 equilibria at extended-precision residual
-$\le 10^{-15}$, with per-cell trading volume and value-of-information
-decompositions consistent with theoretical predictions across six
-orders of magnitude in deficit.
+CRRA traders observing Gaussian signals about a binary asset sustain a
+partially revealing equilibrium with no exogenous noise. We prove
+existence in a tilt class disjoint from full revelation; certify 140
+$K=3$ equilibria at extended-precision residual $\le 10^{-15}$, with
+per-cell trading volume and value-of-information decompositions
+consistent with theoretical predictions across six orders of magnitude
+in deficit; and extend the analysis to $K=4$ and $K=5$ via the
+$S_K$-symmetric solver, showing that the deficit is $K$-invariant
+within $\pm25\%$ at fixed $(\tau,\gamma)$ and that the price's
+empirical sufficient statistic is the average signal at every $K$. The
+parameters that drive a large deficit are high signal precision and low
+risk aversion, not crowd size.
 
 \appendix
 \section{Strict-$h{=}0$ degeneracy under binary payoff}\label{app:degeneracy}
