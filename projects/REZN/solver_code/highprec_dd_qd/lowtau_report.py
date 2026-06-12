@@ -94,12 +94,20 @@ def main():
     taus = sorted(set(round(x['tau'], 4) for x in rows))
     print(f"taus available: {taus}", flush=True)
 
-    cmap = {0.05: 'C0', 0.10: 'C1', 0.20: 'C2', 0.30: 'C3', 0.40: 'C4', 0.50: 'C5'}
+    cmap = {0.05: 'C0', 0.10: 'C1', 0.20: 'C2', 0.30: 'C3', 0.40: 'C4', 0.50: 'C5', 0.60: 'C6'}
     label = {t: rf'$\tau={t:.2f}$' for t in cmap}
+    # Load metrics if available
+    metrics = {}
+    try:
+        m = json.load(open(f"{OUT_DIR}/metrics.json"))
+        for k, v in m.items():
+            metrics[(round(v['tau'], 4), round(v['gamma'], 4))] = v
+    except FileNotFoundError:
+        pass
 
     pdf = PdfPages(PDF_PATH)
 
-    tau_show = [t for t in [0.05, 0.10, 0.20, 0.30, 0.40, 0.50] if t in taus]
+    tau_show = [t for t in [0.05, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60] if t in taus]
 
     # ---------- F1 combined deficit vs gamma (log-log) ----------
     fig, ax = plt.subplots(figsize=(8.5, 6))
@@ -321,6 +329,120 @@ def main():
         ax.grid(alpha=0.3)
     fig.suptitle('F13 -- Per-$\\tau$ panels, linear $y$ axis', fontsize=13, weight='bold')
     fig.tight_layout(); pdf.savefig(fig); plt.close(fig)
+
+    # ---------- Metrics figures (require metrics.json) ----------
+    if metrics:
+        def per_tau_metric(tau, field):
+            r = sorted([m for (t, g), m in metrics.items() if abs(t-tau) < 1e-5],
+                       key=lambda m: m['gamma'])
+            g = np.array([m['gamma'] for m in r])
+            v = np.array([m[field] for m in r])
+            return g, v
+
+        # F14 trading volume vs gamma per tau
+        fig, ax = plt.subplots(figsize=(8.5, 6))
+        for tau in tau_show:
+            g, tv = per_tau_metric(tau, 'TV')
+            if g.size == 0: continue
+            ax.loglog(g, tv, 'o-', color=cmap[tau], label=label[tau], markersize=7, linewidth=2)
+        ax.set_xlabel(r'$\gamma$', fontsize=13)
+        ax.set_ylabel(r'$E\,|x^*|$  (per-agent trading volume)', fontsize=13)
+        ax.set_title('F14 -- Trading volume vs $\\gamma$', fontsize=12)
+        ax.legend(loc='lower left', fontsize=10, ncol=2)
+        ax.grid(alpha=0.3, which='both')
+        fig.tight_layout(); pdf.savefig(fig); plt.close(fig)
+
+        # F15 Vi_public (value of observing the price)
+        fig, ax = plt.subplots(figsize=(8.5, 6))
+        for tau in tau_show:
+            g, v = per_tau_metric(tau, 'Vi_public')
+            if g.size == 0: continue
+            vp = np.where(v > 0, v, 1e-16)
+            ax.loglog(g, vp, 'o-', color=cmap[tau], label=label[tau], markersize=7, linewidth=2)
+        ax.set_xlabel(r'$\gamma$', fontsize=13)
+        ax.set_ylabel(r'$V_i^{\rm public}$  (CE of observing price)', fontsize=13)
+        ax.set_title('F15 -- Value of observing the equilibrium price (vs. prior)\n'
+                     'monotone, dominant share of total VoI', fontsize=12)
+        ax.legend(loc='lower left', fontsize=10, ncol=2)
+        ax.grid(alpha=0.3, which='both')
+        fig.tight_layout(); pdf.savefig(fig); plt.close(fig)
+
+        # F16 Vi_private (value of own signal above the price)
+        fig, ax = plt.subplots(figsize=(8.5, 6))
+        for tau in tau_show:
+            g, v = per_tau_metric(tau, 'Vi_private')
+            if g.size == 0: continue
+            vp = np.where(v > 0, v, 1e-16)
+            ax.loglog(g, vp, 'o-', color=cmap[tau], label=label[tau], markersize=7, linewidth=2)
+        ax.set_xlabel(r'$\gamma$', fontsize=13)
+        ax.set_ylabel(r'$V_i^{\rm private}$  (CE of own signal above price)', fontsize=13)
+        ax.set_title('F16 -- Value of the PRIVATE signal above the price\n'
+                     'small but POSITIVE in PR equilibrium', fontsize=12)
+        ax.legend(loc='lower left', fontsize=10, ncol=2)
+        ax.grid(alpha=0.3, which='both')
+        fig.tight_layout(); pdf.savefig(fig); plt.close(fig)
+
+        # F17 Vi_FRgap (gap to full revelation)
+        fig, ax = plt.subplots(figsize=(8.5, 6))
+        for tau in tau_show:
+            g, v = per_tau_metric(tau, 'Vi_FR_gap')
+            if g.size == 0: continue
+            vp = np.where(v > 0, v, 1e-16)
+            ax.loglog(g, vp, 'o-', color=cmap[tau], label=label[tau], markersize=7, linewidth=2)
+        ax.set_xlabel(r'$\gamma$', fontsize=13)
+        ax.set_ylabel(r'$V_i^{\rm FRgap}$  ($CE_{\rm FR}-CE_{\rm informed}$)', fontsize=13)
+        ax.set_title('F17 -- Welfare gap to full revelation\n'
+                     'how much the PR-REE leaves on the table', fontsize=12)
+        ax.legend(loc='lower left', fontsize=10, ncol=2)
+        ax.grid(alpha=0.3, which='both')
+        fig.tight_layout(); pdf.savefig(fig); plt.close(fig)
+
+        # F18 deficit vs Vi_FR_gap correlation (scatter, all cells)
+        fig, ax = plt.subplots(figsize=(8.5, 6))
+        for tau in tau_show:
+            g, _, _, _ = per_tau(rows, tau)
+            r2 = {round(x['gamma'], 4): x['deficit'] for x in rows
+                  if abs(x['tau'] - tau) < 1e-5}
+            ms = [(r2.get(round(gg, 4), np.nan),
+                   metrics[(round(tau, 4), round(gg, 4))]['Vi_FR_gap'])
+                  for gg in g if (round(tau, 4), round(gg, 4)) in metrics
+                  and round(gg, 4) in r2]
+            if not ms: continue
+            xs, ys = zip(*ms)
+            ax.loglog(xs, ys, 'o', color=cmap[tau], label=label[tau], markersize=7)
+        ax.set_xlabel(r'revelation deficit $1-R^2$', fontsize=13)
+        ax.set_ylabel(r'welfare gap $V_i^{\rm FRgap}$', fontsize=13)
+        ax.set_title('F18 -- Deficit vs welfare gap (cell-level scatter)\n'
+                     'both measure how much the PR-REE differs from FR', fontsize=12)
+        ax.legend(loc='lower right', fontsize=10, ncol=2)
+        ax.grid(alpha=0.3, which='both')
+        fig.tight_layout(); pdf.savefig(fig); plt.close(fig)
+
+        # F19 VoI decomposition stacked at one tau
+        for fid, tau_pick in [('F19a', 0.05), ('F19b', 0.20), ('F19c', 0.40)]:
+            if tau_pick not in taus: continue
+            g, vpub = per_tau_metric(tau_pick, 'Vi_public')
+            _, vpriv = per_tau_metric(tau_pick, 'Vi_private')
+            _, vfrgap = per_tau_metric(tau_pick, 'Vi_FR_gap')
+            if g.size == 0: continue
+            fig, ax = plt.subplots(figsize=(8.5, 5.5))
+            vpub = np.maximum(vpub, 0); vpriv = np.maximum(vpriv, 0)
+            vfrgap = np.maximum(vfrgap, 0)
+            ax.semilogx(g, vpub + vpriv + vfrgap, '-', color='gray', alpha=0.4,
+                        label='CE_FR - CE_prior (total info value)')
+            ax.fill_between(g, 0, vpub, color='C2', alpha=0.6,
+                            label=r'$V_i^{\rm public}$ (price info)')
+            ax.fill_between(g, vpub, vpub + vpriv, color='C0', alpha=0.6,
+                            label=r'$V_i^{\rm private}$ (own signal)')
+            ax.fill_between(g, vpub + vpriv, vpub + vpriv + vfrgap, color='C3', alpha=0.5,
+                            label=r'$V_i^{\rm FRgap}$ (welfare loss vs FR)')
+            ax.set_xlabel(r'$\gamma$ (log)', fontsize=12)
+            ax.set_ylabel('CE units (linear)', fontsize=12)
+            ax.set_title(f'{fid} -- Value-of-information decomposition at $\\tau$={tau_pick}',
+                         fontsize=12)
+            ax.legend(loc='upper right', fontsize=10)
+            ax.grid(alpha=0.3)
+            fig.tight_layout(); pdf.savefig(fig); plt.close(fig)
 
     pdf.close()
     print(f"saved {PDF_PATH}", flush=True)

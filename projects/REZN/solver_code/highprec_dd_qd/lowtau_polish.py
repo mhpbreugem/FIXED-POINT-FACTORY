@@ -16,7 +16,7 @@ import ld_polish as P  # imports ld_ops, defines chain64, polish_ld, etc.
 OUT = '/home/user/FIXED-POINT-FACTORY/projects/REZN/solved_fixed_points/lowtau'
 os.makedirs(OUT, exist_ok=True)
 
-TAUS_LOW = [0.30, 0.40]
+TAUS_LOW = [0.60]
 GAMMAS = list(np.round(np.logspace(np.log10(0.05), np.log10(30.0), 20), 4))
 
 def main():
