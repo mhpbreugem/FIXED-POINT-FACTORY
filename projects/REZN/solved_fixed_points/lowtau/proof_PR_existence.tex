@@ -1,0 +1,196 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{assumption}{Assumption}
+\newtheorem{remark}{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Lam}{\Lambda}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\clear}{\operatorname{clear}}
+\newcommand{\Lip}{\operatorname{Lip}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\Kc}{\mathcal{K}}
+\newcommand{\Pc}{\mathcal{P}}
+\newcommand{\Hc}{\mathcal{H}}
+
+\title{Existence of a Partially Revealing Rational-Expectations\\
+Equilibrium with Three CRRA Traders and No Noise}
+\author{REZN Project\thanks{Fixed-Point Factory, REZN archive. Numerical
+certificates referenced below are in
+\texttt{projects/REZN/solved\_fixed\_points/} of the project repository.}}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove existence of a partially revealing rational-expectations equilibrium
+(PR-REE) in a fully deterministic asset market with three symmetric CRRA
+traders, a binary payoff, conditionally Gaussian private signals, and
+\emph{no} noise traders, liquidity shocks, or random supply. The equilibrium
+price function is obtained as a Schauder fixed point of the
+``infer-from-price $\to$ Bayes-update $\to$ CRRA-clear'' operator on a compact
+convex set of symmetric, odd-in-logit, uniformly Lipschitz price functions.
+Three structural lemmas drive the argument: a uniform two-sided bound on the
+Bayes evidence carried by the price; the fact that CRRA market clearing is a
+\emph{non-expansive aggregator} of log-posterior-odds, with strict contraction
+exactly when traders disagree with the price (the Jensen wedge); and the
+stability of the symmetry class under the operator. The construction works
+directly with a doubly regularized (price-band, signal-mollified) evidence
+operator; we show that the regularization breaks the Grossman--Stiglitz
+degeneracy under which the fully revealing price is always a fixed point of
+the exact operator, and that the fixed point we construct lies in a
+subcritical-tilt class that excludes the fully revealing price by an explicit
+gradient gap. Passage to the exact (co-area) operator is established
+conditionally on uniform $C^{1,\alpha}$ and gradient bounds that are verified
+numerically along a certified branch of more than one hundred high-precision
+equilibria; a continuation corollary in $(\gamma,\tau)$ follows from the
+implicit function theorem at any certified point.
+\end{abstract}
+
+\section{Setup}\label{sec:setup}
+
+\subsection{Primitives}
+There are $K=3$ traders indexed by $k$, a single risky asset with payoff
+$v\in\{0,1\}$, prior $\Pr(v=1)=\tfrac12$, and a riskless numeraire. Trader
+$k$ has CRRA utility with common relative risk aversion $\gamma>0$ and unit
+wealth $W=1$. Each trader observes the centred private signal
+$u_k=s_k-\tfrac12$ where $s_k\mid v\sim N(v,1/\tau)$ independently across
+$k$, $\tau>0$. Write $u=(u_1,u_2,u_3)$, and
+\begin{equation}\label{eq:density}
+f_v(t)\;=\;\sqrt{\frac{\tau}{2\pi}}\,
+\exp\!\Big(-\frac{\tau}{2}\big(t-(v-\tfrac12)\big)^2\Big),
+\qquad
+\frac{f_1(t)}{f_0(t)}=e^{\tau t}.
+\end{equation}
+Let $\Lam(x)=(1+e^{-x})^{-1}$ denote the logistic function and
+$\operatorname{logit}p=\log\frac{p}{1-p}$ its inverse. There are no noise
+traders, no supply shocks, and no random endowments: the market-clearing
+price is a deterministic function of $u$ alone.
+
+\subsection{CRRA demand and market clearing}
+A CRRA-$\gamma$ trader with posterior $\mu\in(0,1)$ facing price $p\in(0,1)$
+has the closed-form excess demand (in shares, unit wealth)
+\begin{equation}\label{eq:demand}
+x(\mu,p)\;=\;\frac{R-1}{(1-p)+Rp},
+\qquad
+R\;=\;\exp\!\Big(\frac{m-\pi}{\gamma}\Big),
+\quad m=\operatorname{logit}\mu,\ \pi=\operatorname{logit}p .
+\end{equation}
+We freely write $x(m,\pi)$ for \eqref{eq:demand} in logit coordinates.
+Given posteriors $(\mu_1,\mu_2,\mu_3)\in(0,1)^3$, the market-clearing price
+$\clear(\mu_1,\mu_2,\mu_3)\in(0,1)$ is the unique root in $p$ of
+$\sum_{k=1}^{3}x(\mu_k,p)=0$ (uniqueness is part of
+Lemma~\ref{lem:clearing}).
+
+\subsection{Price domain and the exact evidence integrals}
+Fix a truncation level $U>0$ and set $Q:=[-U,U]^3$. For a price function
+$P:Q\to(0,1)$ write $\Pi:=\operatorname{logit}P$. When $P\in C^1(Q)$ and the
+in-slice gradient
+$\nabla_{\!(j,l)}P(u_k,\cdot,\cdot)$ does not vanish, the
+\emph{co-area evidence} of trader $k$ at observed price $p$ is
+\begin{equation}\label{eq:coarea}
+A_v(p,u_k;P)\;:=\;
+\int_{\{(t_j,t_l)\,:\,P(u_k,t_j,t_l)=p\}}
+\frac{f_v(t_j)\,f_v(t_l)}{\big|\nabla_{\!(j,l)}P\big|}\;d\Hc^1 ,
+\end{equation}
+where $\Hc^1$ is one-dimensional Hausdorff measure on the level curve and
+the weight $1/|\nabla P|$ is the co-area (conditional-density) factor; by the
+co-area formula \cite{EvansGariepy}, $A_v(\cdot,u_k;P)$ is the density of the
+price $P(u_k,t_j,t_l)$ when $(t_j,t_l)\sim f_v\otimes f_v$, i.e.\ exactly the
+likelihood of the price observation under state $v$. (Omitting the weight
+yields the arc-length measure, which is \emph{not} the Bayes conditional; in
+the project archive the unweighted integral is biased by $\approx 19\%$
+\cite{REZN}.)
+
+\begin{definition}[Exact PR-REE]\label{def:exact}
+A measurable $P:Q\to(0,1)$ is a \emph{partially revealing
+rational-expectations equilibrium} if $P\in C^1(Q)$ with non-vanishing
+in-slice gradients, and for every $u\in Q$ and every $k$:
+\begin{enumerate}[label=(\arabic*),itemsep=1pt]
+\item the posterior of trader $k$ after observing $(u_k,\,P=p)$ is
+\[
+\mu_k(u_k,p)\;=\;
+\frac{f_1(u_k)\,A_1(p,u_k;P)}{f_0(u_k)\,A_0(p,u_k;P)+f_1(u_k)\,A_1(p,u_k;P)}\,;
+\]
+\item markets clear: $\sum_{k}x\big(\mu_k(u_k,P(u)),P(u)\big)=0$;
+\item consistency: $P(u)=\clear\big(\mu_1(u_1,P(u)),\mu_2(u_2,P(u)),
+\mu_3(u_3,P(u))\big)$;
+\end{enumerate}
+and $P$ is not fully revealing, i.e.\ $P\neq P_{\mathrm{FR}}$, where
+$P_{\mathrm{FR}}(u):=\Lam\big(\tau(u_1+u_2+u_3)\big)$ is the
+full-information (sufficient-statistic) price.
+\end{definition}
+
+\subsection{The regularized operator}
+For arbitrary continuous $P$ the level sets in \eqref{eq:coarea} need not be
+rectifiable, so we build the fixed-point argument around a doubly
+regularized evidence functional and recover \eqref{eq:coarea} in the limit
+(Section~\ref{sec:limit}). Let $K_h$ and $\rho_\delta$ be centred Gaussian
+densities with standard deviations $h>0$ (logit-price bandwidth) and
+$\delta>0$ (own-signal mollification). For bounded measurable
+$\Pi:Q\to\R$, $\hat\pi\in\R$, $u_1\in[-U,U]$, define
+\begin{equation}\label{eq:Areg}
+A^{h,\delta}_v(\hat\pi,u_1;\Pi)\;:=\;
+\int_{Q}K_h\big(\Pi(t)-\hat\pi\big)\,\rho_\delta(t_1-u_1)\,
+f_v(t_2)\,f_v(t_3)\,dt,
+\qquad v\in\{0,1\},
+\end{equation}
+\begin{equation}\label{eq:b}
+b^{h,\delta}(\hat\pi,u_1;\Pi)\;:=\;
+\log\frac{A^{h,\delta}_1(\hat\pi,u_1;\Pi)}{A^{h,\delta}_0(\hat\pi,u_1;\Pi)},
+\qquad
+\mu^{h,\delta}_k(u_k,p;P)\;:=\;
+\Lam\big(\tau u_k+b^{h,\delta}(\operatorname{logit}p,\,u_k;\Pi)\big).
+\end{equation}
+(The own-signal slice $\{t_1=u_1\}$ is replaced by the mollified weight
+$\rho_\delta$; the price level set by the Gaussian band $K_h$ in logit-price.
+Both are consistent quadratures of \eqref{eq:coarea}: as
+$(h,\delta)\to0$ with $P$ smooth and non-degenerate,
+$A^{h,\delta}_v\to A_v$; see Lemma~\ref{lem:consistency}. The band evidence
+was verified against the exact co-area integral to $1.5\times10^{-5}$ in the
+archive \cite{REZN}.)
+
+The equilibrium operator is
+\begin{equation}\label{eq:Phi}
+\Phi_{h,\delta}(P)(u)\;:=\;
+\clear\Big(\mu^{h,\delta}_1\big(u_1,P(u);P\big),\,
+\mu^{h,\delta}_2\big(u_2,P(u);P\big),\,
+\mu^{h,\delta}_3\big(u_3,P(u);P\big)\Big),
+\qquad u\in Q .
+\end{equation}
+A fixed point $P=\Phi_{h,\delta}(P)$ satisfies (1)--(3) of
+Definition~\ref{def:exact} with $A_v$ replaced by $A^{h,\delta}_v$; we call
+such a $P$ an \emph{$(h,\delta)$-regularized REE}. We write
+$\Psi_{h,\delta}(\Pi):=\operatorname{logit}\Phi_{h,\delta}(\Lam(\Pi))$ for
+the operator in logit coordinates.
+
+\subsection{Symmetry class}
+Throughout, $\norm{u}_\infty=\max_k|u_k|$. Call $\Pi:Q\to\R$
+\emph{symmetric} if invariant under permutations of $(u_1,u_2,u_3)$ and
+\emph{odd} if $\Pi(-u)=-\Pi(u)$ (equivalently $P(-u)=1-P(u)$: the model is
+invariant under $v\mapsto 1-v$, $u\mapsto-u$, $p\mapsto1-p$). For $B,L>0$ set
+\begin{equation}\label{eq:K}
+\Kc(B,L)\;:=\;\Big\{\Pi\in C(Q):\ \Pi\ \text{symmetric and odd},\
+\norm{\Pi}_\infty\le B,\
+|\Pi(u)-\Pi(u')|\le L\norm{u-u'}_\infty\Big\}.
+\end{equation}
+$\Kc(B,L)$ is nonempty ($\Pi\equiv0$), convex, and compact in
+$(C(Q),\norm{\cdot}_\infty)$ by Arzel\`a--Ascoli. Note
+$\Pi_{\mathrm{FR}}=\tau(u_1+u_2+u_3)$ has $\norm{\cdot}_\infty$-Lipschitz
+constant exactly $3\tau$ (attained along the diagonal): this is the
+\emph{critical tilt}.
+
+%%CHUNK2%%
+\end{document}
