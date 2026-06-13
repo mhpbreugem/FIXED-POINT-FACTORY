@@ -35,30 +35,29 @@ PDF_PATH = '/home/user/FIXED-POINT-FACTORY/projects/REZN/solved_fixed_points/low
 
 
 def load_all():
-    """Combine lowtau (0.05, 0.10) with emin15 tau=0.2 row."""
+    """Combine lowtau + hightau + emin15 certified rows (dedupe (tau, gamma))."""
     rows = []
-    # lowtau
-    try:
-        d = json.load(open(f"{OUT_DIR}/lowtau.json"))
+    seen = set()
+    sources = [
+        (f"{OUT_DIR}/hightau.json", 'hightau'),
+        (f"{OUT_DIR}/lowtau.json", 'lowtau'),
+        (f"{EMIN15}/emin15.json", 'emin15'),
+    ]
+    for path, name in sources:
+        try:
+            d = json.load(open(path))
+        except FileNotFoundError:
+            continue
         for v in d.values():
-            if v.get('verdict') == 'ACCEPT':
-                rows.append(dict(tau=v['tau'], gamma=v['gamma'],
-                                 deficit=v['deficit'], slope=v['slope'],
-                                 F_ld=v['F_ld']))
-    except FileNotFoundError:
-        pass
-    # emin15: tau=0.2 and tau=0.5 rows already certified there
-    try:
-        d = json.load(open(f"{EMIN15}/emin15.json"))
-        for v in d.values():
-            tau_v = float(v['tau'])
-            if v.get('verdict') == 'ACCEPT' and tau_v in (0.2, 0.5):
-                rows.append(dict(tau=tau_v, gamma=float(v['gamma']),
-                                 deficit=float(v['deficit']),
-                                 slope=float(v['slope']),
-                                 F_ld=float(v['F_ld']) if v.get('F_ld') else 0.0))
-    except FileNotFoundError:
-        pass
+            if v.get('verdict') != 'ACCEPT': continue
+            tau_v = float(v['tau']); gamma_v = float(v['gamma'])
+            key = (round(tau_v, 4), round(gamma_v, 4))
+            if key in seen: continue
+            seen.add(key)
+            rows.append(dict(tau=tau_v, gamma=gamma_v,
+                             deficit=float(v['deficit']),
+                             slope=float(v['slope']),
+                             F_ld=float(v['F_ld']) if v.get('F_ld') is not None else 0.0))
     return rows
 
 
