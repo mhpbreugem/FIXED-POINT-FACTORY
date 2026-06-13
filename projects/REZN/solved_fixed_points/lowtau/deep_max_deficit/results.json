@@ -37,6 +37,15 @@
       "deficit": 0.28522218134448346,
       "wall": 63.046029567718506,
       "src": "deep-ladder warm from G=29"
+    },
+    {
+      "G": 37,
+      "h": 0.21213203435596426,
+      "F": 0.01597621933425647,
+      "slope": 0.3996769392395511,
+      "deficit": 0.27805486436058413,
+      "wall": 516.0394415855408,
+      "src": "extended warm from G=33"
     }
   ],
   "fits": {
@@ -72,5 +81,20 @@
   },
   "d_inf_honest": 0.278045045479304,
   "d_err_honest": 0.00409529669473474,
-  "note": "q_free original hit q=0.3 bound (unreliable); q=1 is defensible given linear drift"
+  "note": "q_free original hit q=0.3 bound (unreliable); q=1 is defensible given linear drift",
+  "fits_extended": {
+    "q1": {
+      "d_inf": 0.278045045479304
+    },
+    "q2": {
+      "d_inf": 0.2821403421740387
+    },
+    "qfree": {
+      "d_inf": 0.2698467210746053,
+      "q": 0.5000007259118554,
+      "unc": 0.07144922189393228
+    }
+  },
+  "d_inf_extended": 0.278045045479304,
+  "d_err_extended": 0.008198324404698698
 }
