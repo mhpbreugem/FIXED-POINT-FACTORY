@@ -1,0 +1,20 @@
+[
+  {
+    "label": "kernel",
+    "threshold": 0.05,
+    "M": 4,
+    "total_v": 480,
+    "init_max": 0.23470956866179155,
+    "init_med": 0.020441271743546322,
+    "init_min_dFR": 0.20257997512817383,
+    "init_med_dFR": 2.762326240539551,
+    "final_max": 0.23470956866179155,
+    "final_med": 0.020441271743418424,
+    "final_min_dFR": 0.20257997512817383,
+    "final_med_dFR": 2.7623263972913845,
+    "final_max_pen": 0.0,
+    "final_med_pen": 0.0,
+    "nfev_total": 40,
+    "wall": 32.567996978759766
+  }
+]
