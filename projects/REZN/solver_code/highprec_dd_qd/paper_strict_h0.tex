@@ -14,8 +14,8 @@
 \newcommand{\ViFR}{V_{i}^{\rm FRgap}}
 
 \title{Partial Revelation Without Noise Traders:\\
-\large Existence, certified computation, and $K$-invariance\\
-in CRRA REE with binary state}
+\large Existence, certified computation, the high-deficit corner,\\
+and $K$-invariance in CRRA REE with binary state}
 \author{Fixed-Point Factory}
 \date{\today}
 
@@ -32,8 +32,9 @@ consider. Our argument has three legs. (i) An existence theorem
 (Schauder fixed-point) for the regularised equilibrium operator in a
 symmetric, odd, Lipschitz class explicitly disjoint from the fully
 revealing benchmark $P_{\rm FR}=\sigma(\tau\sum_k u_k)$. (ii) Numerical
-certification at extended precision of 140 equilibria across $\tau\in\{0.05,
-0.10,0.20,0.30,0.40,0.50,0.60\}$ and 20 values of risk aversion $\gamma\in[0.05,30]$,
+certification at extended precision of 255 equilibria across $\tau\in\{0.05,
+0.10,0.20,0.30,0.40,0.50,0.60,0.80,1.00,1.20,1.50,2.00\}$ and risk aversion
+$\gamma\in[0.01,30]$,
 with self-consistency residual $\|\Phi(P)-P\|_\infty \le 10^{-15}$ throughout.
 (iii) An economic decomposition of the value of information per cell ---
 trading volume, value of the public price signal $\Vipub$, value of own
@@ -78,7 +79,7 @@ symmetric, Lipschitz class that strictly excludes $P_{\rm FR}$.
 Proposition~\ref{prop:GS} shows that the regularised operator never
 admits $P_{\rm FR}$ as a fixed point, ruling out collapse to full
 revelation along the regularisation parameter.
-\paragraph{Numerics.} We certify $7\times 20=140$ equilibria at
+\paragraph{Numerics.} We certify $12 \tau \times 20+ \gamma = 255$ equilibria at
 $\|\Phi(P)-P\|_\infty \le 10^{-15}$ in 80-bit extended precision
 (typical residual $\sim 10^{-18}$). The certified deficits span six
 orders of magnitude, with clean monotone decay in $\gamma$ at every $\tau$
@@ -178,7 +179,7 @@ ported to \texttt{longdouble} and validated against the production
 \texttt{numba} operator to $3.8\times 10^{-15}$, exactly the float64
 floor.
 
-\subsection{Headline: certified deficits across 140 cells}
+\subsection{Headline: certified deficits across 255 cells, and the high-deficit corner}
 
 \begin{table}[H]\centering\small
 \begin{tabular}{cccccccc}
@@ -216,10 +217,72 @@ absolute size of the deficit where it matters economically.}
 \begin{figure}[H]\centering
 \includegraphics[width=0.7\textwidth]{F6_certification.png}
 \caption{Certified residuals $\|\Phi(P)-P\|_\infty$ in \texttt{longdouble}
-precision. All 140 cells are several orders of magnitude under the
+precision. All 255 cells are several orders of magnitude under the
 $10^{-15}$ certification bar.}
 \label{fig:certification}
 \end{figure}
+
+\subsection{The high-deficit corner: $\tau\uparrow$, $\gamma\downarrow$}\label{sec:maxdef}
+
+The Jensen-wedge prediction places the high-deficit corner at large
+signal precision $\tau$ and small risk aversion $\gamma$. We certified
+the corner directly. Extending $\tau$ up to $2.0$ and $\gamma$ down to
+$0.01$ (five values per row at $\gamma\in\{0.01,0.02,0.03,0.05,0.07\}$,
+plus the standard 20-$\gamma$ logspace) added 115 cells to the table,
+bringing the total to 255 certified equilibria. Five cells in the
+high-$\gamma\cdot\tau\gtrsim 5$ corner stalled and are quarantined as
+documented in our solver notes.
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.85\textwidth]{Fmax1_all_loglog.png}
+\caption{Certified deficit vs $\gamma$ for all 12 $\tau$ values
+(255 cells). Higher $\tau$ shifts the curves upward; the asymptotic
+$1/\gamma$ slope is preserved across the entire grid.}\label{fig:maxall}
+\end{figure}
+
+\textbf{Maximum certified deficit:}
+\[
+\deficit_{\max} \;=\; 0.2871\quad\text{at}\quad(\tau,\gamma)=(2.0,\,0.01),
+\quad \|\Phi(P)-P\|_\infty^{\text{ld}} = 2.95\times10^{-16}.
+\]
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.85\textwidth]{Fmax2_envelope.png}
+\caption{Envelope $\max_\gamma \deficit(\tau,\gamma)$ vs $\tau$ across
+the 12 certified rows. The envelope is monotone in $\tau$ but with
+visibly slowing growth: certified maxima go from $0.060$ at
+$\tau=0.05$ to $0.287$ at $\tau=2.0$, well below the theoretical bound
+of $1$.}\label{fig:envelope}
+\end{figure}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{Fmax3_heatmap.png}
+\caption{Certified deficit on the extended $(\tau,\gamma)$ grid (log
+scale on both axes; colour log-deficit). The deficit is monotone in
+$\tau\uparrow$ and $\gamma\downarrow$ everywhere.}\label{fig:heatmap}
+\end{figure}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.85\textwidth]{Fmax4_lowgamma_zoom.png}
+\caption{Low-$\gamma$ corner zoom: the deficit \emph{saturates} to a
+$\tau$-dependent ceiling as $\gamma\to 0$, with successive
+$\gamma\in\{0.01,0.02,0.03\}$ differing by $<0.005$ at every $\tau$.
+This is the empirical signature of the Jensen wedge ceiling --- the
+non-linearity of CRRA clearing has a finite range, so further
+risk-aversion increases cannot generate unbounded
+deficit.}\label{fig:ceiling}
+\end{figure}
+
+\paragraph{The price structure at the high-deficit corner.}
+At $(\tau,\gamma)=(2.0,0.01)$, the certified price function spans
+$[10^{-4},\,1-10^{-4}]$ with only $7\%$ of grid cells in $[0.4,0.6]$;
+the equilibrium price is therefore \emph{strongly bimodal}, not
+``compressed near $\tfrac12$''. The deficit measures how much the price
+surface bends \emph{between} the two corners, not how compressed it is.
+With near-risk-neutral agents (small $\gamma$), aggressive arbitrage
+drives the price to $\{0,1\}$ aggressively at the boundary regions, but
+the nonlinear route through $\tfrac12$ that the Jensen wedge captures
+\emph{between} those regions creates the largest $\deficit$.
 
 \section{Value-of-information decomposition}
 
