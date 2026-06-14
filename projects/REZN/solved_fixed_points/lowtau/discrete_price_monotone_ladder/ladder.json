@@ -1,0 +1,67 @@
+{
+  "rows": [
+    {
+      "tau": 0.1,
+      "status": "monotone_converged",
+      "cycle": 0,
+      "kernel_deficit": 0.19568501682094672,
+      "kernel_max_viol": 6.106226635438361e-15,
+      "deficit_final": 0.2036472389305598,
+      "deficit_tail": 0.2050660271731777,
+      "max_viol_raw_final": 0.00034977407344105593,
+      "max_viol_raw_tail": 0.007105204549496628,
+      "n_viol_raw_final": 735,
+      "max_res": 0.014252295897094314,
+      "kernel_wall": 7.5576512813568115,
+      "iter_wall": 1.7709641456604004
+    },
+    {
+      "tau": 0.2,
+      "status": "monotone_converged",
+      "cycle": 0,
+      "kernel_deficit": 0.1984421337819855,
+      "kernel_max_viol": 2.1316282072803006e-14,
+      "deficit_final": 0.13942679266307778,
+      "deficit_tail": 0.1601109554649742,
+      "max_viol_raw_final": 0.014102551883155678,
+      "max_viol_raw_tail": 0.015915773313353455,
+      "n_viol_raw_final": 1893,
+      "max_res": 0.013833006504686107,
+      "kernel_wall": 6.495243310928345,
+      "iter_wall": 2.362915277481079
+    },
+    {
+      "tau": 0.3,
+      "status": "fixed_but_nonmonotone",
+      "cycle": 0,
+      "kernel_deficit": 0.2079871889463269,
+      "kernel_max_viol": 1.3594680936535042e-13,
+      "deficit_final": 0.09388938451717184,
+      "deficit_tail": 0.09716268657787319,
+      "max_viol_raw_final": 0.016633242724440778,
+      "max_viol_raw_tail": 0.01833078998702181,
+      "n_viol_raw_final": 2822,
+      "max_res": 0.014232723683994308,
+      "kernel_wall": 4.897085905075073,
+      "iter_wall": 6.353471040725708
+    },
+    {
+      "tau": 0.4,
+      "status": "monotone_converged",
+      "cycle": 0,
+      "kernel_deficit": 0.21382245188966814,
+      "kernel_max_viol": 7.549516567451064e-15,
+      "deficit_final": 0.08233897872720164,
+      "deficit_tail": 0.092786663790532,
+      "max_viol_raw_final": 0.0111649368171447,
+      "max_viol_raw_tail": 0.021700986207408502,
+      "n_viol_raw_final": 2048,
+      "max_res": 0.014465942858064962,
+      "kernel_wall": 8.043746948242188,
+      "iter_wall": 6.116503953933716
+    }
+  ],
+  "G": 21,
+  "M": 32,
+  "gamma": 0.01
+}
