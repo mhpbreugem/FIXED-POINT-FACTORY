@@ -35,8 +35,18 @@ def main():
     print(f"=== Monotone phase diagram (HIGH gamma/tau) ===", flush=True)
     print(f"G={Gi}, M={M}, gammas={gammas}, taus={taus}\n", flush=True)
     rows = []
+    done = set()
+    json_path = f"{OUT}/phase.json"
+    if os.path.exists(json_path):
+        prev = json.load(open(json_path))
+        for r in prev.get('rows', []):
+            rows.append(r)
+            done.add((float(r['gamma']), float(r['tau'])))
+        print(f"Resuming: {len(done)} cells already done.\n", flush=True)
     for ig, gamma in enumerate(gammas):
         for it, tau in enumerate(taus):
+            if (float(gamma), float(tau)) in done:
+                continue
             print(f"[gamma={gamma}, tau={tau}] ", end='', flush=True)
             t0 = time.time()
             try:
