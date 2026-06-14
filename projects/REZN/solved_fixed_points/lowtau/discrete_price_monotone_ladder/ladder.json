@@ -119,6 +119,21 @@
       "max_res": 0.04066926840837076,
       "kernel_wall": 8.749495506286621,
       "iter_wall": 7.006635665893555
+    },
+    {
+      "tau": 0.9,
+      "status": "fixed_but_nonmonotone",
+      "cycle": 0,
+      "kernel_deficit": 0.22217509710779934,
+      "kernel_max_viol": 8.770761894538737e-15,
+      "deficit_final": 0.10037622569714635,
+      "deficit_tail": 0.10177302459137853,
+      "max_viol_raw_final": 0.026746365331728472,
+      "max_viol_raw_tail": 0.025354697612881484,
+      "n_viol_raw_final": 2233,
+      "max_res": 0.04336055062156441,
+      "kernel_wall": 8.90458369255066,
+      "iter_wall": 7.477373838424683
     }
   ],
   "G": 21,
