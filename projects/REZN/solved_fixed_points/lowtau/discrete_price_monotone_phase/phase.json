@@ -139,6 +139,34 @@
       "max_viol_raw_tail": 2.6935174754309323e-06,
       "max_res": 0.013687164448390465,
       "wall": 7.938844442367554
+    },
+    {
+      "gamma": 0.005,
+      "tau": 0.15,
+      "status": "fixed_but_nonmonotone",
+      "cycle": 0,
+      "kernel_max_viol": 2.220446049250313e-16,
+      "kernel_deficit": 0.19941792906949335,
+      "deficit_final": 0.2052130027078584,
+      "deficit_tail": 0.20387427590259552,
+      "max_viol_raw_final": 0.015429817588658468,
+      "max_viol_raw_tail": 0.017334548480899437,
+      "max_res": 0.011791899686294516,
+      "wall": 8.088134050369263
+    },
+    {
+      "gamma": 0.005,
+      "tau": 0.2,
+      "status": "fixed_but_nonmonotone",
+      "cycle": 0,
+      "kernel_max_viol": 9.43689570931383e-15,
+      "kernel_deficit": 0.20053005058073037,
+      "deficit_final": 0.1431327319805158,
+      "deficit_tail": 0.15978342889001465,
+      "max_viol_raw_final": 0.01680950409742543,
+      "max_viol_raw_tail": 0.017375518082710577,
+      "max_res": 0.014486583038598733,
+      "wall": 9.199007749557495
     }
   ],
   "G": 21,
