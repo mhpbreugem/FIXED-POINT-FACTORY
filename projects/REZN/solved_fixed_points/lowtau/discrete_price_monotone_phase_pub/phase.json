@@ -1483,6 +1483,20 @@
       "max_viol_raw_tail": 0.0026049234145856448,
       "max_res": 0.04966727492647949,
       "wall": 45.52824306488037
+    },
+    {
+      "gamma": 4.0,
+      "tau": 2.5,
+      "status": "monotone_converged",
+      "cycle": 0,
+      "kernel_max_viol": -0.0,
+      "kernel_deficit": 0.05897793844876631,
+      "deficit_final": 0.2763457552402368,
+      "deficit_tail": 0.27229159453472873,
+      "max_viol_raw_final": 0.005759699234093141,
+      "max_viol_raw_tail": 0.005125508033980374,
+      "max_res": 0.04995467719547397,
+      "wall": 47.57609534263611
     }
   ],
   "G": 21,
