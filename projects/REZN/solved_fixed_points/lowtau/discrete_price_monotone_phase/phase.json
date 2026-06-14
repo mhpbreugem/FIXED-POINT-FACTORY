@@ -83,6 +83,34 @@
       "max_viol_raw_tail": 0.0317448205969709,
       "max_res": 0.014395589995638836,
       "wall": 10.788223028182983
+    },
+    {
+      "gamma": 0.001,
+      "tau": 0.5,
+      "status": "fixed_but_nonmonotone",
+      "cycle": 0,
+      "kernel_max_viol": -0.0,
+      "kernel_deficit": 0.22190526073079522,
+      "deficit_final": 0.07752961749860476,
+      "deficit_tail": 0.09061870249106076,
+      "max_viol_raw_final": 0.031164740639093413,
+      "max_viol_raw_tail": 0.03401966237094403,
+      "max_res": 0.023197588907668765,
+      "wall": 13.900530815124512
+    },
+    {
+      "gamma": 0.001,
+      "tau": 0.7,
+      "status": "fixed_but_nonmonotone",
+      "cycle": 0,
+      "kernel_max_viol": -0.0,
+      "kernel_deficit": 0.22370019313557757,
+      "deficit_final": 0.085680193613363,
+      "deficit_tail": 0.08994681506353305,
+      "max_viol_raw_final": 0.03561840660419313,
+      "max_viol_raw_tail": 0.03877368756654308,
+      "max_res": 0.03771111279374837,
+      "wall": 15.250464677810669
     }
   ],
   "G": 21,
