@@ -32,8 +32,10 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-TAU, GAMMA = 2.0, 0.01
-OUT = '/home/user/FIXED-POINT-FACTORY/projects/REZN/solved_fixed_points/lowtau/discrete_price_sweep'
+TAU = float(os.environ.get('TAU', '2.0'))
+GAMMA = float(os.environ.get('GAMMA', '0.01'))
+OUT = os.environ.get('OUT',
+    '/home/user/FIXED-POINT-FACTORY/projects/REZN/solved_fixed_points/lowtau/discrete_price_sweep')
 os.makedirs(OUT, exist_ok=True)
 
 
