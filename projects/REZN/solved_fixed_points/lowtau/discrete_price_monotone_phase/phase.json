@@ -1,0 +1,54 @@
+{
+  "rows": [
+    {
+      "gamma": 0.001,
+      "tau": 0.1,
+      "status": "monotone_converged",
+      "cycle": 0,
+      "kernel_max_viol": -0.0,
+      "kernel_deficit": 0.2006990990386961,
+      "deficit_final": 0.21651028176013906,
+      "deficit_tail": 0.2185612348739688,
+      "max_viol_raw_final": -0.0,
+      "max_viol_raw_tail": 0.0,
+      "max_res": 0.013921791654764593,
+      "wall": 8.056965351104736
+    },
+    {
+      "gamma": 0.001,
+      "tau": 0.15,
+      "status": "monotone_converged",
+      "cycle": 0,
+      "kernel_max_viol": -0.0,
+      "kernel_deficit": 0.20085468223105404,
+      "deficit_final": 0.2096188093374007,
+      "deficit_tail": 0.20894982121997635,
+      "max_viol_raw_final": 0.007851440799227394,
+      "max_viol_raw_tail": 0.009588319338801943,
+      "max_res": 0.012273414851952547,
+      "wall": 8.312782526016235
+    }
+  ],
+  "G": 21,
+  "M": 32,
+  "gammas": [
+    0.001,
+    0.005,
+    0.01,
+    0.05,
+    0.1,
+    0.5,
+    1.0
+  ],
+  "taus": [
+    0.1,
+    0.15,
+    0.2,
+    0.25,
+    0.3,
+    0.4,
+    0.5,
+    0.7,
+    1.0
+  ]
+}
