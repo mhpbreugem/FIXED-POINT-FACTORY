@@ -1,0 +1,27 @@
+[project]
+name = "mizn"
+version = "0.0.1"
+description = "Modular spectral solver for the noiseless K=3 CRRA / CARA rational-expectations equilibrium."
+requires-python = ">=3.11"
+dependencies = [
+  "numpy>=1.26",
+  "scipy>=1.11",
+  "matplotlib>=3.8",
+  "numba>=0.59",
+  "pyyaml>=6.0",
+  "jinja2>=3.1",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8.0", "pytest-cov"]
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+addopts = "-q --strict-markers"
+testpaths = ["tests"]
