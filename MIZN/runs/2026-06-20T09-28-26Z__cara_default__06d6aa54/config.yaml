@@ -1,0 +1,17 @@
+G: 9
+anderson_m: 8
+gamma: 2.0
+grid: u
+maxit: 200
+model: cara
+omega: 0.5
+rho: 2.0
+solver: picard
+step2: gaussian
+tau_eps: 2.0
+tau_th: 1.0
+tau_u: 1.0
+theta_bar: 0.0
+tol: 1.0e-12
+u_bar: 0.0
+umax: 4.0

@@ -1,0 +1,12 @@
+sha:    06d6aa54755e241877647534e578e579734e3010
+branch: claude/study-fixed-point-economics-y12PB
+dirty:  True
+
+--- status --
+?? MIZN/scripts/
+?? MIZN/src/mizn/diagnostics/
+?? MIZN/tests/test_runner.py
+?? MIZN/tools/
+
+--- diff --
+

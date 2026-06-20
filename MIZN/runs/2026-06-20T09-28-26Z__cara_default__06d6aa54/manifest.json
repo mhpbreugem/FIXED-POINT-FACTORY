@@ -1,0 +1,112 @@
+{
+  "repo_sha": "06d6aa54755e241877647534e578e579734e3010",
+  "repo_dirty": true,
+  "files": {
+    "src/mizn/__init__.py": {
+      "git_blob": "396e69e9f1a23cabd91c9478ff7c74b55e18b2b2",
+      "sha256": "baece35fe882ddb051d07120cb690a6ba01ac4741320f3c20cb28c433e884a33",
+      "lines": 5
+    },
+    "src/mizn/analytic.py": {
+      "git_blob": "3ef97dcc65f4867f4157d860ae9f7c196835745f",
+      "sha256": "719c59877a62b8ae4cdbc274be122ba1d4fe686822257fe985621607fcd66e31",
+      "lines": 41
+    },
+    "src/mizn/config.py": {
+      "git_blob": "f58f7ec60e4a7def1cfe8663649a9cc6df4e68fb",
+      "sha256": "302495e2a2deb4f2aa875f32988b7fe418fcfb31d777ad596b081ddb7ea7e859",
+      "lines": 50
+    },
+    "src/mizn/diagnostics/__init__.py": {
+      "git_blob": "5033c93115da62adb4572652fabb4024143458dc",
+      "sha256": "cf774e4e446dd68e10d3678b323585fcd784f84ba226454230af7d8b80b34a59",
+      "lines": 4
+    },
+    "src/mizn/diagnostics/metrics.py": {
+      "git_blob": "95b9a86b715812d0141c5ed9cc1a2cab708da533",
+      "sha256": "98be50a1fca4a168a831d8ff1bd30d6be51f296ac880bc844cee0673ae637a5d",
+      "lines": 34
+    },
+    "src/mizn/diagnostics/plotting.py": {
+      "git_blob": "51fb6cbbd3553f437e062fad23bf7365c3e3060c",
+      "sha256": "2a7f64131648d4ff54683783de7e468cd2180a9c6e39f5edc2b8da8f37c99420",
+      "lines": 38
+    },
+    "src/mizn/grid/__init__.py": {
+      "git_blob": "2bc9aebdc20ffc877eec52af4d4a6a11b2bffced",
+      "sha256": "ae3b0e96b6a70492cce4fbacbe27b62de3f39bf502b5819f051e39b4daa2efba",
+      "lines": 19
+    },
+    "src/mizn/grid/base.py": {
+      "git_blob": "dd1096378b6ab372e70f4af250cb843fb1cd9f43",
+      "sha256": "a85efb4094776380cdeb6c587168354738f42592bccd772aeadf0a9e13465410",
+      "lines": 23
+    },
+    "src/mizn/grid/linear_u.py": {
+      "git_blob": "6a4b715cd4c5579476b3836238d4a7f82e9b2376",
+      "sha256": "d07849e7bc4d404df28f9bba7164a0264746ccf949f140b86068be444ac1a8a2",
+      "lines": 19
+    },
+    "src/mizn/main.py": {
+      "git_blob": "8ee4ac410f8bedde075da52556d5b0cc93fcfeea",
+      "sha256": "f78f3f6785dc5962399b74c0d1f3e46ef239d939e898833435e3cb7fd36cb41a",
+      "lines": 42
+    },
+    "src/mizn/signals.py": {
+      "git_blob": "9f16ff2362cdf6c70be7dd05fadbbd56711f512b",
+      "sha256": "9745638ad088f29ebd9c3385c853f0421c054f5107c78c2f319e28ecdc1c395f",
+      "lines": 26
+    },
+    "src/mizn/solvers/__init__.py": {
+      "git_blob": "3fee61d2d6b7c815b236cc9df248b1d8f40437d3",
+      "sha256": "8201e8eaf123fb6420de34e1096acd9dcf40402b9dfccb763f61809b440c93a1",
+      "lines": 11
+    },
+    "src/mizn/solvers/picard.py": {
+      "git_blob": "f2435eadda62dea5d49724f84d2f600171ca2360",
+      "sha256": "667fa67acd709825a78a4b879c2a758c940b174d95269159850d9c24ef52b499",
+      "lines": 7
+    },
+    "src/mizn/step1_conjecture.py": {
+      "git_blob": "542a59025f8b8ca5c937d31ea18e411b532b088b",
+      "sha256": "bf596cd6be9d5ee3f9dfc58418b3be6cb29ad2c1fd0a80cc713252d1889c4a51",
+      "lines": 28
+    },
+    "src/mizn/step2_learning/__init__.py": {
+      "git_blob": "ef694c12005c41da6f7dfc4a38b0d8f2ae9e0a48",
+      "sha256": "743d26473e33a8e25c1166141fa59e4754cf6302071f60f0e76c9056deb52ade",
+      "lines": 17
+    },
+    "src/mizn/step2_learning/gaussian.py": {
+      "git_blob": "55acff23be129fe943d4d1f7247039f28776d679",
+      "sha256": "7db517ce4f1f6ff2ef22e44e64bf03a071bf16cfe3e349153b1fdaec505352f3",
+      "lines": 48
+    },
+    "src/mizn/step3_demand/__init__.py": {
+      "git_blob": "2d5c3f3b9e548f32ffe17dc2488d4af0e128c5eb",
+      "sha256": "7ed74e98ada048d181467123ffcacdf9de04b939c57bec6761d12893f4b44a2a",
+      "lines": 12
+    },
+    "src/mizn/step3_demand/cara.py": {
+      "git_blob": "7166e7db1163cd4efb0152385f8d5bd6b5a32a54",
+      "sha256": "42250729e647fd20400d7c289512e1ec29a2fc27d37b1bd37d27f42395c02631",
+      "lines": 16
+    },
+    "src/mizn/step4_aggregate.py": {
+      "git_blob": "41990ce1c72524795e2dd8e87b56e81de0558313",
+      "sha256": "ab7da6edc2a191524a3ca021361d8329b7a9841fa013563157aa20eba7616b55",
+      "lines": 13
+    },
+    "src/mizn/step5_clearing/__init__.py": {
+      "git_blob": "1a5bfbb453c3498875a7c18eac7e07bc8ac004b7",
+      "sha256": "15eb3e529c13d40c3e60bad4349cbe902d2b1bb3de8c2b3ab712c3ab8ba1d469",
+      "lines": 11
+    },
+    "src/mizn/step5_clearing/cara.py": {
+      "git_blob": "e6f0c3d569229eb9652cb4c27e2ded98957c6bd9",
+      "sha256": "68359fe7aff6d3f434e04bea045eb5ae0783f34e44b1e856a9f8e35aad3ff19f",
+      "lines": 28
+    }
+  },
+  "run_id": "2026-06-20T09-28-26Z__cara_default__06d6aa54"
+}
