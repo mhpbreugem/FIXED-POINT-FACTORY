@@ -1,5 +1,11 @@
 # fixed-point-factory
 
+> **⚠️ ARCHIVED — read-only.** This platform is generalised into
+> **`mhpbreugem/standards`**: `runner/` (distributed claim/done/bail jobs + dashboard)
+> and `methods/` (solvers); projects consume it via the `standards/` submodule. The
+> `hfree_operator` math lives on in `standards/methods/operators/coarea_h0/`. Kept
+> for history; not maintained.
+
 A reusable platform for running parallel fixed-point solvers on cloud VMs.
 
 Each project defines a mathematical fixed-point problem and a queue of
