@@ -1,0 +1,23 @@
+{
+ "0.25": {
+  "deficit": 0.09872290127101124,
+  "F_inner": 3.973223402864434e-05,
+  "price_min": 4.895182006061638e-05,
+  "price_max": 0.9999510479451745,
+  "kernel_note": "production checkpoint, smooth Gaussian kernel h~0.05*du (very small but positive); exact h=0 sym_phi NK from these seeds drifts to the FR equilibrium"
+ },
+ "0.35": {
+  "deficit": 0.08494636058792604,
+  "F_inner": 4.2980277399240485e-05,
+  "price_min": 9.554415935349402e-05,
+  "price_max": 0.9999042496737335,
+  "kernel_note": "production checkpoint, smooth Gaussian kernel h~0.05*du (very small but positive); exact h=0 sym_phi NK from these seeds drifts to the FR equilibrium"
+ },
+ "0.5": {
+  "deficit": 0.08475253604315902,
+  "F_inner": 8.241454612133159e-05,
+  "price_min": 0.00010733854631495113,
+  "price_max": 0.9998926616037547,
+  "kernel_note": "production checkpoint, smooth Gaussian kernel h~0.05*du (very small but positive); exact h=0 sym_phi NK from these seeds drifts to the FR equilibrium"
+ }
+}

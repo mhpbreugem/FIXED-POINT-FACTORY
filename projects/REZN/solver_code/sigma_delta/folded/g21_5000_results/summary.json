@@ -1,0 +1,13 @@
+{
+  "5K_G21_g0.05_FR_ansatz": {
+    "gamma": 0.05,
+    "ic": "FR_ansatz",
+    "final_ferr": 0.0020608838684661457,
+    "final_d_FR": 0.0017984278457024961,
+    "final_1mR2": 3.267674339143948e-05,
+    "slope": 1.005013670792021,
+    "intercept": -6.338258076448876e-16,
+    "iters": 5000,
+    "converged": false
+  }
+}

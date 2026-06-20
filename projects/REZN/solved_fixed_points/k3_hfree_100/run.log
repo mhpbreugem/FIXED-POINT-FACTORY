@@ -1,0 +1,8 @@
+init
+=== VALIDATION MILESTONE (2026-05-29) ===
+impl: python-flint (arb) direct port of /tmp/hfree_operator.py
+(a) arb 100-dec phi_hfree vs Numba float64: max|diff| = 6.66e-16 (machine eps) -- MATCHES
+    s/eval: float64 0.55s, arb-100dec 77.0s
+(b) precision scaling: 110-dec ~58 good digits, 160-dec ~109 good digits;
+    internal loss ~48-52 digits (co-area 1/|der| + spline solve).
+    full op 100-dec vs 200-dec: 6.19e-54. => nail at 180-dec working prec (>100 reliable digits).

@@ -1,0 +1,43 @@
+[10:05:11] === flint_g21: damped Picard on strict contour-Phi at G=21 (100-dec, Cython) ===
+[10:05:11]   G=21, interior 19^3=6859, h(21)=0.1, h(11)=0.2, predicted floor ratio h(21)/h(11)=0.500
+[10:05:11] --- building warm start (G=11 plateau -> 21^3 mesh) ---
+[10:05:11] --- cost gate: timing one Phi eval at G=21/100-dec ---
+[10:05:40]   COST GATE: 28.23 s/Phi-eval; est Picard wall ~112.9 min (240 evals); warm-start ||Phi(P_init)-P_init||inf=4.160177e-01 d_FR=0.244763
+[10:05:44]   push OK (cost gate 28.23s/phi warm_inf=4.1602e-01) attempt 0
+[10:05:44] --- damped Picard (omega=0.3, monotonicity backtrack) ---
+[10:06:14]   picard  1: ||F||inf 4.160177e-01->2.823285e-01 omega=3.000e-01(bt0) d_FR=0.242401 acc=True
+[10:06:44]   picard  2: ||F||inf 2.823285e-01->2.394784e-01 omega=3.000e-01(bt0) d_FR=0.242282 acc=True
+[10:07:14]   picard  3: ||F||inf 2.394784e-01->2.346880e-01 omega=3.000e-01(bt0) d_FR=0.243104 acc=True
+[10:07:44]   picard  4: ||F||inf 2.346880e-01->2.085388e-01 omega=3.000e-01(bt0) d_FR=0.244480 acc=True
+[10:08:14]   picard  5: ||F||inf 2.085388e-01->1.966595e-01 omega=3.000e-01(bt0) d_FR=0.245907 acc=True
+[10:08:45]   picard  6: ||F||inf 1.966595e-01->1.954398e-01 omega=3.000e-01(bt0) d_FR=0.247471 acc=True
+[10:09:16]   picard  7: ||F||inf 1.954398e-01->1.922994e-01 omega=3.000e-01(bt0) d_FR=0.249025 acc=True
+[10:09:47]   picard  8: ||F||inf 1.922994e-01->1.903717e-01 omega=3.000e-01(bt0) d_FR=0.250447 acc=True
+[10:10:18]   picard  9: ||F||inf 1.903717e-01->1.523295e-01 omega=3.000e-01(bt0) d_FR=0.251875 acc=True
+[10:16:57]   picard 10: ||F||inf 1.523295e-01->1.523295e-01 omega=7.324e-05(bt12) d_FR=0.251875 acc=False
+[10:16:59]   push OK (picard 10 inf=1.5233e-01) attempt 0
+[10:16:59]   picard STALL: omega collapsed to 7.32e-05 -> plateau at ||F||inf=1.523295e-01
+[10:16:59] ================ HEADLINE ================
+[10:16:59]   floor(G=21) = 0.152330   floor(G=11) = 0.066399
+[10:16:59]   ratio floor(21)/floor(11) = 2.2942   predicted h(21)/h(11) = 0.5000
+[10:16:59]   tracks linear h-scaling: False
+[10:16:59]   continuum extrap floor(h->0) intercept = 0.238260  (C from G11=0.3320, G21=1.5233)
+[10:16:59]   d_FR(G=21)=0.251875  vs d_FR(G=11)=0.269451
+[10:16:59]   VERDICT: Floor shrinks SLOWER than linear (ratio > 0.5) or barely moves: NOT pure O(h) discretization. The discontinuity-only hypothesis is WEAKENED/FALSIFIED -- floor may have a non-vanishing component.
+[10:16:59] ==========================================
+[10:17:00]   push OK (plateau floor=0.1523 ratio=2.294) attempt 0
+[10:17:00] --- spike probe: 20 accurate arb-FD diagonal probes (eps=1e-25) ---
+[10:26:01] === flint_g21 FINALIZE: lean spike probe at plateau + report status=done ===
+[10:27:00]   probe 1/12 cell(1, 6, 19) diag_slope=4.142e+04 (58s)
+[10:27:28]   probe 2/12 cell(1, 15, 15) diag_slope=4.823e+14 (87s)
+[10:27:57]   probe 3/12 cell(2, 9, 3) diag_slope=7.550e+06 (116s)
+[10:28:26]   probe 4/12 cell(4, 7, 5) diag_slope=3.004e+19 (144s)
+[10:28:55]   probe 5/12 cell(6, 3, 6) diag_slope=2.741e+21 (173s)
+[10:29:23]   probe 6/12 cell(6, 17, 1) diag_slope=3.259e+18 (202s)
+[10:29:52]   probe 7/12 cell(10, 14, 6) diag_slope=2.345e+18 (230s)
+[10:30:21]   probe 8/12 cell(13, 2, 12) diag_slope=1.037e+22 (259s)
+[10:30:49]   probe 9/12 cell(13, 7, 8) diag_slope=2.340e+20 (288s)
+[10:31:18]   probe 10/12 cell(16, 9, 10) diag_slope=4.112e+12 (316s)
+[10:31:47]   probe 11/12 cell(17, 3, 12) diag_slope=6.298e+18 (345s)
+[10:32:16]   probe 12/12 cell(18, 7, 10) diag_slope=3.676e+11 (374s)
+[10:32:16]   spike probe: 12/12 diag slopes > 1e3 (frac 1.000 vs G11 151/729=0.207); max slope 1.037e+22; typical jump 2.8022e-07 (G11 ~0.027)

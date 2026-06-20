@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.coverage
+build/
+dist/
+
+# per-run artifacts: large binaries + noisy logs regeneratable from code
+runs/*/artifacts/*.npy
+runs/*/stdout.log
+# Keep PDFs (< 1 MB, useful for sharing)

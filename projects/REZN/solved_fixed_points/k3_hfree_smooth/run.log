@@ -1,0 +1,16 @@
+=== h-FREE SMOOTH co-area operator: VALIDATION (2026-05-29) ===
+NO kernel, NO bandwidth, NO smoothing parameter.
+(a) SMOOTHNESS slope-jump scaling at grid-node prices (probe width h):
+    h_list        = [0.004, 0.002, 0.001, 0.0005]
+    hfree median  = [311.99, 507.86, 377.83, 10.43]  -> DECREASES (SMOOTH)
+    grid_scan med = [6.8, 11.87, 22.21, 43.0]  -> GROWS ~1/h (KINK)
+    grid_cdf med  = [7825.5, 15660.3, 31330.0, 62669.2]  -> GROWS ~1/h (KINK)
+(b) CONSISTENCY vs analytic co-area (sigmoid surface): max rel err 1.45e-05
+
+=== NAIL (h-free smooth operator, NO kernel; 2026-05-29) ===
+warm-start: kernel-nailed co-area PR (k3_coarea_limit P_inner_G9, deficit 0.29120)
+Newton trajectory ||F||inf: ['3.222e-01', '3.020e-01', '6.814e-02', '1.623e-02', '7.087e-03', '6.502e-03', '1.098e-03', '3.926e-05']
+lowest ||F||inf = 3.926e-05 (8206x reduction, 7 iters)
+convergence: it1->2: 0.302->0.0681 (rate 2.24); it6->7: 1.1e-3->3.9e-5 (~28x). Full-Nq exact-Jacobian steps take alpha=1 and contract super-linearly/quadratically; the it4-5 plateau used a cheap Nq=24 inexact Jacobian (damped) and was superseded.
+NAILED PR: deficit(1-R^2)=0.1725  d_FR=0.2566  slope_T=0.3642  beta=['0.728', '0.728', '0.728'] (symmetric)
+CONFIRM no h/kernel/bandwidth/smoothing parameter anywhere.

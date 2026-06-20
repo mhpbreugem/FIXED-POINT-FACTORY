@@ -1,0 +1,60 @@
+
+=== TEST1 three-way verification  tau=2.0 gamma=0.1 ===
+date 2026-05-29  G_LIST=[9, 13, 17, 21]  h=C*du^0.5 C=0.45
+G=  9 du=1.000 h=0.450 | (a)def=0.29120 F=7.2e-16 conv=True | (b)def=0.00355 F=0.0417 | (c)def=0.24582 F=5.9e-03 conv=False || |a-c|=6.48e-01 |a-b|=6.16e-01 bias_b=0.2877 gap_c=0.0454 (73s)
+
+=== TEST1 three-way verification  tau=2.0 gamma=0.1 ===
+date 2026-05-29  G_LIST=[9, 13, 17, 21]  h=C*du^0.5 C=0.45
+G=  9 du=1.000 h=0.450 | (a)def=0.29120 F=7.2e-16 conv=True | (b)def=0.00355 F=0.0417 | (c)def=0.00399 F=1.4e-03 conv=False || |a-c|=6.49e-01 |a-b|=6.16e-01 bias_b=0.2877 gap_c=0.2872 (18s)
+G= 13 du=0.667 h=0.367 | (a)def=0.28383 F=6.0e-15 conv=True | (b)def=0.00616 F=0.0208 | (c)def=0.00240 F=1.8e-03 conv=False || |a-c|=6.62e-01 |a-b|=6.14e-01 bias_b=0.2777 gap_c=0.2814 (48s)
+G= 17 du=0.500 h=0.318 | (a)def=0.28134 F=6.9e-15 conv=True | (b)def=0.01167 F=0.0180 | (c)def=0.00241 F=3.4e-03 conv=False || |a-c|=6.62e-01 |a-b|=6.12e-01 bias_b=0.2697 gap_c=0.2789 (132s)
+G= 21 du=0.400 h=0.285 | (a)def=0.27928 F=6.9e-15 conv=True | (b)def=0.01600 F=0.0161 | (c)def=0.13396 F=2.7e-03 conv=False || |a-c|=6.58e-01 |a-b|=6.06e-01 bias_b=0.2633 gap_c=0.1453 (316s)
+TEST1 done.
+
+=== TEST2 audit  tau=2.0 gamma=0.1 (11:14) ===
+[3] bandwidth-exponent sensitivity h=C*du^alpha, alpha in {0.3,0.5,0.7}
+   alpha=0.3 G=9 h=0.4500 def=0.29120 F=6.2e-15 conv=True it=3
+   alpha=0.3 G=13 h=0.3985 def=0.28328 F=1.2e-11 conv=True it=3
+   alpha=0.3 G=17 h=0.3655 def=0.28107 F=1.6e-12 conv=True it=3
+   alpha=0.3 G=21 h=0.3418 def=0.27976 F=1.9e-12 conv=True it=3
+   -> alpha=0.3 deficit(h=0) extrap = 0.36633
+   alpha=0.5 G=9 h=0.4500 def=0.29120 F=6.2e-15 conv=True it=3
+   alpha=0.5 G=13 h=0.3674 def=0.28383 F=2.0e-11 conv=True it=3
+   alpha=0.5 G=17 h=0.3182 def=0.28134 F=9.2e-12 conv=True it=3
+   alpha=0.5 G=21 h=0.2846 def=0.27928 F=3.2e-11 conv=True it=3
+   -> alpha=0.5 deficit(h=0) extrap = 0.28293
+   alpha=0.7 G=9 h=0.4500 def=0.29120 F=6.2e-15 conv=True it=3
+   alpha=0.7 G=13 h=0.3388 def=0.28440 F=3.3e-11 conv=True it=3
+   alpha=0.7 G=17 h=0.2770 def=0.28095 F=2.7e-14 conv=True it=4
+
+=== TEST2 audit  tau=2.0 gamma=0.1 (11:18) ===
+[3] bandwidth-exponent sensitivity h=C*du^alpha, alpha in {0.3,0.5,0.7}
+   alpha=0.3 G=9 h=0.4500 def=0.29120 F=7.2e-16 conv=True it=1
+   alpha=0.3 G=13 h=0.3985 def=0.28328 F=3.2e-11 conv=True it=2
+   alpha=0.3 G=17 h=0.3655 def=0.28107 F=9.1e-15 conv=True it=3
+   alpha=0.3 G=21 h=0.3418 def=0.27976 F=7.4e-13 conv=True it=3
+   -> alpha=0.3 deficit(h=0) extrap = 0.36633
+   alpha=0.5 G=9 h=0.4500 def=0.29120 F=7.2e-16 conv=True it=1
+   alpha=0.5 G=13 h=0.3674 def=0.28383 F=6.0e-15 conv=True it=1
+   alpha=0.5 G=17 h=0.3182 def=0.28134 F=6.9e-15 conv=True it=1
+   alpha=0.5 G=21 h=0.2846 def=0.27928 F=6.9e-15 conv=True it=1
+   -> alpha=0.5 deficit(h=0) extrap = 0.28293
+   alpha=0.7 G=9 h=0.4500 def=0.29120 F=7.2e-16 conv=True it=1
+   alpha=0.7 G=13 h=0.3388 def=0.28440 F=6.9e-15 conv=True it=3
+   alpha=0.7 G=17 h=0.2770 def=0.28095 F=4.9e-12 conv=True it=3
+   alpha=0.7 G=21 h=0.2369 def=0.26993 F=3.8e-03 conv=False it=40
+   -> alpha=0.7 deficit(h=0) extrap = 0.19862
+[3] spread of h=0 extrap across alpha = 0.16771  (53s)
+[4] Morse-critical interior states |grad P|->0
+[4] near-critical interior frac=0.3432 min|gradP|=3.539e-15 median=1.320e-02
+[5] Newton/GMRES conditioning along ladder (iters & resid drop)
+   G=9 h=0.450 newton_it=3 F=6.2e-15 conv=True
+   G=13 h=0.367 newton_it=3 F=2.0e-11 conv=True
+   G=17 h=0.318 newton_it=3 F=9.2e-12 conv=True
+   G=21 h=0.285 newton_it=3 F=3.2e-11 conv=True
+[6] boundary/halo: no-learning vs extrapolation halo
+[6] halo max interior diff=0.0000 def_nl=0.2838 def_ext=0.2838
+[2] grid-coordinate dependence: plain-mean vs quadrature-weighted R^2
+[2] def_plain=0.2793 def_signalweighted=0.1550 def_stretched=0.2389
+[1] from TEST1: finest bias_b=0.2633 gap_c=0.1453
+TEST2 done in 60s

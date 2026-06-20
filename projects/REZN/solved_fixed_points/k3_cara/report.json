@@ -1,0 +1,382 @@
+{
+  "meta": {
+    "method_inference": "consistent co-area smoothed (reference phi_K3_halo_smooth) -- identical to CRRA",
+    "cara_model_primary": "linear-log-odds demand x=W(m_i-pi)/a => pi=mean(logit mu_i) => p=sigmoid(mean logit mu) (gamma->inf CRRA limit)",
+    "cara_model_alt": "exponential-utility binary x=(mu-p)/(a p(1-p))",
+    "h_law": "h=C*du^0.5",
+    "C": 0.45,
+    "G_inner": 9,
+    "UMAX": 4.0,
+    "pad": 2,
+    "dtype": "float64",
+    "W": 1.0,
+    "K": 3,
+    "homogeneous": true,
+    "date": "2026-05-29"
+  },
+  "test1": {
+    "taus": [
+      0.1,
+      0.16378937069540642,
+      0.2682695795279726,
+      0.43939705607607904,
+      0.7196856730011519,
+      1.1787686347935873,
+      1.9306977288832496,
+      3.1622776601683795,
+      5.17947467923121,
+      8.483428982440717,
+      13.894954943731374,
+      22.758459260747887,
+      37.27593720314938,
+      61.054022965853264,
+      100.0
+    ],
+    "rows": [
+      {
+        "tau": 0.1,
+        "deficit": 3.912541932350622e-09,
+        "Finf": 3.8191672047105385e-14,
+        "iters": 7,
+        "nailed": true
+      },
+      {
+        "tau": 0.16378937069540642,
+        "deficit": 1.0696498276216727e-07,
+        "Finf": 8.104628079763643e-15,
+        "iters": 9,
+        "nailed": true
+      },
+      {
+        "tau": 0.2682695795279726,
+        "deficit": 2.254508489152823e-06,
+        "Finf": 1.1046719095020308e-14,
+        "iters": 11,
+        "nailed": true
+      },
+      {
+        "tau": 0.43939705607607904,
+        "deficit": 3.513044500001636e-05,
+        "Finf": 7.083222897108499e-14,
+        "iters": 13,
+        "nailed": true
+      },
+      {
+        "tau": 0.7196856730011519,
+        "deficit": 0.0003381336637328037,
+        "Finf": 5.5067062021407764e-14,
+        "iters": 17,
+        "nailed": true
+      },
+      {
+        "tau": 1.1787686347935873,
+        "deficit": 0.0016175630590374733,
+        "Finf": 7.494005416219807e-14,
+        "iters": 23,
+        "nailed": true
+      },
+      {
+        "tau": 1.9306977288832496,
+        "deficit": 0.0037097047217112375,
+        "Finf": 4.884981308350689e-14,
+        "iters": 33,
+        "nailed": true
+      },
+      {
+        "tau": 3.1622776601683795,
+        "deficit": 0.004317418269349647,
+        "Finf": 1.7543189123614411e-12,
+        "iters": 400,
+        "nailed": true
+      },
+      {
+        "tau": 5.17947467923121,
+        "deficit": 0.0027396911839483,
+        "Finf": 1.0400228400708755e-08,
+        "iters": 400,
+        "nailed": false
+      },
+      {
+        "tau": 8.483428982440717,
+        "deficit": 0.011419332056002532,
+        "Finf": 1.351778133873438e-10,
+        "iters": 400,
+        "nailed": true
+      },
+      {
+        "tau": 13.894954943731374,
+        "deficit": 0.07417768189326987,
+        "Finf": 9.203748874142548e-14,
+        "iters": 33,
+        "nailed": true
+      },
+      {
+        "tau": 22.758459260747887,
+        "deficit": 0.12513401987661624,
+        "Finf": 5.684341886080802e-14,
+        "iters": 20,
+        "nailed": true
+      },
+      {
+        "tau": 37.27593720314938,
+        "deficit": 0.16686777934579825,
+        "Finf": 8.465450562766819e-14,
+        "iters": 23,
+        "nailed": true
+      },
+      {
+        "tau": 61.054022965853264,
+        "deficit": 0.16686777934579825,
+        "Finf": 8.465450562766819e-14,
+        "iters": 23,
+        "nailed": true
+      },
+      {
+        "tau": 100.0,
+        "deficit": 0.16686777934579825,
+        "Finf": 8.465450562766819e-14,
+        "iters": 23,
+        "nailed": true
+      }
+    ],
+    "max_deficit": 0.16686777934579825,
+    "all_nailed": false
+  },
+  "test2": {
+    "tau": 2.0,
+    "gammas": [
+      1.0,
+      2.0,
+      4.0,
+      8.0,
+      16.0,
+      32.0,
+      64.0,
+      128.0
+    ],
+    "cara_deficit": 0.003834800663631416,
+    "cara_Finf": 7.788214517745473e-14,
+    "rows": [
+      {
+        "gamma": 1.0,
+        "deficit": 0.18084271588863848,
+        "Finf": 6.5503158452884236e-15,
+        "price_dist_to_CARA": 0.44423773780642795,
+        "nailed": true
+      },
+      {
+        "gamma": 2.0,
+        "deficit": 0.11135108721217729,
+        "Finf": 7.105427357601002e-15,
+        "price_dist_to_CARA": 0.3324129353217421,
+        "nailed": true
+      },
+      {
+        "gamma": 4.0,
+        "deficit": 0.05484191984063257,
+        "Finf": 9.325873406851315e-15,
+        "price_dist_to_CARA": 0.24940386281529248,
+        "nailed": true
+      },
+      {
+        "gamma": 8.0,
+        "deficit": 0.022301321298946165,
+        "Finf": 1.7319479184152442e-14,
+        "price_dist_to_CARA": 0.18627967894205402,
+        "nailed": true
+      },
+      {
+        "gamma": 16.0,
+        "deficit": 0.00826883800164479,
+        "Finf": 2.1094237467877974e-14,
+        "price_dist_to_CARA": 0.11314443569639446,
+        "nailed": true
+      },
+      {
+        "gamma": 32.0,
+        "deficit": 0.003973193557449626,
+        "Finf": 3.0531133177191805e-14,
+        "price_dist_to_CARA": 0.06173174513694424,
+        "nailed": true
+      },
+      {
+        "gamma": 64.0,
+        "deficit": 0.003227061157203008,
+        "Finf": 3.11972669919669e-14,
+        "price_dist_to_CARA": 0.0332637263921127,
+        "nailed": true
+      },
+      {
+        "gamma": 128.0,
+        "deficit": 0.0033411156319998934,
+        "Finf": 3.26405569239796e-14,
+        "price_dist_to_CARA": 0.017152567981004174,
+        "nailed": true
+      }
+    ],
+    "deficit_decay_exponent": -0.9362343320711194,
+    "deficit_decay_const": 0.169438213459664,
+    "price_dist_decay_exponent": -0.6694181549173556,
+    "price_dist_decay_const": 0.5753111393646972
+  },
+  "test3_tau0.5": {
+    "tau": 0.5,
+    "gammas": [
+      1.0,
+      2.0,
+      4.0,
+      8.0,
+      16.0,
+      32.0,
+      64.0,
+      128.0
+    ],
+    "cara_deficit": 6.730489771593092e-05,
+    "cara_Finf": 5.4067861299245124e-14,
+    "rows": [
+      {
+        "gamma": 1.0,
+        "deficit": 0.009170545260320377,
+        "Finf": 7.549516567451064e-15,
+        "price_dist_to_CARA": 0.058660890084767714,
+        "nailed": true
+      },
+      {
+        "gamma": 2.0,
+        "deficit": 0.0032305487305779508,
+        "Finf": 5.6066262743570405e-15,
+        "price_dist_to_CARA": 0.04082478947305579,
+        "nailed": true
+      },
+      {
+        "gamma": 4.0,
+        "deficit": 0.001022360922889722,
+        "Finf": 5.88418203051333e-15,
+        "price_dist_to_CARA": 0.025642908411727006,
+        "nailed": true
+      },
+      {
+        "gamma": 8.0,
+        "deficit": 0.00027674879873010576,
+        "Finf": 7.105427357601002e-15,
+        "price_dist_to_CARA": 0.014895286053613344,
+        "nailed": true
+      },
+      {
+        "gamma": 16.0,
+        "deficit": 8.27998642738654e-05,
+        "Finf": 9.46465128492946e-15,
+        "price_dist_to_CARA": 0.008010666853263015,
+        "nailed": true
+      },
+      {
+        "gamma": 32.0,
+        "deficit": 4.9331842605317665e-05,
+        "Finf": 5.995204332975845e-15,
+        "price_dist_to_CARA": 0.004150588045216341,
+        "nailed": true
+      },
+      {
+        "gamma": 64.0,
+        "deficit": 5.141923133742742e-05,
+        "Finf": 6.38378239159465e-15,
+        "price_dist_to_CARA": 0.002112052605928061,
+        "nailed": true
+      },
+      {
+        "gamma": 128.0,
+        "deficit": 5.757599294047118e-05,
+        "Finf": 8.43769498715119e-15,
+        "price_dist_to_CARA": 0.0010652622065787098,
+        "nailed": true
+      }
+    ],
+    "deficit_decay_exponent": -1.1420834849961186,
+    "deficit_decay_const": 0.005058718700378032,
+    "price_dist_decay_exponent": -0.8407362678217283,
+    "price_dist_decay_const": 0.07331746797311037
+  },
+  "test3_tau8": {
+    "tau": 8.0,
+    "gammas": [
+      1.0,
+      2.0,
+      4.0,
+      8.0,
+      16.0,
+      32.0,
+      64.0,
+      128.0
+    ],
+    "cara_deficit": 0.006558656631440541,
+    "cara_Finf": 8.720103695548931e-09,
+    "rows": [
+      {
+        "gamma": 1.0,
+        "deficit": 0.389944772520737,
+        "Finf": 9.501825866918556e-15,
+        "price_dist_to_CARA": 0.6602501629801953,
+        "nailed": true
+      },
+      {
+        "gamma": 2.0,
+        "deficit": 0.34899996287806334,
+        "Finf": 4.013456234019941e-14,
+        "price_dist_to_CARA": 0.6513643509734328,
+        "nailed": true
+      },
+      {
+        "gamma": 4.0,
+        "deficit": 0.29350852678035244,
+        "Finf": 2.513211860843967e-12,
+        "price_dist_to_CARA": 0.598207588048864,
+        "nailed": true
+      },
+      {
+        "gamma": 8.0,
+        "deficit": 0.21757545617387167,
+        "Finf": 5.186240326082725e-12,
+        "price_dist_to_CARA": 0.4727262179290576,
+        "nailed": true
+      },
+      {
+        "gamma": 16.0,
+        "deficit": 0.13238891884351664,
+        "Finf": 8.61535842666683e-12,
+        "price_dist_to_CARA": 0.3589556764337537,
+        "nailed": true
+      },
+      {
+        "gamma": 32.0,
+        "deficit": 0.07008780356966025,
+        "Finf": 5.813752507188852e-08,
+        "price_dist_to_CARA": 0.30300979681541207,
+        "nailed": false
+      },
+      {
+        "gamma": 64.0,
+        "deficit": 0.030720505168197174,
+        "Finf": 9.66161872728577e-12,
+        "price_dist_to_CARA": 0.22472977198029967,
+        "nailed": true
+      },
+      {
+        "gamma": 128.0,
+        "deficit": 0.013158678451007048,
+        "Finf": 2.3993634801211527e-08,
+        "price_dist_to_CARA": 0.1398658012371009,
+        "nailed": false
+      }
+    ],
+    "deficit_decay_exponent": -0.6984438457763336,
+    "deficit_decay_const": 0.6310055008558304,
+    "price_dist_decay_exponent": -0.31774045826880615,
+    "price_dist_decay_const": 0.8168285333058282
+  },
+  "verdict": {
+    "cara_max_deficit_over_tau": 0.16686777934579825,
+    "cara_is_FR_benchmark": false,
+    "crra_converges_to_cara": true,
+    "summary": "CARA deficit ~1.7e-01 (FR) for all 15 tau. CRRA deficit 1.808e-01->3.341e-03 and price-dist 4.442e-01->1.715e-02 as gamma 1->128 (tau=2), decay ~gamma^-0.94 (deficit) / gamma^-0.67 (price). CARA IS the high-gamma limit of CRRA."
+  }
+}

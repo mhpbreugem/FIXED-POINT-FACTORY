@@ -1,0 +1,33 @@
+{
+  "tau": 2.0,
+  "gamma": 0.1,
+  "G": 17,
+  "kernel_h": 0.3181980515339464,
+  "nailed_Finf": 3.370970169669363e-12,
+  "iter0_to_iter1_change_inf": 0.05668389777002897,
+  "iter1_to_iter2_change_inf": 0.015841489621319815,
+  "iter2_to_FP_dist_inf": 0.006042360455986606,
+  "spectral_radius": 0.3689584821290651,
+  "top_eigenvalues_abs": [
+    0.3689584821290651,
+    0.3478518735937233,
+    0.3334199015533448,
+    0.3334198976748628,
+    0.3212283596034066,
+    0.32121909320757214,
+    0.3212145485792151,
+    0.3212061160644457
+  ],
+  "top_eigenvalues_complex": [
+    "(0.3689584821290651+0j)",
+    "(0.3478518735937233+0j)",
+    "(0.3334199015533448+0j)",
+    "(0.3334198976748628+0j)",
+    "(0.3212283596034066+0j)",
+    "(0.32121909320757214+0j)",
+    "(0.3212145485792151+0j)",
+    "(0.3212061160644457+0j)"
+  ],
+  "picard_stable_if_rho_less_1": true,
+  "verdict_picard_reachability": "rho=0.369 < 1 -> the fixed point is a Picard ATTRACTOR: undamped Picard will converge to it from a neighborhood."
+}

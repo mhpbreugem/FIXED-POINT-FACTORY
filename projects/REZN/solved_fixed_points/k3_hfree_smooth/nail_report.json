@@ -1,0 +1,39 @@
+{
+  "method": "h-free smooth co-area; dense forward-diff Newton + Armijo line search; full-Nq=40 exact Jacobian in the basin gives full alpha=1 steps",
+  "NO_h": true,
+  "NO_kernel": true,
+  "NO_bandwidth": true,
+  "NO_smoothing_param": true,
+  "tau": 2.0,
+  "gamma": 0.1,
+  "UMAX": 4.0,
+  "Nq": 40,
+  "sub": 4,
+  "G": 9,
+  "warm_start": "kernel-nailed co-area PR (k3_coarea_limit P_inner_G9, deficit 0.29120)",
+  "trajectory": [
+    0.3221849167095079,
+    0.30201117365043695,
+    0.0681357258997769,
+    0.016226224128921385,
+    0.007087438327286977,
+    0.0065023117079086035,
+    0.001098174217159631,
+    3.9262164891473716e-05
+  ],
+  "lowest_Finf": 3.9262164891473716e-05,
+  "reduction_factor": 8205.989598384946,
+  "iterations": 7,
+  "order_q_median": 1.418335446400259,
+  "quadratic_steps": "it1->2: 0.302->0.0681 (rate 2.24); it6->7: 1.1e-3->3.9e-5 (~28x). Full-Nq exact-Jacobian steps take alpha=1 and contract super-linearly/quadratically; the it4-5 plateau used a cheap Nq=24 inexact Jacobian (damped) and was superseded.",
+  "deficit": 0.17249072831001688,
+  "d_FR": 0.25655403253796244,
+  "slope_T": 0.36417362136387493,
+  "beta": [
+    0.7283475581249713,
+    0.7283470928946227,
+    0.728347077163655
+  ],
+  "symmetric_fixed_point": true,
+  "note_deficit": "deficit=0.1725 is the genuine h=0 (h-free) PR deficit at G=9. The kernel co-area at G=9 used a large bandwidth h=0.45 which over-smoothed (deficit 0.291); removing the kernel entirely lowers it to 0.1725. Partial revelation confirmed: deficit>0 (NOT fully revealing) and slope_T=0.364>0 (price is informative)."
+}

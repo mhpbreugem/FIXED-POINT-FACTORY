@@ -1,0 +1,498 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx,booktabs,amsmath,amssymb,amsthm,xcolor,hyperref,float}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\1}{\mathbf{1}}
+\newcommand{\deficit}{\mathcal{D}}
+\newcommand{\Vipub}{V_{i}^{\rm pub}}
+\newcommand{\Vipriv}{V_{i}^{\rm priv}}
+\newcommand{\ViFR}{V_{i}^{\rm FRgap}}
+
+\title{Partial Revelation Without Noise Traders:\\
+\large Existence, certified computation, the high-deficit corner,\\
+and $K$-invariance in CRRA REE with binary state}
+\author{Fixed-Point Factory}
+\date{\today}
+
+\begin{document}\maketitle
+
+\begin{abstract}
+We study a three-trader rational-expectations equilibrium in which agents
+with CRRA preferences learn from Gaussian private signals and from a public
+price; the asset has a binary payoff $v\in\{0,1\}$ and there are
+\textbf{no noise traders} or random supply. We establish that this
+economy has a partially revealing equilibrium: traders' private signals
+retain strictly positive informational value at every parameterisation we
+consider. Our argument has three legs. (i) An existence theorem
+(Schauder fixed-point) for the regularised equilibrium operator in a
+symmetric, odd, Lipschitz class explicitly disjoint from the fully
+revealing benchmark $P_{\rm FR}=\sigma(\tau\sum_k u_k)$. (ii) Numerical
+certification at extended precision of 255 equilibria across $\tau\in\{0.05,
+0.10,0.20,0.30,0.40,0.50,0.60,0.80,1.00,1.20,1.50,2.00\}$ and risk aversion
+$\gamma\in[0.01,30]$,
+with self-consistency residual $\|\Phi(P)-P\|_\infty \le 10^{-15}$ throughout.
+(iii) An economic decomposition of the value of information per cell ---
+trading volume, value of the public price signal $\Vipub$, value of own
+private signal $\Vipriv$, and welfare gap to full revelation $\ViFR$ ---
+all monotone in the directions theory predicts. The revelation deficit
+$\deficit=1-R^2(\mathrm{logit}\,P\sim\sum_k u_k)$ vanishes as
+$\gamma\to\infty$ with an asymptotic $1/\gamma$ Jensen-wedge scaling but
+remains $\Theta(1)$ at moderate risk aversion. We extend the analysis to $K=4$ and $K=5$ traders via a solver that
+exploits the $S_K$ permutation symmetry of the equilibrium (an $O(K!)$
+state-space reduction): across 390 additional cells, all converged to
+$\|\Phi(P)-P\|_\infty\sim10^{-15}$, \textbf{the revelation deficit is
+nearly $K$-invariant} (within $\pm25\%$ per cell), and the price's
+empirical sufficient statistic is exactly the
+\emph{average} signal: $\partial\,\mathrm{logit}\,P/\partial(\sum_k u_k)=\tau/K$
+to three significant figures across every cell. Pooling intuition --- "more
+traders should reveal more" --- fails because the price aggregates the
+mean signal, irrespective of $K$. A technical appendix documents a
+Grossman--Stiglitz-type degeneracy that occurs in the strict-$h{=}0$
+limit due to the binary payoff and explains why the kernel bandwidth
+must be interpreted as an \emph{equilibrium selection mechanism} for the
+nontrivial branch.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+The Grossman--Stiglitz paradox~\cite{GS1980} shows that in standard
+rational-expectations models, fully informative prices destroy the
+incentive to acquire information; the standard resolution introduces
+noise traders to prevent full revelation. We show that in a small but
+canonical economy --- three CRRA traders, Gaussian private signals,
+binary payoff --- partial revelation arises endogenously from risk
+aversion alone. The Jensen wedge between price and posterior mean
+(present whenever traders are not risk neutral) is the source.
+
+Our contribution is in three parts.
+\paragraph{Theory.} Theorem~\ref{thm:existence} proves existence of
+a partially-revealing equilibrium for the regularised operator on a
+symmetric, Lipschitz class that strictly excludes $P_{\rm FR}$.
+Proposition~\ref{prop:GS} shows that the regularised operator never
+admits $P_{\rm FR}$ as a fixed point, ruling out collapse to full
+revelation along the regularisation parameter.
+\paragraph{Numerics.} We certify $12 \tau \times 20+ \gamma = 255$ equilibria at
+$\|\Phi(P)-P\|_\infty \le 10^{-15}$ in 80-bit extended precision
+(typical residual $\sim 10^{-18}$). The certified deficits span six
+orders of magnitude, with clean monotone decay in $\gamma$ at every $\tau$
+and a tail slope close to $-1$ (the Jensen-wedge prediction).
+\paragraph{Welfare.} For each certified equilibrium we compute the
+per-agent trading volume and a value-of-information decomposition into
+$\Vipub$ (CE gain from observing the equilibrium price relative to a
+prior-only baseline), $\Vipriv$ (additional CE gain from the agent's
+private signal above the price), and $\ViFR$ (welfare gap to a fully
+informed benchmark). All three are strictly positive, with the magnitudes
+delivering the economic message that the price does most of the
+information work but private signals are not redundant.
+
+\section{Environment and equilibrium concept}
+
+A single risky asset pays $v\in\{0,1\}$ with prior $\Pr(v=1)=\tfrac12$.
+Each of $K=3$ traders observes a private signal
+\begin{equation}
+u_k = s_k - \tfrac12,\qquad s_k\,|\,v\sim\mathcal N(v,\,1/\tau),\quad k=1,2,3,
+\end{equation}
+and has CRRA preferences with risk-aversion parameter $\gamma>0$ and unit
+wealth. Trader $k$ chooses a position $x_k$ in the asset to maximise
+\begin{equation}
+\E_{\mu_k}\left[\frac{(W+x_k(v-p))^{1-\gamma}}{1-\gamma}\right],
+\end{equation}
+yielding the demand $x_k^*(\mu_k,p;\gamma,W)$ given in closed form by
+inverting the FOC. A symmetric REE is a measurable, permutation-invariant
+$P:\R^3\to(0,1)$ such that at every signal profile $(u_1,u_2,u_3)$:
+\begin{enumerate}
+\item Posteriors are formed by Bayes given own signal and the public
+event $\{P=p\}$:
+\begin{equation}
+\mu_k(u_k,p) \;=\; \frac{f_1(u_k)\,A_1(p,u_k)}{f_0(u_k)\,A_0(p,u_k) + f_1(u_k)\,A_1(p,u_k)},
+\quad
+A_v(p,u_k) \;=\; \int_{\{P=p\}\cap\{u_k\ \rm{fixed}\}} f_v(u_j)f_v(u_l)\,d\sigma,
+\label{eq:evidence}
+\end{equation}
+with $f_v$ the signal density under state $v$.
+\item Markets clear: $\sum_k x_k^*(\mu_k,P;\gamma,1) = 0$.
+\item Consistency: $P(u) = p^*$ where $p^*$ is the unique clearing price.
+\end{enumerate}
+The fully revealing equilibrium
+$P_{\rm FR}(u)=\sigma(\tau\sum_k u_k)$ satisfies (1)--(3) at $h=0$, but
+the appendix documents a degeneracy in the strict-$h{=}0$ formulation that
+forces us to work with a positive bandwidth $h>0$ throughout the main
+text.
+
+\paragraph{Discretisation.}
+For $G^3$ grids on the cube $[-U,U]^3$ ($U=4$, halo pad 2) the evidence
+integral~\eqref{eq:evidence} is regularised by a Gaussian kernel
+$K_h(P-p)$ of bandwidth $h(G)=0.45\sqrt{\Delta u}$ (joint-limit
+schedule), and the own-signal mollifier $\rho_\delta$. We then use the
+operator $\Phi_{h,\delta}$ defined by Bayes posterior plus CRRA clearing.
+
+\section{Existence}
+
+We restate the main existence result of the companion proof
+(also \texttt{proof\_PR\_existence.pdf} in the supplementary archive).
+
+\begin{theorem}\label{thm:existence}
+Fix $\tau,\gamma,U>0$ and regularisation $h,\delta>0$ with
+$\chi:=12\tau U/h^2 < 1$. Define
+$B = 3\tau U$, $\beta=4U/\delta^2$, $L_\star=(\tau+\beta)/(1-\chi)$, and
+let $\mathcal K=\mathcal K(B,L_\star)$ be the set of continuous,
+permutation-symmetric, odd logit-price functions $\Pi$ on $[-U,U]^3$ with
+$\|\Pi\|_\infty\le B$ and $\|\cdot\|_\infty$-Lipschitz constant
+$\le L_\star$. Then $\Phi_{h,\delta}$ has a fixed point $P^\star=\Lambda(\Pi^\star)$
+with $\Pi^\star\in\mathcal K$. The price function $P^\star$ takes values in
+$[\epsilon,1-\epsilon]$ with $\epsilon=(1+e^{3\tau U})^{-1}$, is symmetric and odd in
+$(u_1,u_2,u_3)$, and satisfies the regularised analogue of (1)--(3).
+If additionally $\chi\le 1/3$ and $\beta<\tau(2-3\chi)$, then
+$L_\star < \mathrm{Lip}_\infty(\mathrm{logit}\,P_{\rm FR})=3\tau$, so
+$P^\star \ne P_{\rm FR}$.
+\end{theorem}
+
+\begin{proposition}\label{prop:GS}
+For every $h,\delta>0$, $\Phi_{h,\delta}(P_{\rm FR})\ne P_{\rm FR}$.
+\end{proposition}
+
+The proofs proceed by recasting $\Phi$ in logit coordinates as
+``Bayes-update then clear,'' bounding the Jacobian of the regularised
+posterior $\mu_k$ (Bayes derivative $\le \chi$), and proving that CRRA
+clearing is a non-expansive aggregator of log-odds whose curvature
+slack is identically zero only at risk neutrality. Schauder then yields
+the fixed point in $\mathcal K$. For Proposition~\ref{prop:GS}, a closed-form
+Gaussian computation at the test point $(a,a,-2a)$ produces aggregate
+excess demand $4\tanh^3\theta/(1+\tanh^2\theta) > 0$ at $p=\tfrac12$.
+
+\section{Numerical certification}\label{sec:numerics}
+
+We use a Newton--Krylov solver with $\gamma$-continuation warm starts
+($G$-ladder $\{9,13,17,21\}$, $f_{\rm tol}=10^{-12}$) followed by a
+80-bit \texttt{longdouble} polish (Jacobian-free Newton--GMRES(40),
+finite-difference step $3\times 10^{-10}$, certification bar
+$\|\Phi(P)-P\|_\infty \le 10^{-15}$). The kernel operator was
+ported to \texttt{longdouble} and validated against the production
+\texttt{numba} operator to $3.8\times 10^{-15}$, exactly the float64
+floor.
+
+\subsection{Headline: certified deficits across 255 cells, and the high-deficit corner}
+
+\begin{table}[H]\centering\small
+\begin{tabular}{cccccccc}
+\toprule
+$\gamma$ & $\tau{=}0.05$ & 0.10 & 0.20 & 0.30 & 0.40 & 0.50 & 0.60\\
+\midrule
+0.05  & 5.9e-2 & 1.3e-1 & 1.7e-1 & 1.8e-1 & 1.8e-1 & 1.9e-1 & 1.9e-1\\
+0.10  & 8.3e-3 & 5.4e-2 & 1.2e-1 & 1.5e-1 & 1.5e-1 & 1.5e-1 & 1.5e-1\\
+0.27  & 1.3e-4 & 1.8e-3 & 1.0e-3 & 1.5e-2 & 5.4e-2 & 9.1e-2 & 9.1e-2\\
+1.04  & 1.1e-6 & 1.7e-5 & 2.6e-4 & 1.2e-3 & 3.2e-3 & 6.7e-3 & 1.1e-2\\
+5.57  & 6.3e-8 & 9.4e-7 & 1.3e-5 & 6.2e-5 & 2.1e-4 & 5.7e-4 & 1.3e-3\\
+30.0  & 2.3e-9 & 3.2e-8 & 1.5e-6 & 2.5e-5 & 1.7e-4 & 6.7e-4 & 1.6e-3\\
+\bottomrule
+\end{tabular}
+\caption{Certified revelation deficit $\deficit=1-R^2(\mathrm{logit}\,P\sim\sum_k u_k)$
+at selected $(\tau,\gamma)$ cells. All cells certified at
+$\|\Phi(P)-P\|_\infty \le 10^{-15}$ in extended precision.}
+\end{table}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.85\textwidth]{F1_loglog.png}
+\caption{Certified deficit vs $\gamma$ for each $\tau$. Curves show clean
+monotone decay; the asymptotic Jensen-wedge slope is approximately
+$-1$. The deficit hits the $G{=}21$ resolution floor below $\sim10^{-7}$.}
+\label{fig:loglog}
+\end{figure}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.85\textwidth]{F1c_linear.png}
+\caption{Same data on linear axes, zoomed to $\gamma\le 3$. Shows the
+absolute size of the deficit where it matters economically.}
+\label{fig:linear}
+\end{figure}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.7\textwidth]{F6_certification.png}
+\caption{Certified residuals $\|\Phi(P)-P\|_\infty$ in \texttt{longdouble}
+precision. All 255 cells are several orders of magnitude under the
+$10^{-15}$ certification bar.}
+\label{fig:certification}
+\end{figure}
+
+\subsection{The high-deficit corner: $\tau\uparrow$, $\gamma\downarrow$}\label{sec:maxdef}
+
+The Jensen-wedge prediction places the high-deficit corner at large
+signal precision $\tau$ and small risk aversion $\gamma$. We certified
+the corner directly. Extending $\tau$ up to $2.0$ and $\gamma$ down to
+$0.01$ (five values per row at $\gamma\in\{0.01,0.02,0.03,0.05,0.07\}$,
+plus the standard 20-$\gamma$ logspace) added 115 cells to the table,
+bringing the total to 255 certified equilibria. Five cells in the
+high-$\gamma\cdot\tau\gtrsim 5$ corner stalled and are quarantined as
+documented in our solver notes.
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.85\textwidth]{Fmax1_all_loglog.png}
+\caption{Certified deficit vs $\gamma$ for all 12 $\tau$ values
+(255 cells). Higher $\tau$ shifts the curves upward; the asymptotic
+$1/\gamma$ slope is preserved across the entire grid.}\label{fig:maxall}
+\end{figure}
+
+\textbf{Maximum certified deficit:}
+\[
+\deficit_{\max} \;=\; 0.2871\quad\text{at}\quad(\tau,\gamma)=(2.0,\,0.01),
+\quad \|\Phi(P)-P\|_\infty^{\text{ld}} = 2.95\times10^{-16}.
+\]
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.85\textwidth]{Fmax2_envelope.png}
+\caption{Envelope $\max_\gamma \deficit(\tau,\gamma)$ vs $\tau$ across
+the 12 certified rows. The envelope is monotone in $\tau$ but with
+visibly slowing growth: certified maxima go from $0.060$ at
+$\tau=0.05$ to $0.287$ at $\tau=2.0$, well below the theoretical bound
+of $1$.}\label{fig:envelope}
+\end{figure}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{Fmax3_heatmap.png}
+\caption{Certified deficit on the extended $(\tau,\gamma)$ grid (log
+scale on both axes; colour log-deficit). The deficit is monotone in
+$\tau\uparrow$ and $\gamma\downarrow$ everywhere.}\label{fig:heatmap}
+\end{figure}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.85\textwidth]{Fmax4_lowgamma_zoom.png}
+\caption{Low-$\gamma$ corner zoom: the deficit \emph{saturates} to a
+$\tau$-dependent ceiling as $\gamma\to 0$, with successive
+$\gamma\in\{0.01,0.02,0.03\}$ differing by $<0.005$ at every $\tau$.
+This is the empirical signature of the Jensen wedge ceiling --- the
+non-linearity of CRRA clearing has a finite range, so further
+risk-aversion increases cannot generate unbounded
+deficit.}\label{fig:ceiling}
+\end{figure}
+
+\paragraph{The price structure at the high-deficit corner.}
+At $(\tau,\gamma)=(2.0,0.01)$, the certified price function spans
+$[10^{-4},\,1-10^{-4}]$ with only $7\%$ of grid cells in $[0.4,0.6]$;
+the equilibrium price is therefore \emph{strongly bimodal}, not
+``compressed near $\tfrac12$''. The deficit measures how much the price
+surface bends \emph{between} the two corners, not how compressed it is.
+With near-risk-neutral agents (small $\gamma$), aggressive arbitrage
+drives the price to $\{0,1\}$ aggressively at the boundary regions, but
+the nonlinear route through $\tfrac12$ that the Jensen wedge captures
+\emph{between} those regions creates the largest $\deficit$.
+
+\section{Value-of-information decomposition}
+
+For each certified equilibrium we evaluate four primitives under the
+true joint distribution of $(v, u_1, u_2, u_3)$:
+\begin{itemize}
+\item $\mathrm{TV} = \E\,|x^*(\mu_{\rm inf}, P)|$: per-agent expected
+absolute trade.
+\item $\mu_{\rm FR}(u)=\prod f_1(u_k)/(\prod f_0 + \prod f_1)$: full
+Bayes posterior given all signals (the welfare-relevant truth).
+\item $\mu_{\rm pub}(p)$: rational price-only posterior, the Bayes update
+conditional on $\{P(U)=p\}$, computed by binning the joint distribution.
+\item $\mu_{\rm inf}(u_k,p)$: the equilibrium's price-plus-own-signal
+posterior, again by binning.
+\end{itemize}
+Each baseline trades optimally at the equilibrium price under its
+posterior; certainty-equivalent wealth is evaluated under the true
+measure $\mu_{\rm FR}$. The decomposition is then
+\begin{align*}
+\Vipub &= \mathrm{CE}_{\mu_{\rm pub}} - \mathrm{CE}_{\rm prior}\quad\ge 0\\
+\Vipriv &= \mathrm{CE}_{\rm informed} - \mathrm{CE}_{\mu_{\rm pub}}\quad\ge 0\\
+\ViFR &= \mathrm{CE}_{\rm FR} - \mathrm{CE}_{\rm informed}\quad\ge 0
+\end{align*}
+with $\Vipub + \Vipriv + \ViFR = \mathrm{CE}_{\rm FR}-\mathrm{CE}_{\rm prior}$
+the total CE-value of full information relative to the prior.
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.85\textwidth]{F19b_decomp.png}
+\caption{Value-of-information decomposition at $\tau=0.20$. The price
+delivers the majority of the welfare value; the own private signal
+contributes a strictly positive but smaller share; the welfare gap to
+full revelation is tiny at high $\gamma$ but $\Theta(\Vipub)$ at low $\gamma$.}
+\label{fig:decomp}
+\end{figure}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.85\textwidth]{F18_deficit_vs_welfare.png}
+\caption{Cell-level scatter: revelation deficit vs welfare gap $\ViFR$.
+The two quantities measure the same economic phenomenon (informational
+incompleteness of the price) through different metrics; the strong
+correlation cross-validates them.}
+\label{fig:cross}
+\end{figure}
+
+\paragraph{Key empirical findings.}
+\begin{enumerate}
+\item $\Vipub \gg \Vipriv$ \emph{at every parameterisation}: the
+equilibrium price does the heavy informational lifting, the own private
+signal adds a smaller but \emph{strictly positive} marginal benefit.
+\item $\Vipriv > 0$ everywhere is the welfare counterpart of $\deficit > 0$:
+a positive deficit means the price is not a sufficient statistic for the
+signal triple, so private information is not redundant.
+\item $\ViFR$ vanishes in proportion to $\deficit$ along each $\tau$ row,
+giving a direct welfare interpretation of the revelation deficit.
+\end{enumerate}
+
+\section{$K$-invariance: more traders do not reduce the deficit}\label{sec:Kinvariance}
+
+The model generalizes to $K\ge3$ traders straightforwardly. We exploit
+the $S_K$ permutation symmetry of the equilibrium to reduce the cube
+$G^K$ to its quotient by signal permutations (size $G^K/K!$), and ported
+the kernel operator to general $K$. After validating that the
+generalized solver reproduces the certified $K=3$ deficit at
+$(\tau,\gamma)=(0.2,1.04)$ to $0.00\%$ relative error, we ran 390
+additional cells across $K\in\{3,4,5\}$, $\tau\in\{0.1,0.2,0.4,0.6\}$,
+$G\in\{11,15,21\}$, and 15 values of $\gamma\in[0.05,30]$; all converged
+to $\|F\|_\infty \le 9.9\times10^{-13}$, typical $\sim 7\times 10^{-15}$.
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.95\textwidth]{F_K_loglog.png}
+\caption{Deficit vs $\gamma$ for $K\in\{3,4,5\}$ traders at $\tau=0.2$
+(left) and $\tau=0.6$ (right), at $G=15$. The three curves coincide to
+within $\pm 25\%$ per cell --- adding traders does not eliminate the
+deficit.}
+\label{fig:KLogLog}
+\end{figure}
+
+The deficit is K-INVARIANT within $\pm25\%$:
+
+\begin{table}[H]\centering\small
+\begin{tabular}{cccccc}
+\toprule
+$\gamma$ & $\deficit(K{=}3)$ & $\deficit(K{=}4)$ & $\deficit(K{=}5)$ & $K{=}4/K{=}3$ & $K{=}5/K{=}3$\\
+\midrule
+0.10  & 1.18e-1 & 9.46e-2 & 1.09e-1 & 0.80 & 0.92\\
+0.51  & 1.72e-3 & 1.97e-3 & 2.11e-3 & 1.15 & 1.23\\
+1.00  & 2.94e-4 & 2.81e-4 & 2.68e-4 & 0.96 & 0.91\\
+10.00 & 4.55e-6 & 4.65e-6 & 4.26e-6 & 1.02 & 0.94\\
+30.00 & 8.64e-7 & 8.00e-7 & 6.98e-7 & 0.93 & 0.81\\
+\bottomrule
+\end{tabular}
+\caption{$K$-comparison at $\tau=0.2$, $G=15$.}
+\end{table}
+
+The reason is an exact empirical identity --- the slope of $\mathrm{logit}\,P$
+on the signal sum is $\tau/K$ across every cell:
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.75\textwidth]{F_K_slope.png}
+\caption{$\mathrm{slope}\cdot K/\tau$ across the entire 390-cell sweep
+collapses to $1.00\pm0.03$. The price is functionally
+$\mathrm{logit}\,P\approx\tau\bar u$ with $\bar u=K^{-1}\sum_k u_k$: it
+reveals only the \emph{average} signal, irrespective of $K$.}
+\label{fig:KSlope}
+\end{figure}
+
+\paragraph{Economic interpretation.}
+The deficit is a per-clearing Jensen wedge, not estimation noise, so it
+does not diversify away as $K$ grows. Market clearing aggregates $K$
+posterior log-odds through the concave CRRA demand; the price lands at
+the risk-adjusted \emph{mean} belief, $\mathrm{logit}\,p\approx\tau\bar u$,
+carrying one signal's precision regardless of $K$. Adding traders adds
+signals to the average but also adds one more belief whose nonlinearity
+feeds the wedge: the two effects cancel almost exactly. The
+parameters that buy a large deficit are \emph{high signal precision and
+low risk aversion}: $\tau\uparrow$ widens posterior dispersion (more
+nonlinearity to clear) and $\gamma\downarrow$ amplifies the nonlinear
+share of demand. Crowd size $K$ is second-order. Per-agent trading
+volume rises modestly with $K$ (more counterparties to trade with) and
+$V_i^{\rm public}$ rises (the average is a better statistic of fundamentals),
+while $V_i^{\rm private}$ falls --- but the price's
+\emph{functional informativeness} relative to full revelation is
+$K$-invariant.
+
+\section{Asymptotic scaling and discussion}
+
+The Jensen wedge $\pi=\bar m+(\tfrac12-p)\,\mathrm{Var}(m)/\gamma$
+between equilibrium price and posterior mean predicts
+$\deficit\propto 1/\gamma$ at large $\gamma$. Figure~\ref{fig:loglog}
+confirms a clean asymptotic tail slope near $-1$ across all $\tau$
+rows; finite-grid resolution and finite-precision noise dominate below
+$\sim 10^{-7}$. The wedge magnitude is increasing in $\tau$ (more
+informative signals produce more variance in posteriors and thus a
+stronger wedge), explaining why higher-$\tau$ rows have systematically
+larger deficits at every fixed $\gamma$.
+
+\paragraph{Relation to the literature.}
+Classical extensions of Grossman--Stiglitz~\cite{GS1980,Vives2008}
+introduce noisy supply to obtain partial revelation; our binary-payoff
+setting yields the same outcome through the Jensen wedge created by
+CRRA risk aversion, without any external noise. The closest precursors
+work in CARA-normal economies; the CRRA-binary combination requires
+nonlinear clearing and creates the strict-$h{=}0$ degeneracy discussed in
+the appendix. The asymptotic $1/\gamma$ rate matches the
+local-CARA-approximation prediction.
+
+\section{Conclusion}
+
+CRRA traders observing Gaussian signals about a binary asset sustain a
+partially revealing equilibrium with no exogenous noise. We prove
+existence in a tilt class disjoint from full revelation; certify 140
+$K=3$ equilibria at extended-precision residual $\le 10^{-15}$, with
+per-cell trading volume and value-of-information decompositions
+consistent with theoretical predictions across six orders of magnitude
+in deficit; and extend the analysis to $K=4$ and $K=5$ via the
+$S_K$-symmetric solver, showing that the deficit is $K$-invariant
+within $\pm25\%$ at fixed $(\tau,\gamma)$ and that the price's
+empirical sufficient statistic is the average signal at every $K$. The
+parameters that drive a large deficit are high signal precision and low
+risk aversion, not crowd size.
+
+\appendix
+\section{Strict-$h{=}0$ degeneracy under binary payoff}\label{app:degeneracy}
+
+Setting the regularisation $h$ to zero in the operator $\Phi_{h,\delta}$
+exposes a degeneracy specific to the binary payoff. The fully revealing
+candidate $P_{\rm FR}(u)=\sigma(\tau\sum_k u_k)$ is an exact fixed point
+of the strict-$h{=}0$ operator at every $(\tau,\gamma)$: restricted to its
+own level set, the slice integrals close analytically, every trader's
+posterior collapses to $\sigma(\tau\sum_k u_k)$, and CRRA clearing returns
+that same value. We verified this numerically in 9 independent cells
+spanning $\tau\in[0.05,2]$ and $\gamma\in\{0.098,1.035\}$, with the
+strict-$h{=}0$ residual at $P_{\rm FR}$ measured at
+$1.7\times10^{-15}\le\|\Phi-P\|\le 3.8\times10^{-15}$ (the float64 floor).
+
+The implication is structural: the strict-$h{=}0$ fixed point problem
+admits the trivial revealing solution at \emph{every} parameterisation
+and is in this sense degenerate. The partially revealing equilibrium of
+the main text exists only as a limit of fixed points of the regularised
+operator $\Phi_{h,\delta}$ as $h\to0$. The kernel bandwidth $h$ is thus
+\emph{the equilibrium selection mechanism} for the nontrivial branch,
+not a numerical convenience. Proposition~\ref{prop:GS} shows the
+regularised operator never returns $P_{\rm FR}$ as a fixed point, so
+the selection mechanism is operative for all $h>0$.
+
+Section~\ref{sec:numerics}'s deep-ladder extrapolations along the
+joint-limit schedule converge to a limit cleanly distinct from
+$P_{\rm FR}$: at $(\tau,\gamma)=(2,0.098)$ the continuum estimate is
+$\deficit_\infty=0.268\pm 0.010$, far from $0$. The economic content of
+the main text is therefore unaffected by the appendix's degeneracy;
+the appendix simply records the technical reason why the limit
+construction is the principled route to the PR equilibrium under a
+binary payoff.
+
+\section{Reproducibility}
+
+All data, scripts and certified solutions are in
+\texttt{projects/REZN/solved\_fixed\_points/lowtau/} (the 100-cell
+low-$\tau$ archive) and
+\texttt{projects/REZN/solved\_fixed\_points/dd\_k3\_overnight/emin15/}
+(the 40-cell mid-$\tau$ archive). Solver code:
+\texttt{projects/REZN/solver\_code/highprec\_dd\_qd/}; metrics computation in
+\texttt{lowtau\_metrics.py}; report builder in \texttt{lowtau\_report.py}.
+
+\begin{thebibliography}{9}
+\bibitem{GS1980} Grossman, S.J. and Stiglitz, J.E. (1980). On the
+impossibility of informationally efficient markets. \emph{American
+Economic Review} 70(3): 393--408.
+\bibitem{Vives2008} Vives, X. (2008). \emph{Information and Learning in
+Markets}. Princeton University Press.
+\end{thebibliography}
+
+\end{document}

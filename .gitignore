@@ -4,3 +4,13 @@ __pycache__/
 .venv/
 *.egg-info/
 .DS_Store
+
+# nail-solver intermediate Jacobian dumps (regenerable, large)
+projects/REZN/solved_fixed_points/flint_pr_nail/J_*.npy
+projects/REZN/solved_fixed_points/k4_pr_nail/J_*.npy
+
+# LaTeX intermediate files (regenerable from .tex)
+*.aux
+*.log
+*.out
+*.toc

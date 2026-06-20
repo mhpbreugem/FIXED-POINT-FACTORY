@@ -1,0 +1,9 @@
+{
+  "n_red": 495,
+  "expand_reduce_roundtrip_max_err": 5.551115123125783e-16,
+  "expand_output_asymmetry": 0.0,
+  "NL_halo_inner_asymmetry": 7.105427357601002e-15,
+  "phi_of_symmetric_P_asymmetry": 0.0,
+  "orbit_avg_vs_representative_read_maxdiff": 4.440892098500626e-16,
+  "commutes_with_permutations_1e-12": true
+}

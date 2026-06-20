@@ -1,0 +1,10 @@
+{
+  "P_path": "/home/user/FIXED-POINT-FACTORY/projects/REZN/solver_code/sigma_delta/cdf_cube_NB_G13_NQ64_g0.1.npy",
+  "ferr": 0.037641326659275,
+  "rms": 0.0040764344973777825,
+  "sigma_J_min": 0.24156004543228438,
+  "sigma_J_max": 22.368362657658935,
+  "sigma_IJ_min": 0.5024233515909575,
+  "sigma_IJ_max": 23.36789956534165,
+  "IJ_cond": 46.51037713781737
+}

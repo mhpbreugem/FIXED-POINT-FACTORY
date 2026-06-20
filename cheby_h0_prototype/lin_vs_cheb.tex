@@ -1,0 +1,260 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx,amsmath,amssymb,booktabs,hyperref,xcolor}
+\graphicspath{{/tmp/cheby_h0/figs/}}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\title{Does the tabulated-$\mu$ architecture really need Chebyshev?\\
+       a three-way head-to-head}
+\author{Fixed-Point Factory --- experiment note}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+The tabulated-$\mu$ refactoring (\texttt{tab\_explain.pdf}) reduces the
+per-cell contour cost to a single 1D table lookup, with Phase-B clearing
+running independently at every cube cell. Once that simplification is in
+place, the natural question is: does the underlying conjecture $P$ still
+need to be a tensor-Chebyshev polynomial, or could a simpler CDF-uniform
+linear-grid representation do the same job? We answer empirically by
+running three operator variants at $N{=}7$, $\tau{=}\gamma{=}1$:
+\begin{itemize}
+  \item[(A)] \textbf{Cheb tab} --- Lobatto--atanh nodes, atanh-stretched
+        GL quadrature in $\xi_a$, Chebyshev polynomial slice evaluation.
+  \item[(B)] \textbf{Linear-on-Lobatto} --- \emph{same nodes, same
+        quadrature} as A, but slice evaluation by 2D linear
+        interpolation. Isolates the effect of the interpolant alone.
+  \item[(C)] \textbf{Linear uniform-$u$} --- uniform-in-$u$ nodes on
+        $[-U_{\max}, U_{\max}]$, uniform-$u$ GL quadrature, linear
+        interpolation. Drops the Chebyshev infrastructure entirely.
+\end{itemize}
+Headline: \textbf{A's floor is 10$\times$ better than B's, and 35$\times$
+better than C's.} Variant C's floor does \emph{not} improve as you refine
+$G_{\rm lin}$ --- the uniform-$u$ GL quadrature is the wrong measure for
+$\int f_v\,du$ and the iteration converges to a different (wrong) FP.
+Variant B is the most informative: same nodes and same quadrature as A,
+so the entire 10$\times$ gap is attributable to losing the smooth Chebyshev
+derivative $\partial P/\partial u_b$ in the co-area integrand. The
+verdict: \textbf{at the current resolution, Chebyshev is buying you one
+order of magnitude in residual quality} --- expensive to abandon at
+$N{=}7$, harder to justify if the operator's structural floor were much
+lower.
+\end{abstract}
+
+\section{Design of the experiment}
+
+The three operators all share the tabulated-$\mu$ architecture from
+\texttt{tab\_explain.pdf}: build $\mu(p, u_k)$ on a $G_p\!\times\!G$
+table once per $\Phi$, then look up at every cube cell and run CRRA
+clearing. They differ only in how the underlying $P$ is represented:
+
+\begin{center}
+\begin{tabular}{lcccc}
+\toprule
+Operator & nodes for $P$ & GL quad in $\xi_a$? & slice eval & root in $\xi_b$ \\
+\midrule
+A.\ Cheb tab           & Lobatto+atanh & atanh-stretched & Cheb polynomial & bisection on poly \\
+B.\ Lin-on-Lobatto     & Lobatto+atanh & atanh-stretched & 2D bilinear     & sign-change on grid \\
+C.\ Linear uniform-$u$ & uniform $u$   & uniform $u$     & 2D bilinear     & sign-change on grid \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Both linear variants store $P$ as raw values at the grid nodes; no
+coefficient transform. The grid spacings are $G_p{=}51$ for the
+$p$-table in all three; the cube-clearing grid is $G{=}7$ for A and B,
+and we sweep $G_{\rm lin}\in\{9,13,17,21,25,33\}$ for C.
+
+Starting conjecture: $P_0(u) = \sigma(0.5\,\tau\sum_k u_k)$ on each
+operator's own grid. Iteration: Anderson type-II with memory $m{=}8$,
+80 iterations.
+
+\section{Result 1: the floor under iteration}
+
+\begin{center}
+\includegraphics[width=0.97\linewidth]{three_ops_01_floor.png}
+\end{center}
+
+\begin{tabular}{lcc}
+\toprule
+operator & min $\|F\|_\infty$ (80 Anderson iters) & ratio vs A \\
+\midrule
+A. Cheb tab            & $3.04\!\times\!10^{-3}$ & $1\times$ \\
+B. Linear on Lobatto   & $2.97\!\times\!10^{-2}$ & $9.8\times$ worse \\
+C. Linear uniform-$u$  & $1.12\!\times\!10^{-1}$ & $37\times$ worse \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.5em}
+A reaches the known structural floor at $N{=}7$ ($3\!\times\!10^{-3}$,
+diagnosed in \texttt{fp\_analysis.pdf}). B and C both undershoot it
+substantially. The key comparison is \textbf{A vs B}: identical nodes,
+identical quadrature, only the interpolation differs. The full 10$\times$
+gap is attributable to losing the smooth $\partial P/\partial u_b$ in the
+co-area integrand.
+
+\paragraph{Why piecewise-linear interpolation hurts.} The co-area
+integrand carries a $1/|\partial P/\partial u_b|$ factor. With Chebyshev
+$P$, this derivative is a smooth polynomial (\texttt{chebder} coefficient
+recurrence is exact). With piecewise-linear $P$, $\partial P/\partial u_b$
+is \emph{piecewise constant} --- it jumps at every Lobatto grid line.
+Those jumps inject high-frequency noise into the $\mu$ table, which feeds
+back through clearing and limits how close the iteration can drive the
+residual.
+
+\section{Result 2: variant C does not converge with refinement}
+
+The natural defense of C (linear uniform-$u$) is that refining $G_{\rm
+lin}$ should converge to the truth. It does not:
+
+\begin{center}
+\includegraphics[width=0.97\linewidth]{three_ops_04_lin_sweep.png}
+\end{center}
+
+\textbf{Left.} As $G_{\rm lin}$ grows from 9 to 33, the floor first
+\emph{worsens} (from $2.6\!\times\!10^{-2}$ at $G{=}9$ to
+$1.6\!\times\!10^{-1}$ at $G{=}33$). It never reaches the Cheb floor.
+\textbf{Right.} Wall time grows like $G_{\rm lin}^3$ (driven by the
+per-cube-cell CRRA bisection), so refinement is cubic-expensive.
+
+\textbf{Why refinement fails:} The Hellwig co-area integral involves
+$\int f_v(u_a)\,f_v(u_b(u_a))\,/\,|\partial P/\partial u_b|\,du_a$
+where $f_v$ is a Gaussian density centred at $u = \pm \tfrac{1}{2}$ with
+unit standard deviation (at $\tau{=}1$). The Cheb operator uses
+atanh-stretched GL nodes, which concentrate quadrature points near
+$u\approx 0$ where $f_v\cdot f_v$ is largest. Variant C uses GL nodes
+uniformly mapped to $[-U_{\max},U_{\max}]$, putting most nodes in the
+\emph{tails} where $f_v$ is small --- starving the integral of the
+mass it needs. Refining the storage grid does not fix this: the GL
+points are still in the wrong places. The result is a systematically
+biased $\mu$ table and a different (wrong) fixed point, with slope
+$\alpha^* \approx 0.66$ instead of A's $0.34$ at $\gamma{=}1$.
+
+\section{Result 3: wall time}
+
+\begin{center}
+\includegraphics[width=0.85\linewidth]{three_ops_02_walltime.png}
+\end{center}
+
+\begin{tabular}{lcc}
+\toprule
+operator & wall time per $\Phi$ & floor \\
+\midrule
+A. Cheb tab            & $9.5$ ms & $3.0\!\times\!10^{-3}$ \\
+B. Linear on Lobatto   & $5.2$ ms ($\mathbf{1.8\times}$ faster) & $3.0\!\times\!10^{-2}$ \\
+C. Linear uniform-$u$ ($G_{\rm lin}{=}21$) & $123$ ms (13$\times$ slower) & $1.1\!\times\!10^{-1}$ \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.5em}
+Variant B \emph{is} faster than A --- by $\sim 2\times$ --- because the
+slice evaluation is a simple bilinear blend instead of a Chebyshev value
+recurrence, and the root extraction is a single sign-change scan rather
+than bisection on the polynomial. But the floor is 10$\times$ worse.
+
+\textbf{Cost-of-quality:} B gives you 2$\times$ faster $\Phi$ for 10$\times$
+worse residual. If the goal is just to get an FP at $\|F\|_\infty\sim 3
+\!\times\!10^{-2}$ (perhaps for a coarse phase diagram), B is the right
+choice. If the goal is the structural floor at $\sim 10^{-3}$, you need
+A.
+
+Variant C's 13$\times$ slowdown comes from $G_{\rm lin}{=}21$ giving
+$21^3 = 9261$ cube cells (vs A's $7^3 = 343$); the per-cell CRRA bisection
+dominates and there's no recovery from refinement.
+
+\section{Result 4: $\gamma$-dependence}
+
+\begin{center}
+\includegraphics[width=0.85\linewidth]{three_ops_03_gamma.png}
+\end{center}
+
+The three operators agree on the qualitative shape (slope rising with
+$\gamma$, as expected from CRRA risk-aversion concentrating demand on
+the more probable state), but the \emph{level} is systematically off:
+
+\begin{tabular}{cccc}
+\toprule
+$\gamma$ & A. Cheb & B. Lin-Lob & C. Lin-uniform \\
+\midrule
+0.3 & 0.305 & 0.485 & 0.539 \\
+1.0 & 0.342 & 0.596 & 0.658 \\
+5.0 & 0.463 & 0.731 & 0.667 \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.5em}
+B and C both over-estimate the slope by 50--90\% across the range. The
+discrepancy comes from the same source as the residual floor: the
+mis-estimated $\partial P/\partial u_b$ in the co-area integrand and (for
+C) the mis-placed quadrature nodes corrupt the $\mu(p, u_k)$ table.
+
+\section{Result 5: slice visualisation}
+
+A direct look at $P$ after one $\Phi$ application (slice fixing $u_2 = $
+middle Lobatto node):
+
+\begin{center}
+\includegraphics[width=\linewidth]{three_ops_05_slices.png}
+\end{center}
+
+A and B look qualitatively similar (the underlying conjecture is
+$\sigma(0.5T)$, smooth and antisymmetric about $T{=}0$), with A's slice
+slightly sharper at the boundaries due to the smooth Cheb derivative.
+C looks markedly different: the slope across the diagonal is shallower
+and the boundary regions are more diffuse, consistent with its
+under-resolved tail quadrature.
+
+\section{Verdict: what role is Chebyshev still playing?}
+
+\begin{enumerate}
+  \item \textbf{Storing $P$ as a tensor-Chebyshev polynomial} ---
+        \emph{not essential.} Phase B (clearing) only reads $P$ at the
+        cube grid points; any representation that gives the same node
+        values works.
+  \item \textbf{Lobatto--atanh node placement + atanh-stretched GL
+        quadrature} --- \emph{essential.} Even with linear interpolation
+        of $P$ (variant B), keeping the Lobatto--atanh structure gives
+        $3\!\times\!10^{-2}$. Replacing it with uniform-$u$ (variant C)
+        loses another 4$\times$ in floor and never recovers with
+        refinement.
+  \item \textbf{Smooth $\partial P/\partial u_b$ via \texttt{chebder}} ---
+        \emph{worth one order of magnitude in floor.} The whole gap from
+        $3\!\times\!10^{-3}$ (A) to $3\!\times\!10^{-2}$ (B) is paid for
+        by the smooth derivative in the co-area integrand. This is the
+        single largest contributor.
+\end{enumerate}
+
+\paragraph{Practical implication.} The structural floor at $N{=}7$ is
+$\sim 1.7\!\times\!10^{-3}$ (LM+Newton, \texttt{fp\_analysis.pdf}).
+Variant A reaches $3.0\!\times\!10^{-3}$ --- close to that floor.
+Variant B reaches $3.0\!\times\!10^{-2}$ --- a factor of 17$\times$
+above the structural floor. So Chebyshev is currently the bottleneck
+between "achieves the architecture's floor" and "leaves 17$\times$ of
+room on the table". \emph{If we were already near a much higher floor
+(say $10^{-1}$), linear-on-Lobatto would be the cheaper choice.}
+
+\paragraph{What would close the gap?} A C$^1$ piecewise interpolant
+(PCHIP / monotone cubic Hermite) on Lobatto nodes would give a smooth
+$\partial P/\partial u_b$ without going to full Chebyshev. Predicted
+floor: somewhere between B ($3\!\times\!10^{-2}$) and A
+($3\!\times\!10^{-3}$). This is the natural next experiment if speed
+matters more than the last factor of three.
+
+\paragraph{Summary recommendation.} Keep Chebyshev for now. The smooth
+derivative is genuinely doing work, not just costing time. The only
+component to consider replacing is the storage layer (Cheb coeffs $\to$
+raw values) once $N$ grows large enough that the coefficient
+representation becomes a memory burden --- which is not the regime
+we're in at $N \lesssim 12$.
+
+\section*{Reproducibility}
+
+Figures generated by \texttt{plot\_three\_ops.py}; raw numbers in
+\texttt{three\_ops.json}. Operator sources:
+\texttt{cheby\_numba\_tab.py} (A), \texttt{cheby\_linterp\_on\_lob.py}
+(B), \texttt{cheby\_linear\_op.py} (C). All on branch
+\texttt{claude/study-fixed-point-economics-y12PB}.
+
+\end{document}

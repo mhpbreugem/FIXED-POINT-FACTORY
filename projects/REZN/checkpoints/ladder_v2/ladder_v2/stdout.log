@@ -1,0 +1,46 @@
+[12:20:09] === Ladder v2 started — γ=0.5, τ=2.0, G=10 ===
+[12:20:09] 
+=== p357/bisect ===
+[12:20:09]   step 0: Gp=3, p=[0.3, 0.5, 0.7]
+[12:20:37]     F=3.390e-13, iters=21, shelves=6, p_viol=6, bad_p*=428, 1-R²=0.2458, slope=0.225, wall=5.3s
+[12:20:37]   step 1: Gp=5, p=[0.3, 0.4, 0.5, 0.6, 0.7]
+[12:21:12]     F=4.516e-13, iters=20, shelves=6, p_viol=6, bad_p*=8, 1-R²=0.1116, slope=0.343, wall=8.3s
+[claude/study-fixed-point-economics-y12PB 750f78c] ladder v2: p357/bisect
+ 16 files changed, 116 insertions(+)
+ create mode 100644 projects/REZN/checkpoints/ladder_v2/ladder_summary.pdf
+ create mode 100644 projects/REZN/checkpoints/ladder_v2/ladder_summary.png
+ create mode 100644 projects/REZN/checkpoints/ladder_v2/ladder_v2/ladder_summary.pdf
+ create mode 100644 projects/REZN/checkpoints/ladder_v2/ladder_v2/ladder_summary.png
+ create mode 100644 projects/REZN/checkpoints/ladder_v2/ladder_v2/log.txt
+ create mode 100644 projects/REZN/checkpoints/ladder_v2/ladder_v2/mu_p357_bisect_step0_Gp3.npz
+ create mode 100644 projects/REZN/checkpoints/ladder_v2/ladder_v2/mu_p357_bisect_step1_Gp5.npz
+ create mode 100644 projects/REZN/checkpoints/ladder_v2/ladder_v2/results.json
+ create mode 100644 projects/REZN/checkpoints/ladder_v2/ladder_v2/stdout.log
+ create mode 100644 projects/REZN/checkpoints/ladder_v2/ladder_v2/summary.md
+ create mode 100644 projects/REZN/checkpoints/ladder_v2/log.txt
+ create mode 100644 projects/REZN/checkpoints/ladder_v2/mu_p357_bisect_step0_Gp3.npz
+ create mode 100644 projects/REZN/checkpoints/ladder_v2/mu_p357_bisect_step1_Gp5.npz
+ create mode 100644 projects/REZN/checkpoints/ladder_v2/results.json
+ create mode 100644 projects/REZN/checkpoints/ladder_v2/stdout.log
+ create mode 100644 projects/REZN/checkpoints/ladder_v2/summary.md
+[12:21:16]   committed + pushed: ladder v2: p357/bisect
+[12:21:16] 
+=== p258/bisect ===
+[12:21:16]   step 0: Gp=3, p=[0.25, 0.5, 0.75]
+[12:21:43]     F=8.434e-13, iters=20, shelves=10, p_viol=10, bad_p*=16, 1-R²=0.2451, slope=0.383, wall=4.6s
+[12:21:43]   step 1: Gp=5, p=[0.25, 0.375, 0.5, 0.625, 0.75]
+[12:22:19]     F=2.473e-13, iters=16, shelves=12, p_viol=10, bad_p*=20, 1-R²=0.1040, slope=0.450, wall=5.4s
+[claude/study-fixed-point-economics-y12PB 8c56272] ladder v2: p258/bisect
+ 16 files changed, 146 insertions(+), 2 deletions(-)
+ create mode 100644 projects/REZN/checkpoints/ladder_v2/ladder_v2/mu_p258_bisect_step0_Gp3.npz
+ create mode 100644 projects/REZN/checkpoints/ladder_v2/ladder_v2/mu_p258_bisect_step1_Gp5.npz
+ create mode 100644 projects/REZN/checkpoints/ladder_v2/mu_p258_bisect_step0_Gp3.npz
+ create mode 100644 projects/REZN/checkpoints/ladder_v2/mu_p258_bisect_step1_Gp5.npz
+[12:22:22]   committed + pushed: ladder v2: p258/bisect
+[12:22:22] 
+=== p2_5_8/bisect ===
+[12:22:22]   step 0: Gp=3, p=[0.2, 0.5, 0.8]
+[12:22:48]     F=3.307e-13, iters=23, shelves=12, p_viol=10, bad_p*=0, 1-R²=0.4176, slope=0.342, wall=4.1s
+[12:22:48]   step 1: Gp=5, p=[0.2, 0.35, 0.5, 0.65, 0.8]
+[12:23:06]     F=5.001e-01, iters=3, shelves=12, p_viol=20, bad_p*=0, 1-R²=nan, slope=nan, wall=3.4s
+[12:23:06]     *** STOPPING ladder — F=5.00e-01 too large ***

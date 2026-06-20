@@ -1,0 +1,27 @@
+[14:28:19] === Everything-at-τ=0.5 started ===
+[14:28:19]   γ=0.5, G=10, target F<1e-12
+[14:28:19]   Gp1/NL/lm-newton                        F=nan  n=   0  wall=  0.0s
+[14:28:19]   Gp1/NL/trf                              F=nan  n=   0  wall=  0.0s
+[14:28:19]   Gp1/NL/krylov                           F=nan  n=   0  wall=  0.0s
+[14:28:19]   Gp1/NL/broyden1                         F=nan  n=   0  wall=  0.0s
+[14:28:19]   Gp1/NL/anderson                         F=nan  n=   0  wall=  0.0s
+[14:28:19]   Gp1/NL/df-sane                          F=nan  n=   0  wall=  0.0s
+[14:28:19]   Gp1/NL/long-picard                      F=nan  n=   0  wall=  0.0s
+[14:28:19]   Gp1/half/lm-newton                      F=nan  n=   0  wall=  0.0s
+[14:28:19]   Gp1/half/trf                            F=nan  n=   0  wall=  0.0s
+[14:28:19]   Gp1/half/krylov                         F=nan  n=   0  wall=  0.0s
+[14:28:19]   Gp1/half/broyden1                       F=nan  n=   0  wall=  0.0s
+[14:28:19]   Gp1/half/anderson                       F=nan  n=   0  wall=  0.0s
+[14:28:20]   committed + pushed: everything τ=0.5: 12/112 trials
+[14:28:20]   Gp1/half/df-sane                        F=nan  n=   0  wall=  0.0s
+[14:28:20]   Gp1/half/long-picard                    F=nan  n=   0  wall=  0.0s
+[14:28:20]   Gp1/half_bias/lm-newton                 F=nan  n=   0  wall=  0.0s
+[14:28:20]   Gp1/half_bias/trf                       F=nan  n=   0  wall=  0.0s
+[14:28:20]   Gp1/half_bias/krylov                    F=nan  n=   0  wall=  0.0s
+[14:28:20]   Gp1/half_bias/broyden1                  F=nan  n=   0  wall=  0.0s
+[14:28:20]   Gp1/half_bias/anderson                  F=nan  n=   0  wall=  0.0s
+[14:28:20]   Gp1/half_bias/df-sane                   F=nan  n=   0  wall=  0.0s
+[14:28:20]   Gp1/half_bias/long-picard               F=nan  n=   0  wall=  0.0s
+[14:28:20]   Gp1/cara_half/lm-newton                 F=nan  n=   0  wall=  0.0s
+[14:28:20]   Gp1/cara_half/trf                       F=nan  n=   0  wall=  0.0s
+[14:28:20]   Gp1/cara_half/krylov                    F=nan  n=   0  wall=  0.0s

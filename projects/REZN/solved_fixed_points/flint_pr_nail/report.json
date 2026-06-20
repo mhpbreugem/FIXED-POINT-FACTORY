@@ -1,0 +1,93 @@
+{
+  "task": "Active-set-frozen (semismooth) Newton for K=3 CRRA REE strict contour-Phi PR equilibrium, G=11 grid, 200-dec flint (h=0, no mask smoothing).",
+  "params": {"G_FULL": 11, "interior": 729, "TOT_u": 2.0, "TOT_S": 3.0, "TOT_d": 3.0, "tau": 2.0, "gamma": 0.1, "W": 1.0, "dps": 200},
+
+  "warm_start": {
+    "chosen": "L2 (flint_L2_newton/P.npy)",
+    "reason": "lowest strict ||Phi-P||inf among all available checkpoints",
+    "all_candidates_strict_residual": {
+      "anderson":     {"inf": 0.2183300, "two": 0.4884402, "d_FR": 0.2685254},
+      "persist2":     {"inf": 0.2093988, "two": 0.5869558, "d_FR": 0.2691658},
+      "flint_newton": {"inf": 0.2182594, "two": 0.4416102, "d_FR": 0.2686154},
+      "L1":           {"inf": 0.2090767, "two": 0.5835268, "d_FR": 0.2691524},
+      "L2":           {"inf": 0.2077727, "two": 0.5667145, "d_FR": 0.2691094},
+      "L3":           {"inf": 0.2093075, "two": 0.5852858, "d_FR": 0.2691617}
+    },
+    "note": "Spec anticipated a warm start near ||Phi-P||inf approx 0.066 (anderson). No saved checkpoint is near 0.066: anderson/P.npy evaluates to 0.2183 (its run.json intermediate 0.066/0.121 figures do not correspond to the saved P.npy). All available PR checkpoints sit at ||Phi-P||inf approx 0.208-0.218, ||.||2 approx 0.44-0.59."
+  },
+
+  "feasibility_gate": {
+    "PASSED": true,
+    "frozen_vs_strict_maxdiff_at_warmstart": 0.0,
+    "recorded_vs_fast_strict_maxdiff": 0.0,
+    "n_active_keys": 4374,
+    "n_active_crossing_sites": 787320,
+    "comment": "Freezing the contour-crossing decisions reproduces strict Phi(P) EXACTLY (0.0) at the warm start. The freeze is correct; phi_frozen is a smooth function of P with the recorded branch decisions replayed."
+  },
+
+  "frozen_newton_run": {
+    "method": "Levenberg-Marquardt on F(P)=phi_frozen(P)-P=0; dense 729x729 FD Jacobian (eps=1e-7, parallel over columns, ~30 min/build), reused as chord; ||F||2 acceptance with adaptive lambda.",
+    "jacobian_well_conditioned": true,
+    "cond_J": 1417.1, "smin": 0.0021346, "smax": 3.0251,
+    "as_iter_1": {
+      "newton_descent_normF2": [0.56671, 0.54212, 0.53904, 0.53887, 0.53887],
+      "newton_descent_normFinf": [0.20777, 0.19757, 0.19481, 0.19405, 0.19403],
+      "outcome": "LM stalled after 4 steps: lambda exploded to 1.6e10, no further descent. Frozen ||F||2 reduced only ~5% (0.567->0.539) before the chord Jacobian became useless.",
+      "strict_residual_at_frozen_solution": {"inf": 0.5032030, "two": 0.7482605, "d_FR": 0.2692863},
+      "active_set_changes_after_solve": 4162,
+      "n_cells_with_changed_crossings": 281
+    },
+    "diverging": "Evaluating STRICT Phi at the frozen LM solution gives ||Phi-P||inf=0.503 -- WORSE than the 0.208 start. The frozen solve moved P into a region where the active set flipped in 281 of 729 cells, so the result is NOT a strict fixed point. Active-set iteration 2 started from this worse point (diverging), and was stopped."
+  },
+
+  "decisive_diagnostic_active_set_sensitivity": {
+    "description": "Active-set changes and STRICT residual along the frozen-Newton direction from the L2 warm start, as a function of step size alpha (Newton ||delta||inf = 13.78).",
+    "table": [
+      {"alpha": 1.0,    "active_changes": 27398, "cells": 677, "strict_inf": 13.366,  "strict_2": 13.545},
+      {"alpha": 0.3,    "active_changes": 8824,  "cells": 461, "strict_inf": 3.7204,  "strict_2": 3.9516},
+      {"alpha": 0.1,    "active_changes": 4136,  "cells": 313, "strict_inf": 0.96451, "strict_2": 1.4218},
+      {"alpha": 0.03,   "active_changes": 1654,  "cells": 143, "strict_inf": 0.20157, "strict_2": 0.57546},
+      {"alpha": 0.01,   "active_changes": 436,   "cells": 43,  "strict_inf": 0.20570, "strict_2": 0.59165},
+      {"alpha": 0.003,  "active_changes": 156,   "cells": 17,  "strict_inf": 0.20715, "strict_2": 0.57820},
+      {"alpha": 0.001,  "active_changes": 66,    "cells": 10,  "strict_inf": 0.20756, "strict_2": 0.57448},
+      {"alpha": 1e-4,   "active_changes": 14,    "cells": 3,   "strict_inf": 0.20775, "strict_2": 0.56666},
+      {"alpha": 1e-5,   "active_changes": 14,    "cells": 3,   "strict_inf": 0.20777, "strict_2": 0.56671},
+      {"alpha": 1e-6,   "active_changes": 14,    "cells": 3,   "strict_inf": 0.20777, "strict_2": 0.56671}
+    ],
+    "interpretation": "The frozen-Newton direction is HUGE (||delta||inf=13.78, prices live in [0,1]) because J^{-1} amplifies the 0.2 residual ~470x (smin=0.002). Any step large enough to change the strict residual flips hundreds of cells' crossing topology (313 cells even at alpha=0.1). At step sizes small enough to preserve the active set (alpha<=1e-4), the STRICT residual is PINNED at 0.20777 -- the frozen Newton direction yields ZERO reduction in the true strict residual within the validity region of the frozen active set. There is no descent available inside the current active-set cell."
+  },
+
+  "persistent_kink_cells": {
+    "description": "Crossings that flip even at alpha->0 (1e-6). These are degenerate (dp*dn)<=0 tie-breaks at exact grid-node crossings.",
+    "cells": [[1, 2, 2], [9, 1, 1], [9, 2, 2]],
+    "n_crossings": 14,
+    "residual_at_these_cells": {"(1,2,2)": 1.08e-17, "(9,1,1)": 2.78e-20, "(9,2,2)": 2.77e-20},
+    "note": "These 3 cells are already AT their fixed point (residual ~1e-17 to 1e-20); the flips are harmless node-tie ambiguities and do NOT hold the ||.||inf. The 0.208 inf-norm is held by BULK cells: (3,5,5)=0.2078, (8,3,5)=0.172, (7,3,5)=0.155, (6,4,5)=0.154, (4,5,5)=0.142, ... -- a broad set, not a localized kink."
+  },
+
+  "ANSWER": {
+    "does_a_high_precision_strict_equilibrium_exist_reachable_from_these_warm_starts": "NOT reachable by active-set-frozen Newton from any available checkpoint.",
+    "is_the_0.06_floor_an_irreducible_kink": "The premise does not hold on the available data. (a) No checkpoint is at ~0.06; the best is ||Phi-P||inf=0.2078 (L2). (b) The obstruction is NOT a few stiff kinked cells -- the residual is spread across hundreds of bulk cells (||.||2=0.567). (c) The frozen Jacobian is well-conditioned (cond=1417), so the frozen system IS smooth and solvable; but the warm starts are so far from the equilibrium that the Newton step (||delta||inf=13.8) overshoots wildly and crosses thousands of contour-topology boundaries. (d) Within the active-set validity region (step small enough to keep crossings fixed), the frozen-Newton direction gives exactly zero strict-residual reduction (pinned at 0.20777). The active set is pervasively unstable: any residual-reducing step flips 313+ cells. This is a globally non-smooth landscape, not a localized irreducible kink at 0.06.",
+    "highest_precision_achieved": {
+      "strict_normPhiP_inf": 0.2077727011832030,
+      "strict_normPhiP_2": 0.5667144644343042,
+      "achieved_at": "L2 warm start (frozen-Newton could not improve it)"
+    },
+    "d_FR_of_best_equilibrium": 0.2691094137925732,
+    "d_FR_definition": "RMS distance of interior P from P_FR = sigmoid(tau_F*(u1+u2+u3)), tau_F=2.",
+    "active_set_stabilized_or_cycled": "Neither converged to a clean equilibrium nor settled into a 2-cycle: the active-set iteration DIVERGES (strict residual rises 0.208->0.503 after the first frozen solve, with 281 cells flipping). The frozen solution is not a strict fixed point."
+  },
+
+  "counts": {
+    "n_active_set_iterations_run": 1.5,
+    "n_jacobian_builds": 2,
+    "n_newton_lm_steps": 4,
+    "wall_clock": "first build 36.6 min (serial-bug rerun), second build 29.5 min (parallel), plus diagnostics"
+  },
+
+  "stiff_cells": [[3, 5, 5], [8, 3, 5], [7, 3, 5], [6, 4, 5], [4, 5, 5], [8, 2, 5], [7, 4, 5], [2, 7, 5], [3, 4, 9], [4, 4, 4]],
+  "stiff_cells_note": "Top-10 cells holding the bulk residual at the L2 warm start (these are NOT kink ties; they are simply far from the strict fixed point).",
+
+  "status": "DONE_no_high_precision_equilibrium_reachable",
+  "P_star_npy": "L2 warm start (the lowest-residual strict point found; frozen Newton produced no improvement)."
+}

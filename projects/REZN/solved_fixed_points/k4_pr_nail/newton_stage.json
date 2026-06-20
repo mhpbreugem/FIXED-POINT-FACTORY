@@ -1,0 +1,14 @@
+{
+ "method": "accurate-Jacobian damped/Armijo Newton on the S2xS2-symmetric reduced inner block (2025 unknowns instead of 6561). Dense 2025x2025 FD Jacobian (eps=1e-7) of the symmetric residual, built in 783s; Armijo backtracking line search on ||F||2.",
+ "NORB": 2025,
+ "symmetry_exact": "full-residual == sym-residual == 2.594445e-03 at the warm start, confirming the operator commutes with (0<->1) and (2<->3) swaps and the fixed point lives in the symmetric subspace.",
+ "cond_J": 5.9192e+11,
+ "smin_J": 8.4471e-06,
+ "smax_J": 5.0000e+06,
+ "newton_traj": [2.594445e-03, 2.573539e-03, 2.568155e-03, 2.565440e-03, 2.564076e-03],
+ "alpha_traj": [null, 7.81e-03, 1.95e-03, 9.77e-04, 4.88e-04],
+ "F_final": 2.564076e-03,
+ "warm_src": "P_warm_inner.npy",
+ "outcome": "STALLED on the non-smooth plateau. The accurate Jacobian is severely ILL-CONDITIONED (cond=5.9e11, smax=5e6 from the gamma=300 demand-dropout stiffness, smin=8.4e-6). The full Newton step is amplified ~5.9e11x and overshoots, so Armijo backtracks to vanishing step sizes (alpha 7.8e-3 -> 4.9e-4, halving each iteration) that yield negligible descent: ||F||inf moved only 2.594e-3 -> 2.564e-3 (1.2%) in 4 iterations before the line search collapsed. This is the SAME signature as the K=3 flint_pr_nail plateau (there cond=1417 but the step still amplified the residual ~470x and pinned it). Job killed during the periodic Jacobian rebuild since the descent was conclusively stalled.",
+ "decisive_finding": "||F||inf FLOORS at ~2.56e-3; it does NOT reach 1e-8. Even an accurate (non-matrix-free) Jacobian cannot drive the residual to a true root. The PR surface at gamma=[300,300,1,1] is a non-smooth plateau, smaller than K=3's ~0.06 but still ~1e-3 >> 1e-8."
+}

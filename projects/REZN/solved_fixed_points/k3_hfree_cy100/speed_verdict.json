@@ -1,0 +1,10 @@
+{
+  "verdict": "Cython+libflint h-free operator at 100-dec = 34.7s/eval; only 2.2x faster than python-flint (78s) and ~70x SLOWER than float64 (0.5s). NOT fast: the bottleneck is intrinsic 100-digit arb arithmetic (libflint exp/log/div + cubic-spline solve + bisection root-find + 40-node quadrature per cell), which Cython cannot accelerate (it only removes Python overhead, ~2x). 100-dec of this operator is ~35s/eval regardless. Implication: use float64 (0.5s/eval) for the G->inf limit (deficit is O(0.1), 100-dec unneeded); reserve 100-dec only for the optional 1e-100 nail at fixed G=9 (~30-60min warm-started).",
+  "s_per_eval": {
+    "python_flint": 78.11,
+    "cython_libflint": 34.72,
+    "float64": 0.499
+  },
+  "cython_speedup_vs_pyflint": 2.25,
+  "cython_vs_float64": "~70x slower"
+}

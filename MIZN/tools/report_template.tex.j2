@@ -1,0 +1,60 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,graphicx,booktabs,hyperref,longtable}
+\title{MIZN run report: \texttt{ {{- scenario -}} }}
+\author{auto-generated}
+\date{ {{- timestamp -}} }
+
+\begin{document}\maketitle
+
+\section*{1.~Summary}
+Scenario \texttt{ {{- scenario -}} } on model \texttt{ {{- active_variants['model'] -}} },
+grid \texttt{ {{- active_variants['grid'] -}} },
+step2 \texttt{ {{- active_variants['step2'] -}} },
+solver \texttt{ {{- active_variants['solver'] -}} }.
+Converged in {{ iters }} iterations to $\|F\|_\infty = {{ "%.3e"|format(Finf) }}$
+in {{ "%.2f"|format(walltime_s) }}\,s.
+
+\section*{2.~Configuration}
+\begin{tabular}{ll}\toprule
+parameter & value \\\midrule
+{% for k, v in config.items() %}\texttt{ {{- k|replace('_','\\_') -}} } & {{ v }} \\
+{% endfor %}\bottomrule
+\end{tabular}
+
+\section*{3.~Result metrics}
+\begin{tabular}{lr}\toprule
+metric & value \\\midrule
+$\|F\|_\infty$              & {{ "%.3e"|format(Finf) }} \\
+slope$_T$                    & {{ "%.5f"|format(slope_T) }} \\
+deficit ($1-R^2$)            & {{ "%.5e"|format(deficit) }} \\
+$d_\mathrm{FR}$              & {{ "%.4f"|format(d_FR) }} \\
+$\max|P-P_\mathrm{analytic}|$ & {{ "%.3e"|format(d_analytic) }} \\
+iterations                   & {{ iters }} \\
+walltime (s)                 & {{ "%.2f"|format(walltime_s) }} \\
+\bottomrule
+\end{tabular}
+
+\section*{4.~Convergence}
+\includegraphics[width=\linewidth]{artifacts/plots/convergence.png}
+
+\section*{5.~Fixed point}
+\includegraphics[width=\linewidth]{artifacts/plots/P_slices.png}
+
+\section*{6.~Version manifest}
+\small\begin{longtable}{lll}\toprule
+file & git\_blob (first 10) & sha256 (first 10) \\\midrule
+{% for f, info in files.items() %}\texttt{ {{- f|replace('_','\\_') -}} } & \texttt{ {{- info['git_blob'][:10] -}} } & \texttt{ {{- info['sha256'][:10] -}} } \\
+{% endfor %}\bottomrule
+\end{longtable}
+
+Active variants:
+\texttt{model={{ active_variants['model'] }}, grid={{ active_variants['grid'] }},
+        step2={{ active_variants['step2'] }}, solver={{ active_variants['solver'] }}}.\\
+Repo SHA: \texttt{ {{ repo_sha[:10] }} }
+({{ 'CLEAN' if not repo_dirty else 'DIRTY' }}).
+
+\section*{7.~Notes (manual)}
+\IfFileExists{notes.tex}{\input{notes.tex}}{(none)}
+
+\end{document}

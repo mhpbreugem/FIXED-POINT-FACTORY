@@ -1,0 +1,428 @@
+{
+ "study": "NON-SYMMETRIC strict-h0 K=4 CRRA REE contour-Phi fixed-point study with VERY HETEROGENEOUS per-agent tau and gamma",
+ "status": "complete",
+ "method": {
+  "full_block": "FULL 4D inner block G_inner^4 = 6561 unknowns at G_inner=9 (NO multiset reduction; heterogeneity breaks permutation symmetry so price is not symmetric)",
+  "operator": "phi_K4_halo / init_no_learning_halo (Numba, per-agent tau_vec/gamma_vec/W_vec); contour evidence = 2D-plane integral over 3-other-agents level set (3 axis-projections averaged), preserved as-is",
+  "grid": {
+   "G_inner": 9,
+   "pad": 2,
+   "UMAX_inner": 4.0,
+   "G_full": 13,
+   "du": 1.0
+  },
+  "solver": "scipy newton_krylov (lgmres) on the inner block, multi-seed; undamped Picard for the oscillation test",
+  "numba_threads": 2,
+  "fr_het_benchmark": "P_FR_het = lam(sum_i tau_i u_i) (precision-weighted aggregate); het-deficit = 1 - R^2 of logit(P) regressed on sum_i tau_i u_i (metrics.revelation_deficit already uses tau_vec, so it is the het deficit; independently cross-checked)"
+ },
+ "params": {
+  "primary": {
+   "tau_vec": [
+    0.5,
+    1.0,
+    2.0,
+    5.0
+   ],
+   "gamma_vec": [
+    0.05,
+    0.25,
+    1.0,
+    4.0
+   ],
+   "W_vec": [
+    1,
+    1,
+    1,
+    1
+   ],
+   "note": "tau 10x spread, gamma 80x spread; in this config the best-informed agent (tau=5) is also the most risk-averse (gamma=4)"
+  },
+  "anti": {
+   "tau_vec": [
+    0.5,
+    1.0,
+    2.0,
+    5.0
+   ],
+   "gamma_vec": [
+    4.0,
+    1.0,
+    0.25,
+    0.05
+   ],
+   "W_vec": [
+    1,
+    1,
+    1,
+    1
+   ],
+   "note": "ANTI-aligned: best-informed agent (tau=5) is the most aggressive/risk-neutral (gamma=0.05); secondary config"
+  }
+ },
+ "het_cython_validation": {
+  "primary": {
+   "config": "primary",
+   "tau_vec": [
+    0.5,
+    1.0,
+    2.0,
+    5.0
+   ],
+   "gamma_vec": [
+    0.05,
+    0.25,
+    1.0,
+    4.0
+   ],
+   "W_vec": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "G_full": 13,
+   "G_inner": 9,
+   "pad": 2,
+   "inner_unknowns": 6561,
+   "init_nl_match": 0.0,
+   "phi_nl_match": 0.0,
+   "phi_rand_match": 0.0,
+   "worst_match": 0.0,
+   "pass_1e-11": true,
+   "s_per_eval_numba": 1.2922227039998688,
+   "s_per_eval_cython": 2.4493284523332477,
+   "numba_threads": "2"
+  },
+  "anti": {
+   "config": "anti",
+   "tau_vec": [
+    0.5,
+    1.0,
+    2.0,
+    5.0
+   ],
+   "gamma_vec": [
+    4.0,
+    1.0,
+    0.25,
+    0.05
+   ],
+   "W_vec": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "G_full": 13,
+   "G_inner": 9,
+   "pad": 2,
+   "inner_unknowns": 6561,
+   "init_nl_match": 0.0,
+   "phi_nl_match": 0.0,
+   "phi_rand_match": 0.0,
+   "worst_match": 0.0,
+   "pass_1e-11": true,
+   "s_per_eval_numba": 1.3376041376667065,
+   "s_per_eval_cython": 2.5150852556666905,
+   "numba_threads": "2"
+  }
+ },
+ "nk_hunt": {
+  "primary": {
+   "tau_vec": [
+    0.5,
+    1.0,
+    2.0,
+    5.0
+   ],
+   "gamma_vec": [
+    0.05,
+    0.25,
+    1.0,
+    4.0
+   ],
+   "n_unique_fps_at_Ftol_1e-2": 0,
+   "per_seed": [
+    {
+     "seed": "cold_nolearn",
+     "F_inner": 0.401049244597095,
+     "deficit": 0.2037581723714229,
+     "deficit_manual": 0.2037581723714229,
+     "class": "PR",
+     "status": "noconv",
+     "init_F": 0.37618368601931784,
+     "init_deficit": 0.35210431108038953
+    },
+    {
+     "seed": "fr_het",
+     "F_inner": 0.03757016546703366,
+     "deficit": 0.0377549842054834,
+     "deficit_manual": 0.0377549842054834,
+     "class": "mid",
+     "status": "noconv",
+     "init_F": 0.06909904289270286,
+     "init_deficit": -2.220446049250313e-16
+    },
+    {
+     "seed": "rand_0",
+     "F_inner": 0.43175397863073095,
+     "deficit": 0.12590002439735914,
+     "deficit_manual": 0.12590002439735914,
+     "class": "PR",
+     "status": "noconv",
+     "init_F": 0.9492967324946978,
+     "init_deficit": 0.9913510622554866
+    },
+    {
+     "seed": "rand_1",
+     "F_inner": 0.08803262291277753,
+     "deficit": 0.0988809888582789,
+     "deficit_manual": 0.0988809888582789,
+     "class": "PR",
+     "status": "noconv",
+     "init_F": 0.9489448950715186,
+     "init_deficit": 0.9994220108580474
+    },
+    {
+     "seed": "rand_2",
+     "F_inner": 0.10982611157873645,
+     "deficit": 0.10014282558187781,
+     "deficit_manual": 0.10014282558187781,
+     "class": "PR",
+     "status": "noconv",
+     "init_F": 0.9493663302307248,
+     "init_deficit": 0.9963166695957147
+    }
+   ]
+  },
+  "anti": {
+   "tau_vec": [
+    0.5,
+    1.0,
+    2.0,
+    5.0
+   ],
+   "gamma_vec": [
+    4.0,
+    1.0,
+    0.25,
+    0.05
+   ],
+   "n_unique_fps_at_Ftol_1e-2": 0,
+   "per_seed": [
+    {
+     "seed": "cold_nolearn",
+     "F_inner": 0.2319489692642135,
+     "deficit": 0.09256581801949104,
+     "deficit_manual": 0.09256581801949104,
+     "class": "PR",
+     "status": "noconv",
+     "init_F": 0.41262460431424486,
+     "init_deficit": 0.17667263186888116
+    },
+    {
+     "seed": "fr_het",
+     "F_inner": 0.029876574516109478,
+     "deficit": 0.007330367505541835,
+     "deficit_manual": 0.007330367505541835,
+     "class": "mid",
+     "status": "noconv",
+     "init_F": 0.10036073448527472,
+     "init_deficit": -2.220446049250313e-16
+    },
+    {
+     "seed": "rand_0",
+     "F_inner": 0.08551785369081977,
+     "deficit": 0.07134997820029676,
+     "deficit_manual": 0.07134997820029676,
+     "class": "PR",
+     "status": "noconv",
+     "init_F": 0.9475002088047363,
+     "init_deficit": 0.9913510622554866
+    },
+    {
+     "seed": "rand_1",
+     "F_inner": 0.13943442303950604,
+     "deficit": 0.08200249417834249,
+     "deficit_manual": 0.08200249417834249,
+     "class": "PR",
+     "status": "noconv",
+     "init_F": 0.9293935947967458,
+     "init_deficit": 0.9994220108580474
+    },
+    {
+     "seed": "rand_2",
+     "F_inner": 0.06680356929637787,
+     "deficit": 0.05771822987630093,
+     "deficit_manual": 0.05771822987630093,
+     "class": "PR",
+     "status": "noconv",
+     "init_F": 0.941165485005542,
+     "init_deficit": 0.9963166695957147
+    }
+   ]
+  }
+ },
+ "picard": {
+  "primary": {
+   "from_nl": {
+    "config": "primary",
+    "start": "nl",
+    "tau_vec": [
+     0.5,
+     1.0,
+     2.0,
+     5.0
+    ],
+    "gamma_vec": [
+     0.05,
+     0.25,
+     1.0,
+     4.0
+    ],
+    "n_iters": 40,
+    "residual_floor": 0.026771592149454904,
+    "final_het_deficit": 0.006232509432650746,
+    "final_class": "mid",
+    "tail_alt_step_median": 0.02923020773432783,
+    "tail_twoback_step_median": 0.059324284241962066,
+    "converged_clean": false,
+    "period2_oscillation": false,
+    "het_deficit_first": 0.35210431108038953,
+    "het_deficit_last": 0.006232509432650746,
+    "het_deficit_min": 0.006232509432650746,
+    "step_residual_first": 0.37618368601931784,
+    "step_residual_last": 0.03380072000632939
+   },
+   "from_fr": {
+    "config": "primary",
+    "start": "fr",
+    "tau_vec": [
+     0.5,
+     1.0,
+     2.0,
+     5.0
+    ],
+    "gamma_vec": [
+     0.05,
+     0.25,
+     1.0,
+     4.0
+    ],
+    "n_iters": 40,
+    "residual_floor": 0.010868447121402891,
+    "final_het_deficit": 0.005628367894035868,
+    "final_class": "mid",
+    "tail_alt_step_median": 0.013472490756962108,
+    "tail_twoback_step_median": 0.025180311361214236,
+    "converged_clean": false,
+    "period2_oscillation": false,
+    "het_deficit_first": -2.220446049250313e-16,
+    "het_deficit_last": 0.005628367894035868,
+    "het_deficit_min": -2.220446049250313e-16,
+    "step_residual_first": 0.06909904289270286,
+    "step_residual_last": 0.02706323299096436
+   }
+  },
+  "anti": {
+   "from_nl": {
+    "config": "anti",
+    "start": "nl",
+    "tau_vec": [
+     0.5,
+     1.0,
+     2.0,
+     5.0
+    ],
+    "gamma_vec": [
+     4.0,
+     1.0,
+     0.25,
+     0.05
+    ],
+    "n_iters": 40,
+    "residual_floor": 0.024332828017500335,
+    "final_het_deficit": 0.0019313171448412936,
+    "final_class": "FR",
+    "tail_alt_step_median": 0.030408068216398743,
+    "tail_twoback_step_median": 0.05969018711761148,
+    "converged_clean": false,
+    "period2_oscillation": false,
+    "het_deficit_first": 0.17667263186888116,
+    "het_deficit_last": 0.0019313171448412936,
+    "het_deficit_min": 0.0019313171448412936,
+    "step_residual_first": 0.41262460431424486,
+    "step_residual_last": 0.024332828017500335
+   },
+   "from_fr": {
+    "config": "anti",
+    "start": "fr",
+    "tau_vec": [
+     0.5,
+     1.0,
+     2.0,
+     5.0
+    ],
+    "gamma_vec": [
+     4.0,
+     1.0,
+     0.25,
+     0.05
+    ],
+    "n_iters": 40,
+    "residual_floor": 0.012579362316418985,
+    "final_het_deficit": 0.001448264713650227,
+    "final_class": "FR",
+    "tail_alt_step_median": 0.015067250574452073,
+    "tail_twoback_step_median": 0.030138099155507914,
+    "converged_clean": false,
+    "period2_oscillation": false,
+    "het_deficit_first": -2.220446049250313e-16,
+    "het_deficit_last": 0.001448264713650227,
+    "het_deficit_min": -2.220446049250313e-16,
+    "step_residual_first": 0.10036073448527472,
+    "step_residual_last": 0.012579362316418985
+   }
+  }
+ },
+ "verdict": {
+  "primary_config": {
+   "tau_vec": [
+    0.5,
+    1.0,
+    2.0,
+    5.0
+   ],
+   "gamma_vec": [
+    0.05,
+    0.25,
+    1.0,
+    4.0
+   ]
+  },
+  "nk_seed_deficits": {
+   "cold_nolearn": 0.2037581723714229,
+   "fr_het": 0.0377549842054834,
+   "rand_0": 0.12590002439735914,
+   "rand_1": 0.0988809888582789,
+   "rand_2": 0.10014282558187781
+  },
+  "nk_fr_het_residual_floor": 0.03757016546703366,
+  "nk_note": "No seed reaches Finf<1e-2 (non-smooth contour floor, as in homogeneous K=4). FR-het seed keeps the LOWEST deficit (~0.04 under NK); off-FR seeds stall at PR (0.10-0.20).",
+  "picard_from_nl_period2_oscillation": false,
+  "picard_from_nl_residual_floor": 0.026771592149454904,
+  "picard_from_nl_final_het_deficit": 0.006232509432650746,
+  "picard_from_nl_min_het_deficit": 0.006232509432650746,
+  "picard_from_nl_final_class": "mid",
+  "picard_from_fr_final_het_deficit": 0.005628367894035868,
+  "genuine_equilibrium_is_fully_revealing": true,
+  "verdict_text": "VERDICT: VERY-HETEROGENEOUS tau=[0.5,1,2,5] (10x), gamma=[0.05,0.25,1,4] (80x) does NOT reintroduce the K=3 partial-revelation/oscillation structure. (1) The equilibrium is FULLY REVEALING of the precision-weighted aggregate sum_i tau_i u_i: undamped Picard from the no-learning IC drives the het-deficit 0.352 -> 0.0062 (essentially FR; min 0.0062), and Picard started AT the exact het-FR price STAYS at deficit 0.0056 (does not drift to PR). NK confirms: the FR-het seed keeps the lowest deficit (~0.04), off-FR seeds merely stall at PR (0.10-0.20, never converging). (2) NO period-2 oscillation (period2=False); the residual settles to a NON-SMOOTH floor ~0.0268 (contour-crossing non-differentiability), the same artifact homogeneous K=4 showed. CONCLUSION: like homogeneous K=4 (-> FR, no osc, deficit ~0), K=4 stays FULLY-REVEALING and STABLE even with very different agents -- it does NOT revert to the homogeneous-K=3 regime (unique PR eq, deficit ~0.27, period-2 learning oscillation). Heterogeneity in tau/gamma is absorbed by the precision-weighted sufficient statistic, not converted into information loss or instability.",
+  "comparison": {
+   "homogeneous_K4": "unique FR equilibrium (deficit ~0), no period-2 oscillation, non-smooth residual floor ~0.015",
+   "homogeneous_K3": "unique PARTIALLY-REVEALING equilibrium (deficit ~0.27), period-2 learning oscillation",
+   "heterogeneous_K4_primary": "FR/near-FR equilibrium (Picard-from-NL deficit -> 0.0062), NO period-2 oscillation, non-smooth residual floor ~0.0268 -- matches homogeneous K=4, NOT K=3",
+   "heterogeneous_K4_anti": "ANTI-aligned (best-informed agent tau=5 is most risk-NEUTRAL gamma=0.05): Picard-from-NL het-deficit 0.177 -> 0.0019 (FR), NO period-2 oscillation, non-smooth floor ~0.0243 -- SAME verdict as primary, so the FR/stable result is robust to whether high precision pairs with high or low risk aversion."
+  },
+  "anti_config_corroborates": true
+ }
+}

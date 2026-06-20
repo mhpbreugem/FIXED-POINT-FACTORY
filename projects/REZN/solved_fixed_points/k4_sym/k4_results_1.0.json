@@ -1,0 +1,176 @@
+{
+ "gamma": 1.0,
+ "G_inner": 9,
+ "pad": 2,
+ "n_red": 495,
+ "ftol": 1e-09,
+ "maxit": 16,
+ "seeds": [
+  {
+   "seed": "nl_symmetrized",
+   "Finf": 0.09971480955171225,
+   "deficit": 0.04950053602286175,
+   "d_fr": 0.12392639171149851,
+   "class": "PR",
+   "status": "noconv",
+   "init_F": 0.33697631740892675,
+   "init_d": 0.026093085077339984,
+   "nk_iters": 16,
+   "secs": 166.040560121
+  },
+  {
+   "seed": "fully_revealing",
+   "Finf": 2.622338045585315e-06,
+   "deficit": 1.1102230246251565e-16,
+   "d_fr": 1.7133759653016374e-10,
+   "class": "FR",
+   "status": "plateau",
+   "init_F": 2.622338045585315e-06,
+   "init_d": 1.1102230246251565e-16,
+   "nk_iters": 5,
+   "secs": 50.844751780000024
+  },
+  {
+   "seed": "constant_0.5",
+   "Finf": 0.14471079845905904,
+   "deficit": 0.13646038604539534,
+   "d_fr": 0.1537095336364153,
+   "class": "PR",
+   "status": "noconv",
+   "init_F": 0.4996645947500076,
+   "init_d": NaN,
+   "nk_iters": 16,
+   "secs": 87.17370703799998
+  },
+  {
+   "seed": "random_sym_1",
+   "Finf": 0.11204275769500353,
+   "deficit": 0.0793999936980917,
+   "d_fr": 0.15985683435014195,
+   "class": "PR",
+   "status": "noconv",
+   "init_F": 0.9992036817071392,
+   "init_d": 0.9999587441607783,
+   "nk_iters": 16,
+   "secs": 90.43572917799975
+  },
+  {
+   "seed": "random_sym_2",
+   "Finf": 0.08596331045033984,
+   "deficit": 0.037102376572076934,
+   "d_fr": 0.1522417576661412,
+   "class": "mid",
+   "status": "noconv",
+   "init_F": 0.9937991281475789,
+   "init_d": 0.8333295927470312,
+   "nk_iters": 16,
+   "secs": 105.14311309899995
+  },
+  {
+   "seed": "blend_nl_fr",
+   "Finf": 0.0075700068157303485,
+   "deficit": 0.008193170752091805,
+   "d_fr": 0.05246138970882322,
+   "class": "mid",
+   "status": "noconv",
+   "init_F": 0.19786091547522489,
+   "init_d": 0.03201800218657258,
+   "nk_iters": 16,
+   "secs": 183.9746721710003
+  }
+ ],
+ "n_distinct_fps": 6,
+ "distinct_fps": [
+  {
+   "seed": "fully_revealing",
+   "Finf": 2.622338045585315e-06,
+   "deficit": 1.1102230246251565e-16,
+   "d_fr": 1.7133759653016374e-10,
+   "class": "FR",
+   "status": "plateau",
+   "init_F": 2.622338045585315e-06,
+   "init_d": 1.1102230246251565e-16,
+   "nk_iters": 5,
+   "secs": 50.844751780000024,
+   "seeds_reaching": [
+    "fully_revealing"
+   ]
+  },
+  {
+   "seed": "blend_nl_fr",
+   "Finf": 0.0075700068157303485,
+   "deficit": 0.008193170752091805,
+   "d_fr": 0.05246138970882322,
+   "class": "mid",
+   "status": "noconv",
+   "init_F": 0.19786091547522489,
+   "init_d": 0.03201800218657258,
+   "nk_iters": 16,
+   "secs": 183.9746721710003,
+   "seeds_reaching": [
+    "blend_nl_fr"
+   ]
+  },
+  {
+   "seed": "random_sym_2",
+   "Finf": 0.08596331045033984,
+   "deficit": 0.037102376572076934,
+   "d_fr": 0.1522417576661412,
+   "class": "mid",
+   "status": "noconv",
+   "init_F": 0.9937991281475789,
+   "init_d": 0.8333295927470312,
+   "nk_iters": 16,
+   "secs": 105.14311309899995,
+   "seeds_reaching": [
+    "random_sym_2"
+   ]
+  },
+  {
+   "seed": "nl_symmetrized",
+   "Finf": 0.09971480955171225,
+   "deficit": 0.04950053602286175,
+   "d_fr": 0.12392639171149851,
+   "class": "PR",
+   "status": "noconv",
+   "init_F": 0.33697631740892675,
+   "init_d": 0.026093085077339984,
+   "nk_iters": 16,
+   "secs": 166.040560121,
+   "seeds_reaching": [
+    "nl_symmetrized"
+   ]
+  },
+  {
+   "seed": "random_sym_1",
+   "Finf": 0.11204275769500353,
+   "deficit": 0.0793999936980917,
+   "d_fr": 0.15985683435014195,
+   "class": "PR",
+   "status": "noconv",
+   "init_F": 0.9992036817071392,
+   "init_d": 0.9999587441607783,
+   "nk_iters": 16,
+   "secs": 90.43572917799975,
+   "seeds_reaching": [
+    "random_sym_1"
+   ]
+  },
+  {
+   "seed": "constant_0.5",
+   "Finf": 0.14471079845905904,
+   "deficit": 0.13646038604539534,
+   "d_fr": 0.1537095336364153,
+   "class": "PR",
+   "status": "noconv",
+   "init_F": 0.4996645947500076,
+   "init_d": NaN,
+   "nk_iters": 16,
+   "secs": 87.17370703799998,
+   "seeds_reaching": [
+    "constant_0.5"
+   ]
+  }
+ ],
+ "best_Finf_floor": 2.622338045585315e-06
+}

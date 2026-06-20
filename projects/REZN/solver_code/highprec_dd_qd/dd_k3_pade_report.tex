@@ -1,0 +1,105 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{graphicx,amsmath,amssymb,booktabs,hyperref,xcolor}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlength{\parskip}{6pt}
+\title{Pad\'e vs Richardson for the K=3 lookup function:\\
+       rational extrapolation does NOT beat polynomial}
+\author{Fixed-Point Factory --- two-kernel extrapolation test}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+Tested: replace Richardson (polynomial in $h^2$) with Pad\'e rational
+approximants Pad\'e(0,1) $=\frac{a}{1+b h^2}$ and Pad\'e(1,1)
+$=\frac{a + b h^2}{1 + c h^2}$ to extrapolate the kernel-band lookup
+to $h{=}0$. Hypothesis: rational forms handle non-analytic $h$-dependence
+better than polynomial.
+
+\textbf{Result: hypothesis wrong.} On 16 saved R4 FPs at $G{=}11$:
+
+\begin{itemize}
+  \item At $\tau{=}0.2$ (smooth regime): Pad\'e(0,1) ties Richardson R2
+        ($\max|\Delta|=0.21$); Pad\'e(1,1) DEGENERATES because
+        $\mu \approx 0.5$ over flat regions makes the rational
+        denominator's linear system rank-deficient -- returns
+        constant 0.5.
+  \item At $\tau{=}1$ (kinky regime): Pad\'e(0,1) max error
+        $\sim 0.80$ to $0.91$ (vs Richardson R2 max $\sim 0.4$);
+        Pad\'e(1,1) max $\sim 0.67$. Both WORSE than Richardson.
+\end{itemize}
+
+\textbf{Mechanism.} The kernel-band $\mu(h)$ does \emph{not} have poles
+in $h^2$. It has \emph{jumps} -- non-analytic discontinuities at $h$ values
+where the band edges sweep across kinks/critical points. Pad\'e
+approximants try to fit poles where there are none; the denominator
+$1 + b h^2$ approaches zero spuriously, giving wild extrapolations.
+Richardson's polynomial form is safer (can't blow up).
+
+\textbf{Conclusion.} The two-kernel extrapolation idea is mechanically
+sound but doesn't help because the underlying $\mu(h)$ isn't pole-like.
+The right path to handle the non-analyticity is still
+\textbf{cusp-aware quadrature} (handle each topology change as an
+analytic singular contribution), not a rational approximant in $h$.
+\end{abstract}
+
+\section{Cell-by-cell results}
+
+\begin{center}
+\begin{tabular}{lrrrrr}
+\toprule
+cell & Rich R2 max & Rich R4 max & Pad\'e(0,1) max & Pad\'e(1,1) max \\
+\midrule
+$\gamma{=}10$, $\tau{=}0.2$  & 0.21 & 0.21 & 0.21 & 0.50 \\
+$\gamma{=}10$, $\tau{=}1$    & 0.43 & 0.57 & 0.91 & 0.68 \\
+$\gamma{=}100$, $\tau{=}0.2$ & 0.21 & 0.21 & 0.21 & 0.50 \\
+$\gamma{=}100$, $\tau{=}1$   & 0.38 & 0.44 & 0.85 & 0.68 \\
+$\gamma{=}1000$, $\tau{=}0.2$ & 0.21 & 0.21 & 0.21 & 0.50 \\
+$\gamma{=}1000$, $\tau{=}1$  & 0.38 & 0.44 & 0.81 & 0.68 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Why Pad\'e fails}
+
+For Pad\'e(0,1) $f(h) = a / (1 + b h^2)$ fit to two points:
+\begin{align*}
+b &= (A_2 - A_1) / (A_1 h_1^2 - A_2 h_2^2) \\
+a &= A_1 (1 + b h_1^2)
+\end{align*}
+If $A_1, A_2$ are close (smooth $\mu$), the numerator $A_2 - A_1$ is
+small AND the denominator $A_1 h_1^2 - A_2 h_2^2 \approx
+A_\mathrm{common}(h_1^2 - h_2^2)$ is the difference of two close
+numbers --- catastrophic cancellation. The estimator is noisy.
+
+If $\mu$ has true poles (which it doesn't here, only jumps),
+$b > 0$ captures them and extrapolation is exact. But for jump
+discontinuities, the data look like a low-degree polynomial PLUS noise
+from the jump; Pad\'e treats the noise as a pole and extrapolates
+into a spurious singularity.
+
+For Pad\'e(1,1) with 3 points: 3$\times$3 linear system in $(a, b, c)$
+becomes near-singular when the three $A_i$ are nearly equal (flat $\mu$);
+\texttt{np.linalg.solve} returns garbage that we fall back to mean of
+inputs, hence the 0.5 result at smooth cells.
+
+\section{Conclusion}
+
+Pad\'e in $h^2$ is the wrong tool for this operator. The right path
+remains:
+\begin{enumerate}
+  \item Detect critical points of $P$ analytically (zeros of $\nabla P$,
+        solvable from Cheby coefs via 2D resultant).
+  \item Add an analytic kink residual to the GL quadrature near each
+        critical $p^*$.
+\end{enumerate}
+This makes the operator continuous in $P$ and restores exponential
+spectral convergence at any $\tau$.
+
+\section{Reproducibility}
+\texttt{projects/REZN/solver\_code/highprec\_dd\_qd/dd\_k3\_pade.py}
+
+\end{document}

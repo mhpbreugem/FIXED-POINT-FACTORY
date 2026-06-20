@@ -1,0 +1,52 @@
+{
+  "gamma": 0.1,
+  "tau": 2.0,
+  "G": 11,
+  "rows": [
+    {
+      "umax": 4,
+      "du": 0.8,
+      "h": 0.40249223594996214,
+      "deficit": 0.2862186660149213,
+      "d_FR": 0.3057313472619071,
+      "slope": 0.16611114354230794,
+      "Finf": 5.551115123125783e-15,
+      "converged": true,
+      "sec": 2.6
+    },
+    {
+      "umax": 6,
+      "du": 1.2,
+      "h": 0.4929503017546495,
+      "deficit": 0.3390506685101577,
+      "d_FR": 0.32269178773760177,
+      "slope": 0.143816739492028,
+      "Finf": 2.948596922180968e-11,
+      "converged": true,
+      "sec": 0.6
+    },
+    {
+      "umax": 8,
+      "du": 1.6,
+      "h": 0.5692099788303083,
+      "deficit": 0.37488599328677685,
+      "d_FR": 0.3306131140128228,
+      "slope": 0.1335067590188099,
+      "Finf": 9.22595333463505e-13,
+      "converged": true,
+      "sec": 0.6
+    },
+    {
+      "umax": 12,
+      "du": 2.4,
+      "h": 0.6971370023173351,
+      "deficit": 0.41690625536813974,
+      "d_FR": 0.33613805162682425,
+      "slope": 0.1250392027655704,
+      "Finf": 2.677912336324084e-10,
+      "converged": true,
+      "sec": 0.3
+    }
+  ],
+  "theory": "CRRA Jensen gap should be UMAX-independent (intrinsic) -- sharply distinct from CARA where deficit collapses with UMAX."
+}

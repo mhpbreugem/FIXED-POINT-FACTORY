@@ -1,0 +1,253 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{graphicx,amsmath,amssymb,booktabs,hyperref,xcolor,tabularx}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlength{\parskip}{6pt}
+\title{Method C v2: a Bayesian-symmetric monotone ansatz for the\\
+       K=3 CRRA REE equilibrium price function\\
+       (methodology + neural alternatives)}
+\author{Fixed-Point Factory}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\section{The problem}
+
+The K=3 CRRA Hellwig rational-expectations equilibrium is the
+fixed-point equation
+\[
+P(u_1, u_2, u_3) \;=\; \Phi[P](u_1, u_2, u_3),
+\]
+where each agent observes a private signal $u_i$, market clearing
+yields the price $P$, and $\Phi$ is a Bayesian-CRRA operator: it computes
+each agent's posterior $\mu(p, u_k)$ from observing the price $p$ and their
+own signal $u_k$, then CRRA-clears the market across the three agents.
+
+\textbf{The unknowns} are the values of $P$. In our previous work we
+represented $P$ as a 343-element tensor on a $G^3 = 7^3$ cube grid and
+solved the FP equation cell-by-cell. We hit two structural problems:
+\begin{itemize}
+  \item The kernel-band Richardson operator (smooth, Newton-friendly) gives
+        FPs that are \emph{non-monotone} in $\sim 27\%$ of cube cells at
+        high $\tau$ --- non-physical artifacts.
+  \item The strict-$h{=}0$ operator (Bayesianly correct) is non-smooth at
+        $p$ values where the price level set passes through critical points
+        of $P$; the FP iteration does not converge.
+\end{itemize}
+
+\section{The Bayesian symmetries}
+
+The equilibrium price $P(u_1, u_2, u_3)$ must satisfy four structural
+properties dictated by the model:
+
+\begin{enumerate}
+  \item \textbf{Permutation symmetry.} Agents are exchangeable:
+        $P(u_1, u_2, u_3) = P(u_{\pi(1)}, u_{\pi(2)}, u_{\pi(3)})$ for any
+        permutation $\pi$.
+  \item \textbf{Sign-flip symmetry.} The state space is binary
+        $v \in \{0, 1\}$ with symmetric prior; the signal distribution is
+        $f_v(u) = N(\pm 0.5, 1/\tau)$, antisymmetric under $u \to -u$ and
+        $v \leftrightarrow 1-v$. This gives
+        $P(u_1, u_2, u_3) = 1 - P(-u_1, -u_2, -u_3)$.
+  \item \textbf{Axis-wise monotonicity.} More positive $u_i$ increases the
+        Bayesian posterior on $v=1$ for any agent observing it, and (via
+        market clearing) raises the equilibrium price:
+        $\partial P / \partial u_i > 0$ for each $i$.
+  \item \textbf{Range.} $P \in (0, 1)$.
+\end{enumerate}
+
+Any candidate FP violating these is not a true equilibrium. The
+cube-discretized solvers we used produce candidate FPs that
+\emph{violate (3) and (4)} numerically. Instead of fighting the
+discrete representation, Method C v2 builds (1)--(4) into the
+parameterization.
+
+\section{Method C v2 construction}
+
+\textbf{Parameterize $P$ as}
+\[
+P(u_1, u_2, u_3) \;=\; \sigma\!\big( h(u_1) + h(u_2) + h(u_3) \big),
+\qquad \sigma(x) = \frac{1}{1+e^{-x}},
+\]
+where $h: \mathbb{R} \to \mathbb{R}$ is a \textbf{1D odd, monotone-increasing}
+function. Write
+\[
+h(u) \;=\; \int_0^u \sigma_*(s)^2 \, ds,
+\]
+with $\sigma_*: \mathbb{R} \to \mathbb{R}$ a 1D \emph{even} polynomial of
+degree $2 d$:
+\[
+\sigma_*(s) \;=\; \sum_{n=0}^d a_n T_{2n}(s / U),
+\]
+in the Chebyshev basis (we use $U = 2.33$ to cover the practical signal
+range).
+
+\subsection{Why this enforces all four symmetries by construction}
+
+\begin{enumerate}
+  \item \textbf{Permutation symmetry.} $h(u_1) + h(u_2) + h(u_3)$ is
+        manifestly symmetric in the agents.
+  \item \textbf{Sign-flip symmetry.} $\sigma_*$ even $\Rightarrow \sigma_*^2$
+        even $\Rightarrow h$ odd in $u$
+        $\Rightarrow h(u_1) + h(u_2) + h(u_3)$ is odd in $(u_1, u_2, u_3) \to
+        (-u_1, -u_2, -u_3)$
+        $\Rightarrow$ $\sigma(L) + \sigma(-L) = 1$.
+  \item \textbf{Monotonicity.} $\sigma_*^2 \geq 0$ gives $h'(u) = \sigma_*^2(u) \geq 0$,
+        so $h$ is monotone non-decreasing. Hence
+        $\partial P / \partial u_i = \sigma'(L) \cdot h'(u_i) \geq 0$.
+  \item \textbf{Range.} $\sigma \in (0, 1)$ for any finite $L$.
+\end{enumerate}
+
+\subsection{Unknowns}
+
+Just $d+1$ scalars: $a_0, a_1, \dots, a_d$. We use $d = 4$ (so $\sigma_*$ is
+degree 8) giving \textbf{5 unknowns per cell}. Vastly fewer than the
+343 cube unknowns or the 84 symmetric-reduced cube unknowns.
+
+\subsection{Numerical pipeline per $(\gamma, \tau)$ cell}
+
+\begin{enumerate}
+  \item Given current $\{a_n\}$:
+  \begin{itemize}
+    \item Compute $h(u_i)$ at the $G = 7$ cube nodes via 16-point
+          Gauss-Legendre quadrature on $[0, u_i]$.
+    \item Form $P_{ijk} = \sigma(h(u_i) + h(u_j) + h(u_k))$.
+  \end{itemize}
+  \item Apply the standard Lin-CDF R4 kernel-band operator $\Phi$ to get
+        $\Phi[P]$.
+  \item Compute residual $r_{ijk} = \Phi[P]_{ijk} - P_{ijk}$.
+  \item Minimize $\|r\|_2^2$ over the 5 unknowns via SciPy
+        \texttt{least\_squares(method=trf, jac="2-point")}.
+\end{enumerate}
+
+\textbf{Per cell wall time}: $\sim 1$ s (5 unknowns + few-point FD Jacobian
++ a handful of TRF iterations).
+
+\subsection{What the residual means}
+
+The minimised residual $|F|_\infty = \max_{ijk} |\Phi[P]_{ijk} - P_{ijk}|$
+is the \textbf{structural non-additivity} of the equilibrium: how much it
+deviates from being expressible as a sum of three identical 1D
+contributions. This separates cleanly from:
+\begin{itemize}
+  \item Kernel-band bias (gone --- since we measure the residual at the
+        \emph{ansatz} $P$, not at a kernel-band-biased FP).
+  \item Discretisation noise (gone --- the ansatz is analytic).
+  \item Operator non-smoothness (gone --- our $P$ is $C^\infty$).
+\end{itemize}
+
+If $F \to 0$ at low $\tau$, the equilibrium IS additive --- can be written
+as a sum of agent-wise contributions. If $F$ grows at high $\tau$, the
+equilibrium has irreducible joint structure (genuine cross-signal
+information beyond the sum of marginal posteriors).
+
+\section{Empirical results (preliminary)}
+
+From a partial $\tau$ ladder run at $\gamma = 100$:
+\begin{center}
+\begin{tabular}{rrll}
+\toprule
+$\tau$ & residual $|F|_\infty$ & meaning & wall \\
+\midrule
+0.025 & $2.7 \times 10^{-8}$ & ansatz captures equilibrium nearly exactly & 1 s \\
+0.05  & $2.1 \times 10^{-7}$ & still additive to high precision & 1 s \\
+0.10  & $5.5 \times 10^{-6}$ & beginning to see non-additivity & 1 s \\
+0.25  & $8.0 \times 10^{-4}$ & moderate non-additivity & 1 s \\
+0.50  & $3.4 \times 10^{-2}$ & substantial non-additivity & 1 s \\
+1.00  & $\sim 5 \times 10^{-2}$ (proj.) & strong non-additivity, P spans $\sim$ full range & 1 s \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The residual rises smoothly with $\tau$, suggesting the equilibrium is
+\textbf{additive to high precision at low $\tau$} and acquires irreducible
+joint structure as the signal precision grows.
+
+\section{Could a neural network do better?}
+
+\textbf{Universal approximation: yes.} A neural network is a universal
+function approximator, so in principle it could fit the equilibrium to
+arbitrary precision. But the right question is: what's the
+\emph{efficient} parameterisation that respects the same Bayesian
+symmetries?
+
+\subsection{Naïve MLP: no}
+
+A vanilla MLP $\mathrm{NN}(u_1, u_2, u_3)$ has none of the four required
+symmetries built in. Enforcing them via training:
+\begin{itemize}
+  \item Permutation symmetry: data augmentation, but expensive and only
+        approximate;
+  \item Sign-flip: similar issues;
+  \item Monotonicity: requires constrained training (e.g., projected
+        gradient or monotone-NN architectures with positive weights and
+        monotone activations like ReLU/softplus everywhere).
+\end{itemize}
+This is much harder than our 5-parameter polynomial.
+
+\subsection{Symmetric monotone NN: yes, but redundant}
+
+The natural NN counterpart of Method C v2 is
+\[
+P(u_1, u_2, u_3) = \sigma\!\big( \phi(u_1) + \phi(u_2) + \phi(u_3) \big),
+\]
+where $\phi: \mathbb{R} \to \mathbb{R}$ is a 1D \emph{monotone}
+neural net (e.g., a stack of positive-weight linear layers with
+positive activations, or a monotone PCHIP NN). This automatically gives
+the same four symmetries.
+
+For our problem, the empirical evidence is that a degree-8 even polynomial
+(Cheby basis, 5 coefficients) already captures $\phi$ to F $\sim 10^{-6}$
+at low $\tau$. An NN would add hundreds of parameters with diminishing
+returns. \textbf{The 1D polynomial is a near-optimal basis here.}
+
+\subsection{Joint correction: yes, useful but constrained}
+
+To go beyond the additive ansatz at high $\tau$, add a joint correction:
+\[
+P = \sigma\!\big( h(u_1) + h(u_2) + h(u_3) + g(u_1, u_2, u_3) \big),
+\]
+where $g$ is a permutation-symmetric, sign-flip-symmetric function
+(e.g., $g$ symmetric polynomial in $u_i$, odd in the overall sign flip).
+For $g$, NN choices:
+\begin{itemize}
+  \item \textbf{Deep Sets} architecture: $g = \psi(\sum_i \rho(u_i))$
+        with $\rho, \psi$ small NNs. Gives permutation invariance and
+        moderate flexibility. ~$10^2$ params.
+  \item \textbf{Equivariant NN}: stricter constraint than Deep Sets, fewer
+        params, faster.
+  \item \textbf{Symmetric polynomial basis}: $g = \sum c_{\mathbf{m}}
+        e_{\mathbf{m}}(u_1, u_2, u_3)$ in elementary symmetric polynomials,
+        with sign-flip-respecting parity. ~$10$--$50$ params.
+\end{itemize}
+
+We expect the symmetric polynomial basis to be most parsimonious for
+the K=3 problem and to match NN performance with fewer parameters.
+
+\subsection{Bottom line on NNs}
+
+\begin{itemize}
+  \item NNs are \emph{not} a clear win over the polynomial-Cheby ansatz
+        for this problem. The symmetries are exact (not just learnable)
+        with the 5-parameter polynomial.
+  \item For the \emph{joint correction} to capture remaining
+        non-additivity at high $\tau$, both NN and symmetric polynomial
+        bases would work. Polynomial wins on parsimony for the symmetric
+        structure we know holds.
+  \item Worth trying only if the polynomial bases plateau at a residual
+        we want to push lower.
+\end{itemize}
+
+\section{Reproducibility}
+
+\begin{itemize}
+  \item Operator + ansatz:
+        \texttt{projects/REZN/solver\_code/highprec\_dd\_qd/dd\_k3\_method\_c\_v2.py}
+  \item Ladder driver:
+        \texttt{projects/REZN/solver\_code/highprec\_dd\_qd/dd\_k3\_method\_c\_v2\_ladder.py}
+  \item Per-$\tau$ saved coefficients:
+        \texttt{projects/REZN/solved\_fixed\_points/dd\_k3\_overnight/method\_c\_v2/coefs/tau\{tau\}.npy}
+\end{itemize}
+
+\end{document}

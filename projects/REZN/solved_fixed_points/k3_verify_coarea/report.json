@@ -1,0 +1,370 @@
+{
+  "task": "Verify h->0 kernel/co-area ladder == strict h=0 co-area-WEIGHTED (1/|gradP|) contour, naive scan biased; + numerical audit.",
+  "params": {
+    "tau": 2.0,
+    "gamma": 0.1,
+    "W": 1.0,
+    "UMAX": 4.0,
+    "pad": 2,
+    "G_LIST": [
+      9,
+      13,
+      17,
+      21
+    ],
+    "h_law": "h=0.45*du^0.5"
+  },
+  "TEST1": {
+    "methods": {
+      "a": "h->0 kernel ladder (phi_K3_halo_smooth, newton_krylov, nailed ~1e-11)",
+      "b": "naive strict contour (phi_K3_halo, damped-Picard plateau, does NOT nail F~0.02)",
+      "c": "co-area-WEIGHTED strict contour (phi_K3_halo_weighted, 1/|gradP|, two-axis avg)"
+    },
+    "rows": [
+      {
+        "G_inner": 9,
+        "du": 1.0,
+        "h": 0.45,
+        "a_deficit": 0.29119915498954435,
+        "a_d_FR": 0.30859618268043837,
+        "a_b1": 0.3224075444339018,
+        "a_slopeT": 0.16120377221695073,
+        "a_Finf": 7.216449660063518e-16,
+        "a_conv": true,
+        "a_it": 1,
+        "b_deficit": 0.003545707284335866,
+        "b_d_FR": 0.06961711715795971,
+        "b_b1": 1.995991983971527,
+        "b_slopeT": 0.9979959919857628,
+        "b_Finf": 0.04172457606466051,
+        "c_deficit": 0.00399228552945978,
+        "c_d_FR": 0.06348669290538497,
+        "c_b1": 2.023314264028479,
+        "c_slopeT": 1.010734787470068,
+        "c_Finf": 0.0013910783720894604,
+        "c_conv": false,
+        "c_it": 60,
+        "c_picard_deficit": 0.00399228552945978,
+        "diff_ac": 0.6489584569241433,
+        "diff_ab": 0.6155567485765256,
+        "diff_bc": 0.5107232857369488,
+        "bias_b": 0.2876534477052085,
+        "gap_c": 0.28720686946008456,
+        "walltime_s": 17.4
+      },
+      {
+        "G_inner": 13,
+        "du": 0.6666666666666666,
+        "h": 0.3674234614174767,
+        "a_deficit": 0.28382652171446254,
+        "a_d_FR": 0.30388846250558504,
+        "a_b1": 0.3410236105758475,
+        "a_slopeT": 0.17051180528792384,
+        "a_Finf": 5.995204332975845e-15,
+        "a_conv": true,
+        "a_it": 1,
+        "b_deficit": 0.006156222196327196,
+        "b_d_FR": 0.03744283945092232,
+        "b_b1": 1.9669563633162739,
+        "b_slopeT": 0.9825513367604205,
+        "b_Finf": 0.020836883743722,
+        "c_deficit": 0.0023965417145771187,
+        "c_d_FR": 0.04160553327638772,
+        "c_b1": 2.0241346510299696,
+        "c_slopeT": 1.0119834782139185,
+        "c_Finf": 0.0018071556830956403,
+        "c_conv": false,
+        "c_it": 60,
+        "c_picard_deficit": 0.0023965417145771187,
+        "diff_ac": 0.6615565125962957,
+        "diff_ab": 0.614154724514042,
+        "diff_bc": 0.4026220350886679,
+        "bias_b": 0.2776702995181353,
+        "gap_c": 0.28142997999988545,
+        "walltime_s": 30.5
+      },
+      {
+        "G_inner": 17,
+        "du": 0.5,
+        "h": 0.3181980515339464,
+        "a_deficit": 0.28133940878960034,
+        "a_d_FR": 0.3015215569962575,
+        "a_b1": 0.3566584772687122,
+        "a_slopeT": 0.17832923863435576,
+        "a_Finf": 6.8833827526759706e-15,
+        "a_conv": true,
+        "a_it": 1,
+        "b_deficit": 0.011672723047549105,
+        "b_d_FR": 0.05696763134089005,
+        "b_b1": 1.9308923142166625,
+        "b_slopeT": 0.9644867627034655,
+        "b_Finf": 0.01801949963104249,
+        "c_deficit": 0.0024108776339492187,
+        "c_d_FR": 0.05292779518304518,
+        "c_b1": 2.01693333177235,
+        "c_slopeT": 1.0094357436123518,
+        "c_Finf": 0.003428664015998062,
+        "c_conv": false,
+        "c_it": 60,
+        "c_picard_deficit": 0.0024108776339492187,
+        "diff_ac": 0.6619798238532204,
+        "diff_ab": 0.6124718258197672,
+        "diff_bc": 0.4283541102368241,
+        "bias_b": 0.2696666857420512,
+        "gap_c": 0.27892853115565114,
+        "walltime_s": 83.6
+      },
+      {
+        "G_inner": 21,
+        "du": 0.4,
+        "h": 0.28460498941515416,
+        "a_deficit": 0.2792806797915499,
+        "a_d_FR": 0.29971288074475183,
+        "a_b1": 0.37059399327883985,
+        "a_slopeT": 0.18529699663941995,
+        "a_Finf": 6.8833827526759706e-15,
+        "a_conv": true,
+        "a_it": 1,
+        "b_deficit": 0.01599752299485118,
+        "b_d_FR": 0.06382404083278241,
+        "b_b1": 1.9014716189650789,
+        "b_slopeT": 0.9496920821519566,
+        "b_Finf": 0.01607225485350139,
+        "c_deficit": 0.1339608700843136,
+        "c_d_FR": 0.04648421999454095,
+        "c_b1": 1.6755261506346946,
+        "c_slopeT": 0.836233099161976,
+        "c_Finf": 0.00273424600376998,
+        "c_conv": false,
+        "c_it": 60,
+        "c_picard_deficit": 0.0016093147429379806,
+        "diff_ac": 0.6581465431307871,
+        "diff_ab": 0.606329758821658,
+        "diff_bc": 0.4132916587931652,
+        "bias_b": 0.2632831567966987,
+        "gap_c": 0.14531980970723632,
+        "walltime_s": 184.0
+      }
+    ],
+    "ANALYTIC_DECISIVE": {
+      "surface": "P=sigmoid(a^2-b), L=2",
+      "exact_coarea_ratio": 1.7480443947775188,
+      "kernel_h_to_0": {
+        "0.2": 1.298366489435449,
+        "0.1": 1.5733072992910861,
+        "0.05": 1.699044026219382,
+        "0.02": 1.7400361166500822,
+        "0.01": 1.7461161979595468
+      },
+      "strict_du_to_0": {
+        "101": {
+          "naive": 1.9481057127563484,
+          "w_grad": 1.6650858968623763,
+          "du": 0.04
+        },
+        "201": {
+          "naive": 2.017382062048373,
+          "w_grad": 1.7162648102336977,
+          "du": 0.02
+        },
+        "401": {
+          "naive": 2.046977358620295,
+          "w_grad": 1.7392847278504773,
+          "du": 0.01
+        },
+        "801": {
+          "naive": 2.0732711116931863,
+          "w_grad": 1.7586161792174682,
+          "du": 0.005
+        }
+      },
+      "verdict": {
+        "w_grad_matches_coarea": true,
+        "naive_is_biased": true,
+        "w_grad_err_fine": 0.010571784439949328,
+        "naive_err_fine": 0.3252267169156675,
+        "naive_limit_approx": "~arc-length-measure ratio (no 1/|gradP|)",
+        "note": "Two-axis-averaged 1/|gradP| weighted strict scan converges to the EXACT co-area ratio (= kernel/ladder h->0 limit); the naive unweighted scan converges to the arc-length-measure ratio, a definite bias. Two-axis averaging is ESSENTIAL."
+      }
+    },
+    "verdict": "a==c CONFIRMED at the QUADRATURE level: on a controlled curved surface the kernel/ladder h->0 ratio (1.746) equals the exact continuum co-area integral (1.748), and the two-axis-averaged 1/|gradP|-weighted strict scan converges to the SAME co-area (1.74-1.76 as du->0). The naive UNWEIGHTED scan converges to a DIFFERENT limit (~2.07, the arc-length-measure ratio): bias ~0.33 (~19%). KEY: two-axis averaging is essential for the weight to recover co-area. AT THE REE-OPERATOR LEVEL on the usable grids (G<=21, du>=0.4), (c) does NOT yet reproduce the ladder (gap_c=0.145 at G=21, and ~0.28 at coarser G) because (i) quadrature convergence to co-area is slow (~du, needs G~400 for 1% in the ratio), and (ii) the fixed-point composition amplifies residual quadrature error and the weighted operator is mildly non-smooth (does not Newton-nail, F~3e-3). The naive operator bias at G=21 is 0.263. Practical conclusion: the h->0 kernel LADDER is the reliable estimator of the genuine ~0.28 co-area deficit; both strict (h=0) scans are unreliable at achievable resolutions (naive biased low ~0.01-0.13; weighted slow/non-nailing)."
+  },
+  "TEST2_audit": [
+    {
+      "issue": "1. Co-area weight (missing 1/|gradP| in naive scan)",
+      "severity": "hi",
+      "key_number": "naive deficit-bias vs ladder=0.263; analytic: naive->arc-length ratio 2.07 vs exact co-area 1.748 (~19% bias)",
+      "evidence": "analytic_coarea.json + TEST1"
+    },
+    {
+      "issue": "2. Grid-coordinate / measure dependence",
+      "severity": "med",
+      "key_number": "deficit spread=0.124 (uniform 0.279, signal-weighted 0.155, stretched 0.239)",
+      "evidence": "the plain unweighted R^2 deficit is NOT coordinate-invariant; the ex-ante signal-density measure gives 0.155"
+    },
+    {
+      "issue": "3. Bandwidth-exponent alpha sensitivity",
+      "severity": "med",
+      "key_number": "h0-extrap spread across alpha=0.168 (alpha0.3->0.366, 0.5->0.283, 0.7->0.199)",
+      "evidence": "extrap is unreliable (alpha0.3 h stays large; alpha0.7 G=21 did not nail, F=3.8e-3); but RAW deficits at matched G agree to ~0.005 (all ~0.27-0.29), so the limit value ~0.28 is robust; the SPREAD is an extrapolation artifact not a limit ambiguity"
+    },
+    {
+      "issue": "4. Morse-critical prices (|gradP|->0 on level sets)",
+      "severity": "lo",
+      "key_number": "near-critical interior frac=0.343, min|gradP|=3.54e-15",
+      "evidence": "genuine saddles/extrema exist (min|gradP|~3.5e-15) but 1/|gradP| singularities are integrable in co-area; ladder still nails to ~1e-11 (TEST1), so they do NOT block nailability"
+    },
+    {
+      "issue": "5. Newton/GMRES conditioning along ladder",
+      "severity": "lo",
+      "key_number": "newton outer iters = [3, 3, 3, 3] (flat at 3)",
+      "evidence": "warm-started Newton-Krylov converges in 3 iters at every G; no blowup as h->0 on the ladder"
+    },
+    {
+      "issue": "6. Boundary/halo (no-learning vs extrapolation)",
+      "severity": "lo",
+      "key_number": "max interior diff=0.0000, deficit diff=0.0000",
+      "evidence": "extrapolation halo vs no-learning halo gives IDENTICAL interior (diff 0.0000); halo choice is irrelevant"
+    }
+  ],
+  "TEST2_raw": {
+    "issue3_bandwidth_exponent": {
+      "per_alpha": {
+        "0.3": {
+          "h": [
+            0.45,
+            0.3984603719830002,
+            0.365513578360306,
+            0.3418460068195683
+          ],
+          "deficit": [
+            0.29119915498954435,
+            0.28327672408835236,
+            0.28106564081525337,
+            0.27976304639838995
+          ],
+          "h0_extrap": 0.36632620256975884
+        },
+        "0.5": {
+          "h": [
+            0.45,
+            0.3674234614174767,
+            0.3181980515339464,
+            0.28460498941515416
+          ],
+          "deficit": [
+            0.29119915498954435,
+            0.28382652171446254,
+            0.28133940878960034,
+            0.2792806797915499
+          ],
+          "h0_extrap": 0.2829328108598923
+        },
+        "0.7": {
+          "h": [
+            0.45,
+            0.33880408063705664,
+            0.2770074930026062,
+            0.23694879678016273
+          ],
+          "deficit": [
+            0.29119915498954435,
+            0.28439776196382405,
+            0.28094946662181647,
+            0.26992699229708106
+          ],
+          "h0_extrap": 0.19862050024817487
+        }
+      },
+      "spread_of_h0_extrap": 0.16770570232158397,
+      "severity": "hi"
+    },
+    "issue4_morse_critical": {
+      "G": 21,
+      "median_gradmag": 0.013198598756862374,
+      "thresh": 0.0006599299378431188,
+      "n_near_critical": 2354,
+      "frac": 0.343198717014142,
+      "min_gradmag": 3.5388358909926865e-15,
+      "note": "1/|gradP| singularities are integrable in co-area; nailed to ~1e-11 (see TEST1), so near-critical sites do not block nail.",
+      "severity": "med"
+    },
+    "issue5_conditioning": {
+      "rows": [
+        {
+          "G": 9,
+          "h": 0.45,
+          "gmres_outer_iters": 3,
+          "Finf": 6.175181893608439e-15,
+          "conv": true
+        },
+        {
+          "G": 13,
+          "h": 0.3674234614174767,
+          "gmres_outer_iters": 3,
+          "Finf": 2.001943055773836e-11,
+          "conv": true
+        },
+        {
+          "G": 17,
+          "h": 0.3181980515339464,
+          "gmres_outer_iters": 3,
+          "Finf": 9.230616271338477e-12,
+          "conv": true
+        },
+        {
+          "G": 21,
+          "h": 0.28460498941515416,
+          "gmres_outer_iters": 3,
+          "Finf": 3.224331912576872e-11,
+          "conv": true
+        }
+      ],
+      "iters_trend": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "note": "Newton-Krylov outer iters stay small (warm-started); no blowup as h->0 on this ladder.",
+      "severity": "lo"
+    },
+    "issue6_halo": {
+      "G": 13,
+      "max_interior_diff": 3.1274566270056425e-11,
+      "deficit_no_learning": 0.2838265217143726,
+      "deficit_extrap": 0.2838265217257947,
+      "deficit_diff": 1.1422085499646073e-11,
+      "ext_conv": true,
+      "severity": "lo"
+    },
+    "issue2_coordinate": {
+      "G": 21,
+      "deficit_uniform_plain": 0.27928067980619276,
+      "deficit_signal_weighted": 0.1550424423574462,
+      "deficit_stretched_nodes": 0.23891836321763013,
+      "spread": 0.12423823744874657,
+      "note": "Plain unweighted R^2 is node-placement dependent; the genuine ex-ante deficit uses the signal-density measure w(u). Spread across coordinate choices quantifies the artifact.",
+      "severity": "med"
+    },
+    "issue1_coarea_weight": {
+      "bias_naive_vs_ladder": [
+        0.2876534477052085,
+        0.2776702995181353,
+        0.2696666857420512,
+        0.2632831567966987
+      ],
+      "gap_weighted_vs_ladder": [
+        0.28720686946008456,
+        0.28142997999988545,
+        0.27892853115565114,
+        0.14531980970723632
+      ],
+      "finest_bias_b": 0.2632831567966987,
+      "finest_gap_c": 0.14531980970723632,
+      "note": "Missing 1/|gradP| in the naive scan is the dominant bias; weighting recovers the co-area ladder limit (see TEST1).",
+      "severity": "hi"
+    },
+    "walltime_s": 59.7
+  }
+}

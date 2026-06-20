@@ -1,0 +1,170 @@
+% =====================================================================
+\part{Numerical foundations}
+% =====================================================================
+
+\chapter{Why this problem is numerically hard}
+
+\section{Three compounding difficulties}
+\begin{enumerate}\itemsep2pt
+  \item \textbf{The lookup is a level-set integral.} $A_w(p, u_k)$
+        integrates over $\{P = p\}$ with weight $1/|\nabla P|$. Level
+        sets change topology with $p$, hit domain boundaries, and the
+        weight is singular at critical points of $P$. Each of these
+        produces a kink or cusp in $\mu(p, u_k)$ that downstream
+        numerics must represent without ringing.
+  \item \textbf{The problem is self-consistent.} Lookup errors feed
+        into the price via clearing, which feeds back into the lookup.
+        An operator bias of 0.05 in $\mu$ --- invisible to the
+        operator's own residual --- contaminates every economic
+        quantity built on the fixed point.
+  \item \textbf{Self-residual is not correctness.} The kernel-band R4
+        operator converged to $|F| \sim 10^{-14}$ on its own fixed
+        point while sitting $\sim 0.05$--$0.6$ away from the true
+        lookup. The fixed point migrates to compensate for operator
+        bias. The only defense is an independently derived reference
+        operator --- the role \strict{} plays throughout Parts III--VI.
+\end{enumerate}
+
+\section{The co-area correction (the foundational artifact)}
+The single most consequential numerical fact of the whole investigation:
+the continuum inference $A_v(p) = \int_{\{P=p\}} f_v / |\nabla P|\,
+d\sigma$ is a \emph{smooth} function of $p$, but the naive grid contour
+scan (detect sign changes of $P - p$ on grid edges, sum $f_v$ over
+detected edges) is inconsistent in two separately verified ways:
+\begin{enumerate}\itemsep2pt
+  \item \textbf{Binary include/exclude}: as $p$ crosses a grid node
+        value, edges flip in or out discretely, producing $O(0.1)$
+        jumps in the evidence that do \emph{not} shrink as the price
+        step halves (\texttt{k3\_strict\_h0\_exact}).
+  \item \textbf{Missing $1/|\nabla P|$}: the naive scan integrates
+        arc length, not the co-area measure. On a known analytic
+        surface: naive $= 2.07$ vs true $= 1.748$ --- a 19\% bias
+        (\texttt{k3\_verify\_coarea}).
+\end{enumerate}
+Both are removed by either (a) exact marching-squares contours with the
+explicit $1/|\nabla P|$ weight (the \strict{} operator), or (b) the
+Gaussian kernel band $\int K_h(P - p) f\, du$, which converges to the
+correct co-area integral as $h \to 0$ (verified to $1.5\times10^{-5}$).
+For most of the project's pre-history, the apparent ``non-smooth
+residual floor'' of the strict operator --- interpreted at the time as
+``PR needs noise'' --- was exactly this artifact.
+
+\section{$C^0$-but-not-$C^1$: the smoothness barrier, proven}
+The deeper fact: even the \emph{exact} co-area evidence is only $C^0$ in
+$p$ at Morse-critical prices (values $p_c = P(u^*)$ where
+$\nabla P(u^*) = 0$ on the level set). On a controlled saddle surface,
+$A_v(p)$ is continuous but its derivative blows up $128\times$ at the
+critical price, while the kernel-band derivative stays bounded
+(\texttt{k3\_hfree\_morse/c0\_not\_c1}). Newton-type solvers need
+$C^1$; at finer grids more cells sit near critical prices; hence the
+bare co-area operator is fundamentally not Newton-nailable at high
+resolution. This explains, in one stroke, the entire family of
+high-$\tau$ plateaus met in Parts III and VI: \strict{} Anderson stall
+(Finding 9), zero-h solver plateau (Finding 17), Newton--Krylov and
+HYBRD plateaus (Part VI).
+
+\begin{figure}[H]\centering
+  \includegraphics[width=0.8\linewidth]{cusps_figs/fig2_grad_critical.png}
+  \caption{Critical points of the price slice $P(u_1, u_2 \mid u_3{=}0)$
+    at $\gamma{=}100, \tau{=}1$: the zeros of $\nabla P$ (markers) lie
+    on low-dimensional sets crossing the domain. Each critical value
+    $p_c$ contributes an integrable singularity to the co-area weight
+    and a cusp to the lookup.}
+\end{figure}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=0.8\linewidth]{cusps_figs/fig2_mu_cusps.png}
+  \caption{The induced cusps in $\mu(p, u_k)$: spikes in the
+    $p$-derivative align with the critical values of the slice map.
+    Polynomial (global Chebyshev) representations ring around these
+    cusps; shape-preserving (PCHIP) and \emph{segmented} representations
+    do not.}
+\end{figure}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=0.7\linewidth]{cusps_figs/fig3_decay.png}
+  \caption{Chebyshev coefficient decay of the equilibrium $P$ on Lobatto
+    nodes at $\tau = 1$: algebraic ($\sim n^{-0.8}$), the quantitative
+    signature of finite smoothness. Spectral methods cannot converge
+    exponentially on this object without segmentation.}
+\end{figure}
+
+\chapter{Grids, coordinates, and precision}
+
+\section{$u$-grid choices}
+\begin{itemize}\itemsep2pt
+  \item \textbf{CDF-uniform} ($u_i = \Phi^{-1}(q_i)$, mass-uniform):
+        used by the kernel-band and \strict{} cube paths; right
+        concentration for Gaussian-weighted integrals; \emph{wrong}
+        nodes for polynomial fitting (Runge divergence at degree
+        $\ge 13$, demonstrated).
+  \item \textbf{Chebyshev--Lobatto}: correct interpolation nodes; used
+        by the spectral experiments. The FP re-solved on Lobatto nodes
+        converges to $|F| \sim 10^{-14}$ at $G = 11, 15, 21$, but the
+        Chebyshev coefficients of the solution decay only
+        algebraically (previous figure) --- the barrier is the
+        function, not the nodes.
+  \item \textbf{Private-log-odds uniform} ($\xi = \tanh(\tau u/2)$
+        uniform, the ``no-learning posterior'' transform): the
+        recommended representation grid (Part VI--VII). At
+        $\xi_{\max} = 0.85$ the $u$-range is automatically
+        $\approx \pm 5\sigma_{\rm signal}$ at every $\tau$ ---
+        the grid \emph{scales itself} with signal informativeness, and
+        no hard cube truncation is imposed.
+\end{itemize}
+
+\section{$p$-grid choices}
+Logit-uniform is the workhorse. The adaptive arclength grid (Option D)
+buys $\sim 25\%$ max-error at no cost. The \emph{public-log-odds} grid
+($\Lpub(p) = \log[f_1(p)/f_0(p)]$ uniform, bootstrap-computed from the
+cube CDF and symmetrized $\Lpub(1{-}p) = -\Lpub(p)$) is the natural
+companion to the private-log-odds $u$-grid and is used by the final
+configuration. Lesson learned: the bootstrap \emph{must} be symmetrized
+--- numerical noise in independently computed $f_0, f_1$ densities broke
+the sign-flip symmetry of the equilibrium by $O(0.4)$ until the
+antisymmetrization $\Lpub \mapsto \tfrac12(\Lpub - \Lpub^{\rm rev})$ was
+imposed by construction.
+
+\section{Precision ladder}
+Five arithmetic regimes were exercised across the project:
+\begin{center}\begin{tabular}{lll}\toprule
+regime & digits & role \\
+\midrule
+float64 & 16 & all production lookups; sufficient wherever floors are $\ge 10^{-12}$ \\
+double-double (DD) & 32 & K=2 surface ladder; K=3 sweeps; the $2.7\times10^{-17}$-floor study \\
+quad-double (QD) & 64 & spot checks \\
+F128 & 34 & alternative to DD; $\sim 10\times$ slower, no accuracy gain --- retired \\
+flint/mpmath & 100--130 & ground-truth anchors (\texttt{k3\_strict\_h0\_exact} nails toward $10^{-100}$) \\
+\bottomrule\end{tabular}\end{center}
+Working rule established by the DD-floor study: precision upgrades pay
+only when the residual floor is at the arithmetic limit. The K=3
+high-$\tau$ floors ($10^{-2}$) are operator-truncation floors, hence
+\emph{not} improvable by DD/QD --- whereas the K=2 surface ladder and
+the low-$\tau$ K=3 cells genuinely use the 32 digits.
+
+\section{The K=2 fold at $\tau \approx 0.79$}
+The K=2 double-double descent ($\tau: 2.0 \to 0.8$, $G = 32$) maps the
+informative branch down to a fold: $\sigma_{\min}(I - J)$ collapses
+$0.45 \to 0.31 \to 0.017$ across $\tau = 1.0, 0.9, 0.8$. Below the fold
+the Newton descent cannot continue on this branch --- continuation in
+$\tau$ alone is insufficient and pseudo-arclength would be required.
+This is the earliest clean evidence in the project that the equilibrium
+correspondence has folds, anticipating the K=3 branch-multiplicity
+picture of Part VI.
+
+\begin{figure}[H]\centering
+  \includegraphics[width=0.85\linewidth]{fl_figs/fig1_F.png}
+  \caption{The 1000-cell K=3 $\tau$-ladder residual under the
+    kernel-band R4 operator (double-double arithmetic): machine-level
+    floors at low $\tau$; the operator's intrinsic structure dominates
+    above $\tau \sim 0.3$.}
+\end{figure}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=0.85\linewidth]{fl_figs/fig3_monotonicity.png}
+  \caption{Monotonicity violations along the same ladder: the R4
+    kernel-band fixed points violate axis-monotonicity in a large
+    fraction of cells at high $\tau$ --- an operator artifact (the
+    \strict{} and ansatz fixed points are clean), and an early warning
+    that the R4 economics could not be taken at face value.}
+\end{figure}

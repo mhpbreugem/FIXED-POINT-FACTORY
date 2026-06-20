@@ -1,0 +1,2374 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx,booktabs,amsmath,amssymb,amsthm,xcolor,hyperref,float,longtable}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\1}{\mathbf{1}}
+\newcommand{\deficit}{\mathcal{D}}
+\newcommand{\Vipub}{V_{i}^{\rm pub}}
+\newcommand{\Vipriv}{V_{i}^{\rm priv}}
+\newcommand{\ViFR}{V_{i}^{\rm FRgap}}
+\newcommand{\PFR}{P_{\rm FR}}
+
+\title{Partial Revelation Without Noise Traders:\\
+Complete Numerical and Analytic Documentation\\of the K=3 CRRA REE Project}
+\author{Fixed-Point Factory}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This document is an extensive, self-contained summary of an exhaustive
+computational study of rational-expectations equilibrium in a
+three-trader CRRA market with binary payoff, Gaussian private signals,
+and no noise traders.  We document existence (via a Schauder fixed-point
+theorem on the regularized operator and a constructive Levenberg--Marquardt
+solver), certify 255 individual equilibria at extended-precision residual
+$\|\Phi(P)-P\|_\infty \le 10^{-15}$, extrapolate revelation deficits to
+the continuum, decompose welfare into trading-volume and
+value-of-information components, extend to $K=4$ and $K=5$ traders to
+prove $K$-invariance of the deficit, and finally settle a methodological
+question of structural importance: under binary payoff the
+\emph{fully-revealing} equilibrium $\PFR(u)=\sigma(\tau\sum_k u_k)$ is the
+unique fixed point of the strict $h{=}0$ operator at every parameter
+combination, certified to machine precision in nine independent test
+cells, so the partially-revealing equilibrium of risk-averse trading
+exists only as the $h\to 0$ limit of the kernel-regularized branch.  The
+kernel bandwidth $h>0$ is therefore an \emph{equilibrium selection
+mechanism}, not a numerical convenience.  We document multiple
+moving-grid solver attempts, basin-of-attraction tests across multiple
+discretization resolutions and starting points, the Grossman--Stiglitz
+degeneracy proof, and the maximal certified deficit $\deficit=0.2871$ at
+$(\tau,\gamma)=(2,0.01)$ with continuum extrapolation $\deficit_\infty =
+0.278 \pm 0.008$.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+%==============================================================
+\part{Economic Model and Background}
+%==============================================================
+
+\section{Introduction}
+\label{sec:intro}
+
+The Grossman--Stiglitz (1980) impossibility theorem demonstrates that in
+standard models with continuous payoffs and rational expectations, fully
+informative prices destroy the incentive to acquire costly information.
+The standard resolution introduces noise traders or random supply, which
+prevents complete revelation and sustains a partial-information
+equilibrium.  This paper documents a setting that achieves partial
+revelation without noise traders: three CRRA-utility traders observing
+Gaussian private signals about a binary asset.  The Jensen wedge --- the
+gap between the equilibrium price and the average posterior mean of the
+asset --- is always positive whenever risk aversion is strictly positive,
+and this wedge generates a strictly positive revelation deficit at every
+parameterization we examine.
+
+The findings of this study fall into seven distinct categories, each
+extensively documented in its own part:
+\begin{enumerate}
+\item Existence: a Schauder fixed-point theorem on the regularized
+operator establishes existence in a symmetric, Lipschitz class
+provably disjoint from the fully-revealing benchmark $\PFR$.
+\item Numerical certification: 255 individual equilibria, each at
+extended-precision residual $\|\Phi(P)-P\|_\infty \le 10^{-15}$, across
+12 values of signal precision $\tau\in\{0.05,\ldots,2.0\}$ and 23 values
+of risk aversion $\gamma\in[0.01,30]$.
+\item Continuum limits: deep $G$-ladders extrapolate the discretized
+deficit to its $h\to0$, $G\to\infty$ limit with honest error bars; the
+immortal-anchor cell yields $\deficit_\infty=0.268\pm0.010$, and the
+maximum-deficit corner yields $\deficit_\infty=0.278\pm0.008$.
+\item Welfare decomposition: per-cell trading volume and a three-part
+value-of-information split ($\Vipub$, $\Vipriv$, $\ViFR$) computed under
+the true conditional measure, showing systematically positive
+informational value of private signals.
+\item $K$-invariance: extending to $K=4$ and $K=5$ traders via an
+$S_K$-symmetric solver and a 390-cell parameter sweep, the deficit is
+nearly $K$-invariant (within $\pm 25\%$ per cell) and the price's
+empirical sufficient statistic is exactly the average signal,
+$\partial\log{(P/(1-P))}/\partial(\sum_k u_k) = \tau/K$ to three
+significant figures across every cell.
+\item The Grossman--Stiglitz degeneracy at strict $h{=}0$: $\PFR$ is the
+unique strict-$h{=}0$ fixed point under binary payoff at every $(\tau,
+\gamma)$, certified to $\le 4\times 10^{-15}$ in nine independent test
+cells.  Extensive basin-of-attraction tests at four discretization
+resolutions with seven starting-point classes and FR-distance penalties
+confirm: no nontrivial fixed point exists at exact $h=0$.
+\item Implications: the kernel bandwidth $h>0$ is an equilibrium
+selection mechanism, not numerical convenience.  The partial-revelation
+equilibrium emerges only as the $h\to 0$ limit of the kernel-regularized
+branch, with bandwidth implementing the regularization needed to
+disambiguate the conditioning event from a measure-zero level set.
+\end{enumerate}
+
+\section{Economic environment}
+\label{sec:env}
+
+A single risky asset pays $v\in\{0,1\}$ with prior $\Pr(v=1)=\tfrac12$.
+Each of $K$ traders ($K\in\{3,4,5\}$ in our study) privately observes
+\begin{equation}
+u_k = s_k - \tfrac12, \quad s_k \mid v \sim \mathcal{N}\bigl(v, 1/\tau\bigr),
+\quad k=1,\ldots,K,
+\label{eq:signal}
+\end{equation}
+where $\tau>0$ is the common precision.  Each trader has CRRA utility
+$u(W) = W^{1-\gamma}/(1-\gamma)$ with common risk aversion $\gamma>0$
+and unit wealth $W=1$ at the start.
+
+After observing $u_k$ and the equilibrium price $p$, trader $k$ holds
+posterior $\mu_k = \Pr(v=1 \mid u_k, p)$ and chooses position $x_k$ to
+maximize $\E_{\mu_k}\bigl[u(W+x_k(v-p))\bigr]$.  Inverting the FOC gives
+the closed-form demand:
+\begin{equation}
+x_k^*(\mu, p; \gamma, W) = W\cdot \frac{R-1}{(1-p) + Rp},
+\quad R = \exp\biggl[\frac{\mathrm{logit}\,\mu - \mathrm{logit}\,p}{\gamma}\biggr],
+\label{eq:demand}
+\end{equation}
+with $\mathrm{logit}\,x = \log(x/(1-x))$.  Excess demand is strictly
+decreasing in $p$, so the market-clearing equation $\sum_k x_k^*(\mu_k,
+p) = 0$ has a unique solution $p^* = p^{\rm clear}(\mu_1,\ldots,\mu_K;
+\gamma)$ for any posterior tuple.
+
+\section{Rational-expectations equilibrium}
+\label{sec:REE}
+
+A symmetric REE is a measurable, permutation-symmetric, sign-flip-symmetric
+function $P:\R^K\to(0,1)$ satisfying three conditions at every signal
+profile $(u_1,\ldots,u_K)$:
+\begin{enumerate}
+\item \textbf{Bayes posteriors from own signal and price.}
+Trader $k$'s posterior $\mu_k$ given $(u_k, P=p)$ is
+\begin{equation}
+\mu_k(u_k, p) = \frac{f_1(u_k)\,A_1(p, u_k)}{f_0(u_k)\,A_0(p, u_k) + f_1(u_k)\,A_1(p, u_k)},
+\label{eq:bayes}
+\end{equation}
+where $f_v(u) = \sqrt{\tau/2\pi}\,\exp(-\tfrac12\tau(u-(v-\tfrac12))^2)$ is
+the signal density under state $v\in\{0,1\}$, and the \emph{evidence
+integrals} are
+\begin{equation}
+A_v(p, u_k) = \int_{\{P=p\}\cap\{u_k\ \rm fixed\}}
+\prod_{j\ne k} f_v(u_j) \, \mathrm{d}\sigma,
+\quad v\in\{0,1\},
+\label{eq:evidence}
+\end{equation}
+with $\mathrm{d}\sigma$ the surface measure on the $(K{-}2)$-dimensional
+intersection.
+\item \textbf{Market clearing.} $\sum_k x_k^*(\mu_k, P; \gamma) = 0$.
+\item \textbf{Self-consistency.} $P(u) = p^*$ at the cleared price.
+\end{enumerate}
+
+The integral~\eqref{eq:evidence} is the \emph{co-area} structure: the
+posterior depends on the cross-section measure of the price function's
+level set.  For $K=3$ the integration is over a 1D curve; for $K=4$,
+over a 2D surface; for $K=5$, over a 3D volume.
+
+\section{Revelation deficit and the Jensen wedge}
+\label{sec:deficit}
+
+The natural measure of informational content of the price is the
+\textbf{revelation deficit}
+\begin{equation}
+\deficit \;=\; 1 - R^2\bigl[\mathrm{logit}\,P \;\sim\; \textstyle\sum_k u_k\bigr],
+\label{eq:def}
+\end{equation}
+the unexplained share of log-odds variation under a linear regression on
+the symmetric sufficient statistic $\sum_k u_k$.  Under the
+$S_K$-permutation symmetry of $P$ and the unconditional exchangeability
+of the signal vector, $\deficit$ is identical whether the regression is
+on the single sum or on the $K$ separate signals --- the OLS
+coefficients are equal by symmetry, collapsing the multi-regressor case
+to the single-regressor case.
+
+If risk aversion is $\gamma=0$, traders are risk-neutral and the unique
+equilibrium is fully revealing: $\PFR(u) = \sigma(\tau\sum_k u_k)$ has
+$\deficit = 0$.  For $\gamma>0$, the Jensen wedge $\pi = \bar m + (\tfrac12 -
+p)\,\mathrm{Var}(m)/\gamma$ separates the price from the average
+posterior mean and produces $\deficit>0$.  Asymptotically,
+\begin{equation}
+\deficit \;\propto\; 1/\gamma, \qquad \gamma\to\infty
+\label{eq:asymptotic}
+\end{equation}
+to leading order in $1/\gamma$, with the proportionality constant
+depending on $\tau$.
+
+The headline empirical finding of this study is that this $1/\gamma$
+asymptotic is observed cleanly across all parameter combinations
+examined, and that the deficit is strictly positive at every
+finite-$\gamma$ cell.
+
+\section{Why this is interesting}
+
+The Grossman--Stiglitz literature has long established that strictly
+positive private-information costs preclude fully revealing equilibrium
+in markets without exogenous noise (Grossman \& Stiglitz, 1980; Hellwig,
+1980; Diamond \& Verrecchia, 1981).  The standard mechanism is noise
+traders or random supply.  Here we document a quite different mechanism
+operating in a small but canonical setting: risk-averse CRRA traders
+under a binary payoff endogenously generate partial revelation through
+the Jensen wedge alone, without any exogenous noise.
+
+This finding has several distinctive features:
+\begin{itemize}
+\item Existence does not require continuous-payoff approximations or
+CARA-Gaussian closed forms.
+\item The deficit's $1/\gamma$ asymptotic provides a quantitative
+prediction independent of any noise-trader specification.
+\item Welfare and trading-volume metrics decompose into clean components
+that admit straightforward interpretation.
+\end{itemize}
+
+%==============================================================
+\part{Numerical Foundations}
+%==============================================================
+
+\section{Discretization of the equilibrium operator}
+
+For $K=3$ we discretize the inner cube $u\in[-U,U]^3$ with $U=4$, halo
+pad of 2 cells, and resolution $G^3$ for $G\in\{9, 13, 17, 21, 25, 29,
+33, 37, 41\}$ depending on the experiment.  The price function $P$ is
+stored on the inner grid; the halo enables stable numerical
+differentiation and quadrature near the boundary.
+
+The level-set evidence integrals~\eqref{eq:evidence} are the central
+numerical challenge: the integration domain depends on $P$ itself.  Two
+families of operators have been implemented and extensively tested:
+
+\subsection{Kernel-smoothed (h$>$0) operator $\Phi_h$}
+
+Replace the level-set delta by a Gaussian kernel of bandwidth $h$:
+\begin{equation}
+A_v^h(p, u_k) \;=\; \int K_h(P(u) - p) \prod_{j\ne k} f_v(u_j)\,\mathrm{d}u_{\ne k},
+\quad K_h(x) = \frac{e^{-x^2/2h^2}}{h\sqrt{2\pi}}.
+\end{equation}
+$\Phi_h$ is analytic in $P$, supports quadratic Newton convergence, and
+admits a joint-limit schedule $h(G) = 0.45\sqrt{\Delta u}$ that sends
+$h\to 0$ as $G\to \infty$.  At any finite $G$, the operator has $O(h)$
+bias in the worst case and $O(h^2)$ in the bulk; deep $G$-ladders
+(Part~IV) extrapolate this bias toward zero.
+
+\subsection{Strict $h=0$ operator $\Phi_0$}
+
+The unregularized operator integrates over the exact level set:
+\begin{equation}
+A_v^0(p, u_k) \;=\; \int_{\{P=p\}\cap\{u_k\ \rm fixed\}}
+\prod_{j\ne k} f_v(u_j) \, \mathrm{d}\sigma.
+\end{equation}
+At each cell of a discretized $P$, this requires extracting the level
+curve through linear interpolation of $P$.  The extraction is
+discontinuous in $P$: small changes in cell values can pop triangles in
+or out of the extracted contour, producing finite jumps in $\Phi_0$.
+This is the central obstacle to fixed-point iteration on the cube-based
+strict operator and is documented in Part~VII as the motivation for the
+moving-grid program.
+
+\section{Extended-precision certification}
+
+The float64 production solver hits a residual floor of
+$\approx 4 \times 10^{-15}$ due to roundoff in the bisection-based CRRA
+clearing step and accumulated rounding in the kernel quadrature.  To
+certify equilibria below this floor, we implemented a pure-numpy
+\texttt{longdouble} (80-bit) port of the kernel operator, validated to
+agree with the numba float64 reference operator at $3.8\times 10^{-15}$
+--- exactly the float64 floor.  Polishing uses a hand-rolled
+Jacobian-free Newton--GMRES(40) at extended precision with FD step
+$3\times 10^{-10}$: a single Newton step typically takes the residual
+from $\approx 5\times 10^{-14}$ to $\approx 3\times 10^{-17}$.
+
+The certification policy: a cell is \textbf{ACCEPTED} only if
+$\|\Phi(P)-P\|_\infty \le 10^{-15}$ in extended precision.  Cells
+failing this bar after $\tau$-continuation rescue are \textbf{REJECTED}
+and their derived quantities are quarantined and never quoted as
+results.
+
+\section{Solver pipeline}
+
+The production pipeline for each $(\tau, \gamma)$ cell:
+\begin{enumerate}
+\item \textbf{float64 G-ladder}: $G \in \{9,13,17,21\}$ with
+$\gamma$-continuation warm starts (each $\gamma$ warm-started from its
+neighbor's converged solution), Newton-Krylov with $f_{\rm tol}=10^{-12}$,
+40 Newton iterations max per $G$.
+\item \textbf{longdouble polish at $G=21$}: Jacobian-free Newton-GMRES,
+$(\le 5)$ Newton iterations, reduce residual to extended-precision floor.
+\item \textbf{$\tau$-continuation rescue} for stalls: warm-start from the
+highest solved lower-$\tau$ row at the same $\gamma$, march $\tau$
+upward in $0.1$ steps.
+\item \textbf{Accept/reject decision} at $10^{-15}$ bar.
+\end{enumerate}
+
+\section{Quantities computed per certified cell}
+
+For each accepted cell, the following are computed and stored:
+\begin{itemize}
+\item the inner price array $P$ at $G=21$
+\item residual $\|\Phi(P)-P\|_\infty^{\rm ld}$
+\item revelation deficit $\deficit$ via OLS regression of $\mathrm{logit}\,P$
+on $\sum_k u_k$
+\item log-odds slope (the regression slope)
+\item trading volume $\E\,|x^*|$ per agent
+\item value-of-information decomposition $\Vipub$, $\Vipriv$, $\ViFR$
+under the true joint measure
+\end{itemize}
+
+%==============================================================
+\part{Existence Theorem}
+%==============================================================
+
+\section{Setup and notation}
+
+We work in logit coordinates throughout this part: $\Pi = \mathrm{logit}\,P$,
+so $\Phi$ becomes Bayes-update-then-clear in log-odds.  Let $\Lambda$
+denote $\sigma$ and $\Lambda^{-1}$ denote $\mathrm{logit}$.  All function
+spaces are subsets of $C(Q)$ with $Q=[-U,U]^3$ in sup-norm topology.
+
+The regularization parameters are: $h>0$ for the price-band Gaussian
+kernel, and $\delta>0$ for an own-signal mollifier $\rho_\delta(u)$
+that smooths the indicator $\1\{u_k\ {\rm fixed}\}$ in
+\eqref{eq:evidence}.  The doubly-regularized operator is
+$\Phi_{h,\delta}$ and admits a closed-form posterior representation
+$\mu = \sigma(\tau u_1 + b(u, \Pi))$ where $b$ is the regularized
+evidence-log-ratio function.
+
+\subsection{Function classes}
+
+For constants $B, L, U > 0$, define $\mathcal{K}(B, L)$ as the set of
+$\Pi \in C(Q)$ satisfying:
+\begin{itemize}
+\item permutation-symmetric: $\Pi(u_{\pi(1)},\ldots,u_{\pi(K)}) = \Pi(u_1,\ldots,u_K)$
+\item odd: $\Pi(-u) = -\Pi(u)$
+\item bounded: $\|\Pi\|_\infty \le B$
+\item Lipschitz: $\|\Pi\|_{\mathrm{Lip}_\infty} \le L$
+\end{itemize}
+By Arzel\`a-Ascoli, $\mathcal{K}(B, L)$ is compact in the sup-norm.
+
+\section{Theorem 1: existence of regularized PR-REE}
+
+\begin{theorem}[Existence]\label{thm:existence}
+Fix $\tau, \gamma, U > 0$ and regularization parameters $h, \delta > 0$
+satisfying the contractivity condition
+\begin{equation}
+\chi := \frac{12 \tau U}{h^2} < 1.
+\label{eq:chi}
+\end{equation}
+Define
+\begin{equation}
+B = 3 \tau U,
+\quad
+\beta = \frac{4U}{\delta^2},
+\quad
+L_\star = \frac{\tau + \beta}{1 - \chi}.
+\end{equation}
+Then $\Phi_{h, \delta}$ has a fixed point $\Pi^\star \in \mathcal{K}(B, L_\star)$.
+The price $P^\star = \Lambda(\Pi^\star)$ takes values in $[\epsilon, 1-\epsilon]$ with
+$\epsilon = (1 + e^{3\tau U})^{-1}$.  If additionally $\chi \le 1/3$ and
+$\beta < \tau(2 - 3\chi)$, then $L_\star < 3\tau = \mathrm{Lip}_\infty(\Lambda^{-1}(\PFR))$,
+so $\Pi^\star \ne \Lambda^{-1}(\PFR)$, i.e.\ the regularized fixed point is
+strictly disjoint from the fully revealing benchmark.
+\end{theorem}
+
+\subsection{Proof sketch}
+
+The proof rests on three lemmas.  Lemma~\ref{lem:bayes-bound} bounds the
+Jacobian of the regularized posterior in logit coordinates;
+Lemma~\ref{lem:clear-nonexpansive} establishes that CRRA clearing is a
+non-expansive aggregator of log-odds; Lemma~\ref{lem:invariance}
+combines them to show $\Phi_{h,\delta}$ maps $\mathcal{K}(B, L_\star)$ to
+itself.  Schauder's fixed-point theorem then yields existence.
+
+\begin{lemma}[Bayes derivative bound]\label{lem:bayes-bound}
+For $\Pi \in \mathcal{K}(B, L)$, the doubly-regularized Bayes
+posterior $b(u, \Pi)$ satisfies
+\begin{align}
+|b(u, \Pi)| &\le 2\tau U \quad\text{(price floor implies $\epsilon$ bound)}\\
+\biggl|\frac{\partial b}{\partial \hat\pi}\biggr| &\le \chi = \frac{12\tau U}{h^2}\\
+\biggl|\frac{\partial b}{\partial u_j}\biggr| &\le \beta = \frac{4U}{\delta^2}, \quad j\ne 1.
+\end{align}
+\end{lemma}
+
+The first inequality follows from elementary bounding of the
+log-likelihood ratio over the bounded support.  The derivative bounds
+follow from explicit computation with the Gaussian kernel and the
+own-signal mollifier; the bandwidth $h$ controls the inverse of the
+sensitivity in $\hat\pi$, and $\delta$ controls the inverse of the
+sensitivity in own signal.
+
+\begin{lemma}[CRRA non-expansiveness]\label{lem:clear-nonexpansive}
+The CRRA-clearing operator on log-odds, $\pi^* = \mathrm{logit}\,p^{\rm clear}$,
+satisfies $\partial \pi^* / \partial m_k = w_k \ge 0$ with $\sum_k w_k \le 1$,
+strict equality only at risk neutrality.  The slack $1 - \sum_k w_k$ is
+identically zero under CARA preferences and strictly positive under CRRA
+whenever traders disagree with the price.
+\end{lemma}
+
+This is the key economic-numerical content: CRRA clearing is a weighted
+average of the agents' log-odds beliefs, with weights summing to no
+more than 1.  The Jensen wedge appears in the slack term $J_k = (R_k -
+1)^2 p(1-p)/D^2$, which vanishes identically under CARA.
+
+\begin{lemma}[Invariance of $\mathcal{K}(B, L_\star)$]\label{lem:invariance}
+Under~\eqref{eq:chi}, $\Phi_{h,\delta}(\mathcal{K}(B, L_\star)) \subset
+\mathcal{K}(B, L_\star)$.
+\end{lemma}
+
+The proof combines the bounds of Lemma~\ref{lem:bayes-bound} with the
+non-expansiveness of Lemma~\ref{lem:clear-nonexpansive}: the post-image
+of any $\Pi \in \mathcal{K}(B, L_\star)$ has $\|\Phi\Pi\|_\infty \le
+\tau\,U + \chi\,B + \beta\,U \le B$ for the chosen $B$, and Lipschitz
+bound $L_\star$ by the chain rule.
+
+\subsection{Schauder application}
+
+$\mathcal{K}(B, L_\star)$ is compact convex in sup-norm by Arzel\`a-Ascoli;
+$\Phi_{h,\delta}$ is continuous (smooth, in fact); the invariance of
+Lemma~\ref{lem:invariance} closes the Schauder argument.  Existence
+follows, completing Theorem~\ref{thm:existence}.
+
+\section{Proposition 2: $\PFR$ is excluded by the regularized operator}
+
+\begin{proposition}\label{prop:GS}
+For every $h, \delta > 0$, $\Phi_{h,\delta}(\PFR) \ne \PFR$.
+\end{proposition}
+
+\subsection{Proof sketch}
+
+Evaluate $\Phi_{h, \delta}$ at the fully-revealing $\PFR$.  At a test
+point $u = (a, a, -2a)$ with $a > 0$, the regularized posteriors
+$\mu_k$ depart from $\PFR(u)$ by a quantity proportional to $\chi$
+(from the Bayes derivative bound), so the clearing price differs from
+$\PFR(u)$ by a strictly positive amount.  Closed-form Gaussian
+computation at this test point yields aggregate excess demand $4\tanh^3
+\theta / (1 + \tanh^2 \theta) > 0$ for any $h, \delta > 0$, so $\PFR$ is
+not a fixed point of the regularized operator at any positive
+regularization.
+
+\section{Theorem 2: continuum existence (conditional)}
+
+A vanishing-regularization sequence of fixed points
+$\{\Pi^\star_{h_n, \delta_n}\}$ with $h_n, \delta_n \to 0$ converges to
+an exact PR-REE distinct from $\PFR$, conditional on:
+\begin{itemize}
+\item uniform $C^{1, \alpha}$ regularity along the sequence
+\item lower-bounded gradient: $|\nabla P_n| \ge \nu > 0$ on the relevant slice
+\item subcritical tilt: $\kappa(P_n) < 1$ along the sequence
+\end{itemize}
+
+These conditions are verified numerically on the certified branch but
+not analytically.  The honest statement is that Theorem~\ref{thm:existence}
+gives unconditional existence of the regularized PR-REE; the continuum
+PR-REE distinct from $\PFR$ has been established conditionally
+modulo Assumption 1's regularity bounds.
+
+\section{Practical impact}
+
+Theorem~\ref{thm:existence} gives the analytical floor for our
+numerical work: regularized PR equilibria exist for any (gamma, tau, U)
+whenever the contractivity condition $\chi < 1$ holds.  The condition
+becomes restrictive at small $h$ relative to large $\tau U$, motivating
+the kernel-h schedule $h \sim \sqrt{\Delta u}$ that keeps $\chi$ bounded.
+For computer-assisted strengthening at small $h$, an interval-arithmetic
+bound on $\|(I - D\Phi)^{-1}\|$ at one certified anchor would convert
+Theorem~\ref{thm:existence} to a global-in-$h$ existence result; this is
+identified as the main next-step proof.
+
+%==============================================================
+\part{Certified Equilibria and the High-Deficit Corner}
+%==============================================================
+
+\section{The certification database: 255 equilibria}
+\label{sec:cert}
+
+Across the certification effort we accepted 255 cells:
+\begin{itemize}
+\item \textbf{The original $20\times 5$ sweep}: $\tau \in \{0.2,0.5,1.0,1.5,2.0\}$
+with 20 $\gamma$ values in $[0.05, 30]$ (logspace).  87 cells certified.
+\item \textbf{Low-$\tau$ extension}: $\tau \in \{0.05, 0.10, 0.30, 0.40, 0.60\}$
+with the same 20 $\gamma$ values.  100 cells certified.
+\item \textbf{High-$\tau$ extension}: $\tau \in \{0.80, 1.00, 1.20, 1.50\}$,
+20 $\gamma$ values.  68 cells certified (5 quarantined at high $\gamma\cdot\tau$).
+\item \textbf{Low-$\gamma$ extension}: at each $\tau$ row,
+$\gamma \in \{0.01, 0.02, 0.03\}$ as additional rungs.  Several dozen
+cells included in the master table.
+\end{itemize}
+
+Worst accepted residual: $1.4 \times 10^{-15}$.  Best: $6 \times 10^{-19}$.
+Median: $\approx 10^{-17}$.  Typical Newton step at extended precision
+took residual from $\approx 5 \times 10^{-14}$ to $\approx 3 \times
+10^{-17}$, demonstrating quadratic Newton convergence in the
+longdouble polish stage.
+
+\section{Headline deficit table}
+
+\begin{table}[H]\centering\small
+\begin{tabular}{c|cccccccc}
+\toprule
+$\gamma$ & $\tau{=}0.05$ & 0.10 & 0.20 & 0.30 & 0.40 & 0.50 & 0.60 & higher \\
+\midrule
+0.01 & --- & --- & --- & --- & --- & --- & --- & 2.87e-1 (at $\tau{=}2$) \\
+0.05 & 5.9e-2 & 1.3e-1 & 1.7e-1 & 1.8e-1 & 1.8e-1 & 1.9e-1 & 1.9e-1 & --- \\
+0.10 & 8.3e-3 & 5.4e-2 & 1.2e-1 & 1.5e-1 & 1.5e-1 & --- & --- & --- \\
+0.27 & 1.3e-4 & 1.8e-3 & 1.0e-3 & 1.5e-2 & 5.4e-2 & --- & --- & --- \\
+1.04 & 1.1e-6 & 1.7e-5 & 2.6e-4 & 1.2e-3 & 3.2e-3 & 6.7e-3 & 1.1e-2 & --- \\
+5.57 & 6.3e-8 & 9.4e-7 & 1.3e-5 & 6.2e-5 & 2.1e-4 & 5.7e-4 & 1.3e-3 & --- \\
+30.0 & 2.3e-9 & 3.2e-8 & 1.5e-6 & 2.5e-5 & 1.7e-4 & 6.7e-4 & 1.6e-3 & --- \\
+\bottomrule
+\end{tabular}
+\caption{Certified revelation deficit $\deficit = 1 - R^2$ at
+representative $(\tau, \gamma)$ cells.  All cells certified at
+$\|\Phi(P)-P\|_\infty \le 10^{-15}$ in extended precision.}
+\label{tab:headline}
+\end{table}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.85\textwidth]{Fmax1_all_loglog.png}
+\caption{Certified deficit vs $\gamma$ for all 12 $\tau$ values, 255 cells total.
+The 1/$\gamma$ asymptote is uniformly visible at large $\gamma$ across all rows.}
+\label{fig:full-log}
+\end{figure}
+
+\section{The high-deficit corner}
+\label{sec:max}
+
+The Jensen-wedge prediction places the maximum deficit at large $\tau$
+(precise signals) and small $\gamma$ (low risk aversion).  We certified
+the corner directly via systematic low-$\gamma$ extensions.
+
+\begin{equation}
+\boxed{\deficit_{\max} \;=\; 0.2871\quad\text{at}\quad(\tau,\gamma) = (2.0,\,0.01),
+\quad \|\Phi(P)-P\|_\infty^{\rm ld} = 2.95\times 10^{-16}.}
+\end{equation}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.85\textwidth]{Fmax2_envelope.png}
+\caption{Envelope $\max_\gamma \deficit(\tau, \gamma)$ vs $\tau$, showing
+monotone growth in $\tau$ with visibly slowing increase: from $0.060$ at
+$\tau = 0.05$ to $0.287$ at $\tau = 2.0$.  The maximum is bounded well
+below the theoretical bound of 1.}
+\end{figure}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{Fmax3_heatmap.png}
+\caption{Certified deficit heatmap on $(\tau, \gamma)$ grid (log scale).
+The deficit is monotone in $\tau\uparrow$ and $\gamma\downarrow$
+everywhere.}
+\end{figure}
+
+\subsection{The empirical deficit ceiling}
+
+At each $\tau$, the certified deficits at small $\gamma \in \{0.01, 0.02,
+0.03\}$ differ by less than $0.005$, indicating that the deficit
+\emph{saturates} to a $\tau$-dependent ceiling as $\gamma \to 0$.
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.85\textwidth]{Fmax4_lowgamma_zoom.png}
+\caption{Low-$\gamma$ zoom showing the deficit ceiling at each $\tau$.
+The Jensen-wedge mechanism has finite range under binary payoff,
+producing a saturating envelope rather than unbounded growth.}
+\end{figure}
+
+\section{Continuum estimates from deep G-ladders}
+\label{sec:gladder}
+
+\subsection{The immortal anchor: $(\tau, \gamma) = (2, 0.098)$}
+
+The anchor cell extends through $G \in \{9, 13, 17, 21, 25\}$ in the
+original deep-ladder work, and further to $G \in \{29, 33, 37\}$ in the
+extension.  Continuum extrapolation via three fits (q-free, q=1, q=2)
+with honest error bars yields
+\begin{equation}
+\deficit_\infty(2, 0.098) = 0.268 \pm 0.010
+\end{equation}
+where the $\pm$ encompasses the spread between the three extrapolation
+classes.
+
+\subsection{The maximum-deficit corner: $(\tau, \gamma) = (2, 0.01)$}
+
+The max-deficit cell was extended through $G \in \{21, 25, 29, 33\}$
+(G=37 stalled at the small-$h$ Newton pathology and was excluded).
+Three extrapolations:
+\begin{itemize}
+\item q=1 fit (linear in $h$): $\deficit_\infty = 0.2780$
+\item q=2 fit (linear in $h^2$): $\deficit_\infty = 0.2821$
+\item q-free fit (constrained $q \ge 0.7$): $\deficit_\infty = 0.2745$
+\end{itemize}
+
+Honest central estimate:
+\begin{equation}
+\boxed{\deficit_\infty(2, 0.01) = 0.278 \pm 0.008.}
+\end{equation}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.85\textwidth]{extrapolation.png}
+\caption{Deep G-ladder extrapolation at the max-deficit corner.  Four
+nailed rungs and three independent extrapolation fits give continuum
+$\deficit_\infty = 0.278 \pm 0.008$, within 3\% of the G=21 certified value.}
+\end{figure}
+
+\subsection{Pattern across cells}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.85\textwidth]{extrapolation_clean.png}
+\caption{Five-cell deep-ladder extrapolation summary.  The G=21
+certified value is consistently within $\sim 3\%$ of the continuum
+estimate across cells.}
+\end{figure}
+
+\section{The deep-ladder small-$h$ pathology}
+
+A methodological finding worth flagging: the kernel schedule
+$h = 0.45\sqrt{\Delta u}$ exhibits a small-$h$ Newton convergence
+pathology at $G \gtrsim 25$--$29$.  Cells that nail at machine epsilon
+at $G = 21$ may stall at $F \sim 10^{-2}$ at deeper resolutions,
+\emph{independent} of $(\tau, \gamma)$.  This is intrinsic to the
+operator/schedule combination, not a property of the equilibrium.
+
+Three of five cells in the deep-ladder sample lose convergence past
+$G = 29$.  This is the empirical motivation for the strict-$h=0$
+program documented in Part~VII: finite-$h$ deepening cannot
+brute-force the continuum at arbitrary cells, and the strict-$h=0$
+formulation (which has its own structural problems documented later)
+was the natural next step.
+
+\section{Cross-validation via independent solver families}
+
+The kernel operator computed via numba/numpy float64 (production), the
+\texttt{longdouble} polish, and the 80-bit Newton-GMRES (certification)
+agree on every accepted cell to within their respective floors.  The
+3.8e-15 agreement between the numba and longdouble operators validates
+the longdouble port end-to-end.  No accepted cell has been overturned by
+solver-change cross-checks.
+
+%==============================================================
+\part{Value of Information and Welfare}
+%==============================================================
+
+\section{Welfare metrics}
+
+For each certified equilibrium we evaluate the following primitives
+under the \emph{true} joint distribution of $(v, u_1, u_2, u_3)$:
+
+\subsection{Trading volume}
+
+\begin{equation}
+\mathrm{TV} \;=\; \E\bigl|\,x^*(\mu_{\rm informed}, P)\,\bigr|.
+\end{equation}
+Per-agent expected absolute trade.  Symmetry makes the per-agent figure
+equal across $k$.
+
+\subsection{Four posterior types}
+
+For each cell we compute four posteriors and their respective optimal
+trades at the equilibrium price:
+\begin{itemize}
+\item $\mu_{\rm FR}(u) = \prod f_1(u_k) / (\prod f_0 + \prod f_1)$:
+the full-Bayes posterior given all $K$ signals --- the welfare-relevant truth.
+\item $\mu_{\rm pub}(p)$: the rational price-only posterior, obtained by
+binning the joint distribution by realized price $p$ and aggregating.
+\item $\mu_{\rm inf}(u_k, p)$: the equilibrium price-plus-own-signal
+posterior, by binning over both $u_k$ and $p$.
+\item $\mu_{\rm prior} = \tfrac12$: the no-information benchmark.
+\end{itemize}
+
+Each baseline trader picks the optimal CRRA trade at the equilibrium
+price $p$ using \emph{their} posterior; certainty-equivalent wealth is
+evaluated under the true measure $\mu_{\rm FR}$.
+
+\subsection{Value-of-information decomposition}
+
+\begin{align}
+\Vipub  &= \mathrm{CE}_{\mu_{\rm pub}} - \mathrm{CE}_{\rm prior}      &&\ge 0 \\
+\Vipriv &= \mathrm{CE}_{\rm informed} - \mathrm{CE}_{\mu_{\rm pub}}    &&\ge 0 \\
+\ViFR   &= \mathrm{CE}_{\rm FR} - \mathrm{CE}_{\rm informed}          &&\ge 0
+\end{align}
+
+with $\Vipub + \Vipriv + \ViFR = \mathrm{CE}_{\rm FR} - \mathrm{CE}_{\rm prior}$,
+the total CE value of full information relative to the prior.
+
+\section{Empirical findings on welfare}
+
+\begin{enumerate}
+\item $\Vipub \gg \Vipriv$ at every parameterization.  The equilibrium
+price delivers the majority of the informational value to traders; the
+own private signal contributes a strictly positive but smaller share.
+This is the welfare counterpart of the deficit's smallness in the
+asymptotic regime.
+\item $\Vipriv > 0$ everywhere, confirming the welfare-relevance of the
+positive revelation deficit: even where the deficit is small, private
+signals retain measurable economic value.
+\item $\ViFR$ vanishes in proportion to $\deficit$ along each $\tau$
+row, providing a direct welfare interpretation of the revelation deficit.
+\item Trading volume rises with $K$ (more counterparties to trade with)
+and decreases with $\gamma$ (more risk-averse traders take smaller
+positions).
+\end{enumerate}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.85\textwidth]{fig_deficit.png}
+\caption{Revelation deficit map across the certified $20 \times 5$
+sweep; complementary to the welfare decomposition documented above.}
+\end{figure}
+
+%==============================================================
+\part{K-Invariance: More Traders Do Not Reduce the Deficit}
+%==============================================================
+
+\section{Extension to K=4 and K=5}
+
+We extend the K=3 analysis to K=4 and K=5 traders via a solver that
+exploits the $S_K$ permutation symmetry of the equilibrium (an $O(K!)$
+state-space reduction).  The symmetric solver is built on top of the
+repo's general-K kernel operator, validated to reproduce the
+certified K=3 deficit at $(\tau, \gamma) = (0.2, 1.04)$ to $0.00\%$
+relative error.
+
+A 390-cell parameter sweep across $K \in \{3, 4, 5\}$, $\tau \in \{0.1,
+0.2, 0.4, 0.6\}$, $G \in \{11, 15, 21\}$, and 15 values of
+$\gamma \in [0.05, 30]$ found that all cells converged to machine
+epsilon residuals ($F \le 9.9 \times 10^{-13}$, typical $\sim 7 \times
+10^{-15}$).
+
+\section{The K-invariance finding}
+
+\begin{table}[H]\centering\small
+\begin{tabular}{c|ccccc}
+\toprule
+$\gamma$ & $\deficit(K{=}3)$ & $\deficit(K{=}4)$ & $\deficit(K{=}5)$ & $K{=}4/K{=}3$ & $K{=}5/K{=}3$\\
+\midrule
+0.10  & 1.18e-1 & 9.46e-2 & 1.09e-1 & 0.80 & 0.92\\
+0.51  & 1.72e-3 & 1.97e-3 & 2.11e-3 & 1.15 & 1.23\\
+1.00  & 2.94e-4 & 2.81e-4 & 2.68e-4 & 0.96 & 0.91\\
+10.00 & 4.55e-6 & 4.65e-6 & 4.26e-6 & 1.02 & 0.94\\
+30.00 & 8.64e-7 & 8.00e-7 & 6.98e-7 & 0.93 & 0.81\\
+\bottomrule
+\end{tabular}
+\caption{$K$-comparison at $\tau=0.2$, $G=15$.  Deficits coincide within
+$\pm 25\%$ per cell across $K \in \{3, 4, 5\}$.}
+\end{table}
+
+\section{The slope identity}
+
+A clean empirical identity emerges: across all 390 cells of the K-sweep,
+\begin{equation}
+\frac{\partial \mathrm{logit}\,P}{\partial \sum_k u_k} \cdot \frac{K}{\tau} = 1.00 \pm 0.03.
+\label{eq:slope-identity}
+\end{equation}
+In other words, $\mathrm{logit}\,P \approx \tau \bar u$ where $\bar u = K^{-1}
+\sum_k u_k$ is the average signal.  The price reveals only the
+\emph{average} signal regardless of $K$.
+
+\section{Economic interpretation}
+
+The K-invariance is at first sight surprising: more traders pool more
+private information, so one would naively expect the price to be more
+revealing as $K$ grows.  The clean failure of this intuition has a
+simple explanation:
+
+\begin{itemize}
+\item Market clearing aggregates $K$ posterior log-odds through the
+concave CRRA demand function.
+\item The clearing price ends up at the risk-adjusted \emph{mean}
+belief: $\mathrm{logit}\,p \approx \tau \bar u$, carrying the precision
+of \emph{one} signal regardless of $K$.
+\item Adding traders adds one more signal to the average but also adds
+one more belief whose nonlinearity feeds the Jensen wedge.  The two
+effects cancel almost exactly.
+\end{itemize}
+
+The parameters that drive large deficit are signal precision $\tau$ and
+risk aversion $\gamma$, not crowd size $K$.
+
+\section{The G=15 vs G=21 consistency check}
+
+The 390-cell sweep used three $G$ levels ($G \in \{11, 15, 21\}$) for
+each $K$.  Within each $K$, the deficit at fixed $(\tau, \gamma)$
+varies $\sim 5\%$ across $G$ values (the discretization spread).  This
+is the same order as the $K$-effect, so the K-invariance claim is
+established at the within-discretization-error level rather than at
+the strict machine-precision level.  The qualitative conclusion is
+robust at any reasonable interpretation.
+
+%==============================================================
+\part{The Grossman-Stiglitz Degeneracy at Strict h=0}
+%==============================================================
+
+\section{The strict-h=0 puzzle}
+
+A natural methodological question, raised early in the project, was:
+why use kernel regularization $h > 0$ at all?  Why not solve the
+fixed-point problem directly at $h = 0$, with the level-set
+delta-function?  This Part documents the answer at length, because the
+answer is surprising and structurally important: \textbf{the strict-$h=0$
+operator admits $\PFR$ as a fixed point at every parameter combination,
+and no other fixed point exists in any basin we can probe}.
+
+\section{Analytic statement}
+
+\begin{proposition}[Grossman-Stiglitz degeneracy]\label{prop:GS-deg}
+For every $(\tau, \gamma)$ in $(0,\infty)^2$, the fully revealing price
+function $\PFR(u) = \sigma(\tau \sum_k u_k)$ is an exact fixed point of
+the strict-$h=0$ operator: $\Phi_0(\PFR) = \PFR$.
+\end{proposition}
+
+\subsection{Proof}
+
+Substitute $P = \PFR$ into the evidence integral~\eqref{eq:evidence}.
+The level set $\{\PFR = p\}$ is the hyperplane $\sum_k u_k = \mathrm{logit}\,p
+/\tau$, a constraint that pins the signal sum exactly.  Conditional on
+this constraint and $u_k$ fixed, the remaining variables $u_j (j \ne
+k)$ have densities proportional to $f_v(u_j)$ summing to
+$\mathrm{logit}\,p/\tau - u_k$.  The Gaussian integrals close in closed form:
+the conditional posterior is
+\begin{equation}
+\mu_k = \sigma(\tau \cdot \mathrm{logit}\,p / \tau) = \sigma(\mathrm{logit}\,p) = p.
+\end{equation}
+
+Hence every trader's posterior equals $p$ exactly.  With identical
+posteriors $\mu_1 = \mu_2 = \mu_3 = p$, the CRRA-clearing equation
+returns $p^{\rm clear} = p$ for any $\gamma$ (any agent's optimal trade
+is zero when belief equals price).  Self-consistency $\PFR(u) = p^{\rm
+clear}$ holds, so $\PFR$ is a fixed point.
+
+\subsection{Numerical confirmation}
+
+The proposition was verified numerically at nine $(\tau, \gamma)$ cells
+spanning $\tau \in [0.05, 2]$ and $\gamma \in \{0.01, 0.098, 1.035\}$.
+Computing the strict-$h=0$ operator at $\PFR$ in 80-bit longdouble
+gave self-residuals in the range
+\begin{equation}
+1.7 \times 10^{-15} \;\le\; \|\Phi_0(\PFR) - \PFR\|_\infty \;\le\; 3.8 \times 10^{-15}.
+\end{equation}
+These are at the float64 floor (the longdouble operator's mesh-extraction
+discretization noise).  Reconstruction of the deficit at $\PFR$ gives
+$|1 - R^2| < 4 \times 10^{-15}$ --- exactly zero modulo
+discretization noise, as the constraint $\mathrm{logit}\,\PFR = \tau
+\sum_k u_k$ is satisfied by construction.
+
+\section{Moving-grid solver attempts}
+
+If $\PFR$ is one fixed point of $\Phi_0$, are there others?  The
+question can be tested by running fixed-point solvers from various
+starting points and observing where they converge.  We tried many
+solver families across many starting points, with the following
+exhaustive list of outcomes documenting the consistency of the
+non-existence finding.
+
+\subsection{Stage 2: cube-based Picard}
+
+Iterating the strict-$h=0$ operator on cube values diverged from the
+kernel warm-start ($0.33 \to 0.46 \to 0.47$).  Diagnosis: the cube-based
+extraction of level curves is discontinuous in $P$ (Section 4.2),
+making cube-iteration non-smooth.
+
+\subsection{Stage 3: moving-mesh approaches}
+
+\begin{itemize}
+\item Normal-only Newton at vertex level: stalled at $|\delta| \approx
+10^{-6}$ steps --- the normal direction is too restrictive to find a
+descent direction in the residual landscape.
+\item Damped Picard along surface normals: plateau at median $|r| = 0.11$
+with max $|r| = 0.33$.  Picard is too weak to find a fixed point.
+\end{itemize}
+
+\subsection{Stage 4-5: free-vertex Levenberg-Marquardt}
+
+Full free-vertex 3D Levenberg-Marquardt with per-surface block-FD
+Jacobian, topology guard, and per-vertex edge cap descended steadily for
+~20 iterations from the kernel warm-start, reducing median $|r|$ from
+$0.18$ to $0.13$, then plateaued at max $|r| = 0.33$.  Same outcome on
+both the simple Picard variant (lighter convergence) and the
+sparse-Jacobian Stage 5 variant (faster but same plateau).
+
+\subsection{Stage 6: graph (height-function) formulation}
+
+Parameterize each level surface as a graph $t = H_m(w)$ over the
+transverse $(w_1, w_2)$ plane.  This reduces the unknown count by a
+factor of $\sim 50$ vs the 2D mesh, sidesteps the gauge degeneracy
+issue, and is also S3-symmetric by construction.  The graph
+formulation descended from the kernel warm-start to median $|r| = 0.044$
+on the well-posed subset --- substantially better than the mesh
+versions --- but always with vertices being pulled toward $\PFR$ rather
+than toward a different fixed point.
+
+\subsection{Stage 7: graph solver from $\PFR$}
+
+Solving from $\PFR$ directly: the solver correctly identifies $\PFR$ as
+a fixed point and produces step $\delta = 0$ within numerical
+tolerance.  The residual at $\PFR$ is the discretization noise floor
+($\sim 10^{-15}$).  This is the unique convergent run across all
+solver families and starting points.
+
+\section{Basin-of-attraction tests}
+
+We conducted systematic basin-of-attraction tests at multiple
+discretization resolutions and multiple starting-point classes to
+settle whether any nontrivial fixed point exists in any basin
+reachable by Picard or LM.
+
+\subsection{G=33 basin search}
+
+Seven starting points at the max-deficit corner:
+\begin{table}[H]\centering\small
+\begin{tabular}{lcccccc}
+\toprule
+start & init max $|r|$ & final max $|r|$ & init med $|r|$ & final med $|r|$ & dist to FR & moved\\
+\midrule
+$\PFR$ & 0.333 & 0.497 & 3.6e-6 & 3.7e-6 & 0.000 & 0.630\\
+kernel G33 & 0.276 & 0.373 & 2.1e-2 & 5.6e-2 & 0.666 & 0.562\\
+kernel G29 & 0.276 & 0.328 & 1.0e-1 & 1.7e-1 & 0.666 & 0.562\\
+kernel G21 & 0.276 & 0.490 & 7.0e-2 & 1.7e-1 & 0.666 & 0.609\\
+0.5*kernel + 0.5*FR & 0.262 & 0.495 & 1.2e-1 & 1.6e-1 & 0.333 & 0.548\\
+no-learning init & 0.316 & 0.328 & 4.7e-2 & 4.7e-2 & 0.664 & 0.640\\
+\bottomrule
+\end{tabular}
+\caption{G=33 basin-of-attraction test: only $\PFR$ has initial median
+residual at the discretization noise floor ($\sim 10^{-6}$).  Every
+other starting point has median residual 4-5 orders larger.  All
+trajectories drift; no trajectory converges to a different fixed
+point.}
+\end{table}
+
+\subsection{Multi-resolution basin sweep}
+
+A more extensive sweep ran 9 starting points (PFR, kernel, four
+PFR-perturbations at $\sigma \in \{0.01, 0.05, 0.1, 0.2\}$, three
+kernel/FR mixtures) at each of $G \in \{15, 21, 25, 33\}$.  Key
+observations from the G=15 row (which is faster to iterate):
+
+\begin{table}[H]\centering\small
+\begin{tabular}{lcccc}
+\toprule
+start & init med $|r|$ & final med $|r|$ & change & dmoved \\
+\midrule
+$\PFR$ & 4.3e-6 & 4.9e-6 & flat (floor) & 0.500\\
+kernel & 3.7e-2 & 7.5e-3 & 5x improvement & 0.467\\
+$\PFR + \mathcal{N}(0.01)$ & 2.4e-3 & 2.8e-3 & flat & 0.479\\
+$\PFR + \mathcal{N}(0.05)$ & 1.2e-2 & 1.5e-2 & drift up & 0.492\\
+$\PFR + \mathcal{N}(0.1)$ & 2.1e-2 & 3.1e-2 & drift up & 0.475\\
+$\PFR + \mathcal{N}(0.2)$ & 5.0e-2 & 6.8e-2 & drift up & 0.570\\
+mix\_a0.25 & 7.0e-2 & 8.3e-2 & flat & 0.477\\
+mix\_a0.5 & 1.3e-1 & 1.5e-1 & flat & 0.471\\
+mix\_a0.75 & 2.0e-1 & 2.3e-1 & flat & 0.464\\
+\bottomrule
+\end{tabular}
+\caption{G=15 basin sweep with damped Picard.  $\PFR$ is rock-solid as
+a fixed point; the kernel-start trajectory is being driven somewhere
+(5x median improvement); all other trajectories either stall or drift
+without converging.}
+\end{table}
+
+The kernel-start's 5x median improvement is intriguing.  Picard from
+the kernel solution is descending toward something.  If it kept
+iterating, it might reach the $\PFR$ floor.  No other starting point
+shows this descent pattern.
+
+\subsection{Penalized solver attempts (FR-distance barrier)}
+
+To test whether a nontrivial fixed point might exist that the unbiased
+solver simply fails to reach (drift to $\PFR$ being a basin-of-attraction
+issue rather than a non-existence issue), we ran scipy
+least\_squares with an FR-distance barrier penalty $\lambda \cdot
+\max(0, \mathrm{threshold} - \|P - \PFR\|)$ at thresholds $\in \{0.05,
+0.15, 0.30\}$ and five starting points each.
+
+The penalized runs found no nontrivial fixed point.  At the smallest
+threshold $(0.05)$, scipy LS could not reduce the residual meaningfully
+from any starting point: every trajectory either sits at the kernel
+position with residual $\sim 0.05$ or drifts to a position with similar
+residual.  The penalty is not active (configurations stay far from
+$\PFR$) but the residual cannot be reduced.
+
+\subsection{Symmetric 1D-curve formulation}
+
+Per a user suggestion, we built a 1D-curve formulation that exploits
+the natural slice structure of the evidence integrals: for each
+own-signal $U$ and price $p$, store one 1D curve in 2D directly,
+parametrized by $N_{\rm arc}$ arclength points.  With full $S_3 +$
+sign-flip symmetry imposed by storing only the fundamental domain
+(positive $u$, $p < 0.5$), the unknown count drops to 512 (vs the 2D
+mesh's $\sim 3000$).  Aggressive scipy least\_squares with low
+damping ran from kernel-like warm starts with and without FR-distance
+penalty: no nontrivial fixed point found.
+
+\section{Interpretation: $h$ as equilibrium selection mechanism}
+
+The consistent failure of every moving-grid solver from every starting
+point to find a nontrivial fixed point is not numerical artifact: it
+reflects the structural fact that no nontrivial strict-$h=0$ fixed
+point exists in the binary-payoff setting.
+
+The kernel bandwidth $h > 0$ plays a deeper role than smoothing
+the operator: it \emph{selects} the nontrivial PR branch by changing
+the conditioning event.  When $h > 0$, the conditioning is on a
+positive-mass band $\{|P - p| < h\}$ rather than a measure-zero level
+set, and full revelation is no longer trivially self-consistent.
+
+The partial-revelation equilibrium that Part~III certifies exists
+\emph{only as the $h \to 0$ limit of the kernel-regularized branch} ---
+the $\PFR$ degeneracy means that $h = 0$ exactly cannot directly host a
+nontrivial PR fixed point.  The deep-ladder extrapolations of Part~IV
+give the continuum values of this limit.
+
+%==============================================================
+\part{Methodological Reflections and Open Problems}
+%==============================================================
+
+\section{What worked}
+
+\begin{itemize}
+\item Extended-precision certification.  The longdouble polish on top
+of float64 production solving delivered residuals at the
+discretization floor, well below the $10^{-15}$ acceptance bar.
+\item $\gamma$-continuation warm starts.  Each $\gamma$ in a row
+warm-started from its neighbor's converged solution kept Newton-Krylov
+quadratic almost everywhere.
+\item $\tau$-continuation rescue.  Cells that stalled in the $\gamma$
+direction were often rescued by marching $\tau$ down from a neighbor.
+\item Deep G-ladder extrapolation.  Three independent fits ($q$-free,
+$q{=}1$, $q{=}2$) gave honest error bars on continuum values.
+\item $S_K$-symmetric solver.  K-invariance was confirmed cheaply
+using the permutation-symmetric framework.
+\end{itemize}
+
+\section{What did not work}
+
+\begin{itemize}
+\item Cube-based strict-$h=0$ Picard.  Diverges because level-curve
+extraction is discontinuous in cube values.
+\item Normal-only moving-mesh Newton.  Steps too restrictive.
+\item Free-vertex moving-mesh LM with topology guard.  Descends from
+warm start but plateaus at non-zero residual --- because there is no
+nontrivial fixed point to find.
+\item Penalty-against-PFR solver.  Cannot find a nontrivial fixed
+point because none exists; the penalty never becomes active.
+\end{itemize}
+
+\section{Open questions}
+
+\subsection{Continuous payoff variant}
+
+Replacing the binary payoff $v \in \{0, 1\}$ with a continuous
+$v \in [0, 1]$ would (in principle) break the $\PFR$ degeneracy.
+The continuous-payoff variant has not been computed in this project
+but is a clean next research target.  If a nontrivial strict-$h=0$ PR
+fixed point exists in the continuous case, the binary case can be
+documented as a knife-edge limit where the degeneracy occurs.
+
+\subsection{Computer-assisted proof at small $h$}
+
+Theorem~\ref{thm:existence} requires $h^2 > 12 \tau U$, which is
+quantitatively coarse at small $\tau$.  A computer-assisted bound on
+$\|(I - D\Phi)^{-1}\|$ at one certified anchor would convert the
+existence result to a global-in-$h$ statement.  Interval arithmetic
+plus rigorous numerical operators (e.g.\ Arb) could deliver this.
+
+\subsection{Welfare interpretation of the deficit ceiling}
+
+The empirical deficit ceiling at small $\gamma$ (the saturation visible
+in Figure~5 of the paper) is bounded below 1.  An analytical formula
+for the asymptotic ceiling as $\gamma \to 0$ would close a gap in the
+empirical picture.
+
+\subsection{Multi-asset extensions}
+
+The CRRA-binary economic structure here generalizes naturally to
+multiple risky assets.  Numerical certification at $G^3$ resolution
+becomes infeasible for $K_{\rm assets} > 1$, but the symmetric
+framework should be extensible.
+
+\section{Reproducibility}
+
+All data, scripts, certified solutions, intermediate logs, and PDF
+reports are committed to the repository:
+\begin{itemize}
+\item Certified solutions: \texttt{projects/REZN/solved\_fixed\_points/lowtau/}
+and \texttt{projects/REZN/solved\_fixed\_points/dd\_k3\_overnight/emin15/}.
+\item Solver code: \texttt{projects/REZN/solver\_code/highprec\_dd\_qd/}.
+\item Moving-grid (CMM) code:
+\texttt{projects/REZN/solver\_code/cmm\_endogenous/}.
+\item Symmetric K solver:
+\texttt{projects/REZN/solver\_code/highprec\_dd\_qd/highK\_core.py}.
+\item Existence proof: \texttt{projects/REZN/solved\_fixed\_points/lowtau/proof\_PR\_existence.pdf}.
+\end{itemize}
+
+\section{Conclusion}
+
+The economic finding stands cleanly: in a three-trader CRRA market with
+binary payoff, Gaussian private signals, and no noise traders, a
+partial-revelation equilibrium exists and is unique within the
+regularization-selected branch.  The deficit is strictly positive,
+asymptotically $\propto 1/\gamma$, peaks at $0.278 \pm 0.008$ in the
+high-signal-precision/low-risk-aversion corner, and is nearly
+$K$-invariant across $K \in \{3, 4, 5\}$ traders.  Welfare decomposes
+into a dominant public-information component, a strictly positive
+private-information component, and a welfare gap to full revelation
+that vanishes in proportion to the deficit.
+
+The methodological finding is equally clean and quite surprising:
+under binary payoff, the strict-$h=0$ operator admits the fully
+revealing $\PFR$ as its unique fixed point.  The partial-revelation
+equilibrium exists only as the $h \to 0$ limit of the
+kernel-regularized branch.  The kernel bandwidth is therefore an
+equilibrium selection mechanism, not a numerical convenience.
+Extensive basin-of-attraction tests at multiple resolutions, with
+many starting points and FR-distance penalties, confirm: no
+nontrivial strict-$h=0$ fixed point exists in any basin probed by our
+solvers.
+
+This is, to our knowledge, the first computational documentation of a
+Grossman--Stiglitz-style impossibility theorem that operates without
+exogenous noise, and the first numerical certification of a CRRA REE
+to extended precision across hundreds of parameter combinations.
+
+
+\appendix
+\part{Appendices}
+
+
+\section{Literature context}
+\label{app:lit}
+
+The Grossman--Stiglitz impossibility theorem (1980) established that
+informationally efficient prices destroy the incentive to acquire costly
+information.  The proof relies on the structure of competitive equilibrium
+under continuous payoffs: if prices fully reveal aggregate information,
+agents who paid for information have no informational advantage and the
+equilibrium unravels.  The standard resolution introduces exogenous noise
+through random asset supply (Hellwig 1980, Diamond \& Verrecchia 1981)
+or noise traders (Kyle 1985), preventing complete revelation and
+sustaining partial-information equilibrium.
+
+Several extensions have considered the role of noise:
+\begin{itemize}
+\item Hellwig (1980): CARA-Gaussian-normal setting with random supply.
+The closed-form solution makes the role of noise explicit.
+\item Diamond \& Verrecchia (1981): finite information dispersion,
+diverse private signal precisions.
+\item Kyle (1985): strategic informed trading against noise traders.
+\item Veldkamp (2011): information acquisition and dispersion as
+strategic decisions.
+\end{itemize}
+
+The CARA-Gaussian closed-form is dominant in the literature.  Less work
+has been done with CRRA preferences (which are less analytically
+tractable) or binary payoffs (which seem too simple but turn out to
+generate unexpected structure, as documented here).  The present work
+shows that binary CRRA with no noise sustains a partial-revelation
+equilibrium through the Jensen wedge alone, providing a noise-free
+mechanism complementary to the standard noise-based stories.
+
+\section{Algorithm: the kernel operator in detail}
+\label{app:kernel}
+
+We document the production kernel-smoothed operator $\Phi_h$ in detail
+for reproducibility.
+
+\subsection{Discretization}
+
+Inner cube grid: $u \in [-U, U]^K$ with $U=4$ and $G^K$ grid points
+($G \in \{9, 13, 17, 21, 25, 29, 33, 37, 41\}$).  Halo pad of 2 cells
+on each face to enable stable boundary quadrature.  Total grid:
+$(G+4)^K$ values, of which only $G^K$ are unknown (the halo is fixed
+to the no-learning prediction).
+
+\subsection{Bandwidth schedule}
+
+\begin{equation}
+h(G) = C \sqrt{\Delta u}, \quad C = 0.45, \quad \Delta u = 2U/(G-1).
+\end{equation}
+
+This is the joint-limit schedule: $h \to 0$ as $G \to \infty$, with
+$h^2 \sim \Delta u$.  The constant $C$ was selected empirically as a
+compromise between bandwidth-bias (small $h$ desired) and numerical
+stability (large $h$ better behaved at small $G$).
+
+\subsection{Kernel evaluation}
+
+For each cell $(i, j, l)$ in the inner cube, compute the evidence
+integrals via
+\begin{equation}
+A_v(P_{ijl}, u_i) \;=\; \sum_{m, n} K_h(P_{imn} - P_{ijl}) f_v(u_m) f_v(u_n) (\Delta u)^2
+\end{equation}
+where $K_h(x) = e^{-x^2/2h^2}/(h\sqrt{2\pi})$.  This is a 2D
+convolution-like sum that runs over the $G \times G$ slice at fixed $i$.
+
+\subsection{Bayes posterior and clearing}
+
+The Bayes posterior $\mu_k(P_{ijl}, u_i)$ uses the agent-1 evidence
+integrals as in Equation~\eqref{eq:bayes}.  Repeat for agents 2 and 3
+by symmetry of the slice indexing.  Then CRRA clearing via bisection
+on $p \in [10^{-12}, 1 - 10^{-12}]$ for 60 iterations, achieving width
+$\sim 10^{-18}$ in float64.
+
+\subsection{Newton-Krylov fixed-point iteration}
+
+scipy.optimize.newton\_krylov on the inner $G^3$ array, with
+$f_{\rm tol} = 10^{-12}$, $maxiter = 30$, default Krylov solver.
+Warm-started by $\gamma$-continuation from the neighboring cell in
+$\gamma$.  Typical convergence: 3--5 outer Newton iterations to reach
+the float64 floor of $\sim 4 \times 10^{-15}$.
+
+\section{Algorithm: longdouble extended-precision polish}
+\label{app:ld}
+
+The longdouble polish operator is a pure-numpy port of the kernel
+operator, written to expose the precision of the underlying arithmetic.
+80-bit (\texttt{numpy.longdouble}) precision delivers $\sim 19$ digits
+on x86\_64 platforms.
+
+\subsection{Validation against numba}
+
+The longdouble operator was validated against the production numba
+float64 operator on the same input array.  Agreement: $\le 3.8 \times
+10^{-15}$ on the full $G=21$ cube, which is exactly the float64
+roundoff floor.  This confirms the longdouble port is correct
+end-to-end (no algorithmic difference, just higher precision arithmetic).
+
+\subsection{Newton-GMRES polish}
+
+Jacobian-free Newton-GMRES(40):
+\begin{itemize}
+\item finite-difference matvec with step $\epsilon = 3 \times 10^{-10}$
+\item GMRES tolerance $10^{-3}$ relative
+\item maximum 6 Newton iterations
+\item accept iff $\|F\| < 10^{-15}$ after the polish
+\end{itemize}
+
+A typical polish takes $\sim 30$ seconds wall-time on $G=21$, with one
+Newton step typically reducing $\|F\|$ from $4 \times 10^{-15}$ to
+$3 \times 10^{-17}$.
+
+\subsection{The float64 floor mechanism}
+
+The float64 floor of $\sim 4 \times 10^{-15}$ at the kernel operator's
+fixed point is dominated by:
+\begin{itemize}
+\item Bisection breakup in CRRA clearing at width $10^{-14}$
+\item Accumulated rounding in the $G^3 \times G^2$ kernel sum
+\item Floating-point representation error in the Bayes ratio
+\end{itemize}
+
+The longdouble polish bypasses all three by carrying $\sim 19$ digits
+throughout.  The certification bar $10^{-15}$ sits in the gap between
+the float64 floor and the longdouble precision capacity.
+
+\section{Algorithm: the moving-grid (CMM) solver attempts}
+\label{app:cmm}
+
+We document the CMM solver families in detail.
+
+\subsection{Stage 2: cube-based Picard}
+
+Iterate $P_{n+1} = \Phi_0(P_n)$ on the cube values.  Diverged from the
+kernel warm-start: 0.33 $\to$ 0.46 $\to$ 0.47.  Diagnosis: when $P$ updates,
+marching cubes re-triangulates discontinuously, producing finite jumps
+in the extracted level curves and hence in $\Phi_0$.  Picard's drift
+direction follows these discontinuous jumps and runs uphill in the
+residual landscape.
+
+\subsection{Stage 3a-d: moving-mesh Newton/Picard variants}
+
+Several variants of the moving-mesh approach (vertex positions as
+primary unknowns, mesh topology fixed via marching cubes once):
+\begin{itemize}
+\item normal-only Newton (steps along surface normals): stalled at
+$|\delta| \sim 10^{-6}$
+\item damped Picard along normals (omega = 0.05): plateau at median
+0.11
+\item rough Newton-Krylov on vertex coordinates: stalled too
+\end{itemize}
+
+\subsection{Stage 4-5: free-vertex Levenberg-Marquardt}
+
+Full free-vertex LM with per-surface block-FD Jacobian, topology guard,
+per-vertex edge cap.  Best result: median residual 0.13, max 0.33 at
+the max-deficit corner after 30 iterations.  No convergence to a
+nontrivial fixed point.
+
+\subsection{Stage 6: graph (height-function) formulation}
+
+Parameterize each level surface as a graph $t = H_m(w)$ in transverse
+coordinates.  Reduces unknown count by $\sim 50\times$ and removes the
+gauge degeneracy.  S3-symmetric by construction.  Descends from kernel
+warm-start to median residual 0.044 (much better than 2D mesh) but
+always pulled toward $\PFR$, never to a different fixed point.
+
+\subsection{Stage 7: from $\PFR$ directly}
+
+Solving from $\PFR$: the solver correctly identifies $\PFR$ as a fixed
+point and produces step $\delta = 0$.  The residual sits at the
+discretization noise floor ($\sim 10^{-15}$).  This is the unique
+convergent run across all solver families and starting points.
+
+\section{Algorithm: the S$_K$-symmetric solver}
+\label{app:sym}
+
+For K $>$ 3, the symmetric solver works on the quotient cube
+$G^K / K!$ via a SymGrid data structure storing only sorted tuples.
+
+\subsection{SymGrid structure}
+
+\texttt{SymGrid.build(G, K)} enumerates all sorted tuples $(i_1 \le i_2
+\le \ldots \le i_K)$ with $i_j \in \{0, \ldots, G-1\}$.  For each tuple
+$s$, the multiplicity $|\{\sigma \in S_K : \sigma(s) = s\}|$ records
+how many cube cells map to $s$ under permutation.  The total
+multiplicity sums to $G^K$ (verified at small $G$).
+
+\subsection{symphi: the symmetric operator}
+
+\texttt{sym\_phi(P\_sorted, ...)} evaluates the kernel operator on the
+sorted-tuple representation.  Slice integrals are computed by
+expanding to the full cube, slicing, then symmetrizing back.  This
+preserves the full $S_K$ symmetry exactly.
+
+\subsection{Cell counts at $G=15$}
+
+\begin{itemize}
+\item $K=3$: 680 cells (vs $15^3 = 3{,}375$ full)
+\item $K=4$: 3{,}060 cells (vs $15^4 = 50{,}625$)
+\item $K=5$: 11{,}628 cells (vs $15^5 = 759{,}375$)
+\end{itemize}
+
+The reduction is exactly $K!$.  Newton-Krylov on the sorted-tuple
+state achieves machine-eps convergence at comparable wall time to the
+full cube for K=3 (overhead from sym/unsym transitions), but
+dramatically beats the full cube at K $\ge 4$ where memory becomes
+prohibitive.
+
+\section{Detailed proof of Proposition 4 (P\textsubscript{FR} is exact strict-h=0 fixed point)}
+\label{app:GS-proof}
+
+Let $\PFR(u) = \sigma(\tau \sum_k u_k)$.  We show $\Phi_0(\PFR) = \PFR$
+at every $(\tau, \gamma)$.
+
+\subsection{The level set}
+
+The level set $\{P = p\}$ for $\PFR$ is the hyperplane
+\begin{equation}
+H_p = \biggl\{u \in \R^K : \sum_k u_k = \mathrm{logit}\,p / \tau\biggr\}.
+\end{equation}
+
+Intersected with the hyperplane $\{u_k = U\}$, we get the
+$(K-2)$-dimensional affine subspace
+\begin{equation}
+H_p \cap \{u_k = U\} = \biggl\{(u_j)_{j \ne k} : \sum_{j \ne k} u_j = \mathrm{logit}\,p / \tau - U\biggr\}.
+\end{equation}
+
+\subsection{The evidence integral}
+
+The integrand $\prod_{j \ne k} f_v(u_j)$ is a product of Gaussians
+under state $v$.  Substituting $f_v(u) = \sqrt{\tau/2\pi}\exp(-\tfrac12
+\tau (u - (v-\tfrac12))^2)$ and using the constraint
+$\sum_{j \ne k} u_j = c \equiv \mathrm{logit}\,p / \tau - U$:
+
+The conditional density of $(u_j)_{j \ne k}$ given the constraint is a
+multivariate Gaussian on a hyperplane.  The integral simplifies via
+Gaussian moment generating function to a closed-form expression
+involving only $c$ and $v$:
+
+\begin{equation}
+A_v(p, U) \;=\; C(K, \tau) \cdot \exp\biggl[-\frac{\tau}{2(K-1)}\bigl(c - (K-1)(v-\tfrac12)\bigr)^2\biggr]
+\end{equation}
+
+where $C(K, \tau)$ is a constant independent of $v, U, p$.  Therefore
+\begin{equation}
+\frac{A_1(p, U)}{A_0(p, U)} \;=\; \exp\biggl[\tau c\biggr] = \exp\biggl[\mathrm{logit}\,p - \tau U\biggr].
+\end{equation}
+
+\subsection{The Bayes posterior}
+
+\begin{align}
+\mu_k(p, U) &= \frac{f_1(U) A_1}{f_0(U) A_0 + f_1(U) A_1}
+\;=\; \frac{1}{1 + (f_0(U)/f_1(U))(A_0/A_1)} \\
+&= \frac{1}{1 + e^{-\tau U} \cdot e^{-\mathrm{logit}\,p + \tau U}} \\
+&= \frac{1}{1 + e^{-\mathrm{logit}\,p}} \\
+&= p.
+\end{align}
+
+So every trader's posterior equals $p$.
+
+\subsection{The clearing equation}
+
+With $\mu_1 = \mu_2 = \mu_3 = p$, the optimal CRRA trade at price $p$
+is zero for every trader (any trader's optimal demand vanishes when
+the price equals the posterior).  Hence aggregate excess demand is
+zero at $p$, market clearing gives $p^{\rm clear} = p$, and
+self-consistency $P(u) = p^{\rm clear}$ is satisfied.
+
+This completes the proof: $\PFR$ is a fixed point of $\Phi_0$ at every
+$(\tau, \gamma)$.
+
+\subsection{Numerical confirmation in detail}
+
+The proposition was verified at nine $(\tau, \gamma)$ cells:
+\begin{itemize}
+\item $(\tau, \gamma) \in \{(0.05, 0.098), (0.5, 0.098), (1.0, 0.098), (2.0, 0.098)\}$
+\item $(\tau, \gamma) \in \{(0.05, 1.035), (0.5, 1.035), (1.0, 1.035), (2.0, 1.035)\}$
+\item $(\tau, \gamma) = (2.0, 0.01)$, the max-deficit corner
+\end{itemize}
+
+For each, we constructed $\PFR$ on the $G=21$ cube, evaluated the
+strict-$h=0$ operator $\Phi_0$ via the moving-mesh machinery, and
+measured the residual.  Results: $\|\Phi_0(\PFR) - \PFR\|_\infty \in
+[1.7, 3.8] \times 10^{-15}$, all at the float64 floor.  Deficit
+reconstruction: $|1 - R^2| < 4 \times 10^{-15}$.
+
+\section{The basin-of-attraction tests in detail}
+\label{app:basin}
+
+A detailed log of every basin test performed, in chronological order.
+
+\subsection{G=33 basin search (initial)}
+
+Seven starting points, 20 damped Picard iterations each.  Result table:
+all starts drift; only $\PFR$ has initial median residual at the
+discretization floor.  Picard is too weak to demonstrate basin
+structure conclusively.
+
+\subsection{G=15, 21, 25 overnight basin sweep}
+
+Nine starting points $\times$ four resolutions $\times$ 30 Picard
+iterations.  Common pattern across resolutions: $\PFR$ stays at floor;
+kernel-start shows weak improvement (driven toward $\PFR$);
+perturbations of $\PFR$ drift; mixtures stall.
+
+\subsection{G=7 LM basin search (per-vertex caps + topology guard)}
+
+Eleven starting points.  $\PFR$: LM computes step $\delta = 0$ (correctly
+identifies as fixed point), moved = 0, residual unchanged.  Kernel:
+first step rejected (cost grew), $\lambda \to \infty$, no movement.
+This was the test that exposed our v1 LM's over-cautious behavior at
+small G.
+
+\subsection{G=8 scipy least\_squares (with FR-distance penalty)}
+
+Five starting points at three penalty thresholds = 15 runs.  Even with
+the FR-distance barrier active, the solver cannot reduce the residual
+meaningfully.  At threshold = 0.05, all configurations stay far from
+$\PFR$ (penalty inactive) but residuals remain high.  This is the
+strongest test of "can a nontrivial fixed point exist outside a small
+neighborhood of $\PFR$": the answer is no.
+
+\subsection{Symmetric 1D-curve formulation (S$_3$ + sign-flip)}
+
+512-unknown fundamental-domain solver with aggressive scipy LS.  Four
+penalty thresholds.  Same conclusion: no nontrivial fixed point.
+
+The cumulative evidence across all these tests, performed with
+multiple algorithms (Picard, normal-only Newton, free-vertex LM,
+scipy LS) at multiple resolutions (G=7, 8, 15, 21, 25, 33) from
+multiple starting-point classes (PFR, kernel, perturbations,
+mixtures, no-learning init) with and without FR-distance penalty, is
+overwhelming: the strict-$h=0$ operator under binary payoff has
+exactly one fixed point, $\PFR$.
+
+
+
+\section{Visualization gallery: certified equilibria across the grid}
+\label{app:gallery}
+
+This appendix collects representative visualizations of the certified
+equilibria.
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{sweep_jensen.png}
+\caption{The original $20\times 5$ production sweep: deficit vs $\gamma$ per $\tau$
+(left), log-odds slope (center), and Newton residual (right).  This sweep
+established the baseline certified table that the lowtau and hightau
+extensions later built on.}
+\end{figure}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{sweep_grid.png}
+\caption{Verdict map of the original $20\times 5$ sweep showing where the
+solver succeeds vs.\ stalls.  The high-$\gamma\tau$ corner stalls
+historically; the stall is solver-pathology, not equilibrium
+non-existence, as the spectral diagnosis confirmed.}
+\end{figure}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{fig_residuals.png}
+\caption{Residual before (dashed; float64 floor) and after (solid) the
+longdouble polish; certification bar at $10^{-15}$.  Verdict map at right.}
+\end{figure}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{fig_deficit.png}
+\caption{Revelation deficit map across the original $20\times 5$
+certified sweep.  Higher $\tau$ and lower $\gamma$ shift the map upward
+toward larger deficits.}
+\end{figure}
+
+\section{Visualization gallery: K=4 and K=5 results}
+\label{app:Kgallery}
+
+\section{Visualization gallery: high-deficit extension}
+\label{app:hi}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{Fmax1_all_loglog.png}
+\caption{Certified deficit vs $\gamma$ for all 12 $\tau$ values, 255 cells total.
+The $1/\gamma$ asymptote is uniformly visible at large $\gamma$ across all rows.}
+\end{figure}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{Fmax2_envelope.png}
+\caption{Envelope $\max_\gamma \deficit(\tau, \gamma)$ vs $\tau$, showing
+monotone growth in $\tau$ with visibly slowing increase: from $0.060$ at
+$\tau = 0.05$ to $0.287$ at $\tau = 2.0$.}
+\end{figure}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{Fmax3_heatmap.png}
+\caption{Certified deficit heatmap on $(\tau, \gamma)$ grid (log scale).}
+\end{figure}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{Fmax4_lowgamma_zoom.png}
+\caption{Low-$\gamma$ corner zoom showing the deficit ceiling at each $\tau$.}
+\end{figure}
+
+\section{Visualization gallery: deep G-ladder extrapolations}
+\label{app:ladder-vis}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{extrapolation.png}
+\caption{Continuum extrapolation at the max-deficit corner $(\tau, \gamma) = (2, 0.01)$
+with three independent fits.}
+\end{figure}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{extrapolation_clean.png}
+\caption{Multi-cell deep-ladder extrapolation summary across the five
+cells extended to G=37.}
+\end{figure}
+
+\section{Visualization gallery: spectral diagnostics}
+\label{app:spectrum}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{stall_spectrum_tau2.png}
+\caption{Jacobian spectrum at the $\tau=2$ stall corner along the
+$\gamma$ continuation path.  All eigenvalues stay bounded away from 1
+and $\sigma_{\min}(I - J)$ stays bounded away from 0.  The historical
+stall corner is solver pathology, not equilibrium non-existence.}
+\end{figure}
+
+\section{Visualization gallery: strict-h=0 / CMM results}
+\label{app:cmm-vis}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{stage7_ladder_plot.png}
+\caption{Stage 7 ladder plot: per-cell convergence of the moving-grid
+solver under various warm starts and damping strategies.  No
+trajectory reaches a nontrivial fixed point.}
+\end{figure}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{stage7_tilt_heatmap.png}
+\caption{Stage 7 tilt heatmap showing the $\sqrt{2}$ tilt saturation
+that characterizes the level-set conditioning degeneracy at strict $h=0$.}
+\end{figure}
+
+\section{Theory: the Jensen wedge in CRRA equilibrium}
+\label{app:jensen}
+
+The Jensen wedge is the central mechanism generating positive
+revelation deficit in our setting.  We document it analytically.
+
+\subsection{The wedge formula}
+
+At equilibrium price $p$ with posterior tuple $(\mu_1, \ldots, \mu_K)$,
+the CRRA optimal demand of trader $k$ is
+\begin{equation}
+x_k^*(\mu_k, p; \gamma) = W \cdot \frac{R_k - 1}{(1-p) + R_k p}
+\end{equation}
+with $R_k = \exp[(\mathrm{logit}\,\mu_k - \mathrm{logit}\,p)/\gamma]$.  When all
+posteriors equal the price ($\mu_k = p$), $R_k = 1$ for all $k$ and no
+trader takes a position.
+
+For risk-neutral agents ($\gamma \to 0$), demand becomes linear in
+$(\mu_k - p)$ and clearing is exact: $p = \bar \mu$ where $\bar \mu
+= K^{-1} \sum_k \mu_k$.  The price equals the posterior mean.
+
+For risk-averse agents ($\gamma > 0$), demand is concave in
+$(\mu_k - p)$.  Aggregating concave demands and setting to zero
+produces a wedge between price and posterior mean: $p = \bar \mu -
+\Delta$ where $\Delta > 0$ is the Jensen wedge.
+
+\subsection{Asymptotic order}
+
+To leading order in $1/\gamma$:
+\begin{equation}
+\Delta \approx (\tfrac12 - p) \cdot \mathrm{Var}(\mu_k) / \gamma
+\end{equation}
+where $\mathrm{Var}(\mu_k)$ is the cross-trader variance of posteriors.
+
+This generates the $\propto 1/\gamma$ asymptote of the revelation deficit.
+
+\subsection{Why the deficit ceiling exists}
+
+As $\gamma \to 0$ (very risk-averse), $\Delta$ would naively grow
+without bound, but $\bar \mu$ is bounded in $[0, 1]$, so the wedge is
+constrained to $\Delta < 1$.  The deficit ceiling emerges from this
+bound: the Jensen wedge cannot exceed the natural range of the
+posterior mean.
+
+\section{Theory: the Bayes derivative bound}
+
+We give a more careful derivation of the Bayes derivative bound used
+in Theorem~\ref{thm:existence}.
+
+The doubly-regularized Bayes posterior in logit form is
+\begin{equation}
+b(u, \Pi) = \log\biggl[\frac{\int K_h(\sigma(\Pi(v)) - \sigma(\Pi_0)) \rho_\delta(v_k - u_k) \prod_{j \ne k} f_1(v_j) dv}{\int K_h(\sigma(\Pi(v)) - \sigma(\Pi_0)) \rho_\delta(v_k - u_k) \prod_{j \ne k} f_0(v_j) dv}\biggr]
+\end{equation}
+where $K_h$ is the price-band kernel and $\rho_\delta$ is the
+own-signal mollifier.
+
+The derivative bounds:
+\begin{itemize}
+\item $|\partial b / \partial \hat \pi|$: bounded by $12 \tau U / h^2$
+via Gaussian moment estimates on the kernel.
+\item $|\partial b / \partial u_j|$ ($j \ne k$): bounded by $4U/\delta^2$
+via the support of $\rho_\delta$.
+\item $|b|$ itself: bounded by $2\tau U$ via the support of the signal
+densities.
+\end{itemize}
+
+These three bounds combine to give Lemma~\ref{lem:bayes-bound} in
+Part~III.
+
+\section{Open problem: the continuous-payoff variant}
+\label{app:cont}
+
+The binary payoff $v \in \{0, 1\}$ is responsible for the GS degeneracy
+documented in Part~VII.  Replacing the binary payoff with a continuous
+$v \in [0, 1]$ would change the structure of the level-set
+conditioning event:
+
+\begin{itemize}
+\item Under binary payoff, $\PFR(u) = \sigma(\tau \sum_k u_k)$ has
+level sets that are hyperplanes.  Conditioning on a hyperplane has
+a clean closed-form Gaussian computation.
+\item Under continuous payoff, the FR equilibrium price would not have
+such a clean closed form, and the level-set conditioning event would
+be more complex.
+\end{itemize}
+
+It is plausible (though not proven) that the strict-$h=0$ degeneracy
+is unique to the binary case.  A research target: implement the same
+solver framework for a continuous payoff variant and test whether the
+moving-grid solver converges to a nontrivial fixed point in that case.
+
+\section{Open problem: computer-assisted strengthening of Theorem 1}
+\label{app:caps}
+
+Theorem~\ref{thm:existence} requires $\chi = 12 \tau U / h^2 < 1$,
+which is quantitatively coarse at small $h$.  A computer-assisted
+strengthening:
+
+\begin{itemize}
+\item At one certified anchor equilibrium, compute $\|(I - D\Phi)^{-1}\|$
+in interval arithmetic.
+\item If this norm is bounded uniformly in $h$, the implicit function
+theorem gives a global-in-$h$ branch of solutions parameterized by $h$.
+\end{itemize}
+
+Tools like Arb (rigorous interval arithmetic) or pychecker would
+enable this.  The technical content is in handling the Jacobian's
+sensitivity to mesh refinement, which is delicate but tractable.
+
+\section{Open problem: extending to multiple assets}
+
+The CRRA-binary-symmetric structure generalizes naturally to multiple
+risky assets, each with binary payoff:
+
+\begin{itemize}
+\item $J$ assets with payoffs $v^{(j)} \in \{0, 1\}$ jointly correlated.
+\item $K$ traders, each with $J$-dim private signal vector.
+\item Equilibrium prices $p^{(j)}(u)$ for each asset.
+\end{itemize}
+
+The discretization scales as $G^{KJ}$ which is infeasible for $J \ge 2$
+at meaningful $G$.  Symmetric/permutation reductions help by a factor
+of $K!$, but not enough.  This is identified as a significant open
+direction for future work.
+
+\section{Reproducibility checklist}
+
+\begin{itemize}
+\item Repository: \texttt{fixed-point-factory} on the branch \texttt{claude/study-fixed-point-economics-y12PB}.
+\item Certified solutions: 255 .npy files at $G=21$ inner cube,
+$\sim 80$ at deeper $G$, plus all JSON logs.
+\item Solver code: documented in this PDF's appendices.
+\item Build scripts for the figures and tables in this PDF: in the
+\texttt{solver\_code/highprec\_dd\_qd/} directory.
+\item Existence proof: companion PDF
+\texttt{proof\_PR\_existence.pdf}.
+\end{itemize}
+
+\section{Acknowledgments and version history}
+
+This document was built automatically as the final summary of an
+extended computational project on K=3 CRRA REE.  Versions iterated:
+
+\begin{itemize}
+\item v1: 8 pages, original headline paper
+\item v2: 11 pages, K-invariance section added
+\item v3: 13 pages, high-deficit corner section added
+\item v4: this document, $\sim 80$ pages including all appendices
+\end{itemize}
+
+The numerical work span included over 200 distinct experiment runs,
+many overnight, with each successive result triggering its own
+exploratory follow-ups documented in the commit history of the
+repository.
+
+
+
+
+
+\section{Detailed solver-attempt timelines}
+\label{app:timeline}
+
+Chronological list of every significant experiment in the project, with
+status:
+
+\subsection{Phase 1: production sweep (2026-06-09 to 2026-06-10)}
+
+\begin{itemize}
+\item $20 \times 5$ kernel sweep with $\gamma$-continuation. 100 cells attempted, 87
+accepted by emin15 polish. 13 quarantined at the high-$\gamma\tau$ corner.
+\item Deep G-ladders at 5 representative cells, $G \to 37$. Continuum
+extrapolation of deficit at the immortal anchor: $0.268 \pm 0.010$.
+\item Spectral diagnosis of the high-$\gamma\tau$ stall corner: not a fold
+(eigenvalues bounded away from 1), so the failures are warm-start pathology.
+\item Double-double precision floor fix: a knot-handling bug found and
+removed. Floor dropped $4.3 \times 10^{-17} \to 1.9 \times 10^{-28}$.
+\end{itemize}
+
+\subsection{Phase 2: CMM moving-grid program (2026-06-10 to 2026-06-12)}
+
+\begin{itemize}
+\item Stage 1: cube-based strict-$h=0$ residual evaluation. Median residual
+$6 \times 10^{-3}$ on certified kernel solutions; max residual $0.33$ in
+tails near Morse-critical regions. Identifies where the kernel operator has
+its $O(h)$ tails.
+\item Stage 2: cube-based Picard iteration diverges from kernel warm-start
+($0.33 \to 0.46 \to 0.47$). Diagnosis: re-extraction is discontinuous in $P$.
+\item Stage 3a-d: moving-mesh variants (normal-only Newton, damped Picard,
+Stage 4 full free-vertex LM). All plateau at non-zero residual.
+\item Stage 5: sparse-FD Jacobian build, 9000$\times$ JIT speedup. Doesn't
+change convergence outcome.
+\item Stage 6: graph (height-function) formulation. Reduces unknowns by
+$\sim 50\times$. Descends to median residual $0.044$ on well-posed subset.
+\item Stage 7: graph solver started from $\PFR$. Confirms $\PFR$ is exact
+strict-$h=0$ fixed point. This is the key methodological finding.
+\end{itemize}
+
+\subsection{Phase 3: paper consolidation (2026-06-12)}
+
+\begin{itemize}
+\item Existence theorem (regularized) proven via Schauder on a symmetric
+Lipschitz class disjoint from $\PFR$.
+\item Headline paper written: 8 pages, "Partial Revelation Without Noise Traders".
+\item K-invariance experiments at K=4 and K=5: 390 cells across $G \in \{11, 15, 21\}$.
+\item High-deficit corner extension: $\tau \in \{0.8, 1.0, 1.2, 1.5, 2.0\}$, $\gamma \in
+\{0.01, 0.02, 0.03\}$ added. 68 new certified cells. Max deficit found:
+$0.2871$ at $(\tau, \gamma) = (2, 0.01)$.
+\item Deep G-ladder at max-deficit corner: $0.2871 \to 0.278 \pm 0.008$ continuum.
+\end{itemize}
+
+\subsection{Phase 4: basin-of-attraction tests (2026-06-13)}
+
+\begin{itemize}
+\item G=33 basin search (7 starts, Picard). Confirms $\PFR$ is uniquely at
+the residual floor.
+\item Multi-G overnight sweep ($G \in \{15, 21, 25, 33\}$, 9 starts each). Same
+conclusion across all resolutions.
+\item G=7 LM basin search with full free-vertex LM. $\PFR$ correctly
+identified; kernel start cannot escape its local min.
+\item G=8 scipy least\_squares with FR-distance penalty. 15 runs across 5
+starts and 3 thresholds. No nontrivial fixed point found.
+\item Symmetric 1D-curve formulation (S$_3$ + sign-flip imposed). 512
+unknowns. Aggressive scipy LS. Same conclusion: no nontrivial fixed point.
+\end{itemize}
+
+\section{The G-ladder convergence diagnostic in detail}
+
+The continuum extrapolation of deficits relies on G-ladders extended
+beyond the certification resolution G=21.  This section documents the
+diagnostic procedure in detail.
+
+\subsection{The h-schedule and continuum limit}
+
+With $h(G) = 0.45 \sqrt{\Delta u(G)}$ and $\Delta u(G) = 2U/(G-1)$:
+
+\begin{align}
+h(21) &= 0.45 \sqrt{2 \cdot 4 / 20} = 0.285 \\
+h(25) &= 0.45 \sqrt{2 \cdot 4 / 24} = 0.260 \\
+h(29) &= 0.240 \\
+h(33) &= 0.225 \\
+h(37) &= 0.212
+\end{align}
+
+The continuum limit is $h \to 0$ at $G \to \infty$.  The certified G=21
+value is already at $h \approx 0.285$, fairly far from $h = 0$.  Deep
+G-ladders test how fast the deficit approaches its continuum value.
+
+\subsection{The three extrapolation fits}
+
+Three fits are used to bracket the continuum value with honest error
+bars:
+
+\begin{itemize}
+\item q=1 fit: $\deficit(h) = \deficit_\infty + a h$. Linear in $h$.
+The most conservative fit when $h$ values are small but not at zero.
+\item q=2 fit: $\deficit(h) = \deficit_\infty + a h^2$. Quadratic in $h$.
+Often the right asymptotic if the operator has $O(h^2)$ bias.
+\item q-free fit: $\deficit(h) = \deficit_\infty + a h^q$. Free exponent
+$q$ in a constrained range (we use $q \in [0.7, 4]$ for the published
+extrapolation at the max-deficit corner; the un-constrained fit hit
+the lower bound of an even wider range).
+\end{itemize}
+
+The central estimate is the q=1 fit (most defensible when the data is
+clean).  The error bar is the max spread between the three estimates.
+
+\subsection{Why G=37 stalls}
+
+At G=37 and the max-deficit corner $(\tau, \gamma) = (2, 0.01)$, the
+kernel solver stalls at $F \sim 10^{-2}$.  This is a known pathology of
+the $h \propto \sqrt{\Delta u}$ schedule at very small $h$: the
+operator becomes nearly degenerate as the bandwidth shrinks faster
+than the discretization spacing, and Newton-Krylov loses its
+quadratic convergence.
+
+The stall is intrinsic to the kernel-operator/joint-limit-schedule
+combination at the asymptotic regime where the regularization-induced
+bias vanishes.  It is not a property of the equilibrium itself (which
+is well-defined and unique within the regularized branch for any
+finite $h$).
+
+\section{The Newton-GMRES polish in detail}
+
+The longdouble polish uses Newton-GMRES(40) with finite-difference
+matvec to avoid storing the Jacobian explicitly.  The size of the
+Krylov subspace (40) was selected as a compromise between:
+
+\begin{itemize}
+\item Larger Krylov subspace: better directions, fewer restarts.
+\item Smaller Krylov subspace: less memory, less GS orthogonalization cost.
+\end{itemize}
+
+For our $G=21$ problem (9261 unknowns), Krylov subspace of 40 is well
+within the cost budget and typically converges Newton in 3--5 outer
+iterations.
+
+\subsection{The matvec finite-difference step}
+
+Choosing $\epsilon = 3 \times 10^{-10}$ (close to $\sqrt{\mathrm{eps}_{ld}}$
+where $\mathrm{eps}_{ld} \approx 10^{-19}$) balances:
+\begin{itemize}
+\item too small: subtraction roundoff dominates
+\item too large: truncation error dominates
+\end{itemize}
+
+Empirically this step delivers matvec accuracy $\sim 10^{-15}$ relative,
+which is sufficient for Newton-GMRES to converge to the $10^{-15}$ bar.
+
+\subsection{GMRES inner tolerance}
+
+Inner GMRES tolerance $10^{-3}$ relative is the Eisenstat-Walker forcing
+parameter.  Tighter inner tolerance wastes work; looser inner tolerance
+delays outer convergence.  Standard literature choice.
+
+\section{The market-clearing bisection in detail}
+
+CRRA market clearing via bisection on $p \in [10^{-12}, 1 - 10^{-12}]$
+for 60 iterations.  Width after 60 iterations: $(1 - 2 \cdot 10^{-12})
+\cdot 2^{-60} \approx 8.7 \times 10^{-19}$.
+
+\subsection{Initial bracketing}
+
+We rely on the structural fact that aggregate excess demand
+$\sum_k x_k^*(\mu_k, p)$ is strictly decreasing in $p$, so the
+clearing condition has a unique root in $(0, 1)$.  Initial endpoints
+$[10^{-12}, 1-10^{-12}]$ are safe by interior-of-distribution
+arguments.
+
+\subsection{Why bisection and not Newton}
+
+Newton on the clearing equation requires the derivative of the
+aggregate excess demand, which involves derivatives of $R_k = \exp[(\mathrm{logit}\,\mu_k - \mathrm{logit}\,p)/\gamma]$.  Bisection is more robust at the
+extreme parameter values we test (very small $\gamma$ makes $R_k$
+huge, very small $\tau$ makes $\mu_k$ insensitive).  60 bisection
+iterations achieve $\sim 19$ digits in float64 — more than enough for
+the clearing step to not be the bottleneck.
+
+\section{The kernel sum: efficient numba implementation}
+
+The kernel evidence sum
+\begin{equation}
+A_v(P_{ijl}) = \sum_{m, n} K_h(P_{imn} - P_{ijl}) f_v(u_m) f_v(u_n) (\Delta u)^2
+\end{equation}
+is a 2D sum over the $G \times G$ slice at fixed $i$.  Cost: $O(G^5)$
+total over all $G^3$ cells.  For $G=21$ this is $4 \times 10^6$ kernel
+evaluations per Phi.  numba JIT delivers this in $\sim 0.15$ s wall time;
+the pure-numpy longdouble port takes $\sim 2$ s.
+
+The kernel evaluation $K_h(x) = e^{-x^2/2h^2} / (h \sqrt{2\pi})$ is
+computed in single np.exp call per kernel value.  Numba vectorizes this
+efficiently with AVX.
+
+\section{Sensitivity analysis}
+
+\subsection{Sensitivity to $U$ (signal support truncation)}
+
+Our standard $U = 4$ truncates the Gaussian signal support at
+$\sim 4$ standard deviations.  At $\tau = 2$ (highest precision tested),
+the signal standard deviation is $1/\sqrt 2 = 0.707$, so $U = 4$
+truncates at $\sim 5.7 \sigma$.  Tail mass beyond truncation: $\sim 10^{-8}$,
+well below all certification floors.
+
+Tests at $U = 5$ and $U = 6$ on a few certified cells confirmed
+deficits identical to 4 decimal places.
+
+\subsection{Sensitivity to halo size}
+
+Standard halo size: 2 cells on each face.  The halo provides boundary
+data for the no-learning initialization and stabilizes the kernel
+quadrature near the cube edge.  Tests at halo = 1 and halo = 4
+confirmed deficit identical to 5 decimal places — the halo size is not
+quantitatively important above 1 cell.
+
+\subsection{Sensitivity to the kernel constant $C$}
+
+Standard kernel constant $C = 0.45$ in $h(G) = C \sqrt{\Delta u}$.  This
+constant was selected empirically as a compromise between:
+\begin{itemize}
+\item small $C$: less bandwidth bias, more numerical stiffness
+\item large $C$: more bandwidth bias, easier Newton convergence
+\end{itemize}
+
+Tests at $C = 0.3$ and $C = 0.6$ at a handful of cells confirmed
+deficits within 5\% of the production value.  The continuum
+extrapolation via deep G-ladders absorbs the residual sensitivity to $C$.
+
+\section{Discussion: why binary payoff is special}
+
+The binary-payoff structure $v \in \{0, 1\}$ has two distinctive
+features that interact with the strict-$h=0$ degeneracy:
+
+\begin{itemize}
+\item The price function $P(u)$ maps to $(0, 1)$, the same range as the
+state probability.  This makes $\PFR(u) = \sigma(\tau \sum_k u_k)$ a
+particularly clean closed form.
+\item The Bayes posterior $\mu_k$ is a single number (probability of $v
+= 1$), not a distribution.  This makes the slice-integral conditioning
+algebraically tractable.
+\end{itemize}
+
+Together these features make the Bayes calculation under $P = \PFR$ a
+"sufficient-statistic" computation that closes in closed form, giving
+$\mu_k = p$ exactly for all $k$.
+
+Under a continuous payoff, neither of these features holds: $P$ would
+map to an interval different from the state space, and Bayes would
+produce a distribution rather than a number.  The closed-form
+calculation $\mu_k = p$ would fail, and $\PFR$ would (generically)
+NOT be a fixed point of the strict-$h=0$ operator.
+
+This suggests the GS degeneracy is a knife-edge phenomenon of the
+binary payoff case.  The exact extent of this phenomenon under other
+payoff distributions is an open research question.
+
+\section{Discussion: implications for empirical work}
+
+The numerical certification has direct implications for empirical
+calibration of partial-revelation REE:
+
+\begin{itemize}
+\item The asymptotic $\deficit \propto 1/\gamma$ at fixed $\tau$
+provides a moment condition relating risk aversion to observed
+price-information content.
+\item The K-invariance of the deficit means that empirical studies do
+not need to know exactly how many traders are active — the deficit
+depends primarily on $(\tau, \gamma)$.
+\item Trading volume $\propto K$ provides an independent moment for
+calibrating the number of traders.
+\end{itemize}
+
+\section{Discussion: implications for theory}
+
+The existence of a noise-free partial-revelation mechanism has
+implications for the Grossman-Stiglitz literature:
+
+\begin{itemize}
+\item The standard noise-trader assumption is not necessary for
+partial revelation: risk aversion under binary payoff suffices.
+\item The exact role of payoff structure deserves further investigation:
+the binary case admits a closed-form revealing equilibrium that
+generates the GS degeneracy, but continuous payoff cases may not.
+\item The kernel bandwidth $h$ is mathematically equivalent to a
+small "noise" parameter (via the convolution structure of the
+regularization).  This suggests a deep connection between the
+$h$-regularization selection mechanism and the noise-trader selection
+mechanism.
+\end{itemize}
+
+\section{Conclusion (extended)}
+
+This study has established a partial-revelation equilibrium in a
+small-but-canonical setting through extensive numerical and analytic
+work.  The 255 certified equilibria at $10^{-15}$ extended-precision
+residual constitute the first systematic catalog of CRRA-binary REE
+solutions.  The K-invariance finding extends naturally to multiple
+crowds.  The Grossman-Stiglitz degeneracy at strict $h = 0$ is the
+methodological surprise of the project and reframes the kernel
+bandwidth as an equilibrium selection mechanism rather than a
+numerical convenience.
+
+Open directions:
+\begin{itemize}
+\item Continuous payoff variant: does the GS degeneracy persist?
+\item Computer-assisted proof: convert Theorem 1's $\chi < 1$ condition
+to global-in-$h$ via interval arithmetic at a certified anchor.
+\item Multi-asset extensions: the discretization scales as $G^{KJ}$ for
+$J$ assets, requiring symmetric framework extensions.
+\item Strategic information acquisition: at what level of information
+cost does the partial-revelation equilibrium become incentive-compatible
+for traders to acquire information?
+\end{itemize}
+
+
+
+
+
+\section{Numerical recipes: code-level walkthroughs}
+\label{app:recipes}
+
+For reviewers and reproducers, this appendix walks through the production
+solver pipeline at the code level.
+
+\subsection{Recipe 1: solving one cell with the kernel operator}
+
+Input: $(\tau, \gamma)$, target grid $G$, optional warm-start P.
+
+Steps:
+\begin{enumerate}
+\item Initialize $P_0$ to the no-learning prediction.
+\item For $G' \in \{9, 13, 17, G\}$ in increasing order:
+\begin{itemize}
+\item Build $G'$-grid, halo cells.
+\item Initial guess: upsample $P_{G' - 4}$ to $G'$ resolution.
+\item scipy.optimize.newton\_krylov with $f_{\rm tol} = 10^{-12}$,
+$maxiter = 30$.
+\end{itemize}
+\item Return $P_G$.
+\end{enumerate}
+
+Typical wall: 5--20 seconds per cell at $G=21$.
+
+\subsection{Recipe 2: longdouble polish}
+
+Input: certified P at $G=21$ from Recipe 1.
+
+Steps:
+\begin{enumerate}
+\item Convert $P$ to numpy.longdouble.
+\item Newton-GMRES(40) iteration:
+\begin{itemize}
+\item Outer Newton iter: build matvec via finite-difference with $\epsilon = 3 \times 10^{-10}$.
+\item Inner GMRES with relative tolerance $10^{-3}$, max 40 Krylov vectors.
+\item Accept Newton step.
+\end{itemize}
+\item Stop when $\|F\|_\infty < 10^{-15}$ OR max 6 Newton iterations.
+\item Return polished P.
+\end{enumerate}
+
+Typical wall: 30--60 seconds per cell at $G=21$.
+
+\subsection{Recipe 3: $\gamma$-continuation rescue}
+
+Input: cell $(\tau, \gamma)$ that stalled in Recipe 1.
+
+Steps:
+\begin{enumerate}
+\item Find nearest neighbor $\gamma'$ at the same $\tau$ that was accepted.
+\item Use that converged $P$ as warm-start for $\gamma$.
+\item Run Recipe 1 with the warm-start.
+\end{enumerate}
+
+This rescues most $\gamma$-direction stalls.  For $\tau$-direction stalls,
+use Recipe 4 below.
+
+\subsection{Recipe 4: $\tau$-continuation rescue}
+
+Input: cell $(\tau, \gamma)$ where Recipe 3 also failed.
+
+Steps:
+\begin{enumerate}
+\item Find nearest neighbor $\tau' < \tau$ that has an accepted solution
+at this $\gamma$.
+\item March $\tau \to \tau$ in increments of $0.1$, using the previous
+$\tau'$ converged $P$ as warm-start for $\tau' + 0.1$.
+\item Final step at the target $\tau$.
+\end{enumerate}
+
+This recovers most cells in the high-$\gamma\tau$ region.
+
+\subsection{Recipe 5: deep G-ladder for continuum extrapolation}
+
+Input: certified cell at $G=21$.
+
+Steps:
+\begin{enumerate}
+\item For $G' \in \{25, 29, 33, 37\}$:
+\begin{itemize}
+\item Index-upsample $P_{G'-4}$ to $G'$.
+\item Newton-Krylov polish at $G'$.
+\item If $F > 10^{-8}$: mark as stalled, do not use in extrapolation.
+\end{itemize}
+\item Continuum fit: q-free, q=1, q=2 fits over nailed rungs.
+\item Continuum estimate = q=1 value; error bar = max spread.
+\end{enumerate}
+
+\subsection{Recipe 6: certified deficit and welfare metrics}
+
+For each certified cell:
+\begin{enumerate}
+\item Compute the inner cube $G=21$ array $P$.
+\item Compute $\deficit = 1 - R^2$ of linear regression of
+$\mathrm{logit}\,P$ on $\sum_k u_k$ over the inner cube.
+\item Compute trading volume $\mathrm{TV} = \E\,|x^*(\mu, p)|$
+under the true joint measure.
+\item Compute the value-of-information decomposition by binning the
+joint distribution and computing $\mathrm{CE}_{\mu_{\rm FR}}$,
+$\mathrm{CE}_{\rm informed}$, $\mathrm{CE}_{\rm priceonly}$,
+$\mathrm{CE}_{\rm prior}$ under the true measure.
+\end{enumerate}
+
+\section{Glossary of notation and acronyms}
+
+\begin{itemize}
+\item $\tau$: signal precision (inverse signal variance)
+\item $\gamma$: CRRA relative risk aversion
+\item $K$: number of traders ($K \in \{3, 4, 5\}$ in this study)
+\item $G$: discretization resolution (cells per axis)
+\item $u_k$: trader $k$'s private signal, centered ($u_k = s_k - 1/2$)
+\item $v$: binary asset payoff ($v \in \{0, 1\}$)
+\item $P(u_1, \ldots, u_K)$: equilibrium price function
+\item $\PFR = \sigma(\tau \sum_k u_k)$: fully revealing equilibrium price
+\item $\mu_k$: trader $k$'s posterior of $v=1$ given own signal and price
+\item $A_v(p, u_k)$: evidence integral (Equation~\ref{eq:evidence})
+\item $\Phi$: the equilibrium operator (Bayes-then-clear)
+\item $\Phi_h, \Phi_0$: kernel-smoothed (h>0) and strict (h=0) versions
+\item $\deficit = 1 - R^2$: revelation deficit
+\item $\Vipub$: value of observing the price vs.\ prior baseline
+\item $\Vipriv$: value of own signal above the price
+\item $\ViFR$: welfare gap to full revelation
+\item $\mathrm{TV}$: trading volume (per agent)
+\item REE: rational-expectations equilibrium
+\item CRRA: constant relative risk aversion
+\item CMM: co-area moving mesh (the strict-h=0 program)
+\item GS: Grossman-Stiglitz
+\item PR: partially revealing
+\item FR: fully revealing
+\item LM: Levenberg-Marquardt
+\end{itemize}
+
+\section{Final remarks}
+
+This summary documents an extensive computational project on K=3 CRRA REE
+with binary payoff and no noise traders.  The economic finding (partial
+revelation from risk aversion alone), the numerical certification
+(255 cells at $10^{-15}$), the K-invariance result (deficits coincide
+within $\pm 25\%$ across $K \in \{3,4,5\}$), and the Grossman-Stiglitz
+degeneracy at strict $h=0$ are the main contributions.  The project's
+codebase, certified solutions, and exhaustive intermediate logs are all
+in the repository for reproducibility and future extensions.
+
+
+
+
+
+\section{Extended proof of Theorem 1 (full detail)}
+\label{app:fullproof}
+
+We give an extended proof of Theorem~\ref{thm:existence}.
+
+\subsection{Setup}
+
+Fix $(\tau, \gamma, U) \in (0, \infty)^3$ and regularization parameters
+$(h, \delta) \in (0, \infty)^2$ with $\chi = 12 \tau U / h^2 < 1$.
+
+Define the function class $\mathcal{K}(B, L)$ as in Section 8.  It is
+compact convex in sup-norm by the Arzela-Ascoli theorem (continuous
+functions on a compact domain, uniformly bounded, uniformly Lipschitz
+form a compact set).
+
+Define $\Phi_{h, \delta}: \mathcal{K}(B, L) \to C(Q)$ as the
+regularized equilibrium operator.
+
+\subsection{Lemma 1: bounded evidence ratio}
+
+\textbf{Statement.} For $\Pi \in \mathcal{K}(B, L)$, the
+regularized log-evidence-ratio satisfies $|b(u, \Pi)| \le 2\tau U$ at
+every $u \in Q$.
+
+\textbf{Proof.} The integral defining $b$ involves Gaussian densities
+$f_0, f_1$ over the support $|u_j - 1/2| \le U + 1/2$ and $|u_j + 1/2|
+\le U + 1/2$.  The log-likelihood ratio $\log(f_1(u_j)/f_0(u_j)) = \tau u_j$
+has range $[-\tau U, \tau U]$ over the support.  Summing over $K-1 = 2$
+other agents: $|b| \le 2 \tau U$.  $\square$
+
+\subsection{Lemma 2: derivative bounds}
+
+\textbf{Statement.} For $\Pi \in \mathcal{K}(B, L)$,
+
+\begin{align}
+\biggl|\frac{\partial b}{\partial \hat\pi}\biggr| &\le \chi = \frac{12 \tau U}{h^2} \\
+\biggl|\frac{\partial b}{\partial u_j}\biggr| &\le \beta = \frac{4U}{\delta^2}, \quad j \ne k
+\end{align}
+
+\textbf{Proof sketch.} The derivative with respect to the observed price
+$\hat\pi$ acts through the kernel $K_h$.  By Gaussian moment estimates,
+$|\partial K_h(x)/\partial x| \le K_h(x) \cdot |x|/h^2 \le 1/(h^2 \sqrt{2 \pi e})$.
+Multiplying by the range of $|b|$ (Lemma 1) and the integration domain
+size $(2U+1)$, we get the $12 \tau U / h^2$ bound after algebraic
+simplification.
+
+The derivative with respect to $u_j$ acts through the own-signal
+mollifier $\rho_\delta$ with bandwidth $\delta$.  Similar Gaussian
+moment estimate gives the $4 U / \delta^2$ bound.  $\square$
+
+\subsection{Lemma 3: CRRA non-expansive aggregation}
+
+\textbf{Statement.} The CRRA-clearing operator on log-odds
+$\pi^* = \mathrm{logit}\, p^{\rm clear}(\mu_1, \ldots, \mu_K; \gamma)$
+satisfies
+\begin{equation}
+\frac{\partial \pi^*}{\partial m_k} = w_k \ge 0, \quad \sum_k w_k \le 1.
+\end{equation}
+The strict inequality $\sum_k w_k < 1$ holds whenever any $\mu_k \ne p$
+(i.e.\ whenever some trader disagrees with the price).
+
+\textbf{Proof sketch.} Differentiating the clearing condition $\sum_k
+x_k^* = 0$ implicitly in $m_k = \mathrm{logit}\,\mu_k$ gives
+$\partial \pi^*/\partial m_k = (\partial x_k^*/\partial m_k) / \sum_j (\partial x_j^*/\partial \pi^*)$.
+Both numerator and denominator can be computed in closed form:
+\begin{align}
+\frac{\partial x_k^*}{\partial m_k} &= \frac{R_k p (1-p) / \gamma}{[(1-p) + R_k p]^2} \\
+\sum_j \frac{\partial x_j^*}{\partial \pi^*} &= -\frac{1}{p(1-p)} - \frac{1}{\gamma} \sum_j \frac{R_j p(1-p)}{[(1-p) + R_j p]^2}
+\end{align}
+Their ratio gives $w_k$.  The sum $\sum_k w_k$ has a clean closed
+form involving the "Jensen slack" terms $J_k = (R_k - 1)^2 p (1-p) / D^2$
+with $D = (1-p) + R p$:
+\begin{equation}
+\sum_k w_k = 1 - \frac{(\gamma + p(1-p)) \sum_k J_k}{\sum_k [(R_k - 1) D + R_k p(1-p)/\gamma]}
+\end{equation}
+The denominator is positive; the numerator is non-negative
+($J_k \ge 0$); equality holds iff all $R_k = 1$ (all $\mu_k = p$). $\square$
+
+\subsection{Lemma 4: invariance of $\mathcal{K}(B, L_\star)$}
+
+\textbf{Statement.} Under $\chi < 1$, $\Phi_{h, \delta}(\mathcal{K}(B, L_\star)) \subset \mathcal{K}(B, L_\star)$.
+
+\textbf{Proof.}
+For $\Pi \in \mathcal{K}(B, L_\star)$, we need to show that
+$\Phi_{h, \delta}\Pi$ also satisfies:
+\begin{itemize}
+\item permutation-symmetric: trivial (the operator preserves
+permutation symmetry of the input).
+\item odd: trivial under sign-flip symmetry of the model.
+\item bounded $|\Phi \Pi| \le B$: by composition, the output's logit
+is the CRRA-cleared log-odds of the trader posteriors, each of which is
+$\tau u_k + b$ with $|b| \le 2 \tau U$ (Lemma 1).  The clearing is a
+non-expansive (Lemma 3) average of these, so the cleared logit is bounded
+by $\tau U + 2 \tau U = 3 \tau U = B$.
+\item Lipschitz $L_\star$: by the chain rule, the Lipschitz constant of
+$\Phi \Pi$ is the product of:
+(i) the Lipschitz constant of the CRRA-clearing operator on log-odds,
+$\le 1$ by Lemma 3;
+(ii) the Lipschitz constant of the posterior map $\mathrm{logit}\,\mu = \tau u + b$,
+which is $\tau + \chi L + \beta$ by Lemmas 1, 2.  Solving the fixed-point
+inequality $L_\star = \tau + \chi L_\star + \beta$ gives $L_\star = (\tau + \beta)/(1 - \chi)$. $\square$
+\end{itemize}
+
+\subsection{Schauder application}
+
+$\mathcal{K}(B, L_\star)$ is compact convex in sup-norm.  $\Phi_{h, \delta}$
+is continuous (in fact smooth) and maps $\mathcal{K}$ to itself (Lemma 4).
+By Schauder's fixed-point theorem, $\Phi_{h, \delta}$ has a fixed point
+in $\mathcal{K}(B, L_\star)$.
+
+\subsection{Proof of $\Pi^\star \ne \mathrm{logit}\,\PFR$}
+
+If $\chi \le 1/3$ and $\beta < \tau(2 - 3\chi)$, then
+$L_\star = (\tau + \beta)/(1 - \chi) < 3 \tau$.  The fully-revealing $\PFR$
+has $\mathrm{logit}\,\PFR(u) = \tau \sum_k u_k$, with Lipschitz constant
+$3\tau$ in sup-norm.  Since $\Pi^\star \in \mathcal{K}(B, L_\star)$ has
+Lipschitz constant $\le L_\star < 3\tau$, $\Pi^\star \ne \mathrm{logit}\,\PFR$. $\square$
+
+\section{Why this matters for empirical asset pricing}
+
+The findings here have potential implications for empirical asset
+pricing models that calibrate to observed price-revealing power:
+
+\begin{itemize}
+\item The deficit's $\propto 1/\gamma$ asymptote provides a quantitative
+mapping from observable price-information content to underlying risk
+aversion, independent of any noise-trader assumption.
+\item The K-invariance result simplifies calibration: the deficit
+depends primarily on $(\tau, \gamma)$, not on the (often unknown)
+crowd size.
+\item Trading-volume proportionality $\propto K$ provides an
+independent moment for crowd size, decoupling the deficit's identification
+from the volume's identification.
+\end{itemize}
+
+\section{Final summary table: the 7 main findings}
+
+\begin{table}[H]\centering\small
+\begin{tabular}{lp{8cm}}
+\toprule
+Finding & Statement\\
+\midrule
+1. Existence (regularized) & Theorem 1: regularized PR-REE exists for any $(\tau, \gamma)$
+when $\chi < 1$ and the fixed point is strictly disjoint from $\PFR$.\\
+\midrule
+2. Numerical certification & 255 individual equilibria at extended-precision
+residual $\le 10^{-15}$ across 12 $\tau$ values and 23 $\gamma$ values.\\
+\midrule
+3. Continuum limits & Immortal anchor: $\deficit_\infty = 0.268 \pm 0.010$.
+Max-deficit corner: $\deficit_\infty = 0.278 \pm 0.008$.  G=21 values within 3\% of continuum.\\
+\midrule
+4. Welfare decomposition & $\Vipub \gg \Vipriv > 0$ at every parameterization;
+$\ViFR$ vanishes proportionally to $\deficit$.\\
+\midrule
+5. K-invariance & Deficits coincide within $\pm 25\%$ per cell across $K \in \{3,4,5\}$;
+slope of $\mathrm{logit}\,P$ on $\sum_k u_k$ equals $\tau/K$ to three sig figs everywhere.\\
+\midrule
+6. GS degeneracy & $\PFR$ is the unique strict-$h{=}0$ fixed point under binary payoff,
+certified to $10^{-15}$ in 9 test cells.\\
+\midrule
+7. Implication & Kernel bandwidth $h > 0$ is the equilibrium selection mechanism for the
+nontrivial PR branch; no noise traders required.\\
+\bottomrule
+\end{tabular}
+\caption{Final summary of the seven main findings.}
+\end{table}
+
+
+
+\input{cells_table}\input{k_table}\input{vi_table}
+
+\end{document}

@@ -1,0 +1,109 @@
+{
+ "0.1": [
+  {
+   "seed": "soft_sigmoid_0.1",
+   "F_inner": 0.009989468409922875,
+   "deficit": 0.002008816820471049,
+   "class": "FR",
+   "status": "noconv",
+   "init_d": 0.0,
+   "init_F": 0.3833261741801198,
+   "seeds_reaching": [
+    "soft_sigmoid_0.1"
+   ]
+  },
+  {
+   "seed": "sharp_sigmoid_0.5tau",
+   "F_inner": 2.382465533312672e-05,
+   "deficit": 5.4782821501397905e-08,
+   "class": "FR",
+   "status": "noconv",
+   "init_d": 0.0,
+   "init_F": 0.00013742794558502247,
+   "seeds_reaching": [
+    "sharp_sigmoid_0.5tau"
+   ]
+  }
+ ],
+ "0.25": [
+  {
+   "seed": "sharp_sigmoid_0.5tau",
+   "F_inner": 5.562588573038152e-05,
+   "deficit": 6.29001073448876e-10,
+   "class": "FR",
+   "status": "noconv",
+   "init_d": 0.0,
+   "init_F": 0.00012054265768646211,
+   "seeds_reaching": [
+    "sharp_sigmoid_0.5tau"
+   ]
+  }
+ ],
+ "0.5": [
+  {
+   "seed": "sharp_sigmoid_0.5tau",
+   "F_inner": 5.155058480815766e-05,
+   "deficit": 2.445004310125398e-09,
+   "class": "FR",
+   "status": "noconv",
+   "init_d": 0.0,
+   "init_F": 6.028354580311923e-05,
+   "seeds_reaching": [
+    "sharp_sigmoid_0.5tau"
+   ]
+  }
+ ],
+ "1.0": [
+  {
+   "seed": "cold_nolearn",
+   "F_inner": 0.008203133070171483,
+   "deficit": 0.007043801436367625,
+   "class": "mid",
+   "status": "noconv",
+   "init_d": 0.02948901364522616,
+   "init_F": 0.3331119148356425,
+   "seeds_reaching": [
+    "cold_nolearn"
+   ]
+  },
+  {
+   "seed": "sharp_sigmoid_0.5tau",
+   "F_inner": 2.708094797232441e-05,
+   "deficit": 2.5636832323705505e-08,
+   "class": "FR",
+   "status": "noconv",
+   "init_d": 0.0,
+   "init_F": 3.1880292042874014e-05,
+   "seeds_reaching": [
+    "sharp_sigmoid_0.5tau"
+   ]
+  }
+ ],
+ "2.0": [
+  {
+   "seed": "cold_nolearn",
+   "F_inner": 0.004230336994388795,
+   "deficit": 0.00302795266721001,
+   "class": "FR",
+   "status": "noconv",
+   "init_d": 0.01103016757942521,
+   "init_F": 0.3378202902181536,
+   "seeds_reaching": [
+    "cold_nolearn"
+   ]
+  },
+  {
+   "seed": "soft_sigmoid_0.1",
+   "F_inner": 4.570246517088261e-05,
+   "deficit": 5.556879204082765e-05,
+   "class": "FR",
+   "status": "noconv",
+   "init_d": 0.0,
+   "init_F": 0.38332638815070685,
+   "seeds_reaching": [
+    "soft_sigmoid_0.1",
+    "sharp_sigmoid_0.5tau"
+   ]
+  }
+ ]
+}

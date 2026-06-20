@@ -1,0 +1,130 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{graphicx,amsmath,amssymb,booktabs,hyperref,xcolor,tabularx}
+\graphicspath{{/tmp/dd_k3_ladder_ext_figs/}}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlength{\parskip}{6pt}
+\title{DD K=3 R4 ladder: 1000-cell $\tau$ sweep with analytic Jacobian\\
+       (interim report at $\sim 500$ cells)}
+\author{Fixed-Point Factory --- ladder progress}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\section*{What this is}
+
+A 1000-cell ladder of $\tau$ from 0.001 to 1.0 in steps of 0.001, at
+$\gamma{=}100$, $G{=}7$, solved with the \textbf{Lin-CDF R4 kernel-band
+operator in double-double arithmetic}. Newton steps use an
+\textbf{analytic Jacobian} (chain rule through the bilinear interp +
+Gaussian kernel-band + Richardson combine + linear-interp lookup + CRRA
+implicit derivative). Per cell: $\sim$1--1.3\,s.
+
+\textbf{Important caveat.} R4 kernel-band does NOT extrapolate to the
+strict-$h{=}0$ limit (we documented this earlier: bias $\sim 0.5$ in $\mu$,
+$\sim 0.36$ in $P$ at high $\tau$). These are R4 fixed points at high
+precision, not the "true" strict-$h{=}0$ equilibria.
+
+\section{F floor along the ladder}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig1_F.png}
+\end{center}
+
+Median $|F|_\infty \sim 10^{-18}$, dispersed $10^{-26}$ to $10^{-16}$.
+\emph{Not} full DD eps ($10^{-25}$ target) because the analytic Jacobian
+is in float64 (accumulated rounding $\sim 10^{-13}$ from $\sim 31\,000$
+inner additions per entry). To reach DD eps we'd need a DD-precision
+Jacobian (substantial port).
+
+\section{Slope and deficit along the ladder}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig2_slope_deficit.png}
+\end{center}
+
+\textbf{Slope $\alpha^*$}: monotone increasing in $\tau$ from $\sim 0.07$
+at $\tau{=}0.001$ to higher values; smooth across the ladder.
+
+\textbf{Deficit $1-R^2_\mathrm{nonparam}$}: rapidly grows from
+near-zero to substantial values as $\tau$ increases past 0.05--0.1
+(kicks in around $\tau \sim 0.1$ where the deficit-ridge regime starts).
+\emph{The deficit values here are inflated by the kernel-band bias} ---
+strict-$h{=}0$ deficits at the same $(\gamma, \tau)$ would be 5--40$\times$
+smaller per our earlier cross-validation.
+
+\section{Monotonicity along the ladder}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig3_monotonicity.png}
+\end{center}
+
+\textbf{Number of monotonicity violations} ($\partial P/\partial u_i < 0$)
+grows from zero at very low $\tau$ to dozens past $\tau \sim 0.1$. The
+\textbf{worst negative slope} reaches $\sim -0.01$ at moderate $\tau$.
+
+The non-monotonicity is the structural signal: the R4 operator's FP is
+genuinely non-monotone in the high-$\tau$ regime. We documented earlier
+that the "true" Bayesian equilibrium SHOULD be monotone -- so these R4
+FPs differ from the underlying equilibrium in this respect.
+
+\section{P range along the ladder}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig4_Prange.png}
+\end{center}
+
+$P_{\min}$ to $P_{\max}$ spread along the ladder. At low $\tau$ the range
+is tiny (P nearly constant at 0.5); it widens dramatically past
+$\tau \sim 0.05$ as the equilibrium price acquires informational structure
+from the signals.
+
+\section{Per-cell wall time}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig5_wall.png}
+\end{center}
+
+Mean wall $\sim$1.2\,s per cell; analytic Jacobian + Newton gives
+$\sim 30\times$ speedup vs FD chord (previous approach was $\sim$40\,s/cell).
+
+\section{Sample P contours along the ladder}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig6_contours.png}
+\end{center}
+
+P at mid-$u_3$ slice for several representative $\tau$. Captures the
+qualitative evolution: nearly-flat at low $\tau$, increasingly structured
+as $\tau$ grows.
+
+\section{Honest summary}
+
+\begin{itemize}
+  \item \textbf{Ladder is fast}: $\sim$1.2\,s/cell with analytic Jacobian,
+        ~18\,min total for 1000 cells.
+  \item \textbf{F floors at $\sim 10^{-18}$}: float64 Jacobian limits
+        Newton precision; not full DD eps.
+  \item \textbf{R4 FPs are biased}: relative to strict-$h{=}0$, by
+        $\sim 0.5$ in $\mu$ at high $\tau$. Deficit values inflated.
+  \item \textbf{Monotonicity violations}: the R4 FPs are non-monotone at
+        high $\tau$ (up to 30 cells violate, worst $\sim -0.01$).
+  \item \textbf{Useful for}: tracking R4 behavior across $\tau$, warm-start
+        for other operators, diagnostic.
+  \item \textbf{Not useful for}: claiming strict-$h{=}0$ equilibria.
+\end{itemize}
+
+\section{Reproducibility}
+
+\begin{itemize}
+  \item Ladder script:
+        \texttt{projects/REZN/solver\_code/highprec\_dd\_qd/dd\_k3\_ladder\_anajac.py}
+  \item Analytic Jacobian:
+        \texttt{projects/REZN/solver\_code/highprec\_dd\_qd/dd\_k3\_analytic\_jac.py}
+  \item Per-cell FPs:
+        \texttt{projects/REZN/solved\_fixed\_points/dd\_k3\_overnight/full\_ladder/fps/tau\{tau\}.npy}
+  \item JSON summary: \texttt{.../full\_ladder/ladder.json}
+\end{itemize}
+
+\end{document}

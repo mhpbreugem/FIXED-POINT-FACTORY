@@ -1,0 +1,119 @@
+[11:53:17] GATE g=0.1: 1.959s/Phi  interior_in(0,1)=True [0.0000,0.9988]  PR warm-start ||F||inf=2.0940e-01
+[11:53:21] GATE g=1.0: 1.928s/Phi  interior_in(0,1)=True [0.0000,0.9992]  PR warm-start ||F||inf=2.0716e-01
+[11:53:25]   push OK (attempt 1)
+[11:54:09] === gamma-floor sweep: gammas=[0.1, 0.25, 0.5, 1.0, 2.0, 5.0] tau=2.0 G=11 ===
+[11:54:09] warm-start PR d_FR=0.26917
+[11:55:21] === gamma=0.5 start (w0=0.3); warm-start PR d_FR=0.26917 ===
+[11:55:21]   [g=0.5] it   0  ||F||inf=2.055332e-01  d_FR=0.26917  (warm start)
+[11:55:21]   [g=0.5] it   1  ||F||inf=1.361347e-01  d_FR=0.26235  w=3.00e-01  (2.1s)
+[11:55:21]   [g=0.5] it   2  ||F||inf=1.234720e-01  d_FR=0.26057  w=1.50e-01  (3.9s)
+[11:55:21]   [g=0.5] it   3  ||F||inf=1.234741e-01  d_FR=0.26057  w=9.16e-06  (30.4s)
+[11:55:21]   [g=0.5] PLATEAU at it 3: w hit floor 1e-05; floor=1.235e-01
+[11:55:21]   [g=0.5] spike probe (arb-FD diagonal Jacobian, eps=1e-25)...
+[11:55:21]   [g=0.5] spike: 0/16 diag>1e3  max|diag|=4.104e+00  (34.4s)
+[11:55:21] === gamma=0.5 done: stop=plateau iters=3 floor=1.2347e-01 d_FR=0.26057 spike=0/16 (1.2 min) ===
+[11:55:21] [1/6] gamma=0.5 floor=1.235e-01 d_FR=0.2606 stop=plateau spike=0/16
+[11:55:26]   push OK (attempt 1)
+[11:55:32] === gamma=0.25 start (w0=0.3); warm-start PR d_FR=0.26917 ===
+[11:55:32]   [g=0.25] it   0  ||F||inf=2.041592e-01  d_FR=0.26917  (warm start)
+[11:55:32]   [g=0.25] it   1  ||F||inf=9.871629e-02  d_FR=0.26614  w=3.00e-01  (2.0s)
+[11:55:32]   [g=0.25] it   2  ||F||inf=7.973490e-02  d_FR=0.26524  w=3.00e-01  (2.0s)
+[11:55:32]   [g=0.25] it   3  ||F||inf=7.971144e-02  d_FR=0.26524  w=2.93e-04  (22.3s)
+[11:55:32]   [g=0.25] it   4  ||F||inf=7.969971e-02  d_FR=0.26524  w=1.46e-04  (4.1s)
+[11:55:32]   [g=0.25] it   5  ||F||inf=7.969677e-02  d_FR=0.26524  w=3.66e-05  (6.0s)
+[11:55:32]   [g=0.25] it   6  ||F||inf=7.969531e-02  d_FR=0.26524  w=1.83e-05  (4.1s)
+[11:55:32]   [g=0.25] it   7  ||F||inf=7.969458e-02  d_FR=0.26524  w=9.16e-06  (4.1s)
+[11:55:32]   [g=0.25] it   8  ||F||inf=8.926134e-02  d_FR=0.26524  w=9.16e-06  (2.0s)
+[11:55:32]   [g=0.25] PLATEAU at it 8: w hit floor 1e-05; floor=7.969e-02
+[11:55:32]   [g=0.25] spike probe (arb-FD diagonal Jacobian, eps=1e-25)...
+[11:55:32]   [g=0.25] spike: 0/16 diag>1e3  max|diag|=4.304e-01  (34.8s)
+[11:55:32] === gamma=0.25 done: stop=plateau iters=8 floor=7.9695e-02 d_FR=0.26524 spike=0/16 (1.4 min) ===
+[11:55:32] [2/6] gamma=0.25 floor=7.969e-02 d_FR=0.2652 stop=plateau spike=0/16
+[11:55:34]   push OK (attempt 1)
+[11:55:34] === gamma=0.1 start (w0=0.3); warm-start PR d_FR=0.26917 ===
+[11:55:34]   [g=0.1] it   0  ||F||inf=2.093988e-01  d_FR=0.26917  (warm start)
+[11:55:34]   [g=0.1] it   1  ||F||inf=1.213232e-01  d_FR=0.26853  w=3.00e-01  (2.1s)
+[11:55:34]   [g=0.1] it   2  ||F||inf=6.942047e-02  d_FR=0.26932  w=3.00e-01  (2.0s)
+[11:55:34]   [g=0.1] it   3  ||F||inf=6.704393e-02  d_FR=0.26942  w=3.75e-02  (8.3s)
+[11:55:34]   [g=0.1] it   4  ||F||inf=6.647016e-02  d_FR=0.26945  w=9.37e-03  (6.4s)
+[11:55:34]   [g=0.1] it   5  ||F||inf=6.639905e-02  d_FR=0.26945  w=1.17e-03  (8.5s)
+[11:55:34]   [g=0.1] it   6  ||F||inf=6.639017e-02  d_FR=0.26945  w=1.46e-04  (8.5s)
+[11:55:34]   [g=0.1] it   7  ||F||inf=6.638961e-02  d_FR=0.26945  w=9.16e-06  (10.5s)
+[11:55:34]   [g=0.1] it   8  ||F||inf=7.234509e-02  d_FR=0.26945  w=9.16e-06  (2.0s)
+[11:55:34]   [g=0.1] PLATEAU at it 8: w hit floor 1e-05; floor=6.639e-02
+[11:55:34]   [g=0.1] spike probe (arb-FD diagonal Jacobian, eps=1e-25)...
+[11:55:34]   [g=0.1] spike: 0/16 diag>1e3  max|diag|=9.450e+00  (34.6s)
+[11:55:34] === gamma=0.1 done: stop=plateau iters=8 floor=6.6390e-02 d_FR=0.26945 spike=0/16 (1.4 min) ===
+[11:55:34] [3/6] gamma=0.1 floor=6.639e-02 d_FR=0.2695 stop=plateau spike=0/16
+[11:55:35]   push OK (attempt 1)
+[11:55:43] === gamma=1.0 start (w0=0.3); warm-start PR d_FR=0.26917 ===
+[11:55:43]   [g=1.0] it   0  ||F||inf=2.071557e-01  d_FR=0.26917  (warm start)
+[11:55:43]   [g=1.0] it   1  ||F||inf=1.849168e-01  d_FR=0.25701  w=3.00e-01  (2.0s)
+[11:55:43]   [g=1.0] it   2  ||F||inf=1.482792e-01  d_FR=0.24945  w=3.00e-01  (1.9s)
+[11:55:43]   [g=1.0] it   3  ||F||inf=1.472304e-01  d_FR=0.24427  w=3.00e-01  (1.9s)
+[11:55:43]   [g=1.0] it   4  ||F||inf=1.217747e-01  d_FR=0.24043  w=3.00e-01  (2.0s)
+[11:55:43]   [g=1.0] it   5  ||F||inf=1.096000e-01  d_FR=0.23770  w=3.00e-01  (2.0s)
+[11:55:43]   [g=1.0] it   6  ||F||inf=1.095485e-01  d_FR=0.23714  w=7.50e-02  (6.1s)
+[11:55:43]   [g=1.0] it   7  ||F||inf=1.093758e-01  d_FR=0.23700  w=1.87e-02  (6.2s)
+[11:55:43]   [g=1.0] it   8  ||F||inf=1.093498e-01  d_FR=0.23699  w=2.34e-03  (8.0s)
+[11:55:43]   [g=1.0] it   9  ||F||inf=1.093365e-01  d_FR=0.23698  w=1.17e-03  (4.0s)
+[11:55:43]   [g=1.0] it  10  ||F||inf=1.093297e-01  d_FR=0.23697  w=5.86e-04  (4.1s)
+[11:55:43]   [g=1.0] it  11  ||F||inf=1.093263e-01  d_FR=0.23697  w=2.93e-04  (4.1s)
+[11:55:43]   [g=1.0] it  12  ||F||inf=1.093246e-01  d_FR=0.23697  w=1.46e-04  (3.9s)
+[11:55:43]   [g=1.0] it  13  ||F||inf=1.093238e-01  d_FR=0.23697  w=7.32e-05  (3.9s)
+[11:55:43]   [g=1.0] it  14  ||F||inf=1.496139e-01  d_FR=0.23697  w=9.16e-06  (8.2s)
+[11:55:43]   [g=1.0] PLATEAU at it 14: w hit floor 1e-05; floor=1.093e-01
+[11:55:43]   [g=1.0] spike probe (arb-FD diagonal Jacobian, eps=1e-25)...
+[11:55:43]   [g=1.0] spike: 0/16 diag>1e3  max|diag|=1.328e+00  (33.8s)
+[11:55:43] === gamma=1.0 done: stop=plateau iters=14 floor=1.0932e-01 d_FR=0.23697 spike=0/16 (1.6 min) ===
+[11:55:43] [4/6] gamma=1.0 floor=1.093e-01 d_FR=0.2370 stop=plateau spike=0/16
+[11:55:44]   push OK (attempt 1)
+[11:56:34] === gamma=2.0 start (w0=0.3); warm-start PR d_FR=0.26917 ===
+[11:56:34]   [g=2.0] it   0  ||F||inf=2.392542e-01  d_FR=0.26917  (warm start)
+[11:56:34]   [g=2.0] it   1  ||F||inf=2.390953e-01  d_FR=0.26916  w=1.46e-04  (23.8s)
+[11:56:34]   [g=2.0] it   2  ||F||inf=2.390918e-01  d_FR=0.26916  w=1.83e-05  (7.9s)
+[11:56:34]   [g=2.0] it   3  ||F||inf=2.390901e-01  d_FR=0.26916  w=9.16e-06  (4.0s)
+[11:56:34]   [g=2.0] it   4  ||F||inf=2.493422e-01  d_FR=0.26915  w=9.16e-06  (2.0s)
+[11:56:34]   [g=2.0] PLATEAU at it 4: w hit floor 1e-05; floor=2.391e-01
+[11:56:34]   [g=2.0] spike probe (arb-FD diagonal Jacobian, eps=1e-25)...
+[11:56:34]   [g=2.0] spike: 0/16 diag>1e3  max|diag|=2.747e+01  (33.4s)
+[11:56:34] === gamma=2.0 done: stop=plateau iters=4 floor=2.3909e-01 d_FR=0.26915 spike=0/16 (1.2 min) ===
+[11:56:34] [5/6] gamma=2.0 floor=2.391e-01 d_FR=0.2692 stop=plateau spike=0/16
+[11:56:36]   push OK (attempt 1)
+[11:56:56] === gamma=5.0 start (w0=0.3); warm-start PR d_FR=0.26917 ===
+[11:56:56]   [g=5.0] it   0  ||F||inf=3.595633e-01  d_FR=0.26917  (warm start)
+[11:56:56]   [g=5.0] it   1  ||F||inf=3.219678e-01  d_FR=0.25738  w=1.50e-01  (4.0s)
+[11:56:56]   [g=5.0] it   2  ||F||inf=2.987405e-01  d_FR=0.25240  w=7.50e-02  (4.0s)
+[11:56:56]   [g=5.0] it   3  ||F||inf=2.892933e-01  d_FR=0.25009  w=3.75e-02  (4.0s)
+[11:56:56]   [g=5.0] it   4  ||F||inf=2.881488e-01  d_FR=0.24981  w=4.69e-03  (7.9s)
+[11:56:56]   [g=5.0] it   5  ||F||inf=2.880064e-01  d_FR=0.24978  w=5.86e-04  (8.0s)
+[11:56:56]   [g=5.0] it   6  ||F||inf=2.879708e-01  d_FR=0.24977  w=1.46e-04  (5.9s)
+[11:56:56]   [g=5.0] it   7  ||F||inf=2.879530e-01  d_FR=0.24977  w=7.32e-05  (4.0s)
+[11:56:56]   [g=5.0] it   8  ||F||inf=2.879507e-01  d_FR=0.24976  w=9.16e-06  (7.9s)
+[11:56:56]   [g=5.0] it   9  ||F||inf=4.208325e-01  d_FR=0.24976  w=9.16e-06  (2.0s)
+[11:56:56]   [g=5.0] PLATEAU at it 9: w hit floor 1e-05; floor=2.880e-01
+[11:56:56]   [g=5.0] spike probe (arb-FD diagonal Jacobian, eps=1e-25)...
+[11:56:56]   [g=5.0] spike: 0/16 diag>1e3  max|diag|=8.784e-01  (33.8s)
+[11:56:56] === gamma=5.0 done: stop=plateau iters=9 floor=2.8795e-01 d_FR=0.24976 spike=0/16 (1.4 min) ===
+[11:56:56] [6/6] gamma=5.0 floor=2.880e-01 d_FR=0.2498 stop=plateau spike=0/16
+[11:56:57]   push OK (attempt 1)
+[11:56:57] SWEEP done in 2.8 min
+[11:56:57] ==============================================================================
+[11:56:57] HEADLINE TABLE
+[11:56:57]  gamma |  floor(ferr) |    d_FR |       stop | spike-frac |  spike-max | wall-min
+[11:56:57]    0.1 |   6.6390e-02 |  0.2695 |    plateau | 0/16=0.000 |   9.45e+00 |     1.42
+[11:56:57]   0.25 |   7.9695e-02 |  0.2652 |    plateau | 0/16=0.000 |   4.30e-01 |     1.39
+[11:56:57]    0.5 |   1.2347e-01 |  0.2606 |    plateau | 0/16=0.000 |   4.10e+00 |     1.22
+[11:56:57]    1.0 |   1.0932e-01 |  0.2370 |    plateau | 0/16=0.000 |   1.33e+00 |     1.57
+[11:56:57]    2.0 |   2.3909e-01 |  0.2692 |    plateau | 0/16=0.000 |   2.75e+01 |     1.22
+[11:56:57]    5.0 |   2.8795e-01 |  0.2498 |    plateau | 0/16=0.000 |   8.78e-01 |     1.39
+[11:56:57] ==============================================================================
+[11:56:57] floor monotone-decreasing in gamma? False
+[11:56:57] floor drop g=0.1 -> g=1.0: 6.639e-02 -> 1.093e-01  (0.61x)
+[11:56:57] floor drop g=0.1 -> g=5.0: 6.639e-02 -> 2.880e-01  (0.23x)
+[11:56:57] no gamma reached floor<1e-6 (strict operator stays non-smooth across the sweep)
+[11:56:57] spike-fraction vs gamma: [(0.1, 0.0), (0.25, 0.0), (0.5, 0.0), (1.0, 0.0), (2.0, 0.0), (5.0, 0.0)]
+[11:56:57] spike-fraction shrinks with gamma? True
+[11:56:57] CAVEAT: each gamma is a DIFFERENT economy/equilibrium; d_FR drift: [(0.1, 0.2695), (0.25, 0.2652), (0.5, 0.2606), (1.0, 0.237), (2.0, 0.2692), (5.0, 0.2498)]
+[11:56:59]   push OK (attempt 1)
+[11:56:59] ALL DONE

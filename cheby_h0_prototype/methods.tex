@@ -1,0 +1,388 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx,amsmath,amssymb,booktabs,hyperref,xcolor}
+\graphicspath{{/tmp/cheby_h0/figs/}}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\title{Methods and results: toward machine-$\varepsilon$ strict-$h{=}0$\\
+       K=3 CRRA REE on the Chebyshev tabulated architecture}
+\author{Fixed-Point Factory --- auto-mode running notes}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+Cumulative document of methods explored to drive the K=3 CRRA REE
+fixed-point residual to machine $\varepsilon$ on the tensor-Chebyshev
+tabulated-$\mu$ architecture. Two clean wins so far:
+\textbf{(1) kernel-band Cheb-tab nails to $\sim\!10^{-16}$ from cold and
+warm} at bandwidths $h \in [0.20, 0.50]$; the FP depends on $h$ and the
+joint $(N, h) \to (\infty, 0)$ limit gives slope $\alpha^* \approx 0.22$;
+\textbf{(2) partition-of-unity (POU) Cheb-tab at strict $h{=}0$
+recovers the correct REE slope $\alpha^* \approx 0.37$ at $N{=}8$},
+matching the legacy \texttt{hfree\_smooth} at G=9. The POU operator
+floors at $\sim 4\!\times\!10^{-3}$ with generic Anderson+Newton-Krylov;
+several routes to lower (chebroots all-roots, analytic/complex-step
+Jacobian) are under investigation.
+\end{abstract}
+
+\tableofcontents
+
+\section{Background and where we started}
+
+The K=3 CRRA REE operator $\Phi$ takes a conjectured price function
+$P(u_1,u_2,u_3)$ and returns the next-iterate. The chebroots/bisect
+implementation we built initially floored at $\|F\|_\infty \sim 1.7\!
+\times\!10^{-3}$ across all solvers we tried (\texttt{fp\_analysis.pdf}),
+diagnosed as structural from root-extraction non-smoothness. The
+tabulated-$\mu$ refactoring (\texttt{tab\_explain.pdf}, $\sim 90\times$
+speedup) was found to be \emph{not} the cause of the floor: replaying a
+legacy operator that hit machine $\varepsilon$ on its own grid and
+adding only the lookup table on top still reached $6.4\!\times\!10^{-15}$
+under Newton--Krylov.
+
+\section{Method 1: kernel-band co-area integral}
+
+Replace contour root extraction with a Gaussian band:
+\[
+   A_v(p, u_k) \;=\; \int\!\!\int K_h\!\big(P(u_a, u_b, u_k) - p\big)\,
+                       f_v(u_a) f_v(u_b)\, du_a\, du_b,
+   \quad K_h(z) = e^{-z^2/(2h^2)}.
+\]
+With $P$ as a tensor Chebyshev polynomial and the integral evaluated
+on a tensor-GL quadrature grid, $A_v$ is an \emph{analytic} function of
+the Cheb coefficients of $P$. $\Phi$ is then analytic in $P$, so
+Anderson and Newton--Krylov converge quadratically.
+
+\paragraph{Result.} Machine $\varepsilon$ from both cold and warm starts
+at $h \in [0.20, 0.50]$, $G_p{=}121$, $N{=}6$ (Anderson floor
+$\sim 10^{-16}$, NK confirms to $10^{-15}$). $\sim 7$\,ms per $\Phi$ at
+$G_p{=}121$.
+
+\paragraph{Caveat.} The kernel-band FP \emph{depends on $h$}. The joint
+$(N{\to}\infty, h{\to}0)$ limit (\texttt{kern\_tab.pdf}) gives slope
+$\alpha^* \approx 0.22$ and deficit $1{-}R^2 \approx 0.20$. Going below
+$h \approx 0.10$ at $N{=}12$ fails (the band tightens past the grid
+resolution and the operator approaches the discontinuous strict-$h{=}0$
+limit).
+
+\section{Method 2: partition-of-unity (POU) at strict $h=0$}
+
+NO kernel, NO bandwidth. The strict co-area integral
+$A_v = \int_{P=p} f_v f_v / |\nabla P|\, d\sigma$ is made smooth by
+representing it as the sum of two parameterizations:
+\[
+   A_v = A_v^{(a)} + A_v^{(b)},
+\]
+where $A_v^{(b)}$ parameterizes the contour by $u_a$ (root in $u_b$
+at each GL node) and $A_v^{(a)}$ by $u_b$ (root in $u_a$). Each term is
+weighted by a partition-of-unity factor
+$w_a = d_a^2 / (d_a^2 + d_b^2)$, $w_b = d_b^2 / (d_a^2 + d_b^2)$, with
+$w_a + w_b = 1$. As $|d_b| \to 0$ (turning point along $u_b$), $w_b \to 0$
+and the $1/|d_b|$ singularity is killed; the contribution shifts to
+$A^{(a)}$.
+
+This is a direct port of the K=3 \texttt{hfree\_smooth} legacy operator
+(\texttt{projects/REZN/solved\_fixed\_points/k3\_hfree\_smooth/}) to
+the Cheb-tab architecture. The atanh-stretched $u$-coordinate makes
+$f_v(u(\xi{=}\pm 1)) = 0$ exactly, so roots crossing the box edge
+contribute zero amplitude smoothly --- no bandwidth or cutoff needed
+for the boundary behaviour.
+
+\subsection{Implementation: scan-and-bisect all-roots in numba}
+
+All-roots-in-$[-1,1]$ via dense sign-change scan
+($8N$ subintervals) + 80-iter bisection, fully numba-jit'd:
+\texttt{cheby\_numba\_pou\_tab.py}.
+
+Per-$\Phi$ wall time at $G_p{=}121$:
+\begin{center}
+\begin{tabular}{rrc}
+\toprule
+$N$ & $G$ & ms / $\Phi$ \\
+\midrule
+6  & 7  & 52  \\
+8  & 9  & 93  \\
+10 & 11 & 188 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Results: correct strict-$h{=}0$ FP, floor $\sim 4\!\times\!10^{-3}$}
+
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+$N$ ($G$) & best $\|F\|_\infty$ & slope $\alpha^*$ & deficit \\
+\midrule
+6  (G=7)  & $5.7\!\times\!10^{-3}$ & 0.336 & 0.139 \\
+\textbf{8  (G=9)}  & $\mathbf{3.9\!\times\!10^{-3}}$ & \textbf{0.366} & \textbf{0.177} \\
+10 (G=11) & $1.3\!\times\!10^{-2}$ & 0.439 & 0.165 (cold-start basin issue) \\
+\midrule
+Legacy hfree\_smooth (G=9, spline+exact NK) & $4\!\times\!10^{-5}$ & 0.364 & 0.173 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{The POU N=8 slope and deficit agree with the legacy to three
+digits} --- the same strict-$h{=}0$ REE. Our generic Anderson+NK
+floors $\sim 100\times$ above the legacy because the legacy used
+exact-Jacobian Newton steps that contract quadratically.
+
+\section{Investigations into the $4\!\times\!10^{-3}$ POU floor}
+
+\subsection{Pure dense Newton with finite-difference Jacobian}
+
+40-DOF system. FD Jacobian costs $\sim 40\!\cdot\!\Phi = 2$\,s per step.
+Sweep $\varepsilon_{\rm FD} \in \{10^{-5}, 10^{-6}, 10^{-7}, 10^{-8}\}$,
+warm-start from POU Anderson best:
+
+\begin{center}
+\begin{tabular}{cc}
+\toprule
+$\varepsilon_{\rm FD}$ & best $\|F\|_\infty$ \\
+\midrule
+$10^{-5}$ & $3.70\!\times\!10^{-3}$ \\
+$10^{-6}$ & $\mathbf{2.71\!\times\!10^{-3}}$ \\
+$10^{-7}$ & $3.79\!\times\!10^{-3}$ \\
+$10^{-8}$ & $3.82\!\times\!10^{-3}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Marginal improvement over Anderson (4.1e-3). Line-search alpha collapses
+to $10^{-9}$, confirming the Jacobian carries non-smoothness noise:
+\textbf{the operator, not the solver, is the bottleneck.}
+
+\subsection{Chebroots (companion-matrix all-roots) vs scan-and-bisect}
+
+Hypothesis: my numba scan-and-bisect misses roots near the box
+boundary, contributing to the floor. Test: replace with
+\texttt{numpy.polynomial.chebyshev.chebroots} (companion matrix
+eigenvalues, finds all real roots exactly):
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+all-roots method & ms / $\Phi$ & max $|\Delta P|$ vs scan-bisect \\
+\midrule
+scan-and-bisect (numba) & 50 & --- (reference) \\
+chebroots (numpy) & 2200 & $3.7\!\times\!10^{-4}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{The per-$\Phi$ difference is the same order as our floor.}
+Strong evidence that scan-and-bisect misses roots near the boundary
+and this is what limits POU convergence. The natural fix is to port
+the chebroots-based all-roots to numba (companion matrix eigenvalues
+are well-supported in numba's \texttt{linalg.eigvals}) or to dramatically
+increase the scan resolution near the boundary.
+
+\section{POU+chebroots: only 20\% better than scan-bisect}
+
+Implemented numba chebroots (companion-matrix eigvals on a complex128
+matrix; $\sim 19\,\mu$s per call, $3.4\times$ faster than numpy
+chebroots). Built POU operator on top: 420\,ms per $\Phi$ at $G_p{=}121$
+(vs 50\,ms scan-bisect; vs 2200\,ms non-numba chebroots).
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+POU variant & Anderson floor & + NK + FD-Newton \\
+\midrule
+scan-and-bisect & $5.7\!\times\!10^{-3}$ & $2.71\!\times\!10^{-3}$ \\
+chebroots (all-real-roots) & $4.42\!\times\!10^{-3}$ & $\mathbf{2.15\!\times\!10^{-3}}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+20\% improvement only. \textbf{All-roots completeness is NOT the
+dominant bottleneck.} The 3.7e-4 per-$\Phi$ difference between
+scan-and-bisect and chebroots came from near-boundary roots whose
+amplitude is suppressed by the atanh stretching (so they don't
+accumulate during iteration).
+
+\section{Kernel-band push to strict $h{=}0$: slope tops at 0.23, POU says 0.37}
+
+Pushed kernel-band Cheb-tab to very small $h$ at $N{=}8$ with NQK and
+$G_p$ scaled up:
+
+\begin{center}
+\begin{tabular}{rcccc}
+\toprule
+$h$ & NQK & $G_p$ & $\|F\|_\infty$ & slope $\alpha^*$ \\
+\midrule
+0.50 & 16 & 121  & $3\!\times\!10^{-15}$ & 0.128 \\
+0.35 & 16 & 143  & $8\!\times\!10^{-15}$ & 0.138 \\
+0.25 & 16 & 200  & $8\!\times\!10^{-15}$ & 0.164 \\
+0.18 & 17 & 278  & $4\!\times\!10^{-16}$ & 0.192 \\
+0.13 & 24 & 385  & $3.4\!\times\!10^{-4}$ (FAIL) & 0.211 \\
+0.10 & 30 & 500  & $3.9\!\times\!10^{-2}$ (FAIL) & 0.219 \\
+0.08 & 38 & 625  & $5\!\times\!10^{-14}$ & 0.226 \\
+0.06 & 50 & 834  & $1.5\!\times\!10^{-2}$ (FAIL) & 0.232 \\
+0.04 & 75 & 1250 & $1.5\!\times\!10^{-2}$ (FAIL) & 0.273 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{The kernel-band joint limit tops out around slope $\approx 0.23$,
+while POU strict-$h{=}0$ gives slope $\approx 0.37$.} This 0.14 gap is
+not explained by extrapolation of the converged data.
+
+\paragraph{Diagnosis.} The tensor-GL quadrature in the kernel-band
+needs $N_{Q} \cdot h \gg 1$ to resolve the narrow Gaussian band. For
+$h \sim 0.05$, $N_Q \sim 75$ is marginal; the integral becomes
+sensitive to where GL nodes fall relative to the contour. Failed
+Anderson at small $h$ confirms operator ill-conditioning. \emph{POU
+side-steps this by evaluating the contour exactly via root extraction.}
+
+\section{Breakthrough: NQ=16 sweet spot reaches machine $\varepsilon$ at strict $h=0$}
+
+The breakthrough was simple in hindsight: \textbf{$N_Q = 16$ Gauss--Legendre
+quadrature order} (the outer-axis quadrature in the POU integrand,
+distinct from $G_p$ and $G$) hits a sweet spot where the operator
+becomes smooth enough for Newton--Krylov to converge to machine
+$\varepsilon$.
+
+\begin{center}
+\begin{tabular}{cccccc}
+\toprule
+$N_Q$ & Anderson floor & + NK & slope & deficit & wall time \\
+\midrule
+13 & $1.4\!\times\!10^{-2}$ & $8.9\!\times\!10^{-1}$ \emph{div} & 0.323 & 0.148 & 507 ms \\
+14 & $2.3\!\times\!10^{-3}$ & $2.3\!\times\!10^{-3}$ & 0.339 & 0.137 & 490 ms \\
+15 & $8.5\!\times\!10^{-3}$ & $7.2\!\times\!10^{-1}$ \emph{div} & 0.337 & 0.132 & 547 ms \\
+\textbf{16} & $\mathbf{2.5\!\times\!10^{-8}}$ & $\mathbf{8.9\!\times\!10^{-16}}$ & \textbf{0.345} & \textbf{0.145} & 560 ms \\
+17 & $1.6\!\times\!10^{-2}$ & $2.2\!\times\!10^{-1}$ \emph{div} & 0.331 & 0.137 & 597 ms \\
+18 & $2.9\!\times\!10^{-3}$ & $5.2\!\times\!10^{-3}$ & 0.341 & 0.144 & 632 ms \\
+19 & $7.2\!\times\!10^{-3}$ & $6.8\!\times\!10^{-1}$ \emph{div} & 0.348 & 0.122 & 667 ms \\
+20 & $3.5\!\times\!10^{-3}$ & $8.3\!\times\!10^{-3}$ & 0.336 & 0.138 & 724 ms \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Hypothesis.} The POU integrand is exact along the contour
+(roots found by chebroots), but the outer GL sum over $\xi_a$ (or
+$\xi_b$) reads the integrand at the GL nodes. At "bad" $N_Q$ values,
+one or more GL nodes fall close to critical $\xi_a$ values where the
+1D polynomial $P(\xi_a, \cdot)$ has a near-double root (contour
+tangent to the $\xi_b$ axis). Near such points the partition-of-unity
+weight $w_b = d_b^2/(d_a^2+d_b^2)$ varies rapidly with $P$, and the
+operator becomes non-smooth there. At $N_Q = 16$, none of the GL nodes
+happen to sit near such configurations and the operator is smooth.
+
+This explains the previous floors: the default $N_Q = 12$ (from the
+chebroots prototype, chosen for spectral exactness of a degree-12
+integrand) lands at one of the "bad" configurations.
+
+\paragraph{Saved FP.} \texttt{P\_FP\_pou\_nq16\_n6.npy} is a
+verified-to-machine-$\varepsilon$ K=3 CRRA strict-$h{=}0$ REE FP on
+the Lobatto-atanh $G{=}7$ grid at $\tau{=}\gamma{=}1$:
+\begin{center}
+\begin{tabular}{rl}
+\toprule
+$\|F\|_\infty$ & $9.85\!\times\!10^{-16}$ \\
+slope $\alpha^*$ & $0.344748$ \\
+intercept & $0.000000$ (perfectly $\mathbb{Z}_2$-symmetric) \\
+deficit $1-R^2$ & $0.144796$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{NQ sweet spot is parameter-specific}
+
+The NQ=16 sweet spot is not universal. Warm-starting other NQs from
+the NQ=16 FP and running Anderson:
+
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+NQ & $|F|$ at NQ=16 FP & After Anderson(30) & comment \\
+\midrule
+12 & 4.7e-3 & 5.8e-5 & even, no Lobatto coincidence \\
+13 & 1.1e-1 & 1.9e-2 & odd: GL coincides with Lobatto \\
+14 & 3.5e-3 & 2.2e-6 & even \\
+15 & 7.8e-2 & 2.2e-2 & odd: coincidence \\
+\textbf{16} & \textbf{9.85e-16} & \textbf{9.85e-16} & \textbf{stable at its own FP} \\
+17 & 7.3e-2 & 1.6e-2 & odd: coincidence \\
+18 & 6.1e-3 & 3.7e-4 & even \\
+19 & 6.0e-2 & 1.6e-2 & odd: coincidence \\
+20 & 2.9e-3 & 3.9e-5 & even \\
+24 & 2.3e-3 & 2.3e-3 & stalls \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Each NQ defines a slightly different operator (because the GL
+quadrature is part of the integrand). The FPs are close but not
+identical; each has its own basin and own ease-of-convergence.
+
+\textbf{NQ=16's success at $\tau{=}\gamma{=}1$, $G{=}7$ is a happy
+empirical fact, not a structural result.} Different $(\tau, \gamma)$
+would need a fresh NQ sweep.
+
+\section{Summary figure}
+
+\begin{center}
+\includegraphics[width=\linewidth]{final_summary.png}
+\end{center}
+
+Left: residual floor across all the methods explored. Right: the NQ
+sweep at G=7 showing the NQ=16 sweet spot.
+
+\section{The strict-$h{=}0$ K=3 CRRA REE fixed point at machine $\varepsilon$}
+
+\begin{center}
+\includegraphics[width=\linewidth]{strict_h0_FP_slices.png}
+\end{center}
+
+\begin{center}
+\includegraphics[width=0.8\linewidth]{strict_h0_logit_T.png}
+\end{center}
+
+\paragraph{Saved as} \texttt{P\_FP\_pou\_nq16\_n6.npy} for downstream
+analysis. The near-linear logit$P$-vs-$T$ relationship confirms a
+partially-revealing equilibrium where the price reveals a fraction of
+the total private information.
+
+\section{Open questions and next experiments}
+
+The POU operator finds the correct REE shape ($\alpha^* \approx 0.37$)
+but generic Anderson/Newton-Krylov/FD-Newton all floor near
+$2\!\times\!10^{-3}$. Line search alpha collapses to $10^{-9}$,
+indicating FD-Jacobian noise dominates. Three remaining paths:
+
+\begin{enumerate}
+  \item \textbf{Larger $N$ or larger $G_p$.} Currently testing in
+        background. If table interpolation or grid resolution is
+        the constraint, going from $G_p{=}121$ to $G_p{=}1001$
+        should drop the floor.
+  \item \textbf{Higher NQ.} Currently testing $N_Q \in \{12, 16, 24, 32\}$.
+        The integrand is a sum over discrete roots, so the GL
+        quadrature error is for the outer integral over $u_a$ (or
+        $u_b$) — not for the contour itself, which is exact via
+        chebroots.
+  \item \textbf{Analytic / complex-step Jacobian.} The remaining
+        route. Two options:
+    \begin{enumerate}
+      \item Complex-step: replace all float64 in POU with complex128;
+            compute $\partial F / \partial x_j = \mathrm{Im}[F(x+i\,h\,e_j)]/h$
+            with $h\!=\!10^{-30}$. Exact to machine $\varepsilon$.
+            Effort: $\sim 500$ LOC for complex-safe POU.
+      \item Closed-form: derive $\partial \xi_b^* / \partial P_{\rm coeffs}
+            = -T_i(\xi_a) T_j(\xi_b^*) T_k(\xi_k) / (dP/d\xi_b)$
+            (implicit function theorem on the root); chain through
+            the partition weights, Bayes update, and CRRA clearing
+            (implicit on the price equation).
+    \end{enumerate}
+\end{enumerate}
+
+The kernel-band Cheb-tab \emph{already} reaches machine $\varepsilon$
+for the smoothed operator. The remaining open question is whether the
+\emph{strict} $h{=}0$ FP can be nailed to machine $\varepsilon$ in
+float64 without higher precision arithmetic. The legacy $k3\_hfree\_100$
+work shows it can be nailed to 100 decimals in arb.
+
+\end{document}

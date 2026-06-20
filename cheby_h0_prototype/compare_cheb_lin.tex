@@ -1,0 +1,188 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{graphicx,amsmath,amssymb,booktabs,hyperref,xcolor}
+\graphicspath{{/tmp/cheby_h0/figs/compare/}}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlength{\parskip}{6pt}
+\title{Head-to-head: Chebyshev strict-$h{=}0$ vs Linear-CDF kernel-band\\
+       on the tabulated-$\mu$ K=3 CRRA REE architecture}
+\author{Fixed-Point Factory --- two operators, same architecture, same lookup table}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\section*{The two operators}
+
+Both share the tabulated-$\mu$ architecture and the same per-cube-cell CRRA
+clearing. They differ only in how $P(u_1,u_2,u_3)$ is represented and how
+$\mu(p, u_k)$ is built:
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+& \textbf{Chebyshev (strict $h{=}0$)} & \textbf{Linear-CDF (kernel band)} \\
+\midrule
+$u$-grid                 & Lobatto $\times$ atanh ($c{=}2$), $|u|\!\leq\!9.9$
+                         & Gaussian quantiles, $|u|\!\leq\!2.33$ \\
+$P$ representation       & tensor-Chebyshev polynomial
+                         & values + bilinear interp \\
+slice eval               & exact polynomial value
+                         & bilinear interp on raw values \\
+contour integral         & strict $h{=}0$ POU + chebroots
+                         & Gaussian band $K_h$, $h=0.5$ \\
+GL quadrature order      & $N_Q$ auto-selected per $\gamma$
+                         & $N_Q=16$ fixed \\
+Lookup table $\mu(p,u_k)$ & built at $G_p=121$ p-points
+                         & same \\
+Per-cell clearing         & CRRA bisection on the lookup
+                         & same \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent
+The Chebyshev approach computes the \emph{exact} strict-$h{=}0$ co-area
+integral using polynomial root extraction; the linear-CDF approach uses
+a \emph{regularised} integral with finite kernel bandwidth.
+
+\section{Wall-time per $\Phi$ and convergence to machine $\varepsilon$}
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+operator & ms / $\Phi$ at $G{=}7$ & cold $\rightarrow$ machine-$\varepsilon$ solve \\
+\midrule
+Chebyshev strict $h{=}0$, $N_Q{=}16$ & 540 & 110 s (43s Anderson + 67s NK) \\
+Linear-CDF kernel band $h{=}0.5$    &   6 &   0.3 s (Anderson alone) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Linear-CDF kernel band is $\sim 300\times$ faster.}
+And reaches machine $\varepsilon$ at every $\gamma$ in the sweep on the first
+try (no NQ tuning needed because the operator is analytic in $P$).
+
+\begin{center}
+\includegraphics[width=0.9\linewidth]{03_floors_compare.png}
+\end{center}
+
+The Chebyshev solver has 3 of 9 $\gamma$ values stalling at $\sim 10^{-3}$
+even with NQ auto-search (sweet-spot dependence on $\gamma$). The Linear-CDF
+kernel band has no such issue --- all $\gamma$ nail to machine $\varepsilon$.
+
+\section{Equilibrium statistics vs $\gamma$}
+
+\begin{center}
+\includegraphics[width=0.9\linewidth]{01_slope_compare.png}
+\end{center}
+
+\begin{center}
+\begin{tabular}{ccccccc}
+\toprule
+& \multicolumn{2}{c}{slope $\alpha^*$} & \multicolumn{2}{c}{$1-R^2_{\rm lin}$}
+& \multicolumn{2}{c}{$1-R^2_{\rm nonparam}$} \\
+$\gamma$ & Cheb & Lin-CDF & Cheb & Lin-CDF & Cheb & Lin-CDF \\
+\midrule
+0.10 & 0.3182 & 0.2054 & 0.198 & 0.253 & 0.0361 & 0.0331 \\
+0.30 & 0.3039 & 0.2282 & 0.167 & 0.129 & 0.0339 & 0.0104 \\
+0.50 & 0.3179 & 0.2558 & 0.175 & 0.063 & 0.0309 & 0.0024 \\
+0.80 & 0.3292 & 0.2837 & 0.158 & 0.025 & 0.0306 & 0.0000 \\
+1.00 & 0.3447 & 0.2957 & 0.145 & 0.016 & 0.0285 & 0.0001 \\
+1.50 & 0.3675 & 0.3141 & 0.111 & 0.008 & 0.0175 & 0.0004 \\
+2.00 & 0.3826 & 0.3245 & 0.101 & 0.005 & 0.0129 & 0.0006 \\
+3.00 & 0.4150 & 0.3359 & 0.090 & 0.002 & 0.0076 & 0.0005 \\
+5.00 & 0.4493 & 0.3459 & 0.082 & 0.001 & 0.0033 & 0.0003 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Two distinct FPs.} The strict-$h{=}0$ Chebyshev and the
+kernel-band linear-CDF give \emph{different} fixed points (different
+slope $\alpha^*$ at every $\gamma$). The kernel-band is an
+$h{>}0$-regularised version of the strict integral and converges to a
+different operator's FP.
+
+\begin{center}
+\includegraphics[width=0.95\linewidth]{02_deficit_compare.png}
+\end{center}
+
+\textbf{Both} show the same qualitative trend: slope rises with $\gamma$,
+deficit falls. But the kernel-band's nonparametric deficit is essentially
+zero from $\gamma\!\geq\!0.5$ --- \emph{the kernel-band FP is almost
+exactly a function of $T$ alone}, with no one-to-one breakdown.
+
+The strict-$h{=}0$ Chebyshev FP keeps a nonzero one-to-one breakdown
+(0.03 at $\gamma{=}1$, falling to 0.003 at $\gamma{=}5$).
+
+\paragraph{Why the difference matters.}
+\begin{itemize}
+  \item The kernel-band integral $\int K_h(P-p)\,f f\, du$ averages out
+        fine-scale variation of the co-area integrand. As $h \to 0$, it
+        converges to the strict integral; but at $h=0.5$ there is
+        substantial smoothing.
+  \item This smoothing has the effect of making $P$ closer to a function
+        of $T$ alone. The kernel-band operator is essentially solving a
+        \emph{less informationally rich} REE: it's the limit where the
+        market price summarises only the aggregate signal.
+  \item The strict-$h{=}0$ Chebyshev FP captures genuine non-$T$
+        information that the kernel-band loses.
+\end{itemize}
+
+\section{Price contours $\{P(u_1, u_2, u_3) = p\}$}
+
+\subsection{$\gamma=1$ comparison side-by-side}
+
+\begin{center}
+\includegraphics[width=\linewidth]{04_contours_compare.png}
+\end{center}
+
+The Chebyshev contours (left, on the wider Lobatto-atanh grid) bend more
+than the Linear-CDF contours (right, on the narrower Gaussian-quantile grid).
+Both show the expected diagonal structure (the contour $P=p$ runs roughly along
+$u_1+u_2=\,$const), but the curvatures differ.
+
+\subsection{Chebyshev contours across $\gamma$}
+
+\begin{center}
+\includegraphics[width=\linewidth]{06_cheb_contours_all.png}
+\end{center}
+
+\subsection{Linear-CDF contours across $\gamma$}
+
+\begin{center}
+\includegraphics[width=\linewidth]{05_lin_cdf_contours_all.png}
+\end{center}
+
+\section{logit-$P$ vs $T$ scatter at $\gamma=1$}
+
+\begin{center}
+\includegraphics[width=0.95\linewidth]{07_scatter_compare_g1.png}
+\end{center}
+
+The Chebyshev scatter has visible spread around any vertical line
+($T = $ const): genuine one-to-one breakdown. The Linear-CDF scatter
+looks like a smooth single curve --- essentially a function of $T$.
+
+\section{Summary}
+
+\begin{itemize}
+  \item \textbf{Chebyshev strict $h{=}0$ + POU}: exact contour integral,
+        the actual K=3 strict-$h{=}0$ REE. Slow ($\sim 540$ ms/$\Phi$,
+        $\sim 110$ s/solve), $N_Q$ needs auto-tuning per $\gamma$, 6 of 9
+        $\gamma$ reach machine $\varepsilon$. Captures nonzero one-to-one
+        breakdown (0.003--0.036).
+  \item \textbf{Linear-CDF kernel band, $h=0.5$}: regularised integral,
+        smooth operator. Fast ($\sim 6$ ms/$\Phi$, $\sim 0.3$ s/solve), all
+        9 $\gamma$ reach machine $\varepsilon$ on first try. But the FP
+        is a smoothed version --- nonparametric deficit collapses to $\sim 0$
+        for $\gamma\!\geq\!0.5$.
+  \item \textbf{Implication for the paper}: the one-to-one $P \leftrightarrow T$
+        breakdown is a feature of the \emph{strict} $h{=}0$ operator,
+        present in the Chebyshev path but smoothed away by kernel
+        regularisation. To report the genuine breakdown, use Chebyshev
+        strict-$h{=}0$ + POU; to get fast smooth FPs for parametric
+        sweeps (with the caveat of smoothing), use Linear-CDF kernel.
+\end{itemize}
+
+\end{document}

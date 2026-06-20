@@ -1,0 +1,85 @@
+{
+  "known_surface_max_relerr": 0.02160470701554677,
+  "near_critical_max_relerr": 0.004619674990872676,
+  "rows": [
+    {
+      "p": 0.1,
+      "A_exact": 0.475444976726558,
+      "A_grid": 0.46517312730236726,
+      "rel_err": 0.02160470701554677,
+      "near_critical": false
+    },
+    {
+      "p": 0.25,
+      "A_exact": 0.603296184706022,
+      "A_grid": 0.6011726400702873,
+      "rel_err": 0.003519903970169358,
+      "near_critical": false
+    },
+    {
+      "p": 0.4,
+      "A_exact": 0.6794883757515638,
+      "A_grid": 0.6789440632128741,
+      "rel_err": 0.0008010623258825043,
+      "near_critical": false
+    },
+    {
+      "p": 0.48,
+      "A_exact": 0.7282370411905199,
+      "A_grid": 0.7304468750230151,
+      "rel_err": 0.0030344979828031255,
+      "near_critical": true
+    },
+    {
+      "p": 0.5,
+      "A_exact": 0.7422751788285754,
+      "A_grid": 0.7452665415522033,
+      "rel_err": 0.004029991583914643,
+      "near_critical": true
+    },
+    {
+      "p": 0.52,
+      "A_exact": 0.7572473876873774,
+      "A_grid": 0.7607456245061804,
+      "rel_err": 0.004619674990872676,
+      "near_critical": true
+    },
+    {
+      "p": 0.6,
+      "A_exact": 0.8289095480195187,
+      "A_grid": 0.8324358113062823,
+      "rel_err": 0.0042540990089796815,
+      "near_critical": false
+    },
+    {
+      "p": 0.75,
+      "A_exact": 1.0507324286819844,
+      "A_grid": 1.0515408036857246,
+      "rel_err": 0.0007693442989612169,
+      "near_critical": false
+    },
+    {
+      "p": 0.9,
+      "A_exact": 1.6283799337128875,
+      "A_grid": 1.6342014765070327,
+      "rel_err": 0.003575051911178673,
+      "near_critical": false
+    }
+  ],
+  "finite_near_critical": true,
+  "continuity_max_abs_jump": 0.048099504086065226,
+  "continuity_max_rel_jump": 0.022337250906567848,
+  "continuity_dp": 0.0025,
+  "continuity_npts": 360,
+  "walltime_s": 18.2,
+  "config": {
+    "k": 1.5,
+    "TAU_B": 1.0,
+    "TAU_C": 1.0,
+    "UMAX": 6.0,
+    "G": 81,
+    "NSUB": 6,
+    "Nb_GL": 60,
+    "prec_bits": 428
+  }
+}

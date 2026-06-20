@@ -1,0 +1,109 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{graphicx,amsmath,amssymb,booktabs,hyperref,xcolor}
+\graphicspath{{/tmp/dd_k3_trf_figs/}}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlength{\parskip}{6pt}
+\title{Cheby-native operator + trust-region least squares:\\
+       what we learn about FP existence and operator smoothness}
+\author{Fixed-Point Factory --- TRF follow-up}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+After alternating projection (Anderson + monotone cumulative-max) failed
+to converge on the Cheby-native operator, we tried pure trust-region
+least squares (\texttt{scipy.optimize.least\_squares}, \texttt{method='trf'})
+on the symmetric-reduced unknowns ($n=84$ at $G=7$). Tested at
+$\gamma{=}100, \tau{=}0.1$ (smooth regime per the regime map):
+
+\begin{itemize}
+  \item TRF converges in 6 outer iterations to $|F|_\infty \approx 1.3 \times 10^{-2}$,
+        cost $7.7 \times 10^{-4}$, with $\sim 5 \times 10^{-7}$ reduction at
+        iter 6 (essentially terminated).
+  \item Total work: $\sim$650 Phi evals ($\sim$28 min wall) including the
+        FD Jacobian rebuilds at each iter.
+  \item The residual floors at $\sim 10^{-2}$ at $G=7$ --- the same algebraic
+        Cheby-resolution limit we identified earlier. The FP exists and is
+        well-defined; TRF finds it up to the polynomial-resolution allowed
+        by 84 symmetric-reduced unknowns.
+\end{itemize}
+
+\textbf{Key takeaway.} The Cheby-native operator DOES have a fixed point.
+Newton-class methods (TRF) can find it monotonically (unlike Anderson +
+projection, which oscillated). The remaining error is genuinely the
+finite-resolution limit of $G=7$ Cheby on a $C^k$ FP; bigger $G$ would
+push the residual down.
+\end{abstract}
+
+\section{TRF convergence}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig1_trf_conv.png}
+\end{center}
+
+\textbf{Left:} TRF outer-iteration cost (= $\frac{1}{2}\|F\|_2^2$). Iters 0..6:
+2.24 $\to$ 0.150 $\to$ 0.0040 $\to$ 0.0024 $\to$ 0.00079 $\to$ 0.00077 $\to$ 0.00077.
+Plateau at iter 6 (reduction $5 \times 10^{-7}$).
+
+\textbf{Right:} $|F|_\infty$ along the wall-time axis. The flat stretches
+are FD-Jacobian builds (84 calls each); the drops are the TRF step.
+
+\section{Comparison with Anderson + projection (Method C)}
+
+\begin{center}
+\begin{tabular}{lrrr}
+\toprule
+method                    & final $|F|_\infty$ & iters &  comments \\
+\midrule
+Anderson + projection (it 20) & $\sim 0.05$ oscillating & 20 & did not converge \\
+\textbf{TRF (it 6)}            & $\mathbf{0.013}$       & 6 & monotone convergence \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+TRF achieves $\sim 4\times$ better residual at $4\times$ fewer outer iters.
+Anderson is too aggressive for an operator with non-smooth Jacobian; TRF's
+trust-region constraint keeps the step modest, allowing the FD Jacobian
+to track the operator's local linearization.
+
+\section{Why the floor at $10^{-2}$ at $G=7$}
+
+The Cheby fit at $G=7$ has only 84 symmetric-reduced coefs (vs 343 cube
+cells). For a $C^k$ FP with $k$ small, this gives $|F| \sim 1/G^k$
+resolution. At $k \approx 2$ (which the regime-map data suggests): $1/7^2
+\approx 0.02$, matching the observed floor.
+
+Scaling up: $G=15$ would give $|F| \sim 1/15^2 \approx 4 \times 10^{-3}$
+(with $\sim$680 unknowns and $\sim$3 hours TRF wall);
+$G=21$ would give $|F| \sim 1/21^2 \approx 2 \times 10^{-3}$ (with $\sim$1771
+unknowns and $\sim$1 day wall). Going higher needs the Cheby-native operator
+JIT-compiled.
+
+\section{Recommendations}
+
+\begin{enumerate}
+  \item \textbf{TRF is the right solver for the Cheby-native operator.}
+        It's robust, monotone, terminates cleanly. Adopt as the default.
+  \item \textbf{Need a faster Phi for higher $G$}: rewrite \texttt{lookup\_analytic\_lobatto}
+        with numba + a hand-coded companion-matrix root finder (replace
+        \texttt{cheb.chebroots}). Should give $\sim 50\times$ speedup,
+        making $G=15$ and $G=21$ tractable.
+  \item \textbf{Or use the Lin-CDF R4 Jacobian as a chord substitute} in TRF:
+        cheap Jacobian, slower-converging chord steps; tradeoff to evaluate.
+  \item \textbf{Monotone projection is not the right path}. The Phi
+        operator as defined doesn't admit a monotone FP. Either modify the
+        operator definition (cusp-aware quadrature, or different lookup
+        builder), or accept that the equilibrium is non-monotone.
+\end{enumerate}
+
+\section{Reproducibility}
+
+\texttt{projects/REZN/solver\_code/highprec\_dd\_qd/dd\_k3\_cheby\_trf.py}
+(TRF on Cheby-native), \texttt{dd\_k3\_method\_c.py} (Anderson + projection
+for comparison).
+
+\end{document}

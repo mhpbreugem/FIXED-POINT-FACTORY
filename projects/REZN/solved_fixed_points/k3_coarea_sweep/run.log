@@ -1,0 +1,31 @@
+=== K3 CO-AREA (gamma,tau) DEFICIT SWEEP  C=0.45 G=17 ===
+date 2026-05-29  GAMMAS=[0.1, 0.25, 0.5, 1.0, 2.0, 4.0] TAUS=[0.5, 1.0, 2.0, 4.0]  bar=1e-08
+g= 0.10 t= 0.5 G=17 h=0.3182 | ||F||=5.99e-14 it=3 conv=True nail=True | deficit=0.15547 d_FR=0.2002 slopeT=0.2859 beta=(0.143,0.143,0.143)  [5s tot 5s]
+[git] pushed: first row (g=0.1,t=0.5) nailed
+g= 0.10 t= 1.0 G=17 h=0.3182 | ||F||=6.69e-15 it=4 conv=True nail=True | deficit=0.20336 d_FR=0.2605 slopeT=0.2177 beta=(0.218,0.218,0.218)  [6s tot 12s]
+g= 0.10 t= 2.0 G=17 h=0.3182 | ||F||=5.50e-11 it=3 conv=True nail=True | deficit=0.28134 d_FR=0.3015 slopeT=0.1783 beta=(0.357,0.357,0.357)  [2s tot 15s]
+g= 0.10 t= 4.0 G=17 h=0.3182 | ||F||=1.14e-11 it=3 conv=True nail=True | deficit=0.35701 d_FR=0.3268 slopeT=0.1534 beta=(0.614,0.614,0.614)  [3s tot 18s]
+g= 0.25 t= 0.5 G=17 h=0.3182 | ||F||=2.51e-12 it=3 conv=True nail=True | deficit=0.08192 d_FR=0.1934 slopeT=0.3013 beta=(0.151,0.151,0.151)  [3s tot 20s]
+g= 0.25 t= 1.0 G=17 h=0.3182 | ||F||=6.53e-11 it=3 conv=True nail=True | deficit=0.16293 d_FR=0.2513 slopeT=0.2355 beta=(0.235,0.235,0.235)  [2s tot 23s]
+g= 0.25 t= 2.0 G=17 h=0.3182 | ||F||=1.63e-12 it=4 conv=True nail=True | deficit=0.25723 d_FR=0.2935 slopeT=0.1891 beta=(0.378,0.378,0.378)  [4s tot 27s]
+  cell g=0.25 t=4.0 did NOT nail (||F||=2.24e-02); retry C=0.55 G=17
+g= 0.25 t= 4.0 G=17 h=0.3889 | ||F||=6.78e-14 it=4 conv=True nail=True | deficit=0.34678 d_FR=0.3223 slopeT=0.1514 beta=(0.606,0.606,0.606) retry_C0.55 [293s tot 320s]
+g= 0.50 t= 0.5 G=17 h=0.3182 | ||F||=2.63e-12 it=3 conv=True nail=True | deficit=0.02714 d_FR=0.1838 slopeT=0.3201 beta=(0.160,0.160,0.160)  [2s tot 322s]
+g= 0.50 t= 1.0 G=17 h=0.3182 | ||F||=6.94e-15 it=4 conv=True nail=True | deficit=0.10561 d_FR=0.2337 slopeT=0.2629 beta=(0.263,0.263,0.263)  [6s tot 328s]
+g= 0.50 t= 2.0 G=17 h=0.3182 | ||F||=2.75e-11 it=4 conv=True nail=True | deficit=0.20927 d_FR=0.2769 slopeT=0.2082 beta=(0.416,0.416,0.416)  [4s tot 332s]
+g= 0.50 t= 4.0 G=17 h=0.3182 | ||F||=6.22e-15 it=7 conv=True nail=True | deficit=0.29128 d_FR=0.3053 slopeT=0.1726 beta=(0.690,0.690,0.690)  [9s tot 342s]
+g= 1.00 t= 0.5 G=17 h=0.3182 | ||F||=4.23e-13 it=3 conv=True nail=True | deficit=0.00755 d_FR=0.1740 slopeT=0.3398 beta=(0.170,0.170,0.170)  [1s tot 343s]
+g= 1.00 t= 1.0 G=17 h=0.3182 | ||F||=4.20e-11 it=3 conv=True nail=True | deficit=0.04929 d_FR=0.2067 slopeT=0.3001 beta=(0.300,0.300,0.300)  [1s tot 344s]
+g= 1.00 t= 2.0 G=17 h=0.3182 | ||F||=1.94e-12 it=4 conv=True nail=True | deficit=0.14004 d_FR=0.2472 slopeT=0.2397 beta=(0.479,0.479,0.479)  [3s tot 347s]
+g= 1.00 t= 4.0 G=17 h=0.3182 | ||F||=3.60e-11 it=4 conv=True nail=True | deficit=0.24337 d_FR=0.2880 slopeT=0.1880 beta=(0.752,0.752,0.752)  [4s tot 351s]
+g= 2.00 t= 0.5 G=17 h=0.3182 | ||F||=2.23e-14 it=3 conv=True nail=True | deficit=0.00248 d_FR=0.1660 slopeT=0.3556 beta=(0.178,0.178,0.178)  [2s tot 354s]
+g= 2.00 t= 1.0 G=17 h=0.3182 | ||F||=4.18e-12 it=3 conv=True nail=True | deficit=0.01920 d_FR=0.1787 slopeT=0.3350 beta=(0.335,0.335,0.335)  [2s tot 355s]
+g= 2.00 t= 2.0 G=17 h=0.3182 | ||F||=5.93e-13 it=4 conv=True nail=True | deficit=0.07741 d_FR=0.2072 slopeT=0.2794 beta=(0.559,0.559,0.559)  [4s tot 359s]
+g= 2.00 t= 4.0 G=17 h=0.3182 | ||F||=8.00e-14 it=6 conv=True nail=True | deficit=0.18588 d_FR=0.2627 slopeT=0.2130 beta=(0.852,0.852,0.852)  [6s tot 365s]
+g= 4.00 t= 0.5 G=17 h=0.3182 | ||F||=7.55e-15 it=3 conv=True nail=True | deficit=0.00077 d_FR=0.1605 slopeT=0.3660 beta=(0.183,0.183,0.183)  [2s tot 367s]
+g= 4.00 t= 1.0 G=17 h=0.3182 | ||F||=5.66e-13 it=3 conv=True nail=True | deficit=0.00758 d_FR=0.1559 slopeT=0.3606 beta=(0.361,0.361,0.361)  [2s tot 369s]
+g= 4.00 t= 2.0 G=17 h=0.3182 | ||F||=7.14e-14 it=4 conv=True nail=True | deficit=0.04095 d_FR=0.1669 slopeT=0.3173 beta=(0.635,0.635,0.635)  [4s tot 374s]
+g= 4.00 t= 4.0 G=17 h=0.3182 | ||F||=1.86e-11 it=6 conv=True nail=True | deficit=0.12038 d_FR=0.2251 slopeT=0.2490 beta=(0.996,0.996,0.996)  [12s tot 385s]
+wrote figure k3_coarea_sweep.png
+DONE 24 cells, 24 nailed (||F||<=1e-8)
+[git] pushed: full 24-cell sweep done (24/24 nailed)

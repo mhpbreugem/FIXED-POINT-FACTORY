@@ -1,0 +1,62 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{graphicx,amsmath,amssymb,booktabs,hyperref,xcolor}
+\graphicspath{{/tmp/dd_k3_method_c_v2_figs/}}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlength{\parskip}{6pt}
+\title{Method C v2: Bayesian-symmetric monotone ansatz ladder\\
+       (structural deficit across $\tau$)}
+\author{Fixed-Point Factory --- Method C v2 ladder}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\section*{What this measures}
+
+For each $\tau$, fit the parametric family
+$$
+P(u_1, u_2, u_3) = \sigma\big(h(u_1) + h(u_2) + h(u_3)\big)
+$$
+where $h$ is odd and increasing ($h(u) = \int_0^u \sigma_*^2(s)\,ds$ with
+$\sigma_*$ an even Cheby polynomial of degree 8). 5 unknowns. The fit
+residual $|F|_\infty = \max|\Phi[P] - P|$ measures \textbf{how much the
+equilibrium needs cross-signal joint structure beyond the additive form}.
+This is the structural deficit, separated from kernel-band bias.
+
+\section*{Residual along the $\tau$ ladder}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig1_F.png}
+\end{center}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig2_loglog.png}
+\end{center}
+
+\section*{P range}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig3_Prange.png}
+\end{center}
+
+\section*{$\sigma$ coefficients along ladder}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig4_coefs.png}
+\end{center}
+
+\section*{Diagnostics}
+
+\begin{center}
+\includegraphics[width=\linewidth]{fig5_diag.png}
+\end{center}
+
+\section*{Reproducibility}
+
+\texttt{projects/REZN/solver\_code/highprec\_dd\_qd/dd\_k3\_method\_c\_v2.py}
+(operator), \texttt{dd\_k3\_method\_c\_v2\_ladder.py} (ladder),
+\texttt{dd\_k3\_method\_c\_v2\_figs.py} (figures). Per-tau coefs:
+\texttt{projects/REZN/solved\_fixed\_points/dd\_k3\_overnight/method\_c\_v2/coefs/}.
+
+\end{document}

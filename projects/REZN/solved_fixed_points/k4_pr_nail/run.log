@@ -1,0 +1,95 @@
+======================================================================
+[STAGE 1 warm start] 2026-05-29 06:55:18
+config: tau=[2.0, 2.0, 2.0, 2.0] gamma=[300.0, 300.0, 1.0, 1.0] W=[1.0, 1.0, 1.0, 1.0]
+grid: Gi=9 pad=2 UMAX=4.0 du=1.0 Gf=13 inner_unknowns=6561
+init_no_learning_halo: ||F||inf=4.852951e-01  (5s incl jit)
+  [undamped Picard] it=  1  ||F||inf=4.852951e-01  t=0s
+  [undamped Picard] it=  6  ||F||inf=8.940060e-02  t=2s
+  [undamped Picard] it= 11  ||F||inf=4.913638e-02  t=4s
+  [undamped Picard] it= 16  ||F||inf=4.775420e-02  t=6s
+  [undamped Picard] it= 21  ||F||inf=3.215350e-02  t=8s
+  [undamped Picard] it= 26  ||F||inf=1.470672e-02  t=10s
+  [undamped Picard] it= 31  ||F||inf=1.612828e-02  t=12s
+  [undamped Picard] it= 36  ||F||inf=3.501432e-03  t=14s
+  [undamped Picard] it= 41  ||F||inf=5.202616e-03  t=16s
+  [undamped Picard] it= 46  ||F||inf=8.470059e-03  t=18s
+  [undamped Picard] it= 51  ||F||inf=3.003078e-03  t=19s
+  [undamped Picard] it= 56  ||F||inf=2.957831e-03  t=21s
+  [undamped Picard] it= 60  ||F||inf=2.991064e-03  t=23s
+undamped Picard done: final ||F||inf=2.991064e-03  best=2.475330e-03
+  [damped Picard w=0.3] it=  1  ||F||inf=2.841024e-03  t=0s
+  [damped Picard w=0.3] it=  6  ||F||inf=9.852267e-03  t=2s
+  [damped Picard w=0.3] it= 11  ||F||inf=2.823166e-03  t=4s
+  [damped Picard w=0.3] it= 16  ||F||inf=2.681626e-03  t=6s
+  [damped Picard w=0.3] it= 21  ||F||inf=2.691838e-03  t=8s
+  [damped Picard w=0.3] it= 26  ||F||inf=2.603963e-03  t=10s
+  [damped Picard w=0.3] it= 31  ||F||inf=2.773244e-03  t=12s
+  [damped Picard w=0.3] it= 36  ||F||inf=2.824655e-03  t=14s
+  [damped Picard w=0.3] it= 41  ||F||inf=2.519980e-03  t=16s
+  [damped Picard w=0.3] it= 46  ||F||inf=9.540146e-03  t=18s
+  [damped Picard w=0.3] it= 51  ||F||inf=8.429607e-03  t=19s
+  [damped Picard w=0.3] it= 56  ||F||inf=2.817182e-03  t=21s
+  [damped Picard w=0.3] it= 60  ||F||inf=8.434064e-03  t=23s
+damped Picard done: final ||F||inf=8.434064e-03  best=2.501793e-03
+warm-start chosen: damped  ||F||inf=2.594445e-03
+saved warm-start P (full + inner) and warm_start.json. total 51s
+STAGE 1 done.
+======================================================================
+[STAGE 2 NK + Newton] 2026-05-29 06:57:07
+warm-start inner ||F||inf=2.594445e-03
+  [NK] it=  1  ||F||inf=2.594324e-03
+  [NK] it=  2  ||F||inf=9.151239e-03
+  [NK] it=  3  ||F||inf=8.071257e-03
+  [NK] it=  4  ||F||inf=7.982759e-03
+  [NK] it=  5  ||F||inf=3.305751e-03
+  [NK] it=  6  ||F||inf=3.305806e-03
+  [NK] it=  7  ||F||inf=3.302693e-03
+  [NK] it=  8  ||F||inf=3.296076e-03
+  [NK] it=  9  ||F||inf=3.232265e-03
+  [NK] it= 10  ||F||inf=3.231884e-03
+  [NK] it= 11  ||F||inf=3.231515e-03
+  [NK] it= 12  ||F||inf=3.226744e-03
+  [NK] it= 13  ||F||inf=3.221130e-03
+  [NK] it= 14  ||F||inf=3.215489e-03
+  [NK] it= 15  ||F||inf=3.210781e-03
+  [NK] it= 16  ||F||inf=3.210537e-03
+  [NK] it= 17  ||F||inf=3.205622e-03
+  [NK] it= 18  ||F||inf=3.205428e-03
+  [NK] it= 19  ||F||inf=3.203454e-03
+  [NK] it= 20  ||F||inf=3.201821e-03
+  [NK] it= 21  ||F||inf=3.199956e-03
+  [NK] it= 22  ||F||inf=3.198272e-03
+  [NK] it= 23  ||F||inf=3.196892e-03
+======================================================================
+[STAGE 2b symmetric Newton] 2026-05-29 07:03:24
+warm src=P_warm_inner.npy  NORB=2025  full-residual=2.594445e-03  sym-residual=2.594445e-03
+    [jac] col 0/2025  t=0s
+    [jac] col 200/2025  t=78s
+    [jac] col 400/2025  t=155s
+    [jac] col 600/2025  t=232s
+    [jac] col 800/2025  t=309s
+    [jac] col 1000/2025  t=386s
+    [jac] col 1200/2025  t=465s
+    [jac] col 1400/2025  t=542s
+    [jac] col 1600/2025  t=620s
+    [jac] col 1800/2025  t=697s
+    [jac] col 2000/2025  t=774s
+    [jac] built 2025x2025 in 783s
+    [jac] cond=5.9192e+11  smin=8.4471e-06 smax=5.0000e+06
+  [Newton] oit= 1  alpha=7.81e-03  ||F||inf=2.573539e-03  accepted=True  t=790s
+  [Newton] oit= 2  alpha=1.95e-03  ||F||inf=2.568155e-03  accepted=True  t=794s
+  [Newton] oit= 3  alpha=9.77e-04  ||F||inf=2.565440e-03  accepted=True  t=799s
+  [Newton] oit= 4  alpha=4.88e-04  ||F||inf=2.564076e-03  accepted=True  t=805s
+    [jac] col 0/2025  t=0s
+======================================================================
+[STAGE 3 characterize] 2026-05-29 07:17:45
+  candidate P_warm_inner.npy: full ||F||inf=2.594445e-03
+BEST = P_warm_inner.npy  ||F||inf=2.594445e-03
+deficit (1-R2 full Stau-u) = 0.317265
+beta = [0.6548249337767543, 0.6548249337767533, 2.495572489883688, 2.495572489883687]  (b1=b2 risk-averse, b3=b4 active)
+R2_on_active(u3+u4) = 0.856824   d_FR = 0.343770
+smoothness check: 40 sampled diag |dF/dP|; max=3.026e+04 median=6.390e-01 #(>1e3)=4  (15s)
+cond(J_sym)=5.9192e+11  smin=8.4471e-06 smax=5.0000e+06
+VERDICT: PLATEAU, not a fixed point: ||F||inf floored at 2.594e-03 (>1e-5) with deficit=0.317. Smaller floor than K=3 (~0.06) but the demand-dropout PR still retains non-smoothness.
+saved P_pr_star.npy and report.json
+STAGE 3 done.

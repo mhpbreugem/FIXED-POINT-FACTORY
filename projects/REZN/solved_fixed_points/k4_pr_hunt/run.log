@@ -1,0 +1,312 @@
+=== K=4 PR fixed-point hunt (focused relaunch) ===
+Operator: phi_K4_halo (full non-symmetric), gamma=0.1, tau_base=2, W=1, G_inner=9, pad=2, UMAX=4 (G_full=13).
+phi call ~0.59s warm (NUMBA_NUM_THREADS=3).
+
+FR check (sym 495): Finf=9.45e-6, deficit=1.1e-16, d_fr=1.7e-10 -> FR is a GENUINE fixed point.
+NL sym baseline: Finf=0.4302, deficit=0.2179, d_fr=0.3393 (PR-region surface, NOT a FP).
+
+K=3 prior evidence (flint_persist2 + k3_plateau_table):
+  K=3 PR plateau best ferr=1.2e-4 at deficit~0.27 (gamma=0.1,tau=2); table plateau_floor ~0.05-0.08 with deficit>0.2.
+  => K=3 itself has NO genuine PR FP, only a non-smooth plateau. Strong prior that K=4 PR is also a plateau.
+  Note: K=3 plateau lives on tanh-warped (sigma,delta) coords on linspace(-1,1,11); NOT cell-compatible with the
+  K=4 uniform u-grid (UMAX=4). So TEST A seeds the tau4=0 K=4 system and solves it natively to find the K=3 plateau.
+
+=== TEST A: tau4 -> ... homotopy (definitive locator) ===
+[03:51:38] === TEST A tau4 homotopy (gamma=0.1, tau3=2.0); partial-S3 N_RED=1485 ===
+[03:51:39] --- tau4=0.05 (near-K=3 anchor): solving from PR seeds ---
+[03:51:39]   seed nl: init Finf=4.216e-01 def=0.2910
+[03:51:40]     [Picard w=0.1 nl] it=  0 Finf=4.216e-01 1-R2=0.2910
+[03:52:03]     [Picard w=0.1 nl] it= 40 Finf=6.881e-02 1-R2=0.0335
+[03:52:25]     [Picard w=0.1 nl] it= 80 Finf=3.574e-02 1-R2=0.0052
+[03:52:47]     [Picard w=0.1 nl] it=120 Finf=4.076e-02 1-R2=0.0024
+[03:53:11]     [Picard w=0.1 nl] it=160 Finf=4.083e-02 1-R2=0.0019
+[03:53:34]     [Picard w=0.3 nl] it=  0 Finf=4.216e-01 1-R2=0.2910
+[03:53:56]     [Picard w=0.3 nl] it= 40 Finf=4.112e-02 1-R2=0.0024
+[03:54:19]     [Picard w=0.3 nl] it= 80 Finf=2.450e-02 1-R2=0.0020
+[03:54:42]     [Picard w=0.3 nl] it=120 Finf=6.068e-03 1-R2=0.0020
+[03:55:05]     [Picard w=0.3 nl] it=160 Finf=4.811e-03 1-R2=0.0020
+[03:56:45]   seed subset3: init Finf=7.725e-02 def=0.0010
+[03:56:45]     [Picard w=0.1 subset3] it=  0 Finf=7.725e-02 1-R2=0.0010
+[03:56:57]     [Picard w=0.1 subset3] it= 40 Finf=6.278e-02 1-R2=0.0007
+[03:57:09]     [Picard w=0.1 subset3] it= 80 Finf=4.027e-02 1-R2=0.0012
+[03:57:20]     [Picard w=0.1 subset3] it=120 Finf=3.991e-02 1-R2=0.0015
+[03:57:32]     [Picard w=0.1 subset3] it=160 Finf=3.899e-02 1-R2=0.0016
+[03:57:44]     [Picard w=0.3 subset3] it=  0 Finf=7.725e-02 1-R2=0.0010
+[03:57:55]     [Picard w=0.3 subset3] it= 40 Finf=4.294e-02 1-R2=0.0015
+[03:58:07]     [Picard w=0.3 subset3] it= 80 Finf=3.614e-02 1-R2=0.0019
+[03:58:19]     [Picard w=0.3 subset3] it=120 Finf=3.003e-02 1-R2=0.0019
+[03:58:30]     [Picard w=0.3 subset3] it=160 Finf=7.589e-02 1-R2=0.0019
+[03:59:40]   seed subset2: init Finf=1.985e-01 def=0.0193
+[03:59:41]     [Picard w=0.1 subset2] it=  0 Finf=1.985e-01 1-R2=0.0193
+[03:59:52]     [Picard w=0.1 subset2] it= 40 Finf=1.549e-01 1-R2=0.0029
+[04:00:03]     [Picard w=0.1 subset2] it= 80 Finf=8.260e-02 1-R2=0.0018
+[04:00:15]     [Picard w=0.1 subset2] it=120 Finf=3.527e-02 1-R2=0.0017
+[04:00:26]     [Picard w=0.1 subset2] it=160 Finf=1.657e-02 1-R2=0.0015
+[04:00:38]     [Picard w=0.3 subset2] it=  0 Finf=1.985e-01 1-R2=0.0193
+[04:00:50]     [Picard w=0.3 subset2] it= 40 Finf=4.331e-02 1-R2=0.0017
+[04:01:01]     [Picard w=0.3 subset2] it= 80 Finf=7.317e-03 1-R2=0.0016
+[04:01:13]     [Picard w=0.3 subset2] it=120 Finf=4.356e-03 1-R2=0.0019
+[04:01:24]     [Picard w=0.3 subset2] it=160 Finf=7.528e-03 1-R2=0.0019
+[04:06:54] === TEST A tau4 homotopy (gamma=0.1, tau3=2.0); partial-S3 N_RED=1485 ===
+[04:06:55] --- tau4=0.05 (near-K=3 anchor): solving from PR seeds ---
+[04:06:55]   seed nl: init Finf=4.216e-01 def=0.2910
+[04:06:55]     [Picard w=0.1 nl] it=  0 Finf=4.216e-01 1-R2=0.2910
+[04:07:06]     [Picard w=0.1 nl] it= 40 Finf=6.881e-02 1-R2=0.0335
+
+[note] First homotopy run stalled in scipy.newton_krylov (1485-dim, non-smooth -> GMRES inner iters
+very slow, ~13min no progress). Killed and relaunched LEANER: NK is a light probe (maxiter=6,
+inner_maxiter=15); Picard/Anderson 150 iters; accurate 1485-col Newton only at tau4 in {0.05, 2.0}.
+Also killed a stale PRIOR-run process (k4_pr_newton_sym.py with the BUGGY FR-collinear 'underreveal'
+seeds, deficit==0) that was contending for CPU and interleaving into the log. K=3 table left running.
+Preliminary signal (all tau4=0.05 seeds): damped Picard drives every PR-region seed toward deficit~0.002
+(FR) with residual falling toward the FR floor -> no sustained PR plateau even just above tau4=0.
+[04:07:18]     [Picard w=0.1 nl] it= 80 Finf=3.574e-02 1-R2=0.0052
+[04:07:29]     [Picard w=0.1 nl] it=120 Finf=4.076e-02 1-R2=0.0024
+[04:07:38]     [Picard w=0.3 nl] it=  0 Finf=4.216e-01 1-R2=0.2910
+[04:07:49]     [Picard w=0.3 nl] it= 40 Finf=4.112e-02 1-R2=0.0024
+[04:08:00]     [Picard w=0.3 nl] it= 80 Finf=2.450e-02 1-R2=0.0020
+[04:08:12]     [Picard w=0.3 nl] it=120 Finf=6.068e-03 1-R2=0.0020
+[04:09:05]   seed subset3: init Finf=7.725e-02 def=0.0010
+[04:09:05]     [Picard w=0.1 subset3] it=  0 Finf=7.725e-02 1-R2=0.0010
+[04:09:17]     [Picard w=0.1 subset3] it= 40 Finf=6.278e-02 1-R2=0.0007
+[04:09:28]     [Picard w=0.1 subset3] it= 80 Finf=4.027e-02 1-R2=0.0012
+[04:09:40]     [Picard w=0.1 subset3] it=120 Finf=3.991e-02 1-R2=0.0015
+[04:09:48]     [Picard w=0.3 subset3] it=  0 Finf=7.725e-02 1-R2=0.0010
+[04:10:00]     [Picard w=0.3 subset3] it= 40 Finf=4.294e-02 1-R2=0.0015
+[04:10:11]     [Picard w=0.3 subset3] it= 80 Finf=3.614e-02 1-R2=0.0019
+[04:10:23]     [Picard w=0.3 subset3] it=120 Finf=3.003e-02 1-R2=0.0019
+[04:12:16]   tau4=0.05 best after Picard/Anderson/NK: Finf=4.762e-03 def=0.0020 d_fr=0.2285
+[04:12:17]       jac col 0/1485 t=0s
+[04:13:42]       jac col 300/1485 t=86s
+[04:15:09]       jac col 600/1485 t=172s
+[04:16:35]       jac col 900/1485 t=258s
+[04:18:05]       jac col 1200/1485 t=349s
+[04:19:34]     [Newton tau4=0.05] it=1 Finf=4.687e-03 1-R2=0.0020 alpha=0.0156
+[04:19:37]     [Newton tau4=0.05] it=2 Finf=4.651e-03 1-R2=0.0020 alpha=0.00781
+[04:19:41]     [Newton tau4=0.05] it=3 Finf=4.633e-03 1-R2=0.0020 alpha=0.00391
+[04:19:45]     [Newton tau4=0.05] it=4 Finf=4.628e-03 1-R2=0.0020 alpha=0.000977
+[04:19:50]     [Newton tau4=0.05] it=5 Finf=4.627e-03 1-R2=0.0020 alpha=0.000122
+[04:19:57]     [Newton tau4=0.05] it=6 Finf=3.938e-03 1-R2=0.0020 alpha=7.63e-06
+[04:19:57]   tau4=0.05 FINAL: Finf=3.938e-03 deficit=0.0020 d_fr=0.2285  (near-K=3 plateau)
+[04:19:57] --- tau4=0.1: continuation warm-started from prev solution ---
+[04:19:57]     [Picard w=0.3 tau4=0.1] it=  0 Finf=2.609e-02 1-R2=0.0022
+[04:20:09]     [Picard w=0.3 tau4=0.1] it= 40 Finf=1.450e-02 1-R2=0.0017
+[04:20:21]     [Picard w=0.3 tau4=0.1] it= 80 Finf=3.253e-03 1-R2=0.0017
+[04:20:34]     [Picard w=0.3 tau4=0.1] it=120 Finf=1.252e-03 1-R2=0.0017
+[04:20:43]     [Picard w=0.1 tau4=0.1] it=  0 Finf=2.609e-02 1-R2=0.0022
+[04:20:56]     [Picard w=0.1 tau4=0.1] it= 40 Finf=5.934e-03 1-R2=0.0016
+[04:21:09]     [Picard w=0.1 tau4=0.1] it= 80 Finf=3.454e-03 1-R2=0.0017
+[04:21:22]     [Picard w=0.1 tau4=0.1] it=120 Finf=1.550e-02 1-R2=0.0017
+[04:23:21]   tau4=0.1: tracked Finf=8.564e-04 deficit=0.0017 d_fr=0.2298  (204s)
+[04:23:21] --- tau4=0.25: continuation warm-started from prev solution ---
+[04:23:21]     [Picard w=0.3 tau4=0.25] it=  0 Finf=1.054e-01 1-R2=0.0053
+[04:23:34]     [Picard w=0.3 tau4=0.25] it= 40 Finf=1.441e-02 1-R2=0.0010
+[04:23:47]     [Picard w=0.3 tau4=0.25] it= 80 Finf=9.914e-03 1-R2=0.0010
+[04:23:59]     [Picard w=0.3 tau4=0.25] it=120 Finf=7.880e-03 1-R2=0.0010
+[04:24:08]     [Picard w=0.1 tau4=0.25] it=  0 Finf=1.054e-01 1-R2=0.0053
+[04:24:20]     [Picard w=0.1 tau4=0.25] it= 40 Finf=1.709e-02 1-R2=0.0011
+[04:24:31]     [Picard w=0.1 tau4=0.25] it= 80 Finf=1.437e-02 1-R2=0.0010
+[04:24:43]     [Picard w=0.1 tau4=0.25] it=120 Finf=1.443e-02 1-R2=0.0010
+[04:26:44]   tau4=0.25: tracked Finf=3.969e-03 deficit=0.0010 d_fr=0.2139  (203s)
+[04:26:45] --- tau4=0.5: continuation warm-started from prev solution ---
+[04:26:45]     [Picard w=0.3 tau4=0.5] it=  0 Finf=1.326e-01 1-R2=0.0077
+[04:26:57]     [Picard w=0.3 tau4=0.5] it= 40 Finf=2.844e-02 1-R2=0.0007
+[04:27:09]     [Picard w=0.3 tau4=0.5] it= 80 Finf=3.942e-02 1-R2=0.0007
+[04:27:22]     [Picard w=0.3 tau4=0.5] it=120 Finf=2.806e-02 1-R2=0.0007
+[04:27:31]     [Picard w=0.1 tau4=0.5] it=  0 Finf=1.326e-01 1-R2=0.0077
+[04:27:45]     [Picard w=0.1 tau4=0.5] it= 40 Finf=3.498e-02 1-R2=0.0009
+[04:27:58]     [Picard w=0.1 tau4=0.5] it= 80 Finf=3.651e-02 1-R2=0.0008
+[04:28:10]     [Picard w=0.1 tau4=0.5] it=120 Finf=2.859e-02 1-R2=0.0007
+[04:31:45]   tau4=0.5: tracked Finf=2.330e-02 deficit=0.0007 d_fr=0.1680  (301s)
+[04:31:45] --- tau4=1.0: continuation warm-started from prev solution ---
+[04:31:46]     [Picard w=0.3 tau4=1.0] it=  0 Finf=1.847e-01 1-R2=0.0136
+[04:32:10]     [Picard w=0.3 tau4=1.0] it= 40 Finf=4.343e-02 1-R2=0.0007
+[04:32:36]     [Picard w=0.3 tau4=1.0] it= 80 Finf=4.072e-02 1-R2=0.0006
+[04:33:01]     [Picard w=0.3 tau4=1.0] it=120 Finf=1.609e-02 1-R2=0.0006
+[04:33:20]     [Picard w=0.1 tau4=1.0] it=  0 Finf=1.847e-01 1-R2=0.0136
+[04:33:45]     [Picard w=0.1 tau4=1.0] it= 40 Finf=7.225e-02 1-R2=0.0013
+[04:34:05]     [Picard w=0.1 tau4=1.0] it= 80 Finf=5.514e-02 1-R2=0.0008
+[04:34:18]     [Picard w=0.1 tau4=1.0] it=120 Finf=4.298e-02 1-R2=0.0007
+[04:36:29]   tau4=1.0: tracked Finf=1.020e-02 deficit=0.0007 d_fr=0.1935  (284s)
+[04:36:29] --- tau4=2.0: continuation warm-started from prev solution ---
+[04:36:30]     [Picard w=0.3 tau4=2.0] it=  0 Finf=3.543e-01 1-R2=0.0215
+[04:36:42]     [Picard w=0.3 tau4=2.0] it= 40 Finf=3.950e-02 1-R2=0.0008
+[04:36:55]     [Picard w=0.3 tau4=2.0] it= 80 Finf=3.058e-02 1-R2=0.0010
+[04:37:09]     [Picard w=0.3 tau4=2.0] it=120 Finf=2.815e-02 1-R2=0.0010
+[04:37:19]     [Picard w=0.1 tau4=2.0] it=  0 Finf=3.543e-01 1-R2=0.0215
+[04:37:32]     [Picard w=0.1 tau4=2.0] it= 40 Finf=9.572e-02 1-R2=0.0017
+[04:37:46]     [Picard w=0.1 tau4=2.0] it= 80 Finf=8.480e-02 1-R2=0.0007
+[04:37:59]     [Picard w=0.1 tau4=2.0] it=120 Finf=3.899e-02 1-R2=0.0008
+[04:40:11]       jac col 0/1485 t=0s
+[04:41:53]       jac col 300/1485 t=103s
+[04:43:36]       jac col 600/1485 t=206s
+[04:45:18]       jac col 900/1485 t=308s
+[04:47:07]       jac col 1200/1485 t=416s
+[04:48:59]     [Newton tau4=2.0] it=1 Finf=1.647e-02 1-R2=0.0010 alpha=0.000122
+[04:49:05]     [Newton tau4=2.0] it=2 Finf=1.647e-02 1-R2=0.0010 alpha=6.1e-05
+[04:49:14]     [Newton tau4=2.0] it=3 Finf=1.647e-02 1-R2=0.0010 alpha=2.98e-08
+[04:49:15]       jac col 0/1485 t=0s
+[04:50:59]       jac col 300/1485 t=105s
+[04:52:36]       jac col 600/1485 t=202s
+[04:54:16]       jac col 900/1485 t=301s
+[04:55:58]       jac col 1200/1485 t=403s
+[04:57:34]     [Newton tau4=2.0] it=4 Finf=1.643e-02 1-R2=0.0010 alpha=0.00391
+[04:57:43]     [Newton tau4=2.0] it=5 Finf=1.643e-02 1-R2=0.0010 alpha=2.98e-08
+[04:57:44]       jac col 0/1485 t=0s
+[04:59:22]       jac col 300/1485 t=98s
+[05:00:59]       jac col 600/1485 t=195s
+[05:02:38]       jac col 900/1485 t=295s
+[05:04:17]       jac col 1200/1485 t=394s
+[05:05:57]     [Newton tau4=2.0] it=6 Finf=1.643e-02 1-R2=0.0010 alpha=0.000244
+[05:05:57]   tau4=2.0: tracked Finf=1.643e-02 deficit=0.0010 d_fr=0.1776  (1768s)
+[05:05:57] TEST A trajectory (tau4, deficit, Finf, d_fr):
+[05:05:57]     tau4=0.05  deficit=0.0020  Finf=3.938e-03  d_fr=0.2285
+[05:05:57]     tau4=0.10  deficit=0.0017  Finf=8.564e-04  d_fr=0.2298
+[05:05:57]     tau4=0.25  deficit=0.0010  Finf=3.969e-03  d_fr=0.2139
+[05:05:57]     tau4=0.50  deficit=0.0007  Finf=2.330e-02  d_fr=0.1680
+[05:05:57]     tau4=1.00  deficit=0.0007  Finf=1.020e-02  d_fr=0.1935
+[05:05:57]     tau4=2.00  deficit=0.0010  Finf=1.643e-02  d_fr=0.1776
+[05:05:57] VERDICT (TEST A): TEST A: PR deficit collapses to ~0 by tau4*=0.05 (merges into FR) -> NO genuine K=4 PR FP.
+[05:06:40] === TEST B symmetric accurate-Jacobian Newton, genuinely-partial seeds (gamma=0.1, tau=2.0) ===
+[05:06:40] reduced n=495; warming JIT
+[05:06:41]   seed 'subset2_reveal2of4': deficit=0.0255 Finf=3.660e-01 d_fr=0.2481
+[05:06:41]   seed 'subset3_reveal3of4': deficit=0.0124 Finf=2.188e-01 d_fr=0.1940
+[05:06:41]   seed 'nl_symmetrized': deficit=0.2179 Finf=4.302e-01 d_fr=0.3393
+[05:06:42]   seed 'k3embed_subset3_to_half': deficit=0.0660 Finf=3.188e-01 d_fr=0.2749
+[05:06:42] -- Newton from 'subset2_reveal2of4' --
+[05:06:42]     jac col 0/495 t=0s
+[05:07:14]     jac col 100/495 t=32s
+[05:07:46]     jac col 200/495 t=64s
+[05:08:18]     jac col 300/495 t=96s
+[05:08:50]     jac col 400/495 t=128s
+[05:09:23]   [Newton subset2_reveal2of4] it= 1 Finf=2.488e-01 1-R2=0.02088 d_fr=0.2444 alpha=0.125
+[05:09:26]   [Newton subset2_reveal2of4] it= 2 Finf=2.472e-01 1-R2=0.02073 d_fr=0.2452 alpha=0.00781
+[05:09:30]   [Newton subset2_reveal2of4] it= 3 Finf=2.468e-01 1-R2=0.02069 d_fr=0.2452 alpha=0.00195
+[05:09:30]     jac col 0/495 t=0s
+[05:10:04]     jac col 100/495 t=34s
+[05:10:37]     jac col 200/495 t=67s
+[05:11:10]     jac col 300/495 t=100s
+[05:11:44]     jac col 400/495 t=134s
+[05:12:17]   [Newton subset2_reveal2of4] it= 4 Finf=2.368e-01 1-R2=0.01849 d_fr=0.2507 alpha=0.125
+[05:12:18]   [Newton subset2_reveal2of4] it= 5 Finf=1.902e-01 1-R2=0.01690 d_fr=0.2360 alpha=0.25
+[05:12:28]   [Newton subset2_reveal2of4] it= 6 Finf=1.902e-01 1-R2=0.01690 d_fr=0.2360 alpha=2.98e-08
+[05:12:28]     jac col 0/495 t=0s
+[05:13:01]     jac col 100/495 t=34s
+[05:13:35]     jac col 200/495 t=68s
+[05:14:09]     jac col 300/495 t=102s
+[05:14:43]     jac col 400/495 t=135s
+[05:15:16]   [Newton subset2_reveal2of4] it= 7 Finf=1.664e-01 1-R2=0.01703 d_fr=0.2362 alpha=0.125
+[05:15:18]   [Newton subset2_reveal2of4] it= 8 Finf=1.248e-01 1-R2=0.01772 d_fr=0.2378 alpha=0.25
+[05:15:20]   [Newton subset2_reveal2of4] it= 9 Finf=1.209e-01 1-R2=0.01780 d_fr=0.2381 alpha=0.0312
+[05:15:21]     jac col 0/495 t=0s
+[05:16:11] === TEST B symmetric accurate-Jacobian Newton, genuinely-partial seeds (gamma=0.1, tau=2.0) ===
+[05:16:12] reduced n=495; warming JIT
+[05:16:12]   seed 'subset2_reveal2of4': deficit=0.0255 Finf=3.660e-01 d_fr=0.2481
+[05:16:13]   seed 'subset3_reveal3of4': deficit=0.0124 Finf=2.188e-01 d_fr=0.1940
+[05:16:13]   seed 'nl_symmetrized': deficit=0.2179 Finf=4.302e-01 d_fr=0.3393
+[05:16:13]   seed 'k3embed_subset3_to_half': deficit=0.0660 Finf=3.188e-01 d_fr=0.2749
+[05:16:13] -- Newton from 'subset2_reveal2of4' --
+[05:16:14]     jac col 0/495 t=0s
+[05:16:45]     jac col 100/495 t=32s
+[05:17:17]     jac col 200/495 t=63s
+[05:17:48]     jac col 300/495 t=95s
+[05:18:22]     jac col 400/495 t=129s
+[05:18:56]   [Newton subset2_reveal2of4] it= 1 Finf=2.488e-01 1-R2=0.02088 d_fr=0.2444 alpha=0.125
+[05:19:00]   [Newton subset2_reveal2of4] it= 2 Finf=2.472e-01 1-R2=0.02073 d_fr=0.2452 alpha=0.00781
+[05:19:04]   [Newton subset2_reveal2of4] it= 3 Finf=2.468e-01 1-R2=0.02069 d_fr=0.2452 alpha=0.00195
+[05:19:08]   [Newton subset2_reveal2of4] it= 4 Finf=2.466e-01 1-R2=0.02067 d_fr=0.2452 alpha=0.000977
+[05:19:08]     jac col 0/495 t=0s
+[05:19:42]     jac col 100/495 t=34s
+[05:20:15]     jac col 200/495 t=67s
+[05:20:48]     jac col 300/495 t=100s
+[05:21:21]     jac col 400/495 t=133s
+[05:21:55]   [Newton subset2_reveal2of4] it= 5 Finf=2.135e-01 1-R2=0.01849 d_fr=0.2516 alpha=0.125
+[05:21:56]   [Newton subset2_reveal2of4] it= 6 Finf=1.958e-01 1-R2=0.01691 d_fr=0.2375 alpha=0.25
+[05:22:05]   [Newton subset2_reveal2of4] it= 7 Finf=1.958e-01 1-R2=0.01691 d_fr=0.2375 alpha=2.98e-08
+[05:22:15]   [Newton subset2_reveal2of4] it= 8 Finf=1.958e-01 1-R2=0.01691 d_fr=0.2375 alpha=2.98e-08
+[05:22:15]     jac col 0/495 t=0s
+[05:22:50]     jac col 100/495 t=35s
+[05:23:25] === TEST B symmetric accurate-Jacobian Newton, genuinely-partial seeds (gamma=0.1, tau=2.0) ===
+[05:23:26] reduced n=495; warming JIT
+[05:23:26]   seed 'subset2_reveal2of4': deficit=0.0255 Finf=3.660e-01 d_fr=0.2481
+[05:23:27]   seed 'subset3_reveal3of4': deficit=0.0124 Finf=2.188e-01 d_fr=0.1940
+[05:23:27]   seed 'nl_symmetrized': deficit=0.2179 Finf=4.302e-01 d_fr=0.3393
+[05:23:27]   seed 'k3embed_subset3_to_half': deficit=0.0660 Finf=3.188e-01 d_fr=0.2749
+[05:23:27] -- Newton from 'subset2_reveal2of4' --
+[05:23:28]     jac col 0/495 t=0s
+[05:23:59]     jac col 100/495 t=32s
+[05:24:31]     jac col 200/495 t=64s
+[05:25:03]     jac col 300/495 t=96s
+[05:25:36]     jac col 400/495 t=128s
+[05:26:07]   [Newton subset2_reveal2of4] it= 1 Finf=2.488e-01 1-R2=0.02088 d_fr=0.2444 alpha=0.125
+[05:26:11]   [Newton subset2_reveal2of4] it= 2 Finf=2.472e-01 1-R2=0.02073 d_fr=0.2452 alpha=0.00781
+[05:26:15]   [Newton subset2_reveal2of4] it= 3 Finf=2.468e-01 1-R2=0.02069 d_fr=0.2452 alpha=0.00195
+[05:26:19]   [Newton subset2_reveal2of4] it= 4 Finf=2.466e-01 1-R2=0.02067 d_fr=0.2452 alpha=0.000977
+[05:26:23]   [Newton subset2_reveal2of4] it= 5 Finf=2.464e-01 1-R2=0.02065 d_fr=0.2451 alpha=0.000977
+[05:26:23]   [Newton subset2_reveal2of4] stalled at it=5 (non-smooth floor Finf=2.464e-01); stop
+[05:26:23]    -> 'subset2_reveal2of4' Newton best Finf=2.464e-01 deficit=0.0207 d_fr=0.2451
+[05:26:23] -- Newton from 'subset3_reveal3of4' --
+[05:26:24]     jac col 0/495 t=0s
+[05:26:55]     jac col 100/495 t=32s
+[05:27:28]     jac col 200/495 t=65s
+[05:27:59]     jac col 300/495 t=96s
+[05:28:33]     jac col 400/495 t=129s
+[05:29:06]   [Newton subset3_reveal3of4] it= 1 Finf=2.048e-01 1-R2=0.01159 d_fr=0.1920 alpha=0.0625
+[05:29:09]   [Newton subset3_reveal3of4] it= 2 Finf=1.981e-01 1-R2=0.01124 d_fr=0.1915 alpha=0.0312
+[05:29:12]   [Newton subset3_reveal3of4] it= 3 Finf=1.977e-01 1-R2=0.01122 d_fr=0.1915 alpha=0.00195
+[05:29:16]   [Newton subset3_reveal3of4] it= 4 Finf=1.975e-01 1-R2=0.01121 d_fr=0.1915 alpha=0.000977
+[05:29:21]   [Newton subset3_reveal3of4] it= 5 Finf=1.974e-01 1-R2=0.01120 d_fr=0.1915 alpha=0.000488
+[05:29:21]   [Newton subset3_reveal3of4] stalled at it=5 (non-smooth floor Finf=1.974e-01); stop
+[05:29:21]    -> 'subset3_reveal3of4' Newton best Finf=1.974e-01 deficit=0.0112 d_fr=0.1915
+[05:29:21] -- Newton from 'nl_symmetrized' --
+[05:29:21]     jac col 0/495 t=0s
+[05:29:55]     jac col 100/495 t=34s
+[05:30:26]     jac col 200/495 t=65s
+[05:30:58]     jac col 300/495 t=97s
+[05:31:29]     jac col 400/495 t=128s
+[05:32:07]   [Newton nl_symmetrized] it= 1 Finf=4.302e-01 1-R2=0.21788 d_fr=0.3393 alpha=2.98e-08
+[05:32:16]   [Newton nl_symmetrized] it= 2 Finf=4.302e-01 1-R2=0.21788 d_fr=0.3393 alpha=2.98e-08
+[05:32:25]   [Newton nl_symmetrized] it= 3 Finf=4.302e-01 1-R2=0.21788 d_fr=0.3393 alpha=2.98e-08
+[05:32:25]   [Newton nl_symmetrized] stalled at it=3 (non-smooth floor Finf=4.302e-01); stop
+[05:32:25]    -> 'nl_symmetrized' Newton best Finf=4.302e-01 deficit=0.2179 d_fr=0.3393
+[05:32:25] -- Newton from 'k3embed_subset3_to_half' --
+[05:32:25]     jac col 0/495 t=0s
+[05:32:56]     jac col 100/495 t=32s
+[05:33:28]     jac col 200/495 t=63s
+[05:33:59]     jac col 300/495 t=95s
+[05:34:32]     jac col 400/495 t=127s
+[05:35:04]   [Newton k3embed_subset3_to_half] it= 1 Finf=2.885e-01 1-R2=0.06902 d_fr=0.2694 alpha=0.0625
+[05:35:07]   [Newton k3embed_subset3_to_half] it= 2 Finf=2.781e-01 1-R2=0.06976 d_fr=0.2692 alpha=0.0156
+[05:35:09]   [Newton k3embed_subset3_to_half] it= 3 Finf=2.690e-01 1-R2=0.07572 d_fr=0.2614 alpha=0.125
+[05:35:12]   [Newton k3embed_subset3_to_half] it= 4 Finf=2.527e-01 1-R2=0.07626 d_fr=0.2623 alpha=0.0156
+[05:35:15]   [Newton k3embed_subset3_to_half] it= 5 Finf=2.514e-01 1-R2=0.07678 d_fr=0.2609 alpha=0.0156
+[05:35:16]   [Newton k3embed_subset3_to_half] it= 6 Finf=2.500e-01 1-R2=0.01117 d_fr=0.2619 alpha=1
+[05:35:17]   [Newton k3embed_subset3_to_half] it= 7 Finf=2.491e-01 1-R2=0.04188 d_fr=0.2733 alpha=0.25
+[05:35:27]   [Newton k3embed_subset3_to_half] it= 8 Finf=2.491e-01 1-R2=0.04188 d_fr=0.2733 alpha=2.98e-08
+[05:35:27]    -> 'k3embed_subset3_to_half' Newton best Finf=2.491e-01 deficit=0.0419 d_fr=0.2733
+[05:35:27] VERDICT (TEST B): TEST B: best PR-region Newton residual floored at Finf=4.30e-01 (>1e-5) with deficit>0.05 => NON-SMOOTH PLATEAU, not a true FP. Only FR is genuine.
+
+=== TEST A COMPLETE: tau4 homotopy (gamma=0.1, tau3=2) ===
+  tau4   tracked Finf   deficit(1-R2)   d_fr
+  0.05   3.94e-3        0.0020          0.2285
+  0.10   8.56e-4        0.0017          0.2298
+  0.25   3.97e-3        0.0010          0.2139
+  0.50   2.33e-2        0.0007          0.1680
+  1.00   1.02e-2        0.0007          0.1935
+  2.00   1.64e-2        0.0010          0.1776  (accurate 1485-col Newton stalled, alpha->2e-4)
+  => deficit ~0 (FR manifold) at every tau4; residual on the non-smooth floor; no PR branch.
+  NOTE: at exactly tau4=0 this operator's axis-3 evidence sweep (x f_signal(.,0)=0) collapses phi to P==0.5,
+  so the anchor is tau4=0.05; the K=3 PR plateau is NOT recovered as a low-residual K=4 PR state.
+
+=== TEST B COMPLETE: symmetric 495-dim accurate-Jacobian Newton, genuinely-partial seeds ===
+  seed                      best ||F||inf   deficit@best
+  subset2_reveal2of4        0.2464          0.0207
+  subset3_reveal3of4        0.1974          0.0112
+  nl_symmetrized            0.4302          0.2179   (Newton FROZEN: alpha->3e-8 from iter 1)
+  k3embed_subset3_to_half   0.2491          0.0419
+  => every seed floors on the non-smooth plateau; none reaches ||F||inf<1e-5; only deficit>0.05 point
+     (nl, def=0.218) has the LARGEST residual (0.43). Plateau, not a fixed point.
+
+=== OVERALL VERDICT: NO genuine K=4 PR fixed point. Only FR is a true K=4 FP (||F||inf=9.45e-6, deficit~0).
+    PR exists only as a non-smooth plateau (deficit>0 but ||F||inf floored ~0.07-0.43). Consistent with K=3
+    (PR plateau only) and the homogeneous k4_sym result; consistent with PR requiring noise/smoothing.

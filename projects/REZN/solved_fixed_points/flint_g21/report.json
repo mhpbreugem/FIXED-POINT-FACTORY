@@ -1,0 +1,173 @@
+{
+  "task": "G=21 strict contour-Phi PR-REE: test discontinuity-floor h-scaling hypothesis",
+  "grid": {
+    "G": 21,
+    "interior": 6859,
+    "h_21": 0.1,
+    "h_11": 0.2
+  },
+  "params": {
+    "TOT_u": 2.0,
+    "TOT_S": 3.0,
+    "TOT_d": 3.0,
+    "TAU_F": 2.0,
+    "GAMMA_F": 0.1,
+    "W_F": 1.0
+  },
+  "precision_dps": 100,
+  "precision_bits": 352,
+  "phi_backend": "cython flint_phi_cy at 100-dec, grid-agnostic",
+  "d_FR_definition": "RMS distance of interior P from P_FR=sigmoid(tau*(u1+u2+u3)), tau=2",
+  "reference_G11": {
+    "floor_inf": 0.066399,
+    "d_FR": 0.269451419020756
+  },
+  "cost_gate": {
+    "s_per_phi_eval": 28.226686477661133,
+    "est_picard_evals": 240,
+    "est_picard_wall_min": 112.90674591064453,
+    "warm_start_residual_inf": 0.4160177471861326,
+    "warm_start_d_FR": 0.24476279679985108
+  },
+  "picard_traj": [
+    {
+      "it": 1,
+      "inf": 0.28232848870792043,
+      "omega": 0.3,
+      "bt": 0,
+      "d_FR": 0.2424007648857936,
+      "accepted": true
+    },
+    {
+      "it": 2,
+      "inf": 0.23947840655852448,
+      "omega": 0.3,
+      "bt": 0,
+      "d_FR": 0.2422823195565855,
+      "accepted": true
+    },
+    {
+      "it": 3,
+      "inf": 0.2346879941658919,
+      "omega": 0.3,
+      "bt": 0,
+      "d_FR": 0.24310415944002453,
+      "accepted": true
+    },
+    {
+      "it": 4,
+      "inf": 0.20853883010178542,
+      "omega": 0.3,
+      "bt": 0,
+      "d_FR": 0.24448002793968504,
+      "accepted": true
+    },
+    {
+      "it": 5,
+      "inf": 0.19665952278641524,
+      "omega": 0.3,
+      "bt": 0,
+      "d_FR": 0.24590684550099218,
+      "accepted": true
+    },
+    {
+      "it": 6,
+      "inf": 0.19543982942866167,
+      "omega": 0.3,
+      "bt": 0,
+      "d_FR": 0.2474711594621091,
+      "accepted": true
+    },
+    {
+      "it": 7,
+      "inf": 0.19229939850241476,
+      "omega": 0.3,
+      "bt": 0,
+      "d_FR": 0.24902486522509298,
+      "accepted": true
+    },
+    {
+      "it": 8,
+      "inf": 0.19037168169869711,
+      "omega": 0.3,
+      "bt": 0,
+      "d_FR": 0.2504465319509586,
+      "accepted": true
+    },
+    {
+      "it": 9,
+      "inf": 0.15232951171653436,
+      "omega": 0.3,
+      "bt": 0,
+      "d_FR": 0.25187503683858264,
+      "accepted": true
+    },
+    {
+      "it": 10,
+      "inf": 0.15232951171653436,
+      "omega": 7.32421875e-05,
+      "bt": 12,
+      "d_FR": 0.25187503683858264,
+      "accepted": false
+    }
+  ],
+  "residual_inf_traj": [
+    0.4160177471861326,
+    0.28232848870792043,
+    0.23947840655852448,
+    0.2346879941658919,
+    0.20853883010178542,
+    0.19665952278641524,
+    0.19543982942866167,
+    0.19229939850241476,
+    0.19037168169869711,
+    0.15232951171653436,
+    0.15232951171653436
+  ],
+  "d_FR_traj": [
+    0.24476279679985108,
+    0.2424007648857936,
+    0.2422823195565855,
+    0.24310415944002453,
+    0.24448002793968504,
+    0.24590684550099218,
+    0.2474711594621091,
+    0.24902486522509298,
+    0.2504465319509586,
+    0.25187503683858264,
+    0.25187503683858264
+  ],
+  "per_phi_timing_s": 28.226686477661133,
+  "warm_start_residual_inf": 0.4160177471861326,
+  "floor": 0.15232951171653436,
+  "headline": {
+    "floor_G21_inf": 0.15232951171653436,
+    "floor_G11_inf": 0.066399,
+    "floor_ratio_21_over_11": 2.2941537028650183,
+    "predicted_h_ratio": 0.5,
+    "tracks_linear_h_scaling": false,
+    "C_h_constant_from_G11": 0.331995,
+    "C_h_constant_from_G21": 1.5232951171653435,
+    "continuum_extrap_intercept_b": 0.23826002343306873,
+    "continuum_extrap_slope_a": -0.8593051171653435,
+    "final_d_FR_G21": 0.25187503683858264,
+    "d_FR_G11": 0.269451419020756,
+    "verdict": "Floor shrinks SLOWER than linear (ratio > 0.5) or barely moves: NOT pure O(h) discretization. The discontinuity-only hypothesis is WEAKENED/FALSIFIED -- floor may have a non-vanishing component."
+  },
+  "spike_probe": {
+    "n_probes": 12,
+    "eps": "1e-25",
+    "n_exceeding_1e3": 12,
+    "frac_spike": 1.0,
+    "max_diag_slope": 1.0368749666173448e+22,
+    "typical_jump_magnitude": 2.8021978778866706e-07,
+    "G11_reference_jump": 0.027,
+    "G11_spike_fraction": 0.20713305898491083,
+    "note": "lean re-run after main spike-probe subprocess died mid-run (no traceback)"
+  },
+  "timings": {
+    "picard_min": 11.24978810151418,
+    "spike_probe_min": 6.238638810316721
+  },
+  "status": "done"
+}

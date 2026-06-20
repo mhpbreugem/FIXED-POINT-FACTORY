@@ -1,0 +1,173 @@
+% =====================================================================
+\part{Structural ansatz and coordinate transformations (Findings 5--7)}
+% =====================================================================
+
+\chapter{Method C v2: the additive sigmoid ansatz}
+
+\section{Motivation and form}
+In the $\tau \to 0$ linear-Gaussian limit, signals enter posterior
+log-odds additively and the (CARA/Hellwig) price is exactly
+$\sigma(\tau \sum_i u_i)$. The structural ansatz preserves this skeleton
+with a learned one-dimensional profile:
+\[
+  P(\mathbf{u}) = \sigma\bigl(h(u_1) + h(u_2) + h(u_3)\bigr),
+  \qquad
+  h(u) = \int_0^u s^2(t)\, dt,
+  \qquad
+  s(t) = \sum_{n=0}^{4} c_n\, T_{2n}(t / U_{\max}),
+\]
+five free coefficients. By construction: permutation-symmetric,
+sign-flip symmetric, axis-monotone (zero violations across every run),
+and equipped with a \emph{closed-form 1D lookup}: under the ansatz the
+level set in $(u_a, u_b)$ at fixed $u_k$ collapses, after $v = h(u)$, to
+the affine line $v_a + v_b = \operatorname{logit}p - h(u_k)$, making
+$\mu(p, u_k)$ a single Gauss--Legendre integral
+($\sim 10\,\mu$s per call --- four orders of magnitude faster than any
+cube-based builder).
+
+\begin{figure}[H]\centering
+  \includegraphics[width=0.85\linewidth]{mcv2t_figs/fig1_sigma_h.png}
+  \caption{The fitted profile at $\tau = 0.001$: $s^2(\cdot)$ and the
+    resulting odd-monotone $h(u)$, matching the analytic
+    linear-Gaussian limit $h(u) = \tau u + O(\tau^3 u^3)$ to plotting
+    accuracy.}
+\end{figure}
+
+\section{The grids and ladders}
+Trust-region least squares against \strict{} truth solves a cell in
+$\sim 1$ second. Two production sweeps:
+\begin{itemize}\itemsep2pt
+  \item \textbf{100-cell $(\gamma, \tau)$ grid} (2 minutes): the
+        residual is essentially a function of $\tau$ alone; at
+        $\tau = 0.001$ the fit is exact to $10^{-10}$, at $\tau = 1$ it
+        floors at $\|F\|_\infty \approx 0.08$--$0.10$.
+  \item \textbf{1000-cell $\tau$-ladder} (16.5 minutes, chained
+        warm-start, zero monotonicity violations): the residual scales
+        as $\sim \tau^4$ at small $\tau$ (consistent with the
+        $O(\tau^3 u^3)$ truncation of $h$ feeding an $O(\tau^4)$
+        fixed-point error) and saturates at the non-additive plateau
+        above $\tau \approx 0.3$--$0.4$.
+\end{itemize}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=0.9\linewidth]{mcv2_figs/fig1_F.png}
+  \caption{Method C v2 1000-cell ladder: residual vs $\tau$. The sharp
+    transition near $\tau \approx 0.3$ separates ``additive ansatz
+    exact'' from ``non-additive correction required''.}
+\end{figure}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=0.9\linewidth]{mcv2_figs/fig2_loglog.png}
+  \caption{Same data, log-log: the $\sim \tau^4$ scaling at small
+    $\tau$ and the saturation plateau.}
+\end{figure}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=0.9\linewidth]{mcv2g_figs/fig1_F.png}
+  \caption{The 100-cell $(\gamma, \tau)$ grid heat map: residual depends
+    almost entirely on $\tau$, not $\gamma$ --- the additive structure
+    is $\tau$-driven.}
+\end{figure}
+
+\section{Two control experiments}
+\begin{itemize}\itemsep2pt
+  \item \textbf{Logit-space loss}: refitting v2 with an
+        $L$-space loss leaves the converged residual unchanged (median
+        $1.7\times10^{-3}$ in both) --- the bottleneck is ansatz
+        expressiveness, not loss geometry.
+  \item \textbf{Strict-operator inner loop}: v2 fit with \strict{} as
+        the inner operator at $\tau = 0.001$ converges to
+        $P \equiv \tfrac12$ exactly --- the first clean sighting of the
+        trivial branch that Part VI later confirms is an exact fixed
+        point at all $(\gamma, \tau)$.
+\end{itemize}
+
+\chapter{Finding 5: the $(\Lpriv, \Lpub)$ coordinate test}
+
+\section{Hypothesis}
+Bayes suggests $\operatorname{logit}\mu(p, u_k) = \Lpriv(u_k) + \Lpub(p)
++ \delta(p, u_k)$ with $\Lpriv = \tau u_k$ (closed form),
+$\Lpub = \log[f_1(p)/f_0(p)]$, and $\delta$ a small smooth K=3
+conditional-overlap correction. If $\delta$ were small \emph{and}
+smooth, Chebyshev in the transformed coordinates would converge
+spectrally with a handful of coefficients.
+
+\section{Result: bulk absorbed, cusps preserved}
+The optimal additive (ANOVA) decomposition removes $\sim 50\%$ of the
+RMS magnitude --- but the Chebyshev tail-decay of $\delta$ is
+\emph{indistinguishable} from that of the raw lookup, and the SVD of
+$\delta$ is as full-rank as the original. The cusps live on the
+algebraic variety $\{|\nabla P| = 0\}$, which no global change of
+coordinates can remove.
+
+\begin{figure}[H]\centering
+  \includegraphics[width=\linewidth]{lpub_figs/fig2_heat.png}
+  \caption{$L$, $\delta_{\rm ANOVA}$, $\delta_{\rm Cheby-h}$ heat maps
+    across four cells: the smooth vertical gradient is removed; the
+    sharp horizontal cusp bands survive untouched.}
+\end{figure}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=\linewidth]{lpub_figs/fig1_tail_decay.png}
+  \caption{Chebyshev tail-norm decay: the three curves (raw $L$, ANOVA
+    residual, Cheby-$h$ residual) coincide. The coordinate
+    transformation does not improve the convergence rate.}
+\end{figure}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=\linewidth]{lpub_figs/fig4_svd.png}
+  \caption{SVD spectra: $\delta$ is essentially full rank; rank-1
+    captures only 30--45\% of its Frobenius norm. No low-rank
+    multiplicative correction exists either.}
+\end{figure}
+
+\section{The economic by-product}
+The fitted $u_k$-effect $b(u_k)$ is roughly $10\times$ smaller than the
+textbook $\tau u_k$: at $(\gamma, \tau) = (100, 1)$ the closed form
+predicts $\pm 2.33$ where the data give $\pm 0.22$. Conditional on the
+price, the agent's own signal adds little --- the K=3 price already does
+most of the aggregation. This is the lookup-level reflection of the
+Jensen-gap economics of Part I: the price is a powerful but
+\emph{biased} (compressed) aggregator.
+
+\begin{figure}[H]\centering
+  \includegraphics[width=0.75\linewidth]{lpub_figs/fig3_effects.png}
+  \caption{Row and column effects of the additive decomposition; dotted
+    line: the naive $\tau u_k$ prediction, an order of magnitude too
+    steep.}
+\end{figure}
+
+\chapter{Findings 6--7: the limits of finite-parameter structure}
+
+\section{Finding 7: no low-degree polynomial closes the gap}
+At $(\gamma, \tau) = (100, 1)$, the \emph{best achievable} additive fit
+to the \strict{} log-odds surface leaves $|R|_\infty = 3.5$ (larger than
+$|L|_\infty = 2.56$ itself), flat across 3--11 profile parameters; and
+no symmetric polynomial correction captures the residual:
+
+\begin{center}\begin{tabular}{lrr}\toprule
+candidate $g$ & best $\kappa$ & share of $\|R\|^2$ captured \\
+\midrule
+$u_1 u_2 u_3$ & $-0.103$ & 7.8\% \\
+$\sum_{i<j}(u_i - u_j)^2$ & $\approx 0$ & 0.0\% \\
+$(u_1{+}u_2{+}u_3)^3$ & $-0.009$ & 22.8\% \\
+$\sum u_i^3$, $\sum u_i^5$ & $\approx 0$ & 0.0\% \\
+six-term LSQ combination & --- & 63.3\% \\
+\bottomrule\end{tabular}\end{center}
+
+\begin{figure}[H]\centering
+  \includegraphics[width=0.95\linewidth]{mcv3_figs/refit.png}
+  \caption{The fingerprint test: residual flat in profile flexibility
+    (top left); the residual heat map (bottom right) is a high-rank
+    checkerboard concentrated at corners --- not any smooth low-degree
+    polynomial.}
+\end{figure}
+
+\section{Interpretation}
+Findings 5 and 7 are the same fact seen from two angles: \textbf{the
+non-additive structure of the K=3 equilibrium at high $\tau$ is
+high-rank and cusp-bearing}. Neither clever coordinates nor
+finite-parameter corrections reach $10^{-4}$; the viable routes are
+(i) segmented representations that put the cusps on segment boundaries
+(Part V --- this works), and (ii) brute resolution with a consistent
+smooth operator (Part VII recommendation for the surface itself).

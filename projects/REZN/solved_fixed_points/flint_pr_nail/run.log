@@ -1,0 +1,21 @@
+
+==== POST-RUN DIAGNOSTICS (decisive) ====
+cond(J_as1)=1417.1 smin=0.0021346 smax=3.0251 (frozen system is WELL-conditioned & smooth)
+Newton ||delta||inf = 13.78 (huge: J^-1 amplifies 0.2 residual ~470x)
+Active-set sensitivity along Newton dir from L2 (alpha, active_changes, cells, strict_inf, strict_2):
+  1e+0  27398 677 13.366  13.545
+  3e-1   8824 461  3.7204  3.9516
+  1e-1   4136 313  0.96451 1.4218
+  3e-2   1654 143  0.20157 0.57546
+  1e-2    436  43  0.20570 0.59165
+  3e-3    156  17  0.20715 0.57820
+  1e-3     66  10  0.20756 0.57448
+  1e-4     14   3  0.20775 0.56666
+  1e-5     14   3  0.20777 0.56671
+  1e-6     14   3  0.20777 0.56671
+Persistent flips at alpha->0: 3 cells [(1,2,2),(9,1,1),(9,2,2)], 14 crossings,
+  residual at those cells ~1e-17..1e-20 (already at fixed point; harmless node ties).
+CONCLUSION: No high-precision strict equilibrium reachable. The 0.21 floor is NOT a
+  localized irreducible kink; it is a globally non-smooth landscape -- any residual-
+  reducing step flips hundreds of cells' crossing topology, and within the active-set
+  validity region the frozen-Newton direction gives ZERO strict-residual reduction.

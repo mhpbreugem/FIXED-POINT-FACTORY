@@ -1,0 +1,799 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumerate}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{assumption}{Assumption}
+\newtheorem{remark}{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Lam}{\Lambda}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\clear}{\operatorname{clear}}
+\newcommand{\Lip}{\operatorname{Lip}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\Kc}{\mathcal{K}}
+\newcommand{\Pc}{\mathcal{P}}
+\newcommand{\Hc}{\mathcal{H}}
+
+\title{Existence of a Partially Revealing Rational-Expectations\\
+Equilibrium with Three CRRA Traders and No Noise}
+\author{REZN Project\thanks{Fixed-Point Factory, REZN archive. Numerical
+certificates referenced below are in
+\texttt{projects/REZN/solved\_fixed\_points/} of the project repository.}}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove existence of a partially revealing rational-expectations equilibrium
+(PR-REE) in a fully deterministic asset market with three symmetric CRRA
+traders, a binary payoff, conditionally Gaussian private signals, and
+\emph{no} noise traders, liquidity shocks, or random supply. The equilibrium
+price function is obtained as a Schauder fixed point of the
+``infer-from-price $\to$ Bayes-update $\to$ CRRA-clear'' operator on a compact
+convex set of symmetric, odd-in-logit, uniformly Lipschitz price functions.
+Three structural lemmas drive the argument: a uniform two-sided bound on the
+Bayes evidence carried by the price; the fact that CRRA market clearing is a
+\emph{non-expansive aggregator} of log-posterior-odds, with strict contraction
+exactly when traders disagree with the price (the Jensen wedge); and the
+stability of the symmetry class under the operator. The construction works
+directly with a doubly regularized (price-band, signal-mollified) evidence
+operator; we show that the regularization breaks the Grossman--Stiglitz
+degeneracy under which the fully revealing price is always a fixed point of
+the exact operator, and that the fixed point we construct lies in a
+subcritical-tilt class that excludes the fully revealing price by an explicit
+gradient gap. Passage to the exact (co-area) operator is established
+conditionally on uniform $C^{1,\alpha}$ and gradient bounds that are verified
+numerically along a certified branch of more than one hundred high-precision
+equilibria; a continuation corollary in $(\gamma,\tau)$ follows from the
+implicit function theorem at any certified point.
+\end{abstract}
+
+\section{Setup}\label{sec:setup}
+
+\subsection{Primitives}
+There are $K=3$ traders indexed by $k$, a single risky asset with payoff
+$v\in\{0,1\}$, prior $\Pr(v=1)=\tfrac12$, and a riskless numeraire. Trader
+$k$ has CRRA utility with common relative risk aversion $\gamma>0$ and unit
+wealth $W=1$. Each trader observes the centred private signal
+$u_k=s_k-\tfrac12$ where $s_k\mid v\sim N(v,1/\tau)$ independently across
+$k$, $\tau>0$. Write $u=(u_1,u_2,u_3)$, and
+\begin{equation}\label{eq:density}
+f_v(t)\;=\;\sqrt{\frac{\tau}{2\pi}}\,
+\exp\!\Big(-\frac{\tau}{2}\big(t-(v-\tfrac12)\big)^2\Big),
+\qquad
+\frac{f_1(t)}{f_0(t)}=e^{\tau t}.
+\end{equation}
+Let $\Lam(x)=(1+e^{-x})^{-1}$ denote the logistic function and
+$\operatorname{logit}p=\log\frac{p}{1-p}$ its inverse. There are no noise
+traders, no supply shocks, and no random endowments: the market-clearing
+price is a deterministic function of $u$ alone.
+
+\subsection{CRRA demand and market clearing}
+A CRRA-$\gamma$ trader with posterior $\mu\in(0,1)$ facing price $p\in(0,1)$
+has the closed-form excess demand (in shares, unit wealth)
+\begin{equation}\label{eq:demand}
+x(\mu,p)\;=\;\frac{R-1}{(1-p)+Rp},
+\qquad
+R\;=\;\exp\!\Big(\frac{m-\pi}{\gamma}\Big),
+\quad m=\operatorname{logit}\mu,\ \pi=\operatorname{logit}p .
+\end{equation}
+We freely write $x(m,\pi)$ for \eqref{eq:demand} in logit coordinates.
+Given posteriors $(\mu_1,\mu_2,\mu_3)\in(0,1)^3$, the market-clearing price
+$\clear(\mu_1,\mu_2,\mu_3)\in(0,1)$ is the unique root in $p$ of
+$\sum_{k=1}^{3}x(\mu_k,p)=0$ (uniqueness is part of
+Lemma~\ref{lem:clearing}).
+
+\subsection{Price domain and the exact evidence integrals}
+Fix a truncation level $U>0$ and set $Q:=[-U,U]^3$. For a price function
+$P:Q\to(0,1)$ write $\Pi:=\operatorname{logit}P$. When $P\in C^1(Q)$ and the
+in-slice gradient
+$\nabla_{\!(j,l)}P(u_k,\cdot,\cdot)$ does not vanish, the
+\emph{co-area evidence} of trader $k$ at observed price $p$ is
+\begin{equation}\label{eq:coarea}
+A_v(p,u_k;P)\;:=\;
+\int_{\{(t_j,t_l)\,:\,P(u_k,t_j,t_l)=p\}}
+\frac{f_v(t_j)\,f_v(t_l)}{\big|\nabla_{\!(j,l)}P\big|}\;d\Hc^1 ,
+\end{equation}
+where $\Hc^1$ is one-dimensional Hausdorff measure on the level curve and
+the weight $1/|\nabla P|$ is the co-area (conditional-density) factor; by the
+co-area formula \cite{EvansGariepy}, $A_v(\cdot,u_k;P)$ is the density of the
+price $P(u_k,t_j,t_l)$ when $(t_j,t_l)\sim f_v\otimes f_v$, i.e.\ exactly the
+likelihood of the price observation under state $v$. (Omitting the weight
+yields the arc-length measure, which is \emph{not} the Bayes conditional; in
+the project archive the unweighted integral is biased by $\approx 19\%$
+\cite{REZN}.)
+
+\begin{definition}[Exact PR-REE]\label{def:exact}
+A measurable $P:Q\to(0,1)$ is a \emph{partially revealing
+rational-expectations equilibrium} if $P\in C^1(Q)$ with non-vanishing
+in-slice gradients, and for every $u\in Q$ and every $k$:
+\begin{enumerate}[(1)]
+\item the posterior of trader $k$ after observing $(u_k,\,P=p)$ is
+\[
+\mu_k(u_k,p)\;=\;
+\frac{f_1(u_k)\,A_1(p,u_k;P)}{f_0(u_k)\,A_0(p,u_k;P)+f_1(u_k)\,A_1(p,u_k;P)}\,;
+\]
+\item markets clear: $\sum_{k}x\big(\mu_k(u_k,P(u)),P(u)\big)=0$;
+\item consistency: $P(u)=\clear\big(\mu_1(u_1,P(u)),\mu_2(u_2,P(u)),
+\mu_3(u_3,P(u))\big)$;
+\end{enumerate}
+and $P$ is not fully revealing, i.e.\ $P\neq P_{\mathrm{FR}}$, where
+$P_{\mathrm{FR}}(u):=\Lam\big(\tau(u_1+u_2+u_3)\big)$ is the
+full-information (sufficient-statistic) price.
+\end{definition}
+
+\subsection{The regularized operator}
+For arbitrary continuous $P$ the level sets in \eqref{eq:coarea} need not be
+rectifiable, so we build the fixed-point argument around a doubly
+regularized evidence functional and recover \eqref{eq:coarea} in the limit
+(Section~\ref{sec:limit}). Let $K_h$ and $\rho_\delta$ be centred Gaussian
+densities with standard deviations $h>0$ (logit-price bandwidth) and
+$\delta>0$ (own-signal mollification). For bounded measurable
+$\Pi:Q\to\R$, $\hat\pi\in\R$, $u_1\in[-U,U]$, define
+\begin{equation}\label{eq:Areg}
+A^{h,\delta}_v(\hat\pi,u_1;\Pi)\;:=\;
+\int_{Q}K_h\big(\Pi(t)-\hat\pi\big)\,\rho_\delta(t_1-u_1)\,
+f_v(t_2)\,f_v(t_3)\,dt,
+\qquad v\in\{0,1\},
+\end{equation}
+\begin{equation}\label{eq:b}
+b^{h,\delta}(\hat\pi,u_1;\Pi)\;:=\;
+\log\frac{A^{h,\delta}_1(\hat\pi,u_1;\Pi)}{A^{h,\delta}_0(\hat\pi,u_1;\Pi)},
+\qquad
+\mu^{h,\delta}_k(u_k,p;P)\;:=\;
+\Lam\big(\tau u_k+b^{h,\delta}(\operatorname{logit}p,\,u_k;\Pi)\big).
+\end{equation}
+(The own-signal slice $\{t_1=u_1\}$ is replaced by the mollified weight
+$\rho_\delta$; the price level set by the Gaussian band $K_h$ in logit-price.
+Both are consistent quadratures of \eqref{eq:coarea}: as
+$(h,\delta)\to0$ with $P$ smooth and non-degenerate,
+$A^{h,\delta}_v\to A_v$; see Lemma~\ref{lem:consistency}. The band evidence
+was verified against the exact co-area integral to $1.5\times10^{-5}$ in the
+archive \cite{REZN}.)
+
+The equilibrium operator is
+\begin{equation}\label{eq:Phi}
+\Phi_{h,\delta}(P)(u)\;:=\;
+\clear\Big(\mu^{h,\delta}_1\big(u_1,P(u);P\big),\,
+\mu^{h,\delta}_2\big(u_2,P(u);P\big),\,
+\mu^{h,\delta}_3\big(u_3,P(u);P\big)\Big),
+\qquad u\in Q .
+\end{equation}
+A fixed point $P=\Phi_{h,\delta}(P)$ satisfies (1)--(3) of
+Definition~\ref{def:exact} with $A_v$ replaced by $A^{h,\delta}_v$; we call
+such a $P$ an \emph{$(h,\delta)$-regularized REE}. We write
+$\Psi_{h,\delta}(\Pi):=\operatorname{logit}\Phi_{h,\delta}(\Lam(\Pi))$ for
+the operator in logit coordinates.
+
+\subsection{Symmetry class}
+Throughout, $\norm{u}_\infty=\max_k|u_k|$. Call $\Pi:Q\to\R$
+\emph{symmetric} if invariant under permutations of $(u_1,u_2,u_3)$ and
+\emph{odd} if $\Pi(-u)=-\Pi(u)$ (equivalently $P(-u)=1-P(u)$: the model is
+invariant under $v\mapsto 1-v$, $u\mapsto-u$, $p\mapsto1-p$). For $B,L>0$ set
+\begin{equation}\label{eq:K}
+\Kc(B,L)\;:=\;\Big\{\Pi\in C(Q):\ \Pi\ \text{symmetric and odd},\
+\norm{\Pi}_\infty\le B,\
+|\Pi(u)-\Pi(u')|\le L\norm{u-u'}_\infty\Big\}.
+\end{equation}
+$\Kc(B,L)$ is nonempty ($\Pi\equiv0$), convex, and compact in
+$(C(Q),\norm{\cdot}_\infty)$ by Arzel\`a--Ascoli. Note
+$\Pi_{\mathrm{FR}}=\tau(u_1+u_2+u_3)$ has $\norm{\cdot}_\infty$-Lipschitz
+constant exactly $3\tau$ (attained along the diagonal): this is the
+\emph{critical tilt}.
+
+\section{Lemmas}\label{sec:lemmas}
+
+Throughout this section fix $\tau,\gamma,U,h,\delta>0$ and set
+\begin{equation}\label{eq:constants}
+B:=3\tau U,\qquad
+\chi:=\frac{4B}{h^2}=\frac{12\tau U}{h^2},\qquad
+\beta:=\frac{4U}{\delta^2}.
+\end{equation}
+
+\begin{lemma}[Bayes representation and evidence bounds]\label{lem:bayes}
+Let $\Pi:Q\to\R$ be measurable with $\norm{\Pi}_\infty\le B$ and let
+$\hat\pi\in[-B,B]$, $u_1\in[-U,U]$. Then:
+\begin{enumerate}[(i)]
+\item (Representation.) $\operatorname{logit}\mu^{h,\delta}_1
+=\tau u_1+b^{h,\delta}(\hat\pi,u_1;\Pi)$, and
+\[
+\frac{A^{h,\delta}_1}{A^{h,\delta}_0}(\hat\pi,u_1;\Pi)
+=\E_{\nu}\big[e^{\tau(t_2+t_3)}\big],
+\qquad
+d\nu\propto K_h(\Pi(t)-\hat\pi)\,\rho_\delta(t_1-u_1)\,
+f_0(t_2)f_0(t_3)\,\mathbf 1_Q(t)\,dt .
+\]
+\item (Two-sided evidence bound.)
+$\big|b^{h,\delta}(\hat\pi,u_1;\Pi)\big|\le 2\tau U$, hence
+$\big|\operatorname{logit}\mu^{h,\delta}_1\big|\le \tau U+2\tau U=B$ and
+$\mu^{h,\delta}_1\in[\varepsilon,1-\varepsilon]$ with
+$\varepsilon:=\Lam(-B)=(1+e^{3\tau U})^{-1}$.
+\item (Smoothness in the conditioning variables.)
+$b^{h,\delta}(\cdot,\cdot;\Pi)\in C^\infty([-B,B]\times[-U,U])$ with
+\[
+\Big|\partial_{\hat\pi}\,b^{h,\delta}\Big|\le \chi,
+\qquad
+\Big|\partial_{u_1}\,b^{h,\delta}\Big|\le \beta .
+\]
+\item (Stability in $\Pi$.) There are $a_0=a_0(h,\delta,U,\tau)>0$ and
+$C_P:=2\sup|K_h'|/a_0<\infty$ such that
+$A^{h,\delta}_v\ge a_0$ and, for any two admissible $\Pi,\tilde\Pi$,
+\[
+\big|b^{h,\delta}(\hat\pi,u_1;\Pi)-b^{h,\delta}(\hat\pi,u_1;\tilde\Pi)\big|
+\;\le\;C_P\,\norm{\Pi-\tilde\Pi}_\infty .
+\]
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) Bayes' rule with prior odds $1$ gives posterior odds
+$\frac{f_1(u_1)A_1}{f_0(u_1)A_0}$; by \eqref{eq:density}
+$\log\frac{f_1(u_1)}{f_0(u_1)}=\tau u_1$. Writing
+$f_1(t_2)f_1(t_3)=e^{\tau(t_2+t_3)}f_0(t_2)f_0(t_3)$ in \eqref{eq:Areg}
+yields the stated ratio.
+
+(ii) On $Q$, $|t_2+t_3|\le 2U$, so the expectation in (i) lies in
+$[e^{-2\tau U},e^{2\tau U}]$.
+
+(iii) Differentiation under the integral sign is justified by dominated
+convergence. For the Gaussian kernel $K_h'(z)=-(z/h^2)K_h(z)$, and on the
+domain of integration $|\Pi(t)-\hat\pi|\le 2B$, hence
+$|\partial_{\hat\pi}A_v|\le(2B/h^2)A_v$, so
+$|\partial_{\hat\pi}\log A_v|\le 2B/h^2$ and
+$|\partial_{\hat\pi}b|\le 4B/h^2=\chi$. Similarly
+$\rho_\delta'(z)=-(z/\delta^2)\rho_\delta(z)$ with $|t_1-u_1|\le 2U$ gives
+$|\partial_{u_1}\log A_v|\le 2U/\delta^2$ and $|\partial_{u_1}b|\le\beta$.
+
+(iv) Lower bound: $K_h(\Pi(t)-\hat\pi)\ge K_h(2B)$ on $Q$, so
+$A_v\ge K_h(2B)\,c_\rho c_f^2=:a_0$, where
+$c_\rho:=\min_{|u_1|\le U}\int_{-U}^{U}\rho_\delta(t-u_1)\,dt>0$ and
+$c_f:=\min_v\int_{-U}^{U}f_v>0$. Stability:
+$|A_v(\Pi)-A_v(\tilde\Pi)|\le\sup|K_h'|\cdot\norm{\Pi-\tilde\Pi}_\infty$
+(since $\rho_\delta$, $f_v$ integrate to at most one), and
+$|\log A_v(\Pi)-\log A_v(\tilde\Pi)|\le|A_v(\Pi)-A_v(\tilde\Pi)|/a_0$.
+\end{proof}
+
+\begin{lemma}[CRRA clearing is a non-expansive aggregator]\label{lem:clearing}
+Let $x(m,\pi)$ be as in \eqref{eq:demand} and $D:=(1-p)+Rp>0$. Then:
+\begin{enumerate}[(i)]
+\item $\displaystyle \partial_m x=\frac{R}{\gamma D^2}>0$ and
+$\displaystyle \partial_\pi x=-\partial_m x-\frac{(R-1)^2p(1-p)}{D^2}
+\;\le\;-\partial_m x<0$, with equality iff $R=1$ (i.e.\ $m=\pi$);
+moreover $x(\pi,\pi)=0$, $x(m,\pi)\to+\infty$ as $\pi\to-\infty$ and
+$x(m,\pi)\to-\infty$ as $\pi\to+\infty$, for every fixed $m$ and every
+$\gamma>0$.
+\item For every $(m_1,m_2,m_3)\in\R^3$ the aggregate
+$Z(\pi):=\sum_k x(m_k,\pi)$ has a unique root
+$\pi^*(m_1,m_2,m_3)$, and
+$\min_k m_k\le \pi^*\le\max_k m_k$.
+\item $\pi^*$ is $C^\infty$, symmetric, odd
+($\pi^*(-m)=-\pi^*(m)$), with
+\[
+\frac{\partial\pi^*}{\partial m_k}=w_k\ge0,
+\qquad
+\sum_{k}w_k
+=\frac{\sum_k \partial_m x(m_k,\pi^*)}
+{\sum_k\big[\partial_m x(m_k,\pi^*)+J_k\big]}\;\le\;1,
+\quad
+J_k:=\frac{(R_k-1)^2\,p(1-p)}{D_k^2},
+\]
+with $\sum_k w_k<1$ unless $m_1=m_2=m_3=\pi^*$ (the no-trade point).
+Consequently $\pi^*$ is non-expansive in the sup norm:
+$|\pi^*(m)-\pi^*(m')|\le\norm{m-m'}_\infty$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) Write $x=(R-1)/D$ with $R=e^{(m-\pi)/\gamma}$, $p=\Lam(\pi)$. Then
+$\partial_R x=\big[D-(R-1)p\big]/D^2=1/D^2$, so
+$\partial_m x=(R/\gamma)/D^2>0$. For $\partial_\pi x$, note
+$\partial_\pi R=-R/\gamma$ and $\partial_\pi p=p(1-p)$, while at fixed $R$,
+$\partial_p x=-(R-1)^2/D^2$; the chain rule gives the displayed identity.
+Boundary behaviour: as $\pi\to+\infty$, $R\to0$, $p\to1$, $D\to0^+$,
+$x\to-1/D\to-\infty$. As $\pi\to-\infty$, $R\to\infty$, $p\to0$;
+$Rp\asymp e^{m/\gamma}e^{\pi(1-1/\gamma)}$, so either $Rp\to0$ (then
+$x\approx R-1\to+\infty$) or $Rp\to\infty$ (then $x\approx 1/p\to+\infty$)
+or $Rp\to e^{m}$ ($\gamma=1$; then $x\to+\infty$ since $R\to\infty$).
+Finally $m=\pi$ gives $R=1$, $x=0$.
+
+(ii) $Z$ is continuous, strictly decreasing by (i), and ranges over all of
+$\R$, so the root exists and is unique. At $\pi=\max_k m_k$ each
+$x(m_k,\pi)\le0$ by (i) and $x(\pi,\pi)=0$, so $Z\le0$ and
+$\pi^*\le\max_k m_k$; symmetrically $\pi^*\ge\min_k m_k$.
+
+(iii) Smoothness is the implicit function theorem
+($\partial_\pi Z<0$ strictly). Implicit differentiation gives
+$w_k=\partial_m x(m_k,\pi^*)\big/\sum_j(-\partial_\pi x(m_j,\pi^*))$, and
+$-\partial_\pi x=\partial_m x+J$ from (i) yields the displayed sum, which is
+$\le1$ with equality iff every $J_k=0$, i.e.\ every $R_k=1$. Oddness: with
+$(m,\pi)\mapsto(-m,-\pi)$ one has $R\mapsto 1/R$, $p\mapsto1-p$, and a direct
+computation gives $x(-m,-\pi)=-x(m,\pi)$, so $Z$ flips sign and the root is
+odd. Non-expansiveness follows from the mean value theorem:
+$|\pi^*(m)-\pi^*(m')|\le\big(\sum_k w_k\big)\,\norm{m-m'}_\infty
+\le\norm{m-m'}_\infty$.
+\end{proof}
+
+\begin{remark}[Jensen wedge]\label{rem:jensen}
+The quantity $J_k$ in Lemma~\ref{lem:clearing} is the curvature
+(wealth-effect) term absent under CARA; a second-order expansion of
+$Z(\pi)=0$ gives the project's closed form
+$\pi^*\approx\bar m+(\tfrac12-p)\,\mathrm{Var}(m)/\gamma$: the price is the
+average log-odds plus a wedge proportional to belief
+\emph{disagreement} and inversely proportional to $\gamma$. The wedge
+vanishes identically under full revelation ($m_k\equiv\pi$), which is the
+analytic root of the Grossman--Stiglitz degeneracy in
+Proposition~\ref{prop:GS} below \cite{REZN}.
+\end{remark}
+
+\begin{lemma}[Invariance and compactness of the operator]\label{lem:invariance}
+Assume $\chi<1$ and set
+$L_\star:=\dfrac{\tau+\beta}{1-\chi}$, $\Kc:=\Kc(B,L_\star)$ as in
+\eqref{eq:K}. Then $\Psi_{h,\delta}$ (the operator \eqref{eq:Phi} in logit
+coordinates) maps $\Kc$ into $\Kc$ and is Lipschitz continuous on
+$(\Kc,\norm{\cdot}_\infty)$ with constant $\chi+C_P$.
+\end{lemma}
+
+\begin{proof}
+Fix $\Pi\in\Kc$ and write
+\[
+m_k(u):=\tau u_k+b^{h,\delta}(\Pi(u),u_k;\Pi),
+\qquad
+\Psi(\Pi)(u)=\pi^*\big(m_1(u),m_2(u),m_3(u)\big).
+\]
+
+\emph{Range.} By Lemma~\ref{lem:bayes}(ii), $|m_k(u)|\le B$, and by the
+sandwich in Lemma~\ref{lem:clearing}(ii), $|\Psi(\Pi)(u)|\le B$.
+
+\emph{Symmetry.} If $\sigma$ permutes coordinates, then since $\Pi$ is
+symmetric, $\Pi(u^\sigma)=\Pi(u)$ and
+$m_k(u^\sigma)=m_{\sigma(k)}(u)$; $\pi^*$ is symmetric, so
+$\Psi(\Pi)(u^\sigma)=\Psi(\Pi)(u)$.
+
+\emph{Oddness.} Substituting $t\mapsto-t$ in \eqref{eq:Areg} and using
+$K_h$ even, $\Pi$ odd, $\rho_\delta$ even, $f_v(-t)=f_{1-v}(t)$, one gets
+$A^{h,\delta}_v(-\hat\pi,-u_1;\Pi)=A^{h,\delta}_{1-v}(\hat\pi,u_1;\Pi)$,
+hence $b(-\hat\pi,-u_1;\Pi)=-b(\hat\pi,u_1;\Pi)$ and $m_k(-u)=-m_k(u)$.
+Oddness of $\pi^*$ (Lemma~\ref{lem:clearing}(iii)) finishes.
+
+\emph{Lipschitz bound.} For $u,u'\in Q$, by
+Lemma~\ref{lem:bayes}(iii) and $\Lip_\infty(\Pi)\le L_\star$,
+\[
+|m_k(u)-m_k(u')|
+\le \tau|u_k-u'_k|+\chi\,|\Pi(u)-\Pi(u')|+\beta\,|u_k-u'_k|
+\le \big(\tau+\beta+\chi L_\star\big)\norm{u-u'}_\infty .
+\]
+By non-expansiveness (Lemma~\ref{lem:clearing}(iii)),
+$|\Psi(\Pi)(u)-\Psi(\Pi)(u')|\le\max_k|m_k(u)-m_k(u')|$, and
+$\tau+\beta+\chi L_\star=L_\star$ by the definition of $L_\star$. So
+$\Psi(\Pi)\in\Kc$.
+
+\emph{Continuity in $\Pi$.} For $\Pi,\tilde\Pi\in\Kc$ and any $u$,
+\begin{align*}
+|m_k(u)-\tilde m_k(u)|
+&\le \big|b(\Pi(u),u_k;\Pi)-b(\tilde\Pi(u),u_k;\Pi)\big|
++\big|b(\tilde\Pi(u),u_k;\Pi)-b(\tilde\Pi(u),u_k;\tilde\Pi)\big|\\
+&\le(\chi+C_P)\,\norm{\Pi-\tilde\Pi}_\infty
+\end{align*}
+by Lemma~\ref{lem:bayes}(iii)--(iv), and non-expansiveness of $\pi^*$
+transfers the bound to $\Psi$.
+\end{proof}
+
+\section{Main existence theorem}\label{sec:main}
+
+\begin{theorem}[Existence of a regularized PR-REE]\label{thm:main}
+Fix $\tau,\gamma,U>0$ and regularization parameters $h,\delta>0$ with
+\[
+\chi=\frac{12\tau U}{h^2}<1 .
+\]
+Let $B=3\tau U$, $\beta=4U/\delta^2$, $L_\star=(\tau+\beta)/(1-\chi)$, and
+$\Kc=\Kc(B,L_\star)$ as in \eqref{eq:K}. Then the operator
+$\Phi_{h,\delta}$ of \eqref{eq:Phi} has a fixed point
+$P_\star=\Lam(\Pi_\star)$ with $\Pi_\star\in\Kc$. The price function
+$P_\star$ takes values in $[\varepsilon,1-\varepsilon]$ with
+$\varepsilon=(1+e^{3\tau U})^{-1}$, is symmetric in $(u_1,u_2,u_3)$,
+satisfies $P_\star(-u)=1-P_\star(u)$, and satisfies conditions (1)--(3) of
+Definition~\ref{def:exact} with the evidence $A_v$ replaced by
+$A_v^{h,\delta}$, i.e.\ it is an $(h,\delta)$-regularized REE. If in
+addition
+\begin{equation}\label{eq:subcritical}
+\chi\le\tfrac13
+\qquad\text{and}\qquad
+\beta\,<\,\tau\,(2-3\chi),
+\end{equation}
+then $L_\star<3\tau=\Lip_\infty(\Pi_{\mathrm{FR}})$, so the entire candidate
+set $\Kc$ — and in particular $P_\star$ — lies in the subcritical-tilt class
+that excludes the fully revealing price: $P_\star\neq P_{\mathrm{FR}}$.
+\end{theorem}
+
+\begin{proof}
+$\Kc$ is a nonempty, convex subset of the Banach space
+$(C(Q),\norm{\cdot}_\infty)$; it is bounded and uniformly equicontinuous
+(Lipschitz constant $L_\star$), and closed under uniform limits, hence
+compact by Arzel\`a--Ascoli. By Lemma~\ref{lem:invariance},
+$\Psi_{h,\delta}:\Kc\to\Kc$ is well defined and Lipschitz continuous.
+Schauder's fixed point theorem \cite[Cor.~2.13]{Zeidler} yields
+$\Pi_\star\in\Kc$ with $\Psi_{h,\delta}(\Pi_\star)=\Pi_\star$, i.e.\
+$P_\star:=\Lam(\Pi_\star)$ satisfies $\Phi_{h,\delta}(P_\star)=P_\star$.
+Unwinding \eqref{eq:Phi}: at every $u\in Q$, condition (3) holds with
+$p=P_\star(u)$, and since $\clear$ outputs the unique market-clearing root,
+(2) holds; (1) holds with the regularized evidence by construction
+\eqref{eq:b}. The range, symmetry and oddness statements are
+$\Pi_\star\in\Kc$ plus Lemma~\ref{lem:bayes}(ii). Finally, under
+\eqref{eq:subcritical},
+$L_\star=(\tau+\beta)/(1-\chi)<\tau(3-3\chi)/(1-\chi)=3\tau$, while
+$\Pi_{\mathrm{FR}}=\tau(u_1+u_2+u_3)$ satisfies
+$|\Pi_{\mathrm{FR}}(u)-\Pi_{\mathrm{FR}}(u')|=3\tau\norm{u-u'}_\infty$ along
+the diagonal direction, so $\Pi_{\mathrm{FR}}\notin\Kc$ and
+$\Pi_\star\neq\Pi_{\mathrm{FR}}$.
+\end{proof}
+
+\begin{remark}[Reading the hypotheses]
+The single substantive hypothesis is the \emph{subcritical feedback}
+condition $\chi<1$: the sensitivity of the price-evidence to the
+conditioning price must not exceed unity, otherwise the inference channel
+can amplify price variation without bound (this is precisely the
+self-referential channel that produces the fully revealing solution). The
+condition is a sufficient worst-case bound, not sharp: it requires
+$h^2>12\tau U$, i.e.\ a coarse price-band relative to the logit range
+$[-3\tau U,3\tau U]$. Sharper (measure-weighted, rather than sup-norm)
+estimates of $\partial_{\hat\pi}b$ would relax it; the numerical
+continuation of Corollary~\ref{cor:continuation} is how the result is
+transported to small $h$ in practice.
+\end{remark}
+
+\section{The Grossman--Stiglitz degeneracy and its resolution}
+\label{sec:GS}
+
+At exact $h=\delta=0$ the fully revealing price is \emph{always} a fixed
+point; this is the noiseless-REE degeneracy of
+\cite{GrossmanStiglitz,Hellwig,Radner}. The regularization breaks it.
+Define the exact ($h=\delta=0$) operator $\Phi_0$ by \eqref{eq:Phi} with the
+co-area evidence \eqref{eq:coarea} (well defined at
+$P_{\mathrm{FR}}$, whose in-slice gradients never vanish).
+
+\begin{proposition}[Degeneracy at $h=0$; broken for $h,\delta>0$]
+\label{prop:GS}
+\begin{enumerate}[(i)]
+\item $\Phi_0(P_{\mathrm{FR}})=P_{\mathrm{FR}}$ on $Q$: the fully revealing
+price is an exact fixed point of the unregularized operator for every
+$(\gamma,\tau,U)$.
+\item For every $h,\delta>0$ with $h^2+\tau^2\delta^2>0$ there exists
+$U_0=U_0(h,\delta,\tau,\gamma)$ such that for all $U\ge U_0$,
+$\Phi_{h,\delta}(P_{\mathrm{FR}})\neq P_{\mathrm{FR}}$. In particular no
+fixed point of $\Phi_{h,\delta}$ equals $P_{\mathrm{FR}}$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) Fix $u_1$ and $\hat\pi=\operatorname{logit}p$. On the level set
+$\{(t_2,t_3):\Pi_{\mathrm{FR}}(u_1,t_2,t_3)=\hat\pi\}$ the others' aggregate
+$\tau(t_2+t_3)=\hat\pi-\tau u_1$ is \emph{constant}. Hence in the ratio
+$A_1/A_0$, whatever measure is used on the level set (the co-area weight
+cancels), $b(\hat\pi,u_1)=\log e^{\hat\pi-\tau u_1}=\hat\pi-\tau u_1$
+exactly, so $m_k=\tau u_k+b=\hat\pi$ for every $k$: each trader's posterior
+equals the observed price, every excess demand is $x(\hat\pi,\hat\pi)=0$
+(Lemma~\ref{lem:clearing}(i)), and the market clears at the observed price
+itself. Thus $\Phi_0(P_{\mathrm{FR}})(u)=P_{\mathrm{FR}}(u)$ for all $u$.
+(The archive verifies this numerically to residual
+$1.7\times10^{-15}$ \cite{REZN}.)
+
+(ii) First take $U=\infty$ in \eqref{eq:Areg} (all integrals over $\R^3$;
+absolutely convergent). At $\Pi=\Pi_{\mathrm{FR}}$ everything is Gaussian:
+under $\nu$ of Lemma~\ref{lem:bayes}(i), $w:=\tau(t_2+t_3)\sim N(-\tau,2\tau)$
+a priori (under $f_0\otimes f_0$), $\tau t_1\sim N(\tau u_1,\tau^2\delta^2)$,
+and the kernel conditions on the noisy observation
+$\tau t_1+w=\hat\pi+N(0,h^2)$. Gaussian conditioning plus
+$\log\E e^{w}=\E w+\tfrac12\mathrm{Var}(w)$ give, after simplification,
+\begin{equation}\label{eq:rho}
+m_k\;=\;\tau u_k+b^{h,\delta}(\hat\pi,u_k;\Pi_{\mathrm{FR}})
+\;=\;\rho\,\hat\pi+(1-\rho)\,\tau u_k,
+\qquad
+\rho:=\frac{2\tau}{2\tau+\tau^2\delta^2+h^2}\in(0,1).
+\end{equation}
+So the regularized price-signal is \emph{shrunk}: posteriors are a strict
+convex combination of the price and the private signal. Evaluate at the
+test point $u^\dagger=(a,a,-2a)$, $a>0$, where
+$\hat\pi=\Pi_{\mathrm{FR}}(u^\dagger)=0$, $p=\tfrac12$. With
+$c:=(1-\rho)\tau a>0$ the posterior log-odds are $(c,c,-2c)$ and, using
+$x(m,0)=2\tanh\!\big(m/2\gamma\big)$, aggregate excess demand at the
+observed price is
+\[
+Z(0)\;=\;4\tanh\theta-2\tanh 2\theta
+\;=\;\frac{4\tanh^3\theta}{1+\tanh^2\theta}\;>\;0,
+\qquad \theta:=\frac{c}{2\gamma}>0 .
+\]
+Since $Z$ is strictly decreasing (Lemma~\ref{lem:clearing}), the clearing
+root is strictly positive:
+$\Phi_{h,\delta}(P_{\mathrm{FR}})(u^\dagger)>\tfrac12
+=P_{\mathrm{FR}}(u^\dagger)$. For finite $U$ the evidence integrals differ
+from their $U=\infty$ values by Gaussian tail terms: the integrands are
+dominated by $K_h\rho_\delta f_vf_v\le \sup K_h\cdot\rho_\delta f_vf_v$,
+whose mass outside $Q$ vanishes as $U\to\infty$, while the denominators stay
+bounded below for $\hat\pi$ in a fixed compact set; hence
+$b^{h,\delta}_{(U)}\to b^{h,\delta}_{(\infty)}$ uniformly on compacts as
+$U\to\infty$. Choosing $a$ fixed (say $a=1$) and $U_0$ large enough that the
+perturbation of $Z(0)$ is less than
+$\tfrac12\cdot 4\tanh^3\theta/(1+\tanh^2\theta)$ preserves the strict sign.
+\end{proof}
+
+\begin{remark}[Risk aversion selects the branch]
+The displaced demand in the proof of (ii) is $O(\theta^3)$ with
+$\theta\propto(1-\rho)\tau a/\gamma$: the force that pushes the price off
+the fully revealing ray is the \emph{disagreement-times-curvature} (Jensen)
+channel of Remark~\ref{rem:jensen}, scaled by $1/\gamma$. In the CARA limit
+(demand linear in log-odds) the analogous computation gives
+$Z(0)=\sum_k(m_k-\hat\pi)/\gamma_{\mathrm{CARA}}=0$ at every point:
+regularized or not, CARA clearing reproduces the sufficient statistic and
+the equilibrium is fully revealing — consistent with Hellwig's closed form,
+verified in the archive (deficit at $P_{\mathrm{FR}}$ of order $10^{-4}$ and
+shrinking with resolution; CRRA deficit $\sim\gamma^{-0.94}\to0$ as
+$\gamma\to\infty$) \cite{Hellwig,REZN}. Partial revelation here is a CRRA
+wealth-curvature effect, not a noise effect.
+\end{remark}
+
+\section{The exact co-area limit}\label{sec:limit}
+
+We now relate the regularized fixed points to Definition~\ref{def:exact}.
+The first lemma is the consistency of the band--mollifier quadrature.
+
+\begin{lemma}[Co-area consistency]\label{lem:consistency}
+Let $\Pi\in C^1(Q)$ be symmetric with
+$\partial_2\Pi\ge c>0$ and $\partial_3\Pi\ge c>0$ on $Q$. Fix
+$u_1\in(-U,U)$ and $\hat\pi$ an interior value of
+$\Pi(u_1,\cdot,\cdot)$. Then
+\[
+A^{h,\delta}_v(\hat\pi,u_1;\Pi)\;\longrightarrow\;
+g_v(\hat\pi;u_1):=
+\int_{\{(t_2,t_3):\,\Pi(u_1,t_2,t_3)=\hat\pi\}}
+\frac{f_v(t_2)f_v(t_3)}{|\nabla_{\!(2,3)}\Pi|}\,d\Hc^1
+\quad\text{as }(h,\delta)\to(0,0),
+\]
+the co-area evidence computed on the logit surface. Since level sets of
+$\Pi$ and of $P=\Lam(\Pi)$ coincide and the smooth change of level variable
+rescales $g_0$ and $g_1$ by the same positive factor
+$\Lam'(\hat\pi)^{-1}$, the ratio $A_1/A_0$ — hence the posterior
+\eqref{eq:b} — converges to its value under the exact evidence
+\eqref{eq:coarea}.
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+Let $g_v(\pi;t_1):=\int_{\{\Pi(t_1,\cdot,\cdot)=\pi\}}
+f_vf_v/|\nabla_{(2,3)}\Pi|\,d\Hc^1$ denote the in-slice co-area density. By
+the co-area formula \cite[\S3.4]{EvansGariepy},
+\[
+A^{h,\delta}_v(\hat\pi,u_1;\Pi)
+=\int\rho_\delta(t_1-u_1)\Big[\int K_h(\pi-\hat\pi)\,g_v(\pi;t_1)\,
+d\pi\Big]dt_1 .
+\]
+Under the gradient hypothesis the level set
+$\{\Pi(t_1,\cdot,\cdot)=\pi\}$ is the graph $t_3=\eta(t_2;\pi,t_1)$ of a
+$C^1$ function with slope $-\partial_2\Pi/\partial_3\Pi$ bounded by $c$ and
+$\norm{\nabla\Pi}_\infty/c$; its $t_2$-domain is an interval whose endpoints
+solve $\Pi(t_1,t_2,\pm U)=\pi$ and are Lipschitz in $(\pi,t_1)$ by the
+implicit function theorem (monotonicity in $t_2$ from $\partial_2\Pi\ge c$).
+Hence $g_v(\cdot;\cdot)$ is continuous, and
+$K_h*g_v\to g_v$, $\rho_\delta*\,\cdot\to$ evaluation at $u_1$, uniformly on
+compacts. The change of variables between level sets of $\Pi$ and of
+$P=\Lam(\Pi)$ multiplies $g_v$ by the same positive factor for $v=0,1$, so
+the posterior \eqref{eq:b} is unaffected.
+\end{proof}
+
+To pass to the limit along a family of regularized equilibria we need
+uniform regularity, which Theorem~\ref{thm:main} does not supply as
+$h\to0$ (its hypothesis $\chi<1$ fails). We therefore state the limit
+theorem conditionally; the hypotheses are exactly the bounds observed,
+uniformly, along the certified numerical branch \cite{REZN}.
+
+\begin{assumption}\label{ass:uniform}
+There are sequences $h_n,\delta_n\downarrow0$ and fixed points
+$P_n=\Lam(\Pi_n)$ of $\Phi_{h_n,\delta_n}$, and constants
+$\alpha\in(0,1]$, $C_1<\infty$, $c>0$, $\kappa\in(0,1)$, such that:
+\textup{(A1)} $\norm{\Pi_n}_{C^{1,\alpha}(Q)}\le C_1$ and
+$\partial_k\Pi_n\ge c$ on $Q$ for all $k,n$;
+\textup{(A2)} (subcritical tilt)
+$\max_k\norm{\partial_k\Pi_n}_\infty\le\kappa\,\tau$ for all $n$.
+\end{assumption}
+
+\begin{theorem}[Exact PR-REE as a regularization limit]\label{thm:limit}
+Under Assumption~\ref{ass:uniform} there is a subsequence
+$\Pi_{n_j}\to\Pi_\ast$ in $C^1(Q)$ such that $P_\ast=\Lam(\Pi_\ast)$
+satisfies conditions (1)--(3) of Definition~\ref{def:exact} with the exact
+co-area evidence \eqref{eq:coarea} at every interior $u$. Moreover
+$\max_k\norm{\partial_k\Pi_\ast}_\infty\le\kappa\tau<\tau$, whereas
+$\partial_k\Pi_{\mathrm{FR}}\equiv\tau$; hence
+$P_\ast\neq P_{\mathrm{FR}}$ and $P_\ast$ is an exact PR-REE on $Q$.
+\end{theorem}
+
+\begin{proof}
+By (A1) and Arzel\`a--Ascoli in $C^{1}$ (compact embedding
+$C^{1,\alpha}\hookrightarrow C^1$), extract $\Pi_{n_j}\to\Pi_\ast$ in
+$C^1(Q)$; the bounds $\partial_k\Pi_\ast\ge c$ and
+$\norm{\partial_k\Pi_\ast}_\infty\le\kappa\tau$ pass to the limit. The
+in-slice co-area densities $g^{(n)}_v$ of $\Pi_n$ admit the uniform graph
+parameterization of Lemma~\ref{lem:consistency} with constants depending
+only on $(c,C_1)$; hence $(g^{(n)}_v)_n$ is uniformly bounded and
+equicontinuous, and $g^{(n)}_v\to g^{(\ast)}_v$ uniformly on compact subsets
+of interior level values. Consequently
+\[
+A^{h_n,\delta_n}_v(\hat\pi,u_1;\Pi_n)
+=\big(\rho_{\delta_n}\!*\!\big(K_{h_n}\!*g^{(n)}_v\big)\big)(\hat\pi,u_1)
+\;\longrightarrow\;g^{(\ast)}_v(\hat\pi;u_1)
+\]
+uniformly on compacts, with $g^{(\ast)}_v$ the exact co-area evidence of
+$\Pi_\ast$. The posteriors $\mu^{(n)}_k$ converge uniformly to the exact
+co-area posteriors of $P_\ast$ (the denominators are bounded below by the
+uniform two-sided evidence bound, Lemma~\ref{lem:bayes}(ii), which is
+$h,\delta$-independent), and $\clear$ is continuous
+(Lemma~\ref{lem:clearing}); passing to the limit in
+$P_n(u)=\Phi_{h_n,\delta_n}(P_n)(u)$ gives (1)--(3) for $P_\ast$. The tilt
+gap gives $\Pi_\ast\neq\Pi_{\mathrm{FR}}$.
+\end{proof}
+
+\section{Continuation in $(h,\delta,\gamma,\tau)$}\label{sec:continuation}
+
+\begin{corollary}[Existence by continuation]\label{cor:continuation}
+Let $z=(h,\delta,\gamma,\tau)$ range in an open set on which
+$\chi$ may exceed $1$. The map $(P,z)\mapsto\Phi_z(P)$ is $C^1$ from
+$C^{0,1}(Q)\times\R^4_{++}$ to $C^{0,1}(Q)$ (differentiation under the
+integral in \eqref{eq:Areg}, smoothness of $\clear$ by
+Lemma~\ref{lem:clearing}(iii)). If $\bar P$ is a fixed point of
+$\Phi_{\bar z}$ at which $I-D_P\Phi_{\bar z}(\bar P)$ is boundedly
+invertible, then there is a neighborhood of $\bar z$ and a unique $C^1$
+branch $z\mapsto P(z)$ of fixed points through $\bar P$. In particular,
+existence at any certified parameter point extends to an open neighborhood
+in $(\gamma,\tau)$ and along the regularization path $h\downarrow0$ for as
+long as the linearization remains invertible.
+\end{corollary}
+
+\begin{proof}
+Implicit function theorem in Banach space applied to
+$F(P,z):=P-\Phi_z(P)$.
+\end{proof}
+
+\begin{remark}[Numerical instantiation]\label{rem:numerics}
+The archive provides the anchors: the low-$\tau$ ladder alone certifies
+$66$ equilibria on $\tau\in\{0.05,0.1,0.3,0.4\}\times
+\gamma\in[0.05,30]$ with double-precision residuals
+$\norm{P-\Phi(P)}\le 8\times10^{-15}$ and long-double residuals
+$\le10^{-17}$ (\texttt{lowtau/lowtau.json}), and the full
+$(\gamma,\tau)$ archive contains well over one hundred certified fixed
+points, several to $100$-decimal precision; the joint limit
+$h\to0$, $\Delta x\to0$ nails the equilibrium to residual
+$\sim10^{-14}$ with a positive, grid- and bandwidth-invariant information
+deficit $1-R^2\approx0.26$--$0.28$ at $(\gamma,\tau)=(0.1,2)$
+\cite{REZN}. Quadratic Newton convergence at each anchor is numerical
+evidence that $I-D_P\Phi$ is invertible there, i.e.\ that the branch of
+Corollary~\ref{cor:continuation} passes through every certified point; the
+positive deficit separates the branch from $P_{\mathrm{FR}}$ (whose deficit
+is $0$) uniformly along the sweep. A computer-assisted (interval-arithmetic)
+bound on $\norm{(I-D_P\Phi)^{-1}}$ at one anchor would upgrade
+Assumption~\ref{ass:uniform} and the branch separation to a fully rigorous
+theorem at small $h$; this is the natural next step.
+\end{remark}
+
+\begin{remark}[Comparative statics]
+Along any $C^1$ branch from Corollary~\ref{cor:continuation}, the deficit
+$1-R^2$ and the price surface vary smoothly in $(\gamma,\tau)$.
+Differentiating the second-order clearing identity of
+Remark~\ref{rem:jensen} predicts the deficit to be decreasing in $\gamma$
+and increasing in $\tau$ (the wedge is
+$(\tfrac12-p)\mathrm{Var}(m)/\gamma$, and $\mathrm{Var}(m)$ grows with
+signal precision); this is exactly the monotonicity observed on the
+certified $(\gamma,\tau)$ map \cite{REZN}. We state it as a numerical
+regularity rather than a theorem, since the sign argument is second-order
+exact only in the small-disagreement regime.
+\end{remark}
+
+\section{Discussion}\label{sec:discussion}
+
+\paragraph{What is proven.}
+Theorem~\ref{thm:main} is unconditional: for every $(\gamma,\tau,U)$ and
+every regularization with subcritical feedback $\chi<1$, a symmetric, odd,
+uniformly Lipschitz regularized REE exists, with prices in
+$[\varepsilon,1-\varepsilon]$, and under the slightly stronger condition
+\eqref{eq:subcritical} it lives in a tilt class that provably excludes the
+fully revealing price. Proposition~\ref{prop:GS} shows the exact operator
+always admits $P_{\mathrm{FR}}$ (the Grossman--Stiglitz degeneracy, verified
+in the archive to $1.7\times10^{-15}$) and that any positive regularization
+destroys this fixed point, so the object of Theorem~\ref{thm:main} is never
+the revealing price in disguise. Theorem~\ref{thm:limit} transfers
+existence to the exact co-area operator of Definition~\ref{def:exact},
+conditionally on uniform $C^{1,\alpha}$, gradient-lower, and
+subcritical-tilt bounds along a vanishing-regularization sequence —
+precisely the bounds measured, stably, on the certified numerical branch.
+
+\paragraph{The role of the truncation $[\varepsilon,1-\varepsilon]$ and
+$[-U,U]$.}
+The price floor is not an assumption but an output: the two-sided evidence
+bound (Lemma~\ref{lem:bayes}(ii)) caps the posterior log-odds at
+$3\tau U$ because three bounded signals carry bounded likelihood ratio. On
+unbounded signal space the equilibrium price must approach $0$ and $1$ in
+the tails, so no uniform floor can hold on $\R^3$; the natural route to an
+untruncated statement is an exhaustion $U_n\uparrow\infty$ with locally
+uniform versions of (A1)--(A2) and a diagonal argument. We leave this as an
+open (technical, not conceptual) extension.
+
+\paragraph{Why risk aversion matters.}
+The selection of a non-revealing branch is driven entirely by the CRRA
+wealth-curvature term $J_k$ in Lemma~\ref{lem:clearing}: clearing contracts
+log-odds strictly ($\sum_k w_k<1$) exactly when traders disagree with the
+price, and the second-order wedge $(\tfrac12-p)\mathrm{Var}(m)/\gamma$
+compresses the price toward $\tfrac12$, i.e.\ destroys the sufficient
+statistic. Under CARA the wedge is identically zero, clearing is an exact
+average of log-odds, and full revelation is the unique outcome (Hellwig's
+closed form, reproduced numerically in the archive); accordingly the CRRA
+deficit vanishes like $\gamma^{-0.94}$ in the CARA limit. The economics:
+with wealth effects, prices aggregate beliefs \emph{non-linearly}, and a
+non-degenerate amount of private information remains private — no noise
+traders are needed to break the Grossman--Stiglitz paradox.
+
+\paragraph{Why the smooth function space is essential.}
+The co-area evidence is well defined only on level sets of positive
+regularity, and the archive's diagnosis is sharper: the exact evidence
+$A_v(\cdot,u_1)$ is $C^0$ but generically \emph{not} $C^1$ at Morse-critical
+prices (where $\nabla P$ vanishes on a level set), with derivative blow-ups
+of two orders of magnitude on controlled test surfaces. The gradient lower
+bound in (A1) excludes critical levels on $Q$ and is what makes
+Lemma~\ref{lem:consistency} and Theorem~\ref{thm:limit} run; it is also why
+the kernel band should be read as a consistent quadrature of the co-area
+integral (a numerical-regularity device), not as economic noise: the
+equilibrium deficit is invariant to $h$ once resolved \cite{REZN}.
+
+\paragraph{Toward uniqueness.}
+Global uniqueness is false at $h=0$ ($P_{\mathrm{FR}}$ always coexists).
+The right target is uniqueness \emph{within the subcritical-tilt class}.
+Two routes appear viable: (a) a quantitative version of
+Lemma~\ref{lem:clearing}(iii) — clearing is a strict $\ell^\infty$
+contraction off the no-trade set, with modulus $1-\min_k J_k/(\cdot)$ —
+combined with a bound $\chi<1-\sup\sum_kw_k$-type estimate would make
+$\Psi$ a contraction on $\Kc$ and give uniqueness and constructive
+(Picard) convergence; (b) a degree-theoretic argument: if
+$I-D_P\Phi$ is invertible along the whole branch (as the Newton
+certificates suggest), the Leray--Schauder degree of $I-\Phi$ on the
+subcritical class is constant in $(h,\gamma,\tau)$ and equal to $\pm1$,
+ruling out branch folds but not disconnected solutions. Either upgrade
+requires spectral information about $D_P\Phi$ that is currently numerical.
+
+\begin{thebibliography}{9}
+\bibitem{Radner} R.~Radner, Rational expectations equilibrium: generic
+existence and the information revealed by prices, \emph{Econometrica}
+\textbf{47} (1979), 655--678.
+\bibitem{GrossmanStiglitz} S.~J. Grossman and J.~E. Stiglitz, On the
+impossibility of informationally efficient markets, \emph{American Economic
+Review} \textbf{70} (1980), 393--408.
+\bibitem{Hellwig} M.~F. Hellwig, On the aggregation of information in
+competitive markets, \emph{Journal of Economic Theory} \textbf{22} (1980),
+477--498.
+\bibitem{Allen} B.~Allen, Generic existence of completely revealing
+equilibria for economies with uncertainty when prices convey information,
+\emph{Econometrica} \textbf{49} (1981), 1173--1199.
+\bibitem{MilgromStokey} P.~Milgrom and N.~Stokey, Information, trade and
+common knowledge, \emph{Journal of Economic Theory} \textbf{26} (1982),
+17--27.
+\bibitem{BreonDrish} B.~Breon-Drish, On existence and uniqueness of
+equilibrium in a class of noisy rational expectations models,
+\emph{Review of Economic Studies} \textbf{82} (2015), 868--921.
+\bibitem{EvansGariepy} L.~C. Evans and R.~F. Gariepy, \emph{Measure Theory
+and Fine Properties of Functions}, CRC Press, 1992.
+\bibitem{Zeidler} E.~Zeidler, \emph{Nonlinear Functional Analysis and its
+Applications I: Fixed-Point Theorems}, Springer, 1986.
+\bibitem{REZN} REZN Project, \emph{K=3 CRRA rational-expectations
+fixed-point archive}: \texttt{FINDINGS.md},
+\texttt{k3\_coarea\_limit}, \texttt{k3\_verify\_coarea},
+\texttt{k3\_cara/HELLWIG\_CLOSED\_FORM.md},
+\texttt{k3\_coarea\_2dsweep}, \texttt{lowtau/lowtau.json},
+Fixed-Point Factory repository, 2026.
+\end{thebibliography}
+
+\end{document}

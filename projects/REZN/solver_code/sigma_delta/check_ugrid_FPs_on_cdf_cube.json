@@ -1,0 +1,91 @@
+{
+  "G_cdf": 13,
+  "NQ_cdf": 64,
+  "results": [
+    {
+      "label": "(a) kernel co-area G=17 h\u22480.32 (PR slope=0.18)",
+      "G_src": 17,
+      "interp_slope": 0.1615842439278861,
+      "interp_deficit": 0.31420658001100654,
+      "interp_d_FR": 0.2822148850507335,
+      "after_slope": 0.5405866332676836,
+      "after_deficit": 0.2107611145521063,
+      "after_d_FR": 0.1862916291876574,
+      "ferr": 0.49703525516643776,
+      "rms": 0.1879536409633617
+    },
+    {
+      "label": "(b) hfree_smooth G=9 h=0 (PR slope=0.36)",
+      "G_src": 9,
+      "interp_slope": 0.39785491815636703,
+      "interp_deficit": 0.21520559423956181,
+      "interp_d_FR": 0.2256600119834162,
+      "after_slope": 0.6002007679394461,
+      "after_deficit": 0.15856838853304286,
+      "after_d_FR": 0.15598560522239333,
+      "ferr": 0.4996284084342041,
+      "rms": 0.12692150301607072
+    },
+    {
+      "label": "(c) hfree_smooth G=9 h=0 NK reverify (||F||=3e-11)",
+      "G_src": 9,
+      "interp_slope": 0.3978537253428239,
+      "interp_deficit": 0.21520617100772096,
+      "interp_d_FR": 0.22566014445562846,
+      "after_slope": 0.6002040298365152,
+      "after_deficit": 0.15857049290824138,
+      "after_d_FR": 0.15598534393659916,
+      "ferr": 0.4996267287636693,
+      "rms": 0.1269210536655581
+    },
+    {
+      "label": "(d) hfree_smooth G=13 h=0 BEST (PR slope=0.47 ||F||=0.076)",
+      "G_src": 13,
+      "interp_slope": 0.6216192906500767,
+      "interp_deficit": 0.0775094440738958,
+      "interp_d_FR": 0.11147302062349328,
+      "after_slope": 0.6085462169491967,
+      "after_deficit": 0.23118678865141157,
+      "after_d_FR": 0.11093663462811766,
+      "ferr": 0.4998594805106241,
+      "rms": 0.06847226740513936
+    },
+    {
+      "label": "(e) u-grid h=0 linear scan G=17 (oscillating, near-FR)",
+      "G_src": 17,
+      "interp_slope": 0.836369112986558,
+      "interp_deficit": 0.024671024003990082,
+      "interp_d_FR": 0.04283409350547424,
+      "after_slope": 0.7947340606482762,
+      "after_deficit": 0.11353304866266337,
+      "after_d_FR": 0.05957859228907185,
+      "ferr": 0.3326745895215407,
+      "rms": 0.05266185249408147
+    },
+    {
+      "label": "(f) u-grid h=0 Hermite cubic G=17 (oscillating, near-FR)",
+      "G_src": 17,
+      "interp_slope": 0.8837840562962259,
+      "interp_deficit": 0.00404718489193775,
+      "interp_d_FR": 0.017299759763921743,
+      "after_slope": 0.7798285339914679,
+      "after_deficit": 0.1486495960340618,
+      "after_d_FR": 0.05881270302636714,
+      "ferr": 0.3326766875049844,
+      "rms": 0.05894436929796014
+    },
+    {
+      "label": "(g) cdf_cube \u03b3=0.1 own FP G=9",
+      "G_src": 9,
+      "interp_slope": 0.5539312021669216,
+      "interp_deficit": 0.169277071879135,
+      "interp_d_FR": 0.08542085144670716,
+      "after_slope": 0.6033294777897176,
+      "after_deficit": 0.1509197602290704,
+      "after_d_FR": 0.07965547082843275,
+      "ferr": 0.5000006012750631,
+      "rms": 0.02978790840303823
+    }
+  ],
+  "verdict": "A u-grid FP is also a CDF-cube FP iff ferr~0; otherwise the two operators have different FPs."
+}

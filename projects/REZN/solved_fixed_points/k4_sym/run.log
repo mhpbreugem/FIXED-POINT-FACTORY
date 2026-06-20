@@ -1,0 +1,6 @@
+K4 SYM STUDY LOG
+[18:56:24] Cython port built and validated: max|cy-nb|=0.0 over full grid (NL IC + random P). PASS<=1e-11. Numba 0.286 s/eval (4thr) vs Cython 0.972 s/eval (1thr). Study uses Numba (faster, parallel).
+[18:57:41] Symmetry verified: 495 multisets (C(12,4)); Phi(symmetric P) asymmetry = 0.0 (exact permutation-commuting); roundtrip err 5.6e-16; NL halo asym 7e-15.
+[18:59:56] PICARD g=0.1: undamped Picard from NL IC does NOT oscillate period-2. ||F||inf 0.43 -> non-smooth plateau ~0.012-0.020 (mean 0.0165); deficit -> 0.0003 (FR). Contrast K=3 period-2 osc @ ~0.2.
+[19:21:38] gamma=0.1 DONE: UNIQUE genuine FP = FULLY-REVEALING (||F||inf=9.5e-6, deficit~0). Off-FR seeds stall at non-smooth floor ||F||inf~0.07-0.20 (NOT real FPs). Floor recurs like K=3 but eq is FR not PR.
+[19:54:12] higher-gamma (0.25/0.5/1.0) complete; report.json aggregated.

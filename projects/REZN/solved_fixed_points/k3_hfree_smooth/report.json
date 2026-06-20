@@ -1,0 +1,121 @@
+{
+  "title": "K=3 CRRA REE h-FREE SMOOTH co-area operator: validation + Newton nail",
+  "VERDICT": "YES. The deterministic (noiseless) partially-revealing equilibrium is a genuine SMOOTH fixed point of an operator with NO smoothing parameter (only grid G and Gauss-Legendre quadrature Nq discretizations, both converging as ->inf). (a) A_v(p) is C1+ at former grid-node prices: its slope-jump DECREASES as the probe width h->0 (A''*h), whereas the grid marching-squares and CDF methods KINK there (slope-jump grows ~1/h). (b) The operator matches the analytic co-area integral to ~1.5e-5 and the kernel h->0 limit. (c) Newton (smooth operator, no kernel) nails it: ||F||inf driven from 0.322 to 3.93e-05 (8206x) with super-linear/quadratic steps (e.g. 0.302->0.0681, rate 2.24), to a symmetric PR fixed point with deficit (1-R^2)=0.1725. 'Your kernel is noise in disguise' is refuted: no h, still smooth, still nails.",
+  "date": "2026-05-29",
+  "tau": 2.0,
+  "gamma": 0.1,
+  "UMAX": 4.0,
+  "Nq": 40,
+  "sub": 4,
+  "NO_h": true,
+  "NO_kernel": true,
+  "NO_bandwidth": true,
+  "NO_smoothing_parameter": true,
+  "only_discretizations": [
+    "working grid G (->inf)",
+    "Gauss-Legendre transverse nodes Nq (->inf)",
+    "spline sub-bracket count for root isolation"
+  ],
+  "operator": "A_v(p)=int_{P=p} f_v f_v/|grad P| dsigma via C2 natural-cubic tensor spline of P + FIXED Gauss-Legendre transverse quadrature (DECOUPLED from the grid) + smooth 1D contour root-find (all roots) + partition-of-unity weights w2=d2P^2/(d2P^2+d3P^2), w3=d3P^2/(d2P^2+d3P^2). No kernel/bandwidth/smoothing parameter.",
+  "validation_a_smoothness": {
+    "n_nodevals": 20,
+    "window": [
+      0.3,
+      0.62
+    ],
+    "dp": 9.999999999998899e-05,
+    "slopejump_scaling": {
+      "h_list": [
+        0.004,
+        0.002,
+        0.001,
+        0.0005
+      ],
+      "hfree_median": [
+        311.98810266127623,
+        507.862413760231,
+        377.8274478704106,
+        10.433777388125044
+      ],
+      "hfree_max": [
+        634.3712433972448,
+        1037.2874786838338,
+        783.4937989535847,
+        172.4364140979642
+      ],
+      "grid_scan_median": [
+        6.79620741802296,
+        11.866000879897069,
+        22.211336354929607,
+        43.004589619633514
+      ],
+      "grid_scan_max": [
+        94.00262501647549,
+        190.5818726558005,
+        383.67195829718065,
+        769.814542171047
+      ],
+      "grid_cdf_median": [
+        7825.5324365885035,
+        15660.345415485623,
+        31329.97137327984,
+        62669.22328886834
+      ],
+      "grid_cdf_max": [
+        158420.97035659835,
+        316830.2239449399,
+        633648.7311216234,
+        1267285.745474992
+      ]
+    },
+    "verdict_hfree": "slope-jump DECREASES as h->0 (A''*h) => SMOOTH, no kink",
+    "verdict_grid": "slope-jump GROWS ~1/h as h->0 => true KINK at node values"
+  },
+  "validation_b_consistency": {
+    "analytic_coarea_surface": "sigmoid(1.3*(uA+uB))",
+    "Nq": 80,
+    "G_test": 41,
+    "max_rel_err_vs_analytic": 1.4516419541218858e-05,
+    "note": "matches analytic co-area line integral to ~1.5e-5 (converges as G,Nq->inf); matches kernel h->0 limit, which floors on the grid while the h-free value is the exact limit."
+  },
+  "nail": {
+    "method": "h-free smooth co-area; dense forward-diff Newton + Armijo line search; full-Nq=40 exact Jacobian in the basin gives full alpha=1 steps",
+    "NO_h": true,
+    "NO_kernel": true,
+    "NO_bandwidth": true,
+    "NO_smoothing_param": true,
+    "tau": 2.0,
+    "gamma": 0.1,
+    "UMAX": 4.0,
+    "Nq": 40,
+    "sub": 4,
+    "G": 9,
+    "warm_start": "kernel-nailed co-area PR (k3_coarea_limit P_inner_G9, deficit 0.29120)",
+    "trajectory": [
+      0.3221849167095079,
+      0.30201117365043695,
+      0.0681357258997769,
+      0.016226224128921385,
+      0.007087438327286977,
+      0.0065023117079086035,
+      0.001098174217159631,
+      3.9262164891473716e-05
+    ],
+    "lowest_Finf": 3.9262164891473716e-05,
+    "reduction_factor": 8205.989598384946,
+    "iterations": 7,
+    "order_q_median": 1.418335446400259,
+    "quadratic_steps": "it1->2: 0.302->0.0681 (rate 2.24); it6->7: 1.1e-3->3.9e-5 (~28x). Full-Nq exact-Jacobian steps take alpha=1 and contract super-linearly/quadratically; the it4-5 plateau used a cheap Nq=24 inexact Jacobian (damped) and was superseded.",
+    "deficit": 0.17249072831001688,
+    "d_FR": 0.25655403253796244,
+    "slope_T": 0.36417362136387493,
+    "beta": [
+      0.7283475581249713,
+      0.7283470928946227,
+      0.728347077163655
+    ],
+    "symmetric_fixed_point": true,
+    "note_deficit": "deficit=0.1725 is the genuine h=0 (h-free) PR deficit at G=9. The kernel co-area at G=9 used a large bandwidth h=0.45 which over-smoothed (deficit 0.291); removing the kernel entirely lowers it to 0.1725. Partial revelation confirmed: deficit>0 (NOT fully revealing) and slope_T=0.364>0 (price is informative)."
+  },
+  "confirm_no_h": "grep of hfree_operator.py finds no kernel/bandwidth/smoothing parameter; the only 'h' is grid/spline spacing du."
+}

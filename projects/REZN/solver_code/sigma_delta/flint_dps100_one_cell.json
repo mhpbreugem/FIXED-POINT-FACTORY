@@ -1,0 +1,22 @@
+{
+  "arb_precision_bits": 333,
+  "arb_dps": 100,
+  "gamma": 10.0,
+  "G": 9,
+  "NQ": 40,
+  "cell_(i,j,k)": [
+    4,
+    4,
+    4
+  ],
+  "P_FR_cell": 0.5,
+  "mu_0": 0.5,
+  "mu_1": 0.5,
+  "mu_2": 0.5,
+  "Phi_arb_cell": 0.5,
+  "Phi_arb_minus_FR": -3.111507638930571e-61,
+  "arb_interval_rad": 5.714937009635873e-101,
+  "Phi_float64_cell": 0.5000000000000004,
+  "Phi_float64_minus_FR": 4.440892098500626e-16,
+  "flint_vs_float64_diff": -4.440892098500626e-16
+}

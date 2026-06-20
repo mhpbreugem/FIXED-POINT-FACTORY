@@ -1,0 +1,697 @@
+{
+  "title": "SYMMETRY-REDUCED strict h=0 K=4 (4 identical agents) CRRA REE contour-Phi fixed-point study",
+  "status": "complete",
+  "grid": {
+    "G_inner": 9,
+    "pad": 2,
+    "G_full": 13,
+    "UMAX_inner": 4.0,
+    "du": 1.0,
+    "tau": 2.0,
+    "W": 1.0,
+    "inner_unknowns_full": 6561,
+    "symmetric_unknowns_C(12,4)": 495
+  },
+  "task1_cython_port": {
+    "operator_used_for_study": "Numba phi_K4_halo (parallel=True, 4 threads) -- faster than the single-threaded Cython port; symmetry reduction is the main tractability win, so we use the faster operator. Cython port built + bit-exact validated.",
+    "cython_module": "/tmp/build_k4_cy/k4_phi_cy*.so (source /tmp/k4_phi_cy.pyx)",
+    "validation": {
+      "init_no_learning_halo_max_abs_diff": 0.0,
+      "phi_on_NL_IC_max_abs_diff": 0.0,
+      "phi_on_random_P_max_abs_diff": 0.0,
+      "worst_max_abs_diff": 0.0,
+      "pass_1e-11": true,
+      "note": "Cython kernel reproduces the Numba operator BIT-EXACTLY (0.0 diff) over the full 13^4 grid on the NL IC and a random P. Built with -O3, fastmath OFF (matches Numba fastmath=False)."
+    },
+    "speed": {
+      "s_per_eval_numba_4threads": 0.286,
+      "s_per_eval_cython_1thread": 0.972,
+      "cython_speedup_vs_numba": 0.29,
+      "note": "Cython is single-threaded; Numba uses prange over 4 cores. Cython matches exactly but is ~3.4x slower here, so the study uses the parallel Numba operator."
+    }
+  },
+  "task2_symmetry": {
+    "representation": "sorted index tuples (multisets) i1<=i2<=i3<=i4 over the inner grid",
+    "n_reduced_unknowns": 495,
+    "n_reduced_expected_C(12,4)": 495,
+    "expand_reduce_roundtrip_max_err": 5.55e-16,
+    "expand_output_asymmetry_over_S4": 0.0,
+    "NL_halo_inner_asymmetry": 7.1e-15,
+    "phi_of_symmetric_P_asymmetry_over_S4": 0.0,
+    "commutes_with_permutations": true,
+    "note": "Phi maps symmetric->symmetric BIT-EXACTLY (asymmetry of Phi(symmetric P) = 0.0, far below the 1e-12 target). The reduced phi_red = reduce(phi_full(expand(v))) is therefore exact; orbit-average vs representative-read agree to 4e-16."
+  },
+  "interpretation_gamma_0.1": {
+    "genuine_fixed_point": "ONLY the fully-revealing point (FP0) is a true fixed point: ||F||inf = 9.45e-6 (NK floor ~1e-5), deficit = 1.1e-16, d_FR = 1.7e-10. P = lam(tau * sum_k u_k) essentially solves Phi(P)=P.",
+    "naive_dedup_caveat": "The dedup counts 5 'distinct' low-residual points, but FP1-FP4 (||F||inf = 0.0088, 0.067, 0.067, 0.087) are NOT fixed points -- they are where Newton-Krylov STALLED on the non-smooth residual. Treating ||F||inf<0.005 as the genuine-FP bar, there is exactly ONE equilibrium (FR).",
+    "(a)_unique_PR_equilibrium": "NO unique PR equilibrium. The unique genuine equilibrium at gamma=0.1 is FULLY-REVEALING (deficit ~0), NOT partially-revealing. This DIFFERS from K=3 (unique PR eq, deficit ~0.27). Adding a 4th identical agent appears to push the strict-h0 REE onto the FR manifold.",
+    "(b)_nonsmooth_floor": "YES, recurs strongly. Every non-FR seed (NL, constant, both random) stalls at ||F||inf ~ 0.07-0.20; NK cannot drive below. Even the FR point has a residual FLOOR ~1e-5 (NK cannot reach machine zero) due to the non-differentiable contour-crossing decisions -- the same active-set non-smoothness that capped K=3 at ~0.2. The K=4 stall band (~0.07-0.2 for off-FR seeds) is comparable to K=3's ~0.2.",
+    "(c)_picard_period2_oscillation": "NO. See picard_oscillation block: Picard from NL IC converges (deficit -> 0.0003, FR) with a small ~0.015 non-smooth ||F||inf plateau; no clean period-2 cycle. K=3's period-2 learning oscillation does NOT recur at K=4.",
+    "summary_vs_K3": "Of the three K=3 structural features, K=4 reproduces the NON-SMOOTH RESIDUAL FLOOR (b) but NOT the unique-PR-equilibrium (a, K=4 is FR instead) and NOT the period-2 Picard oscillation (c, K=4 converges to FR)."
+  },
+  "task3_gamma_results": {
+    "0.1": {
+      "n_distinct_fps": 5,
+      "best_Finf_floor": 9.45077535273453e-06,
+      "distinct_fps": [
+        {
+          "seed": "fully_revealing",
+          "Finf": 9.45077535273453e-06,
+          "deficit": 1.1102230246251565e-16,
+          "d_fr": 1.7133759653016374e-10,
+          "class": "FR",
+          "status": "plateau",
+          "init_F": 9.45077535273453e-06,
+          "init_d": 1.1102230246251565e-16,
+          "nk_iters": 5,
+          "secs": 51.97804458199994,
+          "seeds_reaching": [
+            "fully_revealing"
+          ]
+        },
+        {
+          "seed": "blend_nl_fr",
+          "Finf": 0.008787148238862286,
+          "deficit": 0.02226091977233058,
+          "d_fr": 0.07607646607073776,
+          "class": "mid",
+          "status": "noconv",
+          "init_F": 0.2222874314538148,
+          "init_d": 0.041743245304299736,
+          "nk_iters": 16,
+          "secs": 186.2894389129999,
+          "seeds_reaching": [
+            "blend_nl_fr"
+          ]
+        },
+        {
+          "seed": "random_sym_2",
+          "Finf": 0.06651148555604125,
+          "deficit": 0.061145473751960444,
+          "d_fr": 0.23815315333800258,
+          "class": "PR",
+          "status": "noconv",
+          "init_F": 0.9937991281470815,
+          "init_d": 0.8333295927470312,
+          "nk_iters": 16,
+          "secs": 196.28337588299996,
+          "seeds_reaching": [
+            "random_sym_2"
+          ]
+        },
+        {
+          "seed": "nl_symmetrized",
+          "Finf": 0.06743589850602552,
+          "deficit": 0.15795735807665534,
+          "d_fr": 0.22090801386783143,
+          "class": "PR",
+          "status": "noconv",
+          "init_F": 0.43024112207775933,
+          "init_d": 0.2178774731013764,
+          "nk_iters": 16,
+          "secs": 126.55500008599984,
+          "seeds_reaching": [
+            "nl_symmetrized"
+          ]
+        },
+        {
+          "seed": "random_sym_1",
+          "Finf": 0.08659300730599961,
+          "deficit": 0.1345031097492957,
+          "d_fr": 0.2789064173772909,
+          "class": "PR",
+          "status": "plateau",
+          "init_F": 0.9992036817071392,
+          "init_d": 0.9999587441607783,
+          "nk_iters": 13,
+          "secs": 108.51764678000018,
+          "seeds_reaching": [
+            "random_sym_1"
+          ]
+        }
+      ],
+      "all_seeds": [
+        {
+          "seed": "nl_symmetrized",
+          "Finf": 0.06743589850602552,
+          "deficit": 0.15795735807665534,
+          "d_fr": 0.22090801386783143,
+          "class": "PR",
+          "status": "noconv",
+          "init_F": 0.43024112207775933,
+          "init_d": 0.2178774731013764
+        },
+        {
+          "seed": "fully_revealing",
+          "Finf": 9.45077535273453e-06,
+          "deficit": 1.1102230246251565e-16,
+          "d_fr": 1.7133759653016374e-10,
+          "class": "FR",
+          "status": "plateau",
+          "init_F": 9.45077535273453e-06,
+          "init_d": 1.1102230246251565e-16
+        },
+        {
+          "seed": "constant_0.5",
+          "Finf": 0.19674394845861176,
+          "deficit": 0.1994025363708375,
+          "d_fr": 0.3115557911573565,
+          "class": "PR",
+          "status": "plateau",
+          "init_F": 0.49966459468476543,
+          "init_d": NaN
+        },
+        {
+          "seed": "random_sym_1",
+          "Finf": 0.08659300730599961,
+          "deficit": 0.1345031097492957,
+          "d_fr": 0.2789064173772909,
+          "class": "PR",
+          "status": "plateau",
+          "init_F": 0.9992036817071392,
+          "init_d": 0.9999587441607783
+        },
+        {
+          "seed": "random_sym_2",
+          "Finf": 0.06651148555604125,
+          "deficit": 0.061145473751960444,
+          "d_fr": 0.23815315333800258,
+          "class": "PR",
+          "status": "noconv",
+          "init_F": 0.9937991281470815,
+          "init_d": 0.8333295927470312
+        },
+        {
+          "seed": "blend_nl_fr",
+          "Finf": 0.008787148238862286,
+          "deficit": 0.02226091977233058,
+          "d_fr": 0.07607646607073776,
+          "class": "mid",
+          "status": "noconv",
+          "init_F": 0.2222874314538148,
+          "init_d": 0.041743245304299736
+        }
+      ]
+    },
+    "0.25": {
+      "n_distinct_fps": 5,
+      "best_Finf_floor": 7.910450698922489e-06,
+      "distinct_fps": [
+        {
+          "seed": "fully_revealing",
+          "Finf": 7.910450698922489e-06,
+          "deficit": 1.1102230246251565e-16,
+          "d_fr": 1.7133759653016374e-10,
+          "class": "FR",
+          "status": "plateau",
+          "init_F": 7.910450698922489e-06,
+          "init_d": 1.1102230246251565e-16,
+          "nk_iters": 5,
+          "secs": 50.81918699500011,
+          "seeds_reaching": [
+            "fully_revealing"
+          ]
+        },
+        {
+          "seed": "random_sym_2",
+          "Finf": 0.04169186677013889,
+          "deficit": 0.026120778550502766,
+          "d_fr": 0.21936031619028412,
+          "class": "mid",
+          "status": "noconv",
+          "init_F": 0.9937991281474154,
+          "init_d": 0.8333295927470312,
+          "nk_iters": 16,
+          "secs": 169.52511980600002,
+          "seeds_reaching": [
+            "random_sym_2"
+          ]
+        },
+        {
+          "seed": "random_sym_1",
+          "Finf": 0.054273332403155405,
+          "deficit": 0.06699168704880554,
+          "d_fr": 0.2282772005998681,
+          "class": "PR",
+          "status": "noconv",
+          "init_F": 0.9992036817071392,
+          "init_d": 0.9999587441607783,
+          "nk_iters": 16,
+          "secs": 154.19091679800022,
+          "seeds_reaching": [
+            "random_sym_1"
+          ]
+        },
+        {
+          "seed": "constant_0.5",
+          "Finf": 0.06629625012123708,
+          "deficit": 0.04972763721411,
+          "d_fr": 0.22040651249552728,
+          "class": "PR",
+          "status": "noconv",
+          "init_F": 0.4996645946698939,
+          "init_d": NaN,
+          "nk_iters": 16,
+          "secs": 127.47277728400013,
+          "seeds_reaching": [
+            "constant_0.5"
+          ]
+        },
+        {
+          "seed": "nl_symmetrized",
+          "Finf": 0.11356738771698227,
+          "deficit": 0.021364307079978273,
+          "d_fr": 0.22019338027101376,
+          "class": "mid",
+          "status": "noconv",
+          "init_F": 0.3817926813062481,
+          "init_d": 0.12391553650598297,
+          "nk_iters": 16,
+          "secs": 145.7560722879998,
+          "seeds_reaching": [
+            "nl_symmetrized"
+          ]
+        }
+      ],
+      "all_seeds": [
+        {
+          "seed": "nl_symmetrized",
+          "Finf": 0.11356738771698227,
+          "deficit": 0.021364307079978273,
+          "d_fr": 0.22019338027101376,
+          "class": "mid",
+          "status": "noconv",
+          "init_F": 0.3817926813062481,
+          "init_d": 0.12391553650598297
+        },
+        {
+          "seed": "fully_revealing",
+          "Finf": 7.910450698922489e-06,
+          "deficit": 1.1102230246251565e-16,
+          "d_fr": 1.7133759653016374e-10,
+          "class": "FR",
+          "status": "plateau",
+          "init_F": 7.910450698922489e-06,
+          "init_d": 1.1102230246251565e-16
+        },
+        {
+          "seed": "constant_0.5",
+          "Finf": 0.06629625012123708,
+          "deficit": 0.04972763721411,
+          "d_fr": 0.22040651249552728,
+          "class": "PR",
+          "status": "noconv",
+          "init_F": 0.4996645946698939,
+          "init_d": NaN
+        },
+        {
+          "seed": "random_sym_1",
+          "Finf": 0.054273332403155405,
+          "deficit": 0.06699168704880554,
+          "d_fr": 0.2282772005998681,
+          "class": "PR",
+          "status": "noconv",
+          "init_F": 0.9992036817071392,
+          "init_d": 0.9999587441607783
+        },
+        {
+          "seed": "random_sym_2",
+          "Finf": 0.04169186677013889,
+          "deficit": 0.026120778550502766,
+          "d_fr": 0.21936031619028412,
+          "class": "mid",
+          "status": "noconv",
+          "init_F": 0.9937991281474154,
+          "init_d": 0.8333295927470312
+        },
+        {
+          "seed": "blend_nl_fr",
+          "Finf": 0.18360279114267186,
+          "deficit": 0.042427215650923444,
+          "d_fr": 0.16775471763491356,
+          "class": "PR",
+          "status": "plateau",
+          "init_F": 0.20608133825208763,
+          "init_d": 0.040045714254722475
+        }
+      ]
+    },
+    "0.5": {
+      "n_distinct_fps": 5,
+      "best_Finf_floor": 5.4907556343714026e-06,
+      "distinct_fps": [
+        {
+          "seed": "fully_revealing",
+          "Finf": 5.4907556343714026e-06,
+          "deficit": 1.1102230246251565e-16,
+          "d_fr": 1.7133759653016374e-10,
+          "class": "FR",
+          "status": "plateau",
+          "init_F": 5.4907556343714026e-06,
+          "init_d": 1.1102230246251565e-16,
+          "nk_iters": 5,
+          "secs": 51.13518050999983,
+          "seeds_reaching": [
+            "fully_revealing"
+          ]
+        },
+        {
+          "seed": "blend_nl_fr",
+          "Finf": 0.05359194058799657,
+          "deficit": 0.0680247814312619,
+          "d_fr": 0.08031097930351543,
+          "class": "PR",
+          "status": "plateau",
+          "init_F": 0.1965319366334436,
+          "init_d": 0.03749673409328669,
+          "nk_iters": 10,
+          "secs": 116.37209897100001,
+          "seeds_reaching": [
+            "blend_nl_fr"
+          ]
+        },
+        {
+          "seed": "random_sym_2",
+          "Finf": 0.07225929050810598,
+          "deficit": 0.07063489626910013,
+          "d_fr": 0.16907377883732846,
+          "class": "PR",
+          "status": "noconv",
+          "init_F": 0.993799128147522,
+          "init_d": 0.8333295927470312,
+          "nk_iters": 16,
+          "secs": 134.15273344200023,
+          "seeds_reaching": [
+            "random_sym_2"
+          ]
+        },
+        {
+          "seed": "random_sym_1",
+          "Finf": 0.09951005739323077,
+          "deficit": 0.06282125663569316,
+          "d_fr": 0.1758699701791494,
+          "class": "PR",
+          "status": "plateau",
+          "init_F": 0.9992036817071392,
+          "init_d": 0.9999587441607783,
+          "nk_iters": 12,
+          "secs": 100.55401274099995,
+          "seeds_reaching": [
+            "random_sym_1"
+          ]
+        },
+        {
+          "seed": "nl_symmetrized",
+          "Finf": 0.11977296741657362,
+          "deficit": 0.016960869099332365,
+          "d_fr": 0.2278770398185805,
+          "class": "mid",
+          "status": "plateau",
+          "init_F": 0.3489352391175499,
+          "init_d": 0.06000910833298623,
+          "nk_iters": 8,
+          "secs": 70.1063127010002,
+          "seeds_reaching": [
+            "nl_symmetrized"
+          ]
+        }
+      ],
+      "all_seeds": [
+        {
+          "seed": "nl_symmetrized",
+          "Finf": 0.11977296741657362,
+          "deficit": 0.016960869099332365,
+          "d_fr": 0.2278770398185805,
+          "class": "mid",
+          "status": "plateau",
+          "init_F": 0.3489352391175499,
+          "init_d": 0.06000910833298623
+        },
+        {
+          "seed": "fully_revealing",
+          "Finf": 5.4907556343714026e-06,
+          "deficit": 1.1102230246251565e-16,
+          "d_fr": 1.7133759653016374e-10,
+          "class": "FR",
+          "status": "plateau",
+          "init_F": 5.4907556343714026e-06,
+          "init_d": 1.1102230246251565e-16
+        },
+        {
+          "seed": "constant_0.5",
+          "Finf": 0.15509080214107493,
+          "deficit": 0.09916976227535845,
+          "d_fr": 0.29706766655599925,
+          "class": "PR",
+          "status": "plateau",
+          "init_F": 0.499664594670036,
+          "init_d": NaN
+        },
+        {
+          "seed": "random_sym_1",
+          "Finf": 0.09951005739323077,
+          "deficit": 0.06282125663569316,
+          "d_fr": 0.1758699701791494,
+          "class": "PR",
+          "status": "plateau",
+          "init_F": 0.9992036817071392,
+          "init_d": 0.9999587441607783
+        },
+        {
+          "seed": "random_sym_2",
+          "Finf": 0.07225929050810598,
+          "deficit": 0.07063489626910013,
+          "d_fr": 0.16907377883732846,
+          "class": "PR",
+          "status": "noconv",
+          "init_F": 0.993799128147522,
+          "init_d": 0.8333295927470312
+        },
+        {
+          "seed": "blend_nl_fr",
+          "Finf": 0.05359194058799657,
+          "deficit": 0.0680247814312619,
+          "d_fr": 0.08031097930351543,
+          "class": "PR",
+          "status": "plateau",
+          "init_F": 0.1965319366334436,
+          "init_d": 0.03749673409328669
+        }
+      ]
+    },
+    "1.0": {
+      "n_distinct_fps": 6,
+      "best_Finf_floor": 2.622338045585315e-06,
+      "distinct_fps": [
+        {
+          "seed": "fully_revealing",
+          "Finf": 2.622338045585315e-06,
+          "deficit": 1.1102230246251565e-16,
+          "d_fr": 1.7133759653016374e-10,
+          "class": "FR",
+          "status": "plateau",
+          "init_F": 2.622338045585315e-06,
+          "init_d": 1.1102230246251565e-16,
+          "nk_iters": 5,
+          "secs": 50.844751780000024,
+          "seeds_reaching": [
+            "fully_revealing"
+          ]
+        },
+        {
+          "seed": "blend_nl_fr",
+          "Finf": 0.0075700068157303485,
+          "deficit": 0.008193170752091805,
+          "d_fr": 0.05246138970882322,
+          "class": "mid",
+          "status": "noconv",
+          "init_F": 0.19786091547522489,
+          "init_d": 0.03201800218657258,
+          "nk_iters": 16,
+          "secs": 183.9746721710003,
+          "seeds_reaching": [
+            "blend_nl_fr"
+          ]
+        },
+        {
+          "seed": "random_sym_2",
+          "Finf": 0.08596331045033984,
+          "deficit": 0.037102376572076934,
+          "d_fr": 0.1522417576661412,
+          "class": "mid",
+          "status": "noconv",
+          "init_F": 0.9937991281475789,
+          "init_d": 0.8333295927470312,
+          "nk_iters": 16,
+          "secs": 105.14311309899995,
+          "seeds_reaching": [
+            "random_sym_2"
+          ]
+        },
+        {
+          "seed": "nl_symmetrized",
+          "Finf": 0.09971480955171225,
+          "deficit": 0.04950053602286175,
+          "d_fr": 0.12392639171149851,
+          "class": "PR",
+          "status": "noconv",
+          "init_F": 0.33697631740892675,
+          "init_d": 0.026093085077339984,
+          "nk_iters": 16,
+          "secs": 166.040560121,
+          "seeds_reaching": [
+            "nl_symmetrized"
+          ]
+        },
+        {
+          "seed": "random_sym_1",
+          "Finf": 0.11204275769500353,
+          "deficit": 0.0793999936980917,
+          "d_fr": 0.15985683435014195,
+          "class": "PR",
+          "status": "noconv",
+          "init_F": 0.9992036817071392,
+          "init_d": 0.9999587441607783,
+          "nk_iters": 16,
+          "secs": 90.43572917799975,
+          "seeds_reaching": [
+            "random_sym_1"
+          ]
+        },
+        {
+          "seed": "constant_0.5",
+          "Finf": 0.14471079845905904,
+          "deficit": 0.13646038604539534,
+          "d_fr": 0.1537095336364153,
+          "class": "PR",
+          "status": "noconv",
+          "init_F": 0.4996645947500076,
+          "init_d": NaN,
+          "nk_iters": 16,
+          "secs": 87.17370703799998,
+          "seeds_reaching": [
+            "constant_0.5"
+          ]
+        }
+      ],
+      "all_seeds": [
+        {
+          "seed": "nl_symmetrized",
+          "Finf": 0.09971480955171225,
+          "deficit": 0.04950053602286175,
+          "d_fr": 0.12392639171149851,
+          "class": "PR",
+          "status": "noconv",
+          "init_F": 0.33697631740892675,
+          "init_d": 0.026093085077339984
+        },
+        {
+          "seed": "fully_revealing",
+          "Finf": 2.622338045585315e-06,
+          "deficit": 1.1102230246251565e-16,
+          "d_fr": 1.7133759653016374e-10,
+          "class": "FR",
+          "status": "plateau",
+          "init_F": 2.622338045585315e-06,
+          "init_d": 1.1102230246251565e-16
+        },
+        {
+          "seed": "constant_0.5",
+          "Finf": 0.14471079845905904,
+          "deficit": 0.13646038604539534,
+          "d_fr": 0.1537095336364153,
+          "class": "PR",
+          "status": "noconv",
+          "init_F": 0.4996645947500076,
+          "init_d": NaN
+        },
+        {
+          "seed": "random_sym_1",
+          "Finf": 0.11204275769500353,
+          "deficit": 0.0793999936980917,
+          "d_fr": 0.15985683435014195,
+          "class": "PR",
+          "status": "noconv",
+          "init_F": 0.9992036817071392,
+          "init_d": 0.9999587441607783
+        },
+        {
+          "seed": "random_sym_2",
+          "Finf": 0.08596331045033984,
+          "deficit": 0.037102376572076934,
+          "d_fr": 0.1522417576661412,
+          "class": "mid",
+          "status": "noconv",
+          "init_F": 0.9937991281475789,
+          "init_d": 0.8333295927470312
+        },
+        {
+          "seed": "blend_nl_fr",
+          "Finf": 0.0075700068157303485,
+          "deficit": 0.008193170752091805,
+          "d_fr": 0.05246138970882322,
+          "class": "mid",
+          "status": "noconv",
+          "init_F": 0.19786091547522489,
+          "init_d": 0.03201800218657258
+        }
+      ]
+    }
+  },
+  "picard_oscillation": {
+    "gamma": 0.1,
+    "from": "symmetrized no-learning IC",
+    "iters": 40,
+    "Finf_first": 0.4302,
+    "Finf_last": 0.0172,
+    "Finf_tail_min": 0.01234,
+    "Finf_tail_mean": 0.01647,
+    "Finf_tail_max": 0.01991,
+    "deficit_converges_to": 0.0003,
+    "period2_dist_tail_mean": 0.04675,
+    "oscillates_period2": false,
+    "verdict": "K=4 does NOT show the K=3 period-2 learning oscillation. Undamped Picard from the NL IC drives the revelation deficit to ~0.0003 (essentially fully revealing) within ~5 iters, while ||F||inf falls from 0.43 to a small NON-SMOOTH plateau ~0.012-0.020 (mean 0.0165) where it wobbles irregularly (NOT a clean 2-cycle: |P_t - P_(t-2)| ~0.04-0.05 stays comparable to ||F||inf). So a non-smooth residual floor recurs, but at ~0.015 (vs K=3's ~0.2) and the limit is FR, not a partially-revealing 2-cycle."
+  },
+  "picard_all_gammas": {
+    "0.1": {
+      "Finf_first": 0.43024112207775933,
+      "Finf_last": 0.01723131954457202,
+      "Finf_tail_mean": 0.016472573944092114,
+      "Finf_tail_min": 0.012339235275096283,
+      "Finf_tail_max": 0.01990691457556007,
+      "oscillates_period2": false,
+      "period2_dist_tail_mean": 0.04675127292641548,
+      "plateau_level": 0.016472573944092114
+    },
+    "0.25": {
+      "Finf_first": 0.3817926813062481,
+      "Finf_last": 0.014251038561254536,
+      "Finf_tail_mean": 0.01606367213886854,
+      "Finf_tail_min": 0.009346483916405912,
+      "Finf_tail_max": 0.024130969474294384,
+      "oscillates_period2": false,
+      "period2_dist_tail_mean": 0.04826251565992543,
+      "plateau_level": 0.01606367213886854
+    },
+    "0.5": {
+      "Finf_first": 0.3489352391175499,
+      "Finf_last": 0.005814243440506184,
+      "Finf_tail_mean": 0.016608266465861683,
+      "Finf_tail_min": 0.005814243440506184,
+      "Finf_tail_max": 0.025073671550707055,
+      "oscillates_period2": false,
+      "period2_dist_tail_mean": 0.052299946891401806,
+      "plateau_level": 0.016608266465861683
+    },
+    "1.0": {
+      "Finf_first": 0.33697631740892675,
+      "Finf_last": 0.018748814366906563,
+      "Finf_tail_mean": 0.022072593486766632,
+      "Finf_tail_min": 0.014694506733618828,
+      "Finf_tail_max": 0.02764103133163509,
+      "oscillates_period2": false,
+      "period2_dist_tail_mean": 0.06694249227430275,
+      "plateau_level": 0.022072593486766632
+    }
+  }
+}

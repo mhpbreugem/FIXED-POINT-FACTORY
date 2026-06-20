@@ -1,0 +1,106 @@
+\chapter{Repository map}
+
+\section{Solver code (\texttt{projects/REZN/solver\_code/highprec\_dd\_qd/})}
+\begin{center}\small\begin{tabularx}{\linewidth}{lX}\toprule
+file & role \\
+\midrule
+\texttt{dd\_ops.py}, \texttt{dd\_k3\_ops.py} & double-double primitives; exact CRRA clearing bisection \\
+\texttt{dd\_solver.py} & K=2 DD surface solver (the $\tau$-fold study) \\
+\texttt{dd\_k3\_solver.py}, \texttt{dd\_k3\_sweep.py} & K=3 kernel-band R4 production (superseded for economics) \\
+\texttt{dd\_k3\_strict\_solve.py} & \strict{} Anderson + deficit metrics \\
+\texttt{dd\_k3\_compare.py}, \texttt{dd\_k3\_rconverge.py}, \texttt{dd\_k3\_small\_h.py} & Findings 1, 3 diagnostics \\
+\texttt{dd\_k3\_lookup\_alts.py}, \texttt{dd\_k3\_optB\_numba.py}, \texttt{dd\_k3\_optB\_refined.py} & Options A--E; B+ production \\
+\texttt{dd\_k3\_optD\_adaptive\_p.py} & adaptive $p$-grid \\
+\texttt{dd\_k3\_cheby\_h0.py}, \texttt{dd\_k3\_cheby\_lobatto.py} & spectral program \\
+\texttt{dd\_k3\_method\_c\_v2*.py} & structural ansatz: solver, grid, ladder, logit-loss, strict variants \\
+\texttt{dd\_k3\_mu\_analytic.py} & closed-form 1D lookup under the ansatz \\
+\texttt{dd\_k3\_v3\_fingerprint.py}, \texttt{dd\_k3\_v3\_refit.py} & Finding 7 \\
+\texttt{dd\_k3\_lpub\_lpriv\_v2.py}, \texttt{dd\_k3\_delta\_svd.py} & Finding 5 \\
+\texttt{dd\_k3\_critpts.py} & 3D critical-point detector (Finding 8) \\
+\texttt{dd\_k3\_optB\_pieceCheby.py} & per-segment Chebyshev + the internal cusp detector (Findings 10, 13) \\
+\texttt{dd\_k3\_optB\_tail.py}, \texttt{dd\_k3\_optB\_exact.py}, \texttt{dd\_k3\_optB\_multielem.py} & Findings 8, 11, 12 \\
+\texttt{dd\_k3\_strict\_smoothed*.py}, \texttt{dd\_k3\_stall\_trace.py} & Finding 9 \\
+\texttt{dd\_k3\_strict\_fixed\_fallback.py} & the fallback fix (Finding 14) \\
+\texttt{dd\_k3\_zero\_h\_pipeline\_v2/v3/v4.py}, \texttt{dd\_k3\_pipeline\_v5\_final.py} & pipeline v2--v5 \\
+\texttt{dd\_k3\_v5\_grid.py} & 36-cell certification (Finding 16) \\
+\texttt{dd\_k3\_zero\_h\_solver.py} & Finding 17 \\
+\texttt{dd\_k3\_logodds.py}, \texttt{dd\_k3\_logodds\_ladder.py} & the final coordinate configuration + 50-cell ladder \\
+\texttt{dd\_k3\_logodds\_newton.py}, \texttt{dd\_k3\_logodds\_ift.py} & IFT Newton (Krylov; HYBRD experiments) \\
+\bottomrule\end{tabularx}\end{center}
+
+\section{Pre-K=3 foundations (\texttt{projects/REZN/solved\_fixed\_points/})}
+\begin{center}\small\begin{tabularx}{\linewidth}{lX}\toprule
+directory & contribution \\
+\midrule
+\texttt{methodology/} & 9pp method paper + runnable reference operator --- start here \\
+\texttt{k3\_coarea\_limit/} & the key anchor: joint $h \to 0$ ladder, PR nailed to $10^{-14}$, deficit $\to 0.28$ \\
+\texttt{k3\_verify\_coarea/} & the 19\% naive-scan bias, proven on an analytic surface \\
+\texttt{k3\_strict\_h0\_exact/} & flint marching-squares \strict{}: continuity of the bare operator; nails toward $10^{-100}$ \\
+\texttt{k3\_hfree\_morse/} & the $C^0$-not-$C^1$ proof ($128\times$ derivative blowup at a Morse price) \\
+\texttt{k3\_coarea\_2dsweep/} & the definitive $(\gamma, \tau)$ deficit map (31/32 cells at $10^{-12}$) \\
+\texttt{k3\_jensen\_gap/} & the closed-form wedge verified on nailed equilibria \\
+\texttt{k3\_cara/} & CARA = $\gamma \to \infty$ benchmark; Hellwig closed-form cross-check \\
+\texttt{k4\_*} & K=4: FR globally attracting; PR via extreme-$\gamma$ dropout \\
+\texttt{highprec\_dd/} & K=2 DD ladder; the $\tau \approx 0.79$ fold \\
+\texttt{flint\_*}, \texttt{k3\_plateau\_*} & superseded naive-scan era (kept as the artifact record) \\
+\texttt{FINDINGS.md} & the human-readable index of all of the above \\
+\bottomrule\end{tabularx}\end{center}
+
+\chapter{Glossary}
+\begin{description}\itemsep2pt
+  \item[REE] rational-expectations equilibrium: price function such
+    that demands conditioned on (own signal, price) clear at every
+    signal profile.
+  \item[FR / PR] fully / partially revealing price function.
+  \item[deficit] $1 - R^2$ of $\operatorname{logit}P$ on the pooled
+    statistic (with stated state-measure); 0 under FR.
+  \item[co-area integral] $\int_{\{P=p\}} f/|\nabla P|\, d\sigma$ ---
+    the correct level-set evidence measure.
+  \item[\strict{}] the bare co-area operator: explicit contours +
+    $1/|\nabla P|$, no kernel.
+  \item[kernel band] Gaussian-smoothed indicator
+    $\int K_h(P - p) f\, du$; consistent quadrature of the co-area
+    integral as $h \to 0$.
+  \item[central path / joint limit] $h \to 0$ together with
+    $\Delta x \to 0$, $\Delta x \ll h$ --- the regime where the kernel
+    is both consistent and smooth.
+  \item[lookup] $\mu(p, u_k)$: Bayes posterior of $v = 1$ given own
+    signal and the price level set.
+  \item[POU] partition of unity across the two sweep directions of the
+    level-set integral.
+  \item[Morse-critical price] $p_c = P(u^*)$ with $\nabla P(u^*) = 0$:
+    location of the $C^0$-not-$C^1$ kink in the evidence and of the
+    lookup cusps.
+  \item[$\Fw$] density-weighted residual
+    $\max |\Phi(P) - P| \cdot \prod_i \bar f(u_i)$ --- the economically
+    meaningful convergence metric on unbounded grids.
+  \item[trivial branch] $P \equiv \tfrac12$: an exact fixed point at
+    all parameters; the uninformative pooled-prior equilibrium.
+  \item[best iterate] the lowest-residual point of a non-converging
+    iteration --- reported as such, never as a fixed point.
+  \item[DD / QD] double-double (32 digits) / quad-double (64 digits)
+    arithmetic.
+\end{description}
+
+\chapter{Chronology of the seventeen findings}
+\begin{center}\small\begin{tabularx}{\linewidth}{clX}\toprule
+\# & verdict & one-line content \\
+\midrule
+1 & negative & fixed-grid kernel-band Richardson does not extrapolate to $h = 0$ (kink powers) \\
+2 & positive & \strict{} re-solve collapses the R4 deficit $\sim 40\times$; ridge is an artifact \\
+3 & negative & cross-variant agreement $\ne$ correctness (robust-but-wrong comparator) \\
+4 & positive & Option B+ (cube CDF + PCHIP) wins the builder bake-off; median $10^{-5}$ \\
+5 & mixed & $(\Lpriv, \Lpub)$ transform absorbs bulk, preserves cusps; $b(u_k) \approx \tau u_k / 10$ \\
+6 & positive & adaptive arclength $p$-grid: $-25\%$ max error, free \\
+7 & negative & no finite-parameter polynomial correction reaches $10^{-4}$ (high-rank residual) \\
+8 & mixed & 3D critical-point detector works; knots fix the median only \\
+9 & negative & $\varepsilon$-smoothed \strict{}: no sweet spot (bias vs convergence) \\
+10 & breakthrough & per-segment Chebyshev between cusps: machine eps in-segment \\
+11 & negative & tail BCs alone do not move the max error \\
+12 & mixed & exact cell mass: halves the median, worsens the max \\
+13 & correction & cusps of $\mu$ are \emph{slice}-critical values; internal detector is the right one \\
+14 & positive & \texttt{fix\_fallback}: monotone, BC-correct cleaned lookup \\
+15 & positive & pipeline v5 assembled: the production zero-$h$ lookup \\
+16 & certification & 36/36 cells: median $10^{-16}$, 11/11 monotone, 7 s total \\
+17 & negative & smooth lookup inside the FP loop does not break the $G$-truncation wall \\
+\bottomrule\end{tabularx}\end{center}

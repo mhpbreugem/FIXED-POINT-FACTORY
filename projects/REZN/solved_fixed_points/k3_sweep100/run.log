@@ -1,0 +1,35 @@
+12:59:15 ======================================================================
+12:59:15 K=3 co-area deficit sweep 100-dec START 2026-05-29 12:59
+12:59:15 GAMMAS=[np.float64(0.1), np.float64(0.164), np.float64(0.268), np.float64(0.439), np.float64(0.72), np.float64(1.179), np.float64(1.931), np.float64(3.162), np.float64(5.179), np.float64(8.483), np.float64(13.895), np.float64(22.758), np.float64(37.276), np.float64(61.054), np.float64(100.0)]
+12:59:15 TAUS  =[np.float64(0.1), np.float64(0.164), np.float64(0.268), np.float64(0.439), np.float64(0.72), np.float64(1.179), np.float64(1.931), np.float64(3.162), np.float64(5.179), np.float64(8.483), np.float64(13.895), np.float64(22.758), np.float64(37.276), np.float64(61.054), np.float64(100.0)]
+12:59:15 225 cells, 4 cores. OUT=/home/user/FIXED-POINT-FACTORY/projects/REZN/solved_fixed_points/k3_sweep100
+12:59:15 VALIDATION GATE: max|flint-float64| inner = 3.442e-15  PASS=True
+12:59:17 [git] pushed validation gate + setup (attempt 1)
+13:00:29 [row  1/15] tau=0.100  nailed 15/15  deficit[min,max]=[0.0000,0.0578]  (73s row, 73s total)
+13:00:32 [git] pushed row 1/15 tau=0.100 (15/225 cells) (attempt 1)
+13:01:27 [row  2/15] tau=0.164  nailed 15/15  deficit[min,max]=[0.0000,0.1067]  (55s row, 130s total)
+13:01:29 [git] pushed row 2/15 tau=0.164 (30/225 cells) (attempt 1)
+13:02:25 [row  3/15] tau=0.268  nailed 15/15  deficit[min,max]=[0.0000,0.1354]  (56s row, 188s total)
+13:02:29 [git] pushed row 3/15 tau=0.268 (45/225 cells) (attempt 1)
+13:03:26 [row  4/15] tau=0.439  nailed 15/15  deficit[min,max]=[0.0000,0.1522]  (57s row, 249s total)
+13:03:28 [git] pushed row 4/15 tau=0.439 (60/225 cells) (attempt 1)
+13:04:23 [row  5/15] tau=0.720  nailed 15/15  deficit[min,max]=[0.0002,0.1776]  (55s row, 307s total)
+13:04:26 [git] pushed row 5/15 tau=0.720 (75/225 cells) (attempt 1)
+13:05:37 [row  6/15] tau=1.179  nailed 15/15  deficit[min,max]=[0.0012,0.2213]  (71s row, 381s total)
+13:05:39 [git] pushed row 6/15 tau=1.179 (90/225 cells) (attempt 1)
+13:06:41 [row  7/15] tau=1.931  nailed 15/15  deficit[min,max]=[0.0031,0.2861]  (62s row, 445s total)
+13:06:43 [git] pushed row 7/15 tau=1.931 (105/225 cells) (attempt 1)
+13:10:54 [row  8/15] tau=3.162  nailed 15/15  deficit[min,max]=[0.0043,0.3553]  (251s row, 698s total)
+13:10:56 [git] pushed row 8/15 tau=3.162 (120/225 cells) (attempt 1)
+13:21:51 [row  9/15] tau=5.179  nailed 15/15  deficit[min,max]=[0.0056,0.4113]  (655s row, 1354s total)
+13:21:52 [git] pushed row 9/15 tau=5.179 (135/225 cells) (attempt 1)
+13:30:19 [row 10/15] tau=8.483  nailed 15/15  deficit[min,max]=[0.0231,0.4468]  (507s row, 1863s total)
+13:30:25 [git] pushed row 10/15 tau=8.483 (150/225 cells) (attempt 1)
+13:34:06 [row 11/15] tau=13.895  nailed 15/15  deficit[min,max]=[0.0895,0.4539]  (221s row, 2089s total)
+13:34:08 [git] pushed row 11/15 tau=13.895 (165/225 cells) (attempt 1)
+13:38:56 [row 12/15] tau=22.758  nailed 15/15  deficit[min,max]=[0.1428,0.4543]  (288s row, 2379s total)
+13:38:58 [git] pushed row 12/15 tau=22.758 (180/225 cells) (attempt 1)
+13:41:42 [row 13/15] tau=37.276  nailed 15/15  deficit[min,max]=[0.1887,0.4692]  (165s row, 2546s total)
+13:41:45 [git] pushed row 13/15 tau=37.276 (195/225 cells) (attempt 1)
+13:44:33 [row 14/15] tau=61.054  nailed 15/15  deficit[min,max]=[0.1887,0.4692]  (169s row, 2717s total)
+13:44:36 [git] pushed row 14/15 tau=61.054 (210/225 cells) (attempt 1)

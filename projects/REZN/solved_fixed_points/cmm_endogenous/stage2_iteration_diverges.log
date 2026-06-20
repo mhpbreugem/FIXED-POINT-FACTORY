@@ -1,0 +1,9 @@
+=== timing fast CMM Phi ===
+  n_bins= 32:  53.6s  |CMM-kernel|_inf=3.188e-01
+  n_bins= 64: 106.1s  |CMM-kernel|_inf=3.265e-01
+  n_bins=128: 215.2s  |CMM-kernel|_inf=3.300e-01
+
+=== iteration from kernel FP ===
+  iter 0: res_inf=3.300e-01  (217s)
+  iter 1: res_inf=4.581e-01  (360s)
+  iter 2: res_inf=4.736e-01  (428s)

@@ -1,0 +1,169 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{graphicx,amsmath,amssymb,booktabs,hyperref,xcolor}
+\graphicspath{{/tmp/cheby_h0/figs/three_way/}}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlength{\parskip}{6pt}
+\title{Three tabulated-$\mu$ operators side-by-side:\\
+       Chebyshev strict-$h{=}0$ vs Linear-CDF kernel vs Linear-CDF strict-$h{=}0$}
+\author{Fixed-Point Factory --- $\gamma$-sweep, same architecture three ways}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\section*{The three operators}
+
+All three share the tabulated-$\mu$ architecture (build $\mu(p, u_k)$
+table, look up per cube cell, run CRRA clearing). They differ in:
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+& \textbf{Cheb strict $h{=}0$} & \textbf{Lin-CDF kernel} & \textbf{Lin-CDF strict $h{=}0$} \\
+\midrule
+$u$-grid                & Lobatto-atanh & Gaussian quantiles & Gaussian quantiles \\
+$P$ representation      & tensor Cheb poly & piecewise bilinear & piecewise bilinear \\
+contour integral        & strict $h{=}0$ line int. & Gaussian band $h{=}0.5$ & strict $h{=}0$ line int. \\
+POU partition-of-unity  & yes & --- (kernel) & yes \\
+ms / $\Phi$ (G=7)        & 540 & 6 & 7 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The third operator (NEW): strict $h{=}0$ line integral, no kernel, just
+finds piecewise-linear root crossings on the CDF grid, weighted by
+partition-of-unity over both axes.
+
+\section{Convergence floor per $\gamma$}
+
+\begin{center}
+\includegraphics[width=\linewidth]{02_floor_three.png}
+\end{center}
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+$\gamma$ & Cheb strict $\|F\|_\infty$ & Lin-CDF kernel $\|F\|_\infty$ & Lin-CDF strict $\|F\|_\infty$ \\
+\midrule
+0.1 & $4.4\!\times\!10^{-16}\,\star$ & $2.2\!\times\!10^{-16}\,\star$ & $6.0\!\times\!10^{-2}$ \\
+0.3 & $6.4\!\times\!10^{-4}$         & $2.2\!\times\!10^{-16}\,\star$ & $2.8\!\times\!10^{-2}$ \\
+0.5 & $1.5\!\times\!10^{-3}$         & $2.2\!\times\!10^{-16}\,\star$ & $4.7\!\times\!10^{-2}$ \\
+0.8 & $2.0\!\times\!10^{-15}\,\star$ & $2.2\!\times\!10^{-16}\,\star$ & $1.4\!\times\!10^{-2}$ \\
+1.0 & $8.9\!\times\!10^{-16}\,\star$ & $2.8\!\times\!10^{-16}\,\star$ & $5.2\!\times\!10^{-2}$ \\
+1.5 & $1.3\!\times\!10^{-3}$         & $3.3\!\times\!10^{-16}\,\star$ & $4.8\!\times\!10^{-2}$ \\
+2.0 & $2.2\!\times\!10^{-16}\,\star$ & $2.2\!\times\!10^{-16}\,\star$ & $2.3\!\times\!10^{-2}$ \\
+3.0 & $5.8\!\times\!10^{-16}\,\star$ & $2.2\!\times\!10^{-16}\,\star$ & $3.7\!\times\!10^{-2}$ \\
+5.0 & $9.2\!\times\!10^{-16}\,\star$ & $2.2\!\times\!10^{-16}\,\star$ & $2.9\!\times\!10^{-2}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Verdict.}
+\begin{itemize}
+  \item \textbf{Lin-CDF kernel}: ALL 9 reach machine $\varepsilon$ — fast, robust,
+        but smoothed.
+  \item \textbf{Cheb strict}: 6 of 9 reach machine $\varepsilon$ — exact REE, but
+        slow and $N_Q$ sweet-spot-dependent.
+  \item \textbf{Lin-CDF strict}: NONE reach machine $\varepsilon$ — floors at
+        $\sim 10^{-2}$. The piecewise-linear $P$ has piecewise-constant
+        $\partial P/\partial u$, which generates step discontinuities in the
+        co-area integrand that POU cannot smooth out.
+\end{itemize}
+
+\paragraph{Why strict $h{=}0$ needs the Chebyshev representation.}
+The co-area integrand $f f / |\nabla P|$ depends pointwise on the derivative
+$\nabla P$. On the linear-CDF grid the derivative is piecewise constant and
+jumps at every grid line. As the root location $\xi_b^*(p)$ moves continuously
+with $p$, the value of $|\nabla P|$ at the root changes discontinuously
+each time the root crosses a grid line. POU smooths $|\nabla P| \to 0$
+(turning points) but cannot smooth $|\nabla P|$ JUMPS. Chebyshev gives a
+$C^\infty$ derivative everywhere, so no jumps.
+
+\section{FP slopes and deficits}
+
+\begin{center}
+\includegraphics[width=\linewidth]{01_slope_three.png}
+\end{center}
+
+The three operators give three different FPs:
+
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+$\gamma$ & Cheb strict $\alpha^*$ & Lin-CDF kernel $\alpha^*$ & Lin-CDF strict $\alpha^*$ \\
+\midrule
+0.1 & 0.318 & 0.205 & 0.541 \\
+0.3 & 0.304 & 0.228 & 0.550 \\
+0.5 & 0.318 & 0.256 & 0.571 \\
+0.8 & 0.329 & 0.284 & 0.652 \\
+1.0 & 0.345 & 0.296 & 0.649 \\
+1.5 & 0.368 & 0.314 & 0.658 \\
+2.0 & 0.383 & 0.324 & 0.606 \\
+3.0 & 0.415 & 0.336 & 0.711 \\
+5.0 & 0.449 & 0.346 & 0.734 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[width=\linewidth]{03_deficit_three.png}
+\end{center}
+
+\paragraph{Pattern.} For each $\gamma$:
+\begin{itemize}
+  \item Lin-CDF kernel slope $<$ Cheb strict slope $<$ Lin-CDF strict slope
+  \item The kernel smoothing biases the FP DOWN (less revealing).
+  \item The strict-h=0-on-linear-grid biases UP (over-revealing) and never
+        converges fully because of derivative jumps.
+  \item Cheb strict is the only operator that's both exact AND converges
+        to machine $\varepsilon$.
+\end{itemize}
+
+\paragraph{One-to-one breakdown.}
+\begin{itemize}
+  \item Cheb strict: $0.003-0.036$ (genuine breakdown captured).
+  \item Lin-CDF kernel: $\sim 0$ for $\gamma \geq 0.5$ (smoothed away by
+        kernel band).
+  \item Lin-CDF strict: $0.001-0.008$ (intermediate, partly reflective
+        of the unconverged FP).
+\end{itemize}
+
+\section{Contours at $\gamma=1$, $u_3=0$}
+
+\begin{center}
+\includegraphics[width=\linewidth]{05_contours_g1_three.png}
+\end{center}
+
+Same equilibrium concept, three different numerical pictures.
+
+\section{Lin-CDF strict contour gallery}
+
+\begin{center}
+\includegraphics[width=\linewidth]{04_lin_strict_contours.png}
+\end{center}
+
+\section{logit-$P$ vs $T$ at $\gamma=1$}
+
+\begin{center}
+\includegraphics[width=\linewidth]{06_scatter_three_g1.png}
+\end{center}
+
+\section{Summary}
+
+\begin{itemize}
+  \item \textbf{For the actual REE} at strict $h{=}0$: use Cheb strict POU.
+        Slope $\alpha^* = 0.345$ at $\gamma{=}1$, one-to-one deficit $0.0285$.
+  \item \textbf{For fast parametric sweeps}: use Lin-CDF kernel band. Fast,
+        robust, all $\gamma$ reach machine $\varepsilon$ — but FP is the
+        regularised version (smaller slope, near-zero one-to-one deficit).
+  \item \textbf{Lin-CDF strict $h{=}0$ does not work} for high-precision FP at this
+        $G$ — derivative jumps prevent Newton from converging below
+        $10^{-2}$.
+\end{itemize}
+
+The Chebyshev representation is \emph{required} for strict-$h{=}0$
+machine-$\varepsilon$ convergence: it provides the $C^\infty$ derivatives
+that the strict co-area integrand needs.
+
+\end{document}

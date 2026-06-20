@@ -1,0 +1,101 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{graphicx,amsmath,booktabs,xcolor,hyperref,tabularx,float}
+\setlength{\parskip}{6pt}
+\title{Cross-method check against the immortal-accurate anchor\\
+\large $K=3$ deterministic CRRA REE at $(\tau, \gamma) = (2, 0.1)$,\\
+joint-limit kernel co-area nailed to $F \le 10^{-11}$, deficit $\approx 0.282$
+across $G \in \{9,13,17,21,25,31\}$}
+\author{Fixed-Point Factory}\date{June 2026}
+\begin{document}\maketitle
+
+\section*{The anchor}
+\texttt{projects/REZN/solved\_fixed\_points/k3\_coarea\_limit/} contains
+six nailed fixed points along the joint central-path
+$h = C \sqrt{\Delta u}$ ($C = 0.45$): residual $F_\infty$ from
+$6 \cdot 10^{-15}$ at $G = 9$ to $\sim 10^{-11}$ at $G = 31$, with the
+one-to-one revelation deficit converging to $0.282\!-\!0.291$. This
+\emph{is} the reference value of the K=3 deterministic equilibrium at
+this $(\tau, \gamma)$ --- the only object in the repo I trust to four
+digits. The cross-check here tests other methods against it on the
+\emph{same} cell.
+
+\section*{Methods and results}
+
+\begin{center}\small\begin{tabularx}{\linewidth}{lrrrrrl}\toprule
+method (all DD where DD) & $F^{\rm own}$ & $F^{\rm strict}_w$ & slope &
+deficit & $|\Delta_{\rm anchor}|$ & wall \\
+\midrule
+\textbf{anchor (joint-limit, $G$=9..31)} & $\le 10^{-11}$ & --- &
+$\approx 0.32$ & \textbf{0.282} & 0.000 & --- \\
+M1 legacy R4 DD $G$=7 ($h$=0.2..0.5) & $9 \cdot 10^{-29}$ &
+$0.086$ & $0.799$ & $0.030$ & \textcolor{red}{$0.252$} & 71 s \\
+M2 scaled R4 DD $G$=9 ($h$=0.07..0.16) & $3 \cdot 10^{-27}$ &
+$0.136$ & $1.151$ & $0.006$ & \textcolor{red}{$0.276$} & 808 s \\
+M3 \mbox{strict-$h{=}0$} best-iter $G$=9 & $0.088$ &
+$0.088$ & $0.776$ & $0.012$ & \textcolor{red}{$0.270$} & 2 s \\
+\bottomrule\end{tabularx}\end{center}
+
+\section*{The headline}
+\textbf{All three production-side methods miss the anchor deficit by
+\textit{a quarter of the unit interval}.} Self-residual at the
+arithmetic limit (M1, M2 at $10^{-27}\!-\!10^{-29}$) is no protection.
+Even the bare \mbox{strict-$h{=}0$} best-iterate (M3) misses by the
+same amount.
+
+\section*{Reading}
+\begin{itemize}
+  \item M1 / M2 are R4 Newton-nailed fixed points of their respective
+        operators. Their deficits are near zero because at $h$ on the
+        order of the cube cell spacing, the kernel-band Phi is
+        Lipschitz, the equilibrium is essentially \emph{fully revealing}
+        for that operator, and DD just pins that wrong limit to 29
+        digits.
+  \item M3 reaches a strict best-iterate with $F = 0.088$ --- the
+        \mbox{strict-$h{=}0$} stall, documented in Findings 9 and 17 of
+        the monograph. Its deficit is also near zero for the same
+        reason: the best iterate found by damped Picard at $G = 9$ is
+        near the FR branch.
+  \item The anchor's deficit comes from the \emph{joint} limit
+        $h\downarrow 0$ with $G\uparrow$ at fixed ratio. Neither
+        fixed-$h$ Newton nor strict-Picard alone follows that
+        central path.
+  \item This is the same lesson as the $h$-ladder at $(\tau = 0.1,
+        \gamma = 10)$ from earlier: the legacy $h$ values bias the
+        slope by a factor of two; only the trajectory in $h$ has
+        economic content. At $(\tau = 2, \gamma = 0.1)$ the bias is
+        even larger because the PR is much stronger here.
+\end{itemize}
+
+\section*{What ``immortal-accurate'' actually means}
+The anchor was produced by the consistent-kernel joint-limit operator
+plus high precision at six grids. Two independent confirmations exist
+in the repo:
+\begin{itemize}
+  \item \texttt{k3\_hfree\_morse/} ($G = 9$, no-kernel co-area):
+        $\|F\| = 8 \cdot 10^{-15}$, deficit $\approx 0.17$ (lower
+        because that experiment is at $(\gamma = 1, \tau = 1)$, a
+        different cell --- but the operator is independent).
+  \item \texttt{k3\_strict\_h0\_exact/} (flint marching-squares,
+        $\sim 130$-digit): the strict-$h{=}0$ operator at
+        $(\tau=2,\gamma=0.1)$ \emph{stalled} at $F = 0.995$ (no
+        improvement from cold start) --- precisely the
+        $C^0$-not-$C^1$ obstruction proven in Finding 9. Confirms the
+        anchor is not reachable by strict alone, only by the
+        joint-limit path.
+\end{itemize}
+The anchor is therefore not flint-level digits, but it is
+\emph{operator-consistent} at six independent grids and confirmed by
+two other operator families. That is the strongest truth-closeness
+the project currently owns.
+
+\section*{Implication for any future $\gamma$-ladder}
+\textbf{A single-$h$ ladder is not adequate at any $\tau$ where the
+equilibrium is more than mildly partial.} The valid product is the
+$h$-trajectory plus the strict bound, as the $v2$/$v3$ design enforces.
+The current dual-DD $v3$ run at $(\tau = 0.1)$ is right-shaped for that
+regime (slope wedge $O(\tau^2/\gamma)$ is small, so single-cell DD
+nails carry useful information) --- but the deficit it reports is the
+same ``operator-conditional'' object: the only economically defensible
+deliverable remains the $h$-trend toward the strict reference.
+\end{document}

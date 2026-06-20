@@ -1,0 +1,15 @@
+{
+  "known_surface_max_relerr": 0.029691952130395428,
+  "continuity_strict_jump_dp02": 0.33417972803930673,
+  "continuity_strict_jump_dp01": 0.18668622255684242,
+  "continuity_naive_jump_dp02": 0.39950442118773405,
+  "continuity_naive_jump_dp01": 0.39950442118773405,
+  "prec_bits": 461,
+  "grid": {
+    "G_inner": 81,
+    "pad": 0,
+    "UMAX": 6.0,
+    "du": 0.15
+  },
+  "walltime_s": 1.8
+}

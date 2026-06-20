@@ -1,0 +1,150 @@
+% =====================================================================
+\part{The recommendation: a reproducible \strict{}-anchored gold standard}
+% =====================================================================
+
+\chapter{Design principles}
+
+The recommendation reconciles two facts that pull in opposite
+directions:
+\begin{enumerate}\itemsep2pt
+  \item The \emph{bare} \strict{} operator is the unbiased definition
+        of the equilibrium (no auxiliary parameter at all) --- but it is
+        $C^0$-not-$C^1$ at Morse-critical prices and therefore cannot
+        be nailed at high resolution by any Newton-type method
+        (Part II theorem; Findings 9, 17; Part VI plateaus).
+  \item The \emph{consistent kernel} co-area operator is $C^\infty$ and
+        nails the equilibrium to $10^{-14}$ --- but carries the
+        bandwidth $h$, which must be demonstrated (not assumed) to be a
+        pure convergence knob.
+\end{enumerate}
+The resolution: \textbf{solve with the kernel in the joint central-path
+limit; certify against \strict{} at matched tolerance; report the
+$h$-ladder as part of the result}. The kernel is then never trusted ---
+it is verified, cell by cell.
+
+\chapter{The protocol, step by step}
+
+\section{Step 0: coordinates and grids}
+\begin{itemize}\itemsep2pt
+  \item $u$-grid: uniform private log-odds $\xi = \tanh(\tau u/2)$,
+        $\xi_{\max} = 0.85$ (auto-scaling $\pm 5\sigma$; no hard
+        truncation). $G$ per the accuracy target below.
+  \item $p$-grid: uniform public log-odds $\Lpub$, bootstrap from the
+        cube CDF, antisymmetrized by construction; refreshed during
+        warm-up only (iteration 5), frozen afterwards.
+  \item Weights: trapezoid in $u$; density weight
+        $W_3 = \prod_i \bar f(u_i)$ cached for the residual metric.
+\end{itemize}
+
+\section{Step 1: continuation ladder (the branch certificate)}
+Start at $\tau_0 = 10^{-3}$ from the analytic additive solution
+$P = \sigma(\tau \sum_i u_i)$ (Method C v2 closed form; exact there to
+$10^{-10}$). March $\tau$ upward in log steps of $\le 5\%$, each cell
+warm-started from its predecessor, recording per cell: $\Fw$ best,
+symmetry errors, price range, wall time. This ladder \emph{is} the
+proof of branch identity: a connected continuation path from the
+analytic limit to the target cell. Never accept a cold-started
+high-$\tau$ fixed point --- the trivial branch is exact and
+attracting.
+
+\section{Step 2: solve each cell with the consistent kernel, joint limit}
+At each $(\gamma, \tau)$ target:
+\begin{enumerate}\itemsep2pt
+  \item Solve at $(G_1, h_1)$ with the Gaussian-band co-area operator,
+        Anderson or Picard, to its floor; require the floor to be at
+        arithmetic level for the precision in use.
+  \item Refine along the central path: $(G_{k+1}, h_{k+1}) =
+        (\lceil 1.4 G_k \rceil,\; h_k / 1.4)$ keeping
+        $h \gtrsim 3\Delta\xi$ always, warm-starting each rung by
+        interpolation. Three rungs minimum.
+  \item Convergence claim: economic quantities (deficit, slope,
+        $P$-range) must agree across the last two rungs to the target
+        tolerance, demonstrating $h$-invariance. \emph{The ladder
+        table, not a single number, is the result.}
+  \item Symmetry projection (permutation + sign-flip) every iteration;
+        symmetry errors reported at arithmetic level.
+  \item Precision: float64 until the rung floor reaches $10^{-13}$;
+        double-double beyond. (QD/F128 retired: no benefit at these
+        floors.)
+\end{enumerate}
+
+\section{Step 3: the \strict{} cross-check (the unbiasedness certificate)}
+At the finest rung, evaluate the \emph{bare} \strict{} residual at the
+kernel solution. Accept if
+$|F_{\rm strict}|_w \le C \cdot (\text{kernel-rung truncation
+estimate})$ with $C \approx 3$. This certifies that the kernel solution
+is a \strict{} near-fixed-point to the accuracy the bare operator can
+measure --- the kernel never substitutes its own notion of equilibrium.
+
+\section{Step 4: extract the lookup with pipeline v5}
+On the certified surface: \texttt{fix\_fallback} $\to$ internal
+$\mu$-based cusp detector $\to$ degree-6 per-segment Chebyshev $\to$
+PCHIP monotone tails with $\mu(\epsilon) = 0$, $\mu(1-\epsilon) = 1$.
+Certify per cell: in-support max error vs the cleaned co-area lookup at
+machine epsilon; 11/11 monotone slices on a dense grid; boundary
+conditions met. (Demonstrated at 36/36 cells, 7 seconds total.)
+
+\section{Step 5: the validation battery (all five, every cell)}
+\begin{enumerate}\itemsep2pt
+  \item \textbf{Symmetry}: permutation, sign-flip, lookup mirror at
+        arithmetic level.
+  \item \textbf{Monotonicity}: $P$ axis-monotone; $\mu$ monotone in $p$
+        per slice (dense check).
+  \item \textbf{Boundary conditions}: lookup tails; $P(\mathbf{0}) =
+        \tfrac12$ exactly.
+  \item \textbf{Operator cross-check}: Step 3 inequality, plus the
+        kernel $h$-ladder invariance table.
+  \item \textbf{Measure robustness}: report the deficit under at least
+        two state weightings (uniform and signal-weighted); the
+        $\sim 0.12$ measure spread is part of the honest result, the
+        price \emph{surface} being the invariant object.
+\end{enumerate}
+
+\section{Step 6: reporting standard}
+Every published cell carries: the continuation provenance (ladder
+path), the final rung $(G, h, \text{precision})$, the kernel-ladder
+invariance table, the \strict{} cross-check value, best-iterate vs
+converged status, the symmetry residuals, and the deficit with its
+measure convention. Nothing else counts as a result.
+
+\chapter{Accuracy targets and cost}
+
+\begin{center}\begin{tabularx}{\linewidth}{lXXX}\toprule
+target & grid/rungs & precision & cost/cell (order) \\
+\midrule
+survey ($10^{-3}$ econ) & $G{=}11$, 1 rung + v5 lookup & float64 & seconds \\
+publication ($10^{-6}$ econ) & $G{=}17{-}25$, 3 rungs & float64 & minutes \\
+anchor ($10^{-12+}$) & $G{\ge}31$, 4 rungs & DD (\& flint spot checks) & hours \\
+\bottomrule\end{tabularx}\end{center}
+
+The existing anchors: \texttt{k3\_coarea\_limit} ($10^{-14}$, joint
+limit), \texttt{k3\_strict\_h0\_exact} (flint, toward $10^{-100}$ at
+coarse $G$), and the $G{=}9$ no-kernel nail at $8\times10^{-15}$ ---
+three independent operator families agreeing on the same PR equilibrium
+is the strongest truth-closeness evidence the project owns.
+
+\chapter{Open problems}
+
+\begin{enumerate}\itemsep2pt
+  \item \textbf{Analytic Jacobian through the kernel co-area operator}
+        ($\sim 200$ LOC chain rule): would replace finite-difference
+        Newton noise and likely extend deep convergence to higher
+        $\tau$ at fixed cost.
+  \item \textbf{Pseudo-arclength continuation} past the K=2 fold at
+        $\tau \approx 0.79$ and a systematic K=3 fold map: the branch
+        structure above $\tau \sim 1$ is mapped only along ladders, not
+        in the $(\gamma, \tau)$ plane.
+  \item \textbf{The 5 corner outlier cells} of the v5 certification
+        ($10^{-2}$ max): localized fallback-smoothing artifacts at
+        extreme parameter corners; a targeted $G_p$ refinement there is
+        unfinished.
+  \item \textbf{K=4 extreme-heterogeneity PR} (\texttt{k4\_pr\_nail}
+        floors at $2.6\times10^{-3}$): whether it nails fully under the
+        consistent co-area operator is open --- the natural next
+        economics result.
+  \item \textbf{A cusp-tracking surface representation}: the lookup-side
+        segmentation idea lifted to the surface itself (multi-element
+        cube patches bounded by the critical manifold) --- the
+        principled route to exponential convergence of $P$, beyond the
+        scope of the present cycle.
+\end{enumerate}

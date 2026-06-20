@@ -1,0 +1,4 @@
+[06:35:57] Robust damped-Picard (omega0=0.3, line-search floor 0.01, hard monotone gate) + gated AA(beta=0.3, m=4, cond_max=1e+10, use=True)  TOL=1.0e-10 maxiter=800 dps=200 N=729
+[06:36:12]   iter   0  ||Phi-P||inf=2.093988e-01  ||Phi-P||2=5.870e-01  d_FR=2.6917e-01  w=0.30000  took=picard  phi/iter=1  (next finf=1.213e-01)  (10.9s)
+[06:36:14]   --- push iter 0: ok (attempt 1)
+[06:36:38]   iter   1  ||Phi-P||inf=1.213232e-01  ||Phi-P||2=3.462e-01  d_FR=2.6853e-01  w=0.30000  took=picard  phi/iter=2  aa_finf=7.128e-02  (next finf=6.942e-02)  (24.5s)

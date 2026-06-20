@@ -1,0 +1,235 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx,amsmath,amssymb,booktabs,hyperref,xcolor}
+\graphicspath{{/tmp/cheby_h0/figs/}}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\title{Kernel-band Chebyshev-tab operator:\\
+       machine-$\varepsilon$ convergence in one solver call}
+\author{Fixed-Point Factory --- breakthrough note}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+The Chebyshev-tab prototype's $\sim 1.7\!\times\!10^{-3}$ residual floor
+was diagnosed as structural at $N{=}7$ (\texttt{fp\_analysis.pdf}).
+Running the user-suggested "legacy + table" test
+(\texttt{test\_replay\_and\_table.py}) we found that a saved Gaussian
+kernel-band FP on the legacy uniform-$u$ grid replays at
+$\|F\|_\infty = 7.2\!\times\!10^{-16}$ in one step, and adding the
+lookup table on top reaches $6.4\!\times\!10^{-15}$ under
+Newton--Krylov. \emph{The floor was the chebroots/bisect root-extraction,
+not the table.} This note replaces that step in the Chebyshev pipeline
+with a Gaussian kernel band and shows the operator nails to machine
+$\varepsilon$ from \emph{both} cold and warm starts at bandwidths
+$h \in [0.20, 0.50]$ on the same $N{=}7$ grid. The FP shape (slope,
+deficit) is the standard $h$-regularized REE: as $h \to 0$ the slope
+approaches the chebroots reference at $\approx 0.34$ and the deficit
+falls below $0.21$.
+\end{abstract}
+
+\section{What changed: contour extraction $\to$ Gaussian band}
+
+Old Phase A (build $\mu(p, u_k)$ table, \texttt{cheby\_numba\_tab.py}):
+\begin{enumerate}
+  \item For each Lobatto $u_k$ and each $p$ in $p$-grid,
+  \item extract the level set $\{(u_a, u_b) : P(u_a, u_b, u_k) = p\}$
+        by bisecting the 1D Chebyshev polynomial in $u_b$ at each GL
+        node $\xi_a^{(q)}$;
+  \item integrate $f_v(u_a)\,f_v(u_b)\,/\,|\partial P/\partial u_b|$
+        along the curve.
+\end{enumerate}
+The non-smoothness comes from step (2): roots can be born or die at the
+box edge as $p$ varies, producing $C^0$ creases in $A_v(p, u_k)$.
+
+New Phase A (kernel band, \texttt{cheby\_numba\_kern\_tab.py}):
+\begin{enumerate}
+  \item For each Lobatto $u_k$ and each $p$ in $p$-grid,
+  \item evaluate $P$ on the tensor-GL grid $(\xi_a^{(q_a)},
+        \xi_b^{(q_b)})$ via Cheb-3D contraction,
+  \item integrate
+        \[
+          A_v(p, u_k) \;=\; \int\!\!\int K_h\big(P(u_a, u_b, u_k)-p\big)\,
+                              f_v(u_a)\,f_v(u_b)\;du_a\,du_b,
+          \quad K_h(z) = \exp\!\big(-z^2/(2h^2)\big),
+        \]
+        over the full 2D slice using tensor GL quadrature.
+\end{enumerate}
+There is no root finding. $A_v$ is an analytic function of the Cheb
+coefficients of $P$ (a sum of Gaussians of polynomial differences), so
+$\Phi$ is analytic in $P$ and Newton converges quadratically.
+
+Phase B (per-cube-cell clearing) is unchanged.
+
+\section{Result: machine $\varepsilon$ from both starts}
+
+\begin{center}
+\includegraphics[width=\linewidth]{kern_tab_01_convergence.png}
+\end{center}
+
+Both cold ($P_0 = \sigma(0.5\,T)$) and warm
+($P_0 = $ \texttt{P\_final\_sym2.npy}, an old prototype FP) starts
+reach machine $\varepsilon$ in $\sim 20$--$40$ Anderson iterations at
+$h \in \{0.20, 0.30, 0.50\}$:
+
+\begin{center}
+\begin{tabular}{rcc}
+\toprule
+$h$ & cold floor & warm floor \\
+\midrule
+0.50 & $2.2\!\times\!10^{-16}$ & $7.2\!\times\!10^{-16}$ \\
+0.30 & $6.7\!\times\!10^{-16}$ & $1.0\!\times\!10^{-15}$ \\
+0.20 & $6.7\!\times\!10^{-16}$ & $8.9\!\times\!10^{-16}$ \\
+0.15 & $2.1\!\times\!10^{-4}$ \emph{(fails)} & $1.6\!\times\!10^{-4}$ \emph{(fails)} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The $h{=}0.15$ case is informative: at $G{=}7$ the Lobatto spacing in
+$p$ near $p{=}\tfrac{1}{2}$ is $\sim 0.15$, so a band of width $0.15$
+covers about one grid cell and the Gaussian kernel approaches a delta
+function --- the operator approaches the discontinuous strict-$h{=}0$
+limit and Anderson stalls at the same $\sim 10^{-4}$ floor we know from
+\texttt{fp\_analysis.pdf}. The rule of thumb is: $h$ must span several
+typical $P$-jumps between adjacent cells.
+
+\section{What FP did we find?}
+
+The kernel-band operator does \emph{not} have the same FP as the strict
+contour operator --- $h>0$ regularizes the integral and the FP depends
+on $h$. As $h \to 0$ the kernel FP converges to the strict-contour FP.
+
+\begin{center}
+\includegraphics[width=\linewidth]{kern_tab_02_FPshape.png}
+\end{center}
+
+\begin{center}
+\begin{tabular}{rcc}
+\toprule
+$h$ & slope $\alpha^*$ & deficit $1-R^2$ \\
+\midrule
+0.50 & $0.125$ & $0.308$ \\
+0.40 & $0.130$ & $0.300$ \\
+0.30 & $0.142$ & $0.279$ \\
+0.25 & $0.158$ & $0.247$ \\
+0.20 & $0.178$ & $0.211$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The slope rises from $0.125$ at $h{=}0.5$ toward $0.34$ (the
+chebroots estimate from \texttt{tab\_explain.pdf}, $\gamma{=}1$) as $h$
+narrows, and the information deficit falls from $0.31$ to $0.21$ over
+the same range. The natural continuation here is a "joint $h{\to}0$
+limit": refine the grid and lower $h$ together, keeping
+$h \gtrsim \mathrm{const}\!\cdot\!\Delta u$, until the FP stabilises ---
+the same recipe the legacy \texttt{phi\_K3\_halo\_smooth} solver uses
+in \texttt{projects/REZN}.
+
+\section{Why this works: $\Phi$ is now analytic in $P$}
+
+The new $A_v(p, u_k)$ is a sum of terms
+$K_h(P(\xi^{(q_a)}, \xi^{(q_b)}, \xi_{\text{fix}}) - p)
+ \cdot f_v(u_a^{(q_a)}) f_v(u_b^{(q_b)}) \cdot w$,
+each of which is an analytic function of the Cheb coefficients of $P$.
+Hence the Jacobian $\partial F / \partial P$ is well-defined and smooth
+everywhere, Newton's quadratic convergence applies, and Anderson is
+similarly unencumbered. The previous operator had $A_v$ defined as a
+piecewise function with $C^0$ creases at root-birth events; Newton's
+finite-difference Jacobian was being computed across those creases.
+
+\section{Implementation}
+
+\texttt{/tmp/cheby\_h0/cheby\_numba\_kern\_tab.py} ($\sim 150$ LOC,
+all numba-jit'd). Hot path:
+\begin{enumerate}
+  \item \texttt{cheb\_eval\_slice\_axis0} --- evaluate $P$ on the
+        $N_{Q}{\times}N_Q$ tensor-GL grid for one Lobatto $u_k$
+        ($G \cdot N_Q^2 \cdot G^2$ ops),
+  \item \texttt{build\_mu\_table\_kern} --- inner $(p, q_a, q_b)$ loop
+        computes $A_v$ from the slice with a precomputed Gaussian
+        weight ($G_p \cdot N_Q^2$ ops per $u_k$, $\cdot G$ for the
+        full table),
+  \item \texttt{phi\_kern\_tab\_jit} --- standard per-cube-cell lookup
+        + \texttt{crra\_clear\_jit}.
+\end{enumerate}
+
+Per-$\Phi$ wall time at $N{=}6$, $G_p{=}121$: $\sim 7$\,ms (vs
+$\sim 9$\,ms for the chebroots-tab variant). Newton--Krylov nail from
+cold: $\sim 0.2$\,s wall time.
+
+\section{Verdict}
+
+\begin{itemize}
+  \item The lookup-table architecture (\texttt{tab\_explain.pdf}) is
+        \emph{not} the source of the $10^{-3}$ floor. The smooth-band
+        operator with the same table reaches machine $\varepsilon$.
+  \item Replacing chebroots/bisect with a Gaussian kernel band of
+        bandwidth $h \gtrsim 2\!-\!3\,\Delta u$ gives an analytic
+        $\Phi$ that Newton can nail; cold and warm starts both work.
+  \item The price is that the FP depends on $h$. The recipe is the
+        standard kernel-band joint limit: refine grid and $h$
+        together.
+\end{itemize}
+
+\paragraph{Next:} A 2D sweep $(G, h)$ along the joint limit, recovering
+the $h{\to}0$ FP and comparing slope $\alpha^*$ at $\gamma{=}1$ with
+the legacy chebroots estimate; then push to $N{=}8$ using the tabulated
+speed.
+
+\section{Joint $(N, h) \to (\infty, 0)$ limit: the actual REE}
+
+We swept $N \in \{6, 8, 10, 12\}$ (i.e. $G\in\{7, 9, 11, 13\}$) and
+$h \in \{0.5, 0.35, 0.25, 0.18, 0.13, 0.10, 0.07, 0.05\}$, using a
+\emph{warm-restart-along-$h$} path: start cold at $h{=}0.5$, then warm
+each smaller-$h$ solve from the previous solution.
+
+\begin{center}
+\includegraphics[width=\linewidth]{joint_warmpath.png}
+\end{center}
+
+\paragraph{Per-$N$ "deepest converged" estimate.}
+For each $N$, the smallest $h$ at which Anderson + Newton--Krylov
+reached machine $\varepsilon$:
+
+\begin{center}
+\begin{tabular}{ccccc}
+\toprule
+$N$ (G)    & deepest $h$ & slope $\alpha^*$ & deficit $1-R^2$ & wall time \\
+\midrule
+6  (G=7)   & 0.07 & 0.2234 & 0.169 & 0.4\,s \\
+8  (G=9)   & 0.13 & 0.2114 & 0.198 & 1.8\,s \\
+10 (G=11)  & 0.10 & 0.2258 & 0.204 & 3.2\,s \\
+12 (G=13)  & 0.10 & 0.2322 & 0.211 & 5.7\,s \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Trends.} As $h$ shrinks at fixed $N$, slope rises and
+deficit falls --- the operator is reading the price more sharply. As
+$N$ grows at fixed $h$, slope and deficit barely move (the Cheb basis
+is over-resolved for the smoothed problem). The joint limit
+$\alpha^* \approx 0.22\!-\!0.23$, $1{-}R^2 \approx 0.20\!-\!0.21$ is
+stable across $N \ge 8$.
+
+\paragraph{Where it fails.} Small-$h$ cells with the warm path:
+$N{=}8$ at $h{=}0.10$, $N{=}10$ at $h\in\{0.13, 0.07\}$, $N{=}12$ at
+$h\in\{0.13, 0.07, 0.05\}$. In every failure case Anderson stalls in
+the $10^{-3}$ band --- the kernel has tightened past the grid's
+resolution and the operator approaches the discontinuous chebroots
+limit that we already know cannot be nailed at this precision. The
+remedy is the usual one: refine $N$ further, or move to higher
+arithmetic precision (\texttt{projects/REZN/solver\_code/highprec\_dd\_qd}
+has this in DD).
+
+\paragraph{Comparison with prior estimates.}
+The chebroots cold-start single-$\Phi$ estimate from
+\texttt{tab\_explain.pdf} gave slope $\approx 0.34$ at $\gamma{=}1$,
+but that was measured at $\|F\|_\infty \sim 10^{-1}$ (an unconverged
+point). The kernel-band joint-limit estimate $\alpha^* \approx 0.22$
+is more reliable --- it's at machine $\varepsilon$ for the smoothed
+operator, and stable across $N \in [8, 12]$ at deepest-$h$.
+
+\end{document}

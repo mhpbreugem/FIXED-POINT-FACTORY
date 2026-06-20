@@ -1,0 +1,48 @@
+{
+  "gamma=0.1": {
+    "corr_self": -0.004505315781730414,
+    "corr_explicit": 0.5490043550060668,
+    "rms_err_self": 2.157501340831851,
+    "max_err_self": 11.59097731237642,
+    "rms_err_explicit": 2.103465929980232,
+    "max_err_explicit": 14.788985684836979,
+    "mean_abs_gap": 0.296881863664873,
+    "sign_match_frac": 0.592225,
+    "sign_match_frac_disp": 0.5809444818827433
+  },
+  "gamma=0.3": {
+    "corr_self": 0.23553740346809168,
+    "corr_explicit": 0.673920004193813,
+    "rms_err_self": 0.6305127987477602,
+    "max_err_self": 3.7289394002280676,
+    "rms_err_explicit": 0.603654468149402,
+    "max_err_explicit": 4.67648497111357,
+    "mean_abs_gap": 0.22919636882710662,
+    "sign_match_frac": 0.707875,
+    "sign_match_frac_disp": 0.6986159348919185
+  },
+  "gamma=1.0": {
+    "corr_self": 0.8313614214618098,
+    "corr_explicit": 0.8958589408772593,
+    "rms_err_self": 0.0961607788984735,
+    "max_err_self": 0.7328933258658837,
+    "rms_err_explicit": 0.11567926015808862,
+    "max_err_explicit": 1.1738179403075524,
+    "mean_abs_gap": 0.11012205371876287,
+    "sign_match_frac": 0.892775,
+    "sign_match_frac_disp": 0.8894303042869732
+  },
+  "gamma=3.0": {
+    "corr_self": 0.9864107355210195,
+    "corr_explicit": 0.9831725953451806,
+    "rms_err_self": 0.010974491292241836,
+    "max_err_self": 0.08679102887431189,
+    "rms_err_explicit": 0.018082503672660934,
+    "max_err_explicit": 0.22233705220779681,
+    "mean_abs_gap": 0.04469276908981538,
+    "sign_match_frac": 0.96935,
+    "sign_match_frac_disp": 0.9684308745010627
+  },
+  "P3_loglog_slope_meanabsgap_vs_gamma": -0.5625223430481763,
+  "P4_corr_absgap_vs_Varm_g1": 0.47969882241035283
+}

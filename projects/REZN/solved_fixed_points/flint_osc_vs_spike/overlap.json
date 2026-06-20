@@ -1,0 +1,11 @@
+{
+  "n_osc": 259,
+  "n_spk": 151,
+  "n_both": 59,
+  "osc_only": 200,
+  "spk_only": 92,
+  "jaccard": 0.16809116809116809,
+  "p_spike_given_osc": 0.2277992277992278,
+  "p_osc_given_spike": 0.39072847682119205,
+  "corr_logamp_logdiag": 0.11428148362156514
+}
