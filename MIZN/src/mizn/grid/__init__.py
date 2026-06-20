@@ -6,6 +6,8 @@ is underneath.
 """
 from .base import Grid
 from .linear_u import build_linear_u
+from .atanh_xi import build_atanh_xi
+from .cdf_zeta import build_cdf_zeta
 
 
 def build(params) -> Grid:
@@ -13,6 +15,10 @@ def build(params) -> Grid:
     kind = params.grid
     if kind == 'u':
         return build_linear_u(params)
+    if kind == 'xi':
+        return build_atanh_xi(params)
+    if kind == 'zeta':
+        return build_cdf_zeta(params)
     raise ValueError(f"grid kind {kind!r} not implemented yet")
 
 

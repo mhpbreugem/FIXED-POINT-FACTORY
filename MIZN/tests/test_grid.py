@@ -26,7 +26,24 @@ def test_trapezoidal_integrates_quadratic():
     assert abs(s - 250.0 / 3) < 5e-2  # trapezoidal — coarse
 
 
+def test_atanh_xi_shape_and_bounds():
+    g = build(Params(G=11, grid='xi', umax=4.0))
+    assert g.kind == 'xi'
+    assert g.nodes[0] < 0 and g.nodes[-1] > 0
+    assert abs(g.u[0] + 4.0) < 0.05    # close to -umax
+    assert abs(g.u[-1] - 4.0) < 0.05
+
+
+def test_cdf_zeta_concentrates_around_u_bar():
+    g = build(Params(G=21, grid='zeta', u_bar=0.0, tau_u=1.0, umax=4.0))
+    assert g.kind == 'zeta'
+    mid = g.G // 2
+    assert abs(g.u[mid]) < 0.1   # midpoint stays near 0
+    # half-width: 25%-75% quantiles inside |u| < 1
+    assert abs(g.u[g.G // 4]) < 1.0
+
+
 def test_invalid_grid_kind_raises():
     import pytest
     with pytest.raises(ValueError, match="not implemented"):
-        build(Params(grid='xi'))
+        build(Params(grid='zzz'))
